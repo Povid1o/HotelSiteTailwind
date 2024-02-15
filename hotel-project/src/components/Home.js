@@ -16,43 +16,43 @@ const Home = ({nav}) => {
                 </div>
             </div>
             {/*  Intro */}
+            
 
 
             {/* Brick 1 */}
-            {/* <div className='w-3/4 max-w-[700px] bg-white rounded-xl drop-shadow-2xl mx-auto mt-5'>
-                <div className="w-full flex flex-row items-center justify-center p-10 py-5 font-body md:flex-col">
-                    <h1 className="font-bold text-4xl text-gray-700 bg-white p-4">Кто мы?</h1>
-                    <p className="max-w-screen-lg font-light text-base text-left text-gray-700 bg-white p-4 pl-20">
-                        Отель-винодельня "Винные Террассы" - это уникальное место, сочетающее в себе шарм и гостеприимство с изысканными винами, произведенным нашими виноделами по собственному рецепту. Мы предлагаем гостям возможность насладиться роскошью и комфортом, а также окунуться в удивительный мир виноделия, попробовать уникальные сорта вин и узнать историю их создания.
-                    </p>
-                </div> */}
+            <div className='mt-14 justify-center flex flex-row '>
 
-                {/*  Images Carousel */}
-                {/* <div className= " relative h-56 w-3/4 ml-auto mr-auto pb-5 z-0 sm:h-64 xl:h-80 2xl:h-96">
-                    <Carousel pauseOnHover>
-                        <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg" alt="..." />
-                        <img src="https://flowbite.com/docs/images/carousel/carousel-2.svg" alt="..." />
-                        <img src="https://flowbite.com/docs/images/carousel/carousel-3.svg" alt="..." />
-                        <img src="https://flowbite.com/docs/images/carousel/carousel-4.svg" alt="..." />
-                        <img src="https://flowbite.com/docs/images/carousel/carousel-5.svg" alt="..." />
-                    </Carousel>
+                {/* Text Block */}
+                <div className='w-3/4 max-w-[700px] mx-auto bg-white rounded-xl drop-shadow-2xl lg:max-w-[900px] xl:mx-8'>
+
+                    <div className="w-full flex flex-col p-10 py-5 font-body md:flex-row">
+                        <h1 className="font-bold text-4xl text-gray-700 bg-white pt-4 pr-4 lg:text-5xl xl:text-6xl pt-8 pr-16">Кто мы?</h1>
+                        <p className="max-w-screen-lg font-light text-left text-gray-700 bg-white p-4 text-xs md:text-base lg:text-lg xl:text-2xl pt-8">
+                            Отель-винодельня "Винные Террассы" - это уникальное место, сочетающее в себе шарм и гостеприимство с изысканными винами, произведенным нашими виноделами по собственному рецепту. Мы предлагаем гостям возможность насладиться роскошью и комфортом, а также окунуться в удивительный мир виноделия, попробовать уникальные сорта вин и узнать историю их создания.
+                        </p>
+                    </div>
+
                 </div>
-            </div> */}
-            {/* Brick 1 */}
+                {/* Text Block */}
 
+                <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg" alt="" className='hidden xl:flex max-h-[400px] rounded-xl'/>
 
-            {/* Brick 1 */}
-            <div className='w-3/4 max-w-[700px] bg-white rounded-xl drop-shadow-2xl mx-auto mt-14 lg:max-w-[900px]'>
-                <div className="w-full flex flex-col p-10 py-5 font-body md:flex-row">
-                    <h1 className="font-bold text-4xl text-gray-700 bg-white pt-4 pr-4 lg:text-5xl xl:text-6xl pt-8 pr-16">Кто мы?</h1>
-                    <p className="max-w-screen-lg font-light text-left text-gray-700 bg-white p-4 text-xs md:text-base lg:text-lg xl:text-2xl pt-8">
-                        Отель-винодельня "Винные Террассы" - это уникальное место, сочетающее в себе шарм и гостеприимство с изысканными винами, произведенным нашими виноделами по собственному рецепту. Мы предлагаем гостям возможность насладиться роскошью и комфортом, а также окунуться в удивительный мир виноделия, попробовать уникальные сорта вин и узнать историю их создания.
-                    </p>
-                </div>
             </div>
 
+            <div className='mt-8 justify-center flex flex-row'>
+                <img src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" alt="" className='hidden xl:flex w-3/4 max-w-[900px] mx-8 rounded-xl'/>
+
+                <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1" alt="" className='hidden xl:flex max-h-[600px] rounded-xl'/>
+
+
+            </div>
+            {/* Brick 1 */}
+
+            
+
+
             {/*  Images Carousel */}
-            <div className= " relative h-56 w-3/4 max-w-[700px] ml-auto mr-auto mt-5 z-0 sm:h-80 lg:max-w-[900px] xl:h-96 2xl:h-112">
+            <div className= " relative h-56 w-3/4 max-w-[700px] ml-auto mr-auto mt-5 z-0 sm:h-80 lg:max-w-[900px] xl:hidden">
                 <Carousel pauseOnHover>
                     <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg" alt="..." />
                     <img src="https://flowbite.com/docs/images/carousel/carousel-2.svg" alt="..." />
@@ -66,7 +66,7 @@ const Home = ({nav}) => {
             
 
 
-            {/* Brick 3 */}
+            {/* Brick 2 */}
             <div className='w-3/4 max-w-[700px] mt-14 ml-auto mr-auto font-body' >
                 <div className='w-full flex flex-row items-center'>
                     <p className='text-4xl text-gray-700 font-bold'>Номерной Фонд</p>
@@ -85,24 +85,9 @@ const Home = ({nav}) => {
                     </p>
                 </Card>
 
-                
-                
-
-
             </div>
             {/* Brick 2 */}
             
-                
-
-
-
-
-
-
-
-
-
-
         </div>
      );
 }
