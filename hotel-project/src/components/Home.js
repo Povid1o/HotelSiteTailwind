@@ -27,7 +27,7 @@ const Home = ({nav}) => {
 
                     <div className="w-full flex flex-col p-10 py-5 font-body md:flex-row">
                         <h1 className="font-bold text-4xl text-gray-700 bg-white pt-4 pr-4 lg:text-5xl xl:text-6xl pt-8 pr-16">Кто мы?</h1>
-                        <p className="max-w-screen-lg font-light text-left text-gray-700 bg-white p-4 text-xs md:text-base lg:text-lg xl:text-2xl pt-8">
+                        <p className="max-w-screen-lg font-light text-left text-gray-700 bg-white text-xs md:text-base lg:text-lg xl:text-2xl pt-8">
                             Отель-винодельня "Винные Террассы" - это уникальное место, сочетающее в себе шарм и гостеприимство с изысканными винами, произведенным нашими виноделами по собственному рецепту. Мы предлагаем гостям возможность насладиться роскошью и комфортом, а также окунуться в удивительный мир виноделия, попробовать уникальные сорта вин и узнать историю их создания.
                         </p>
                     </div>
@@ -40,7 +40,11 @@ const Home = ({nav}) => {
             </div>
 
             <div className='mt-8 justify-center flex flex-row'>
-                <img src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" alt="" className='hidden xl:flex w-3/4 max-w-[900px] mx-8 rounded-xl'/>
+                
+                <div className='hidden xl:flex w-3/4 max-w-[900px] mx-8 rounded-xl'>
+                    <img src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" alt="" className='object-cover rounded-xl'/>
+
+                </div>
 
                 <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1" alt="" className='hidden xl:flex max-h-[600px] rounded-xl'/>
 
@@ -52,7 +56,7 @@ const Home = ({nav}) => {
 
 
             {/*  Images Carousel */}
-            <div className= " relative h-56 w-3/4 max-w-[700px] ml-auto mr-auto mt-5 z-0 sm:h-80 lg:max-w-[900px] xl:hidden">
+            <div className= " relative h-56 w-3/4 max-w-[700px] mx-auto z-0 sm:h-80 lg:max-w-[900px] xl:hidden">
                 <Carousel pauseOnHover>
                     <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg" alt="..." />
                     <img src="https://flowbite.com/docs/images/carousel/carousel-2.svg" alt="..." />
@@ -67,21 +71,20 @@ const Home = ({nav}) => {
 
 
             {/* Brick 2 */}
-            <div className='w-3/4 max-w-[700px] mt-14 ml-auto mr-auto font-body' >
-                <div className='w-full flex flex-row items-center'>
-                    <p className='text-4xl text-gray-700 font-bold'>Номерной Фонд</p>
-                </div>
+            <div className='w-3/4 mt-14 mx-auto justify-center font-body xl:w-full max-w-[1300px]' >
+                <p className='text-4xl text-gray-700 font-bold pt-4 lg:text-5xl xl:text-6xl pt-8'>Номерной Фонд</p>
                 
                 <Card
-                    className="max-w-sm mt-5"
+                    className="max-w-xl mt-5"
+                    horizontal
                     imgAlt="Meaningful alt text for an image that is not purely decorative"
-                    imgSrc="https://flowbite.com/docs/images/carousel/carousel-1.svg"
+                    imgSrc="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg"
                 >
-                    <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                        Noteworthy technology acquisitions 2021
+                    <h5 className="text-2xl font-bold tracking-tight text-gray-900">
+                        Номер Стандарт+
                     </h5>
-                    <p className="font-light text-gray-700 dark:text-gray-400">
-                        Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.
+                    <p className="font-light text-gray-700">
+                        Включены все услуги плюс баня 
                     </p>
                 </Card>
 
