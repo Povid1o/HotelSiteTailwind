@@ -3,11 +3,30 @@ import { Carousel } from 'flowbite-react';
 // import { Card } from 'flowbite-react';
 import Card from './Card';
 import ExtCard from './ExtCard';
+import ExtStandartPlus  from './ExtStandartplus';
+// import ExtStandart from  './ExtStandart';
+
+const StandartCard = () => {
+    return(
+        <Card
+        imgAlt="Image alt text"
+        imgSrc="https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWxzfGVufDB8fDB8fHww"
+        >
+            <div className='flex flex-col ml-5'>
+                <h2 className="text-2xl font-bold mb-2">Номер Стандарт</h2>
+                <p className="text-gray-700">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
+                </p>
+            </div>
+                            
+        </Card>
+
+    )
+}
 
 const StandartPlusCard = () => {
     return(
         <Card
-        horizontal
         imgAlt="Image alt text"
         imgSrc="https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWxzfGVufDB8fDB8fHww"
         >
@@ -22,6 +41,8 @@ const StandartPlusCard = () => {
 
     )
 }
+
+
 
 const Home = ({nav}) => {
     return ( 
@@ -94,7 +115,7 @@ const Home = ({nav}) => {
             <div className='w-3/4 mt-14 mx-8 mx-auto justify-center font-body xl:w-full max-w-[1300px]' >
                 <p className='text-4xl text-gray-700 font-bold pt-4 lg:text-5xl xl:text-6xl pt-8'>Номерной Фонд</p>
 
-                <div className='flex flex-row xl:justify-center'>
+                <div className='flex flex-col xl:justify-center'>
 
                     {/* <Card
                         className="max-w-xl mt-5 mr-5"
@@ -127,7 +148,13 @@ const Home = ({nav}) => {
 
                     <ExtCard
                     Card={StandartPlusCard}
+                    ExtContent={ExtStandartPlus}
                     /> 
+{/* 
+                    <ExtCard
+                    Card={StandartCard}
+                    ExtContent={ExtStandart}
+                    />  */}
 
                     
 

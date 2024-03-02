@@ -1,20 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { Carousel } from 'flowbite-react';
-// import ImageCarousel from './ImageCarousel'
+import { useMediaQuery } from 'react-responsive';
 
 const Card = ({ className, horizontal, imgAlt, imgSrc, children }) => {
+  // New: useMediaQuery hook to check screen width
+  const isBelow600px = useMediaQuery({ query: '(max-width: 599px)' });
+
   const cardClasses = `
-    ${horizontal ? 'flex flex-row' : 'flex flex-col'}
+    ${horizontal && !isBelow600px ? 'flex flex-row' : 'flex flex-col'}
     ${className}
     rounded-lg
     shadow-2xl
     p-4
-    ${horizontal ? 'items-center' : 'items-start'}
+    ${horizontal && !isBelow600px ? 'items-center' : 'items-start'}
   `;
 
   const imgClasses = `
-    ${horizontal ? 'w-1/2' : 'w-full'}
+    ${horizontal && !isBelow600px ? 'w-1/2' : 'w-full'}
     h-auto
     rounded-lg
   `;
@@ -27,14 +29,6 @@ const Card = ({ className, horizontal, imgAlt, imgSrc, children }) => {
           src={imgSrc}
           alt={imgAlt}
         />
-
-        // <Carousel pauseOnHover className='md:h-[300px] w-[400px] lg:w-[650px] h-[500px]'>
-        //     <img src={imgSrc} alt={imgAlt} />
-        //     <img src={imgSrc} alt={imgAlt} />
-        //     <img src={imgSrc} alt={imgAlt} />
-        //     <img src={imgSrc} alt={imgAlt} />
-        //     <img src={imgSrc} alt={imgAlt} />
-        // </Carousel>
       )}
       {children}
     </div>
@@ -51,7 +45,7 @@ Card.propTypes = {
 
 Card.defaultProps = {
   className: '',
-  horizontal: false,
+  horizontal: true, // Set the default value to true
   imgAlt: '',
   imgSrc: '',
 };

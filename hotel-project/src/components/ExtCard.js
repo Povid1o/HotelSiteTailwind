@@ -1,15 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
-const ExtCard = ({ Card }) => {
+const ExtCard = ({ Card, ExtContent }) => {
   const [showDialog, setShowDialog] = useState(false);
+  const dialogRef = useRef(null);
+  const [dialogOverflow, setDialogOverflow] = useState('hidden');
+
 
   const handleClick = () => {
     setShowDialog(true);
+    // document.body.classList.add('no-scroll');
   };
 
   const handleClose = () => {
     setShowDialog(false);
+    // document.body.classList.remove('no-scroll');
   };
+
+  useEffect(() => {
+    if (showDialog) {
+      document.body.style.overflow = 'hidden';
+      setDialogOverflow('auto');
+    } else {
+      document.body.style.overflow = 'auto';
+      setDialogOverflow('hidden');
+    }
+  }, [showDialog]);
+
+  useEffect(() => {
+    if (dialogRef.current) {
+      dialogRef.current.style.overflow = dialogOverflow;
+    }
+  }, [dialogOverflow]);
+
 
   return (
     <div className="flex items-center justify-center">
@@ -20,10 +42,9 @@ const ExtCard = ({ Card }) => {
           <Card/>
         </button>
       {showDialog && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-8 rounded-lg shadow-md w-64">
-            <h2 className="font-bold mb-4">Dialog Title</h2>
-            <p className="text-gray-600">Dialog Description</p>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" ref={dialogRef}>
+          <div className="bg-white p-8 rounded-lg shadow-md">
+            <ExtContent/>
             <button
               className="bg-red-500 hover:bg-red-700 p-2 rounded-lg text-white mt-4"
               onClick={handleClose}
