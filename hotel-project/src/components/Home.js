@@ -4,7 +4,7 @@ import { Carousel } from 'flowbite-react';
 import Card from './Card';
 import ExtCard from './ExtCard';
 import ExtStandartPlus  from './ExtStandartplus';
-// import ExtStandart from  './ExtStandart';
+import ExtStandart from  './ExtStandart';
 
 const StandartCard = () => {
     return(
@@ -150,11 +150,11 @@ const Home = ({nav}) => {
                     Card={StandartPlusCard}
                     ExtContent={ExtStandartPlus}
                     /> 
-{/* 
+
                     <ExtCard
                     Card={StandartCard}
                     ExtContent={ExtStandart}
-                    />  */}
+                    /> 
 
                     
 
