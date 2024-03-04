@@ -4,7 +4,7 @@ import { useMediaQuery } from 'react-responsive';
 
 const Card = ({ className, horizontal, imgAlt, imgSrc, children }) => {
   // New: useMediaQuery hook to check screen width
-  const isBelow600px = useMediaQuery({ query: '(max-width: 599px)' });
+  const isBelow600px = useMediaQuery({ query: '(max-width: 689px)' });
 
   const cardClasses = `
     ${horizontal && !isBelow600px ? 'flex flex-row' : 'flex flex-col'}

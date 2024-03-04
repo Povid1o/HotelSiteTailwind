@@ -13,6 +13,9 @@ module.exports = {
       fontFamily: {
         body : ['Bitter'],
         // sans: ['Graphik', 'sans-serif'],
+      },
+      screens: {
+        'mobile': '420px'
       }
     },
   },
