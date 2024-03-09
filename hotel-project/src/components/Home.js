@@ -105,24 +105,16 @@ const Home = ({nav}) => {
 
 
             {/*  Images Carousel */}
-            <div className= " relative h-56 w-3/4 max-w-[700px] mx-auto z-0 sm:h-80 lg:max-w-[900px] xl:hidden">
-                <Carousel pauseOnHover>
-                    <img src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" alt="..." />
-                    <img src="https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWxzfGVufDB8fDB8fHww" alt="..." />
-                    <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1" alt="..." />
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-4.svg" alt="..." />
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-5.svg" alt="..." />
-                </Carousel>
-            </div>
 
-            
+
+            {/* Blue Swiper */}
             <Swiper
-            className='rounded-lg w-3/4 max-w-[700px] mt-5 mx-auto z-0 sm:h-80 lg:max-w-[900px] xl:hidden'
+            className='rounded-lg content-center h-56 w-3/4 max-w-[700px] mt-5 mx-auto z-0 sm:h-80 lg:max-w-[900px] lg:h-96 xl:hidden '
             pagination={{
                 clickable: true,
               }}
             navigation={true}
-            autoHeight={true}
+            autoHeight={false}
             centeredSlides={true} 
             autoplay={{
                 delay: 2500,
@@ -130,23 +122,23 @@ const Home = ({nav}) => {
             }}
             spaceBetween={30}
             slidesPerView={1}
-            height={460}
+            // height={460}
             modules={[Autoplay, Navigation, Pagination]}>
                 
                 <SwiperSlide>
-                    <img src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" className='flex-shrink-0 snap-center' alt="..." />
+                    <img className='rounded-lg absolute top-1/2 left-1/2 block w-full -translate-x-1/2 -translate-y-1/2  ' src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" alt="..." />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1" className='flex-shrink-0 snap-center' alt="..." />
+                    <img className='absolute top-1/2 left-1/2 block w-full -translate-x-1/2 -translate-y-1/2 ' src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1" alt="..." />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-3.svg" alt="..." />
+                    <img className='absolute top-1/2 left-1/2 block w-full -translate-x-1/2 -translate-y-1/2  ' src="https://flowbite.com/docs/images/carousel/carousel-3.svg" alt="..." />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-4.svg" alt="..." />
+                    <img className='absolute top-1/2 left-1/2 block w-full -translate-x-1/2 -translate-y-1/2 ' src="https://flowbite.com/docs/images/carousel/carousel-4.svg" alt="..." />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-5.svg" alt="..." />
+                    <img className='absolute top-1/2 left-1/2 block w-full -translate-x-1/2 -translate-y-1/2 ' src="https://flowbite.com/docs/images/carousel/carousel-5.svg" alt="..." />
                 </SwiperSlide>
 
             </Swiper>
