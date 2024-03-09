@@ -63,6 +63,8 @@ const Home = ({nav}) => {
                 </div>
             </div>
             {/*  Intro */}
+
+            {/* Brick */}
             
 
 
