@@ -42,8 +42,8 @@ const ExtCard = ({ Card, ExtContent }) => {
           <Card/>
         </button>
       {showDialog && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" ref={dialogRef}>
-          <div className="bg-white p-8 rounded-lg shadow-md">
+        <div className="fixed top-6 inset-0 bg-black bg-opacity-50 flex items-center justify-center " ref={dialogRef}>
+          <div className="bg-white p-8 rounded-lg shadow-md  w-5/6 h-4/5 "ref={dialogRef}>
             <ExtContent/>
             <button
               className="bg-red-500 hover:bg-red-700 p-2 rounded-lg text-white mt-4"
