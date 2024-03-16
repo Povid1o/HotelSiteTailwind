@@ -107,7 +107,10 @@ const Home = ({nav}) => {
 
 
             {/* Blue Swiper */}
-            <BlueSwiper/>
+            <div className="w-3/4 mx-auto xl:hidden ">
+                <BlueSwiper />
+            </div>
+            
             
             {/* Brick 1 */}
 

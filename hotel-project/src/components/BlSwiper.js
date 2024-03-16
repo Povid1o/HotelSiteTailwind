@@ -10,8 +10,8 @@ import {Autoplay, Navigation, Pagination} from 'swiper/modules';
 const BlueSwiper = () => {
   return(
           <Swiper
-            className='rounded-lg content-center h-56 w-3/4 max-w-[700px] mt-5 mx-auto z-0 sm:h-80 lg:max-w-[900px] lg:h-96 xl:hidden '//Создать w-full(а по хорошему другой className) для карточки(В виде тернара)
-              
+            className='rounded-lg content-center h-56 w-full max-w-[700px] mt-5 mx-auto z-0 sm:h-80 lg:max-w-[900px] lg:h-96  '//Создать w-full(а по хорошему другой className) для карточки(В виде тернара)
+              loop={true}
               pagination={{
                   clickable: true,
               }}
