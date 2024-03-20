@@ -1,6 +1,8 @@
 import React from 'react';
 import {ReactComponent as Logo} from './assets/Logo2.svg';
 import {FaBars, FaTimes} from 'react-icons/fa';
+import './hover.css';
+
 // import { useState } from 'react';
 
 
@@ -23,12 +25,12 @@ const Navbar = ({nav, setNav}) => {
             </div>
 
             {/*  Menu */}
-            <ul className='hidden md:flex'>
-                <li>О нас</li>
-                <li>Отель</li>
-                <li>Винодельня</li>
-                <li>Ресторан</li>
-                <li>Мероприятия</li>
+            <ul className='hidden md:flex '>
+                <li className='underlineDescktop'><a href='#'>О нас</a></li>
+                <li className='underlineDescktop'><a href='#'>Отель</a></li>
+                <li className='underlineDescktop'><a href='#'>Винодельня</a></li>
+                <li className='underlineDescktop'><a href='#'>Ресторан</a></li>
+                <li className='underlineDescktop'><a href='#'>Мероприятия</a></li>
             </ul>
             
 
@@ -41,11 +43,11 @@ const Navbar = ({nav, setNav}) => {
             {/*  Mobile Menu */}
             
             <ul className= {!nav ? 'absolute top-0 left-0 opacity-0' : 'transition-opacity duration-300 ease-out opacity-100 absolute top-0 left-0 w-full h-screen bg-main_theme flex flex-col justify-center items-center'}>
-                <li className='py-6 text-4xl'>О нас</li>
-                <li className='py-6 text-4xl'>Отель</li>
-                <li className='py-6 text-4xl'>Винодельня</li>
-                <li className='py-6 text-4xl'>Ресторан</li>
-                <li className='py-6 text-4xl'>Мероприятия</li>
+                <li className='py-6 text-4xl underlineMobile'><a href='#'>О нас</a></li>
+                <li className='py-6 text-4xl underlineMobile'><a href='#'>Отель</a></li>
+                <li className='py-6 text-4xl underlineMobile'><a href='#'>Винодельня</a></li>
+                <li className='py-6 text-4xl underlineMobile'><a href='#'>Ресторан</a></li>
+                <li className='py-6 text-4xl underlineMobile'><a href='#'>Мероприятия</a></li>
             </ul>
 
 
