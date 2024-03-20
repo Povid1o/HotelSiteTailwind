@@ -4,10 +4,12 @@ import ExtCard from './ExtCard';
 import ExtStandartPlus  from './ExtStandartplus';
 import ExtStandart from  './ExtStandart';
 import BlueSwiper from './BlSwiper';
+import { YMaps, Map, Placemark} from '@pbe/react-yandex-maps';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import useWindowDimensions from './WindowResizeListener';
 
 
 
@@ -47,9 +49,28 @@ const StandartPlusCard = () => {
     )
 }
 
+const YandexMap = () => {
+    const {height, width} = useWindowDimensions();
+  return (
+    // <div className="w-3/4 rounded-xl bg-gray-200 mx-auto">
+    <div className="w-full mt-5 -z-50">
+      <YMaps>
+        <Map defaultState={{
+            center: [55.751574, 37.573856],
+            zoom: 5
+            }}
+            style={{ width: '${width}px', height: '240px' }}>
+          <Placemark geometry={[55.684758, 37.738521]} />
+        </Map>
+      </YMaps>
+    </div>
+  );
+};
+
 
 
 const Home = ({nav}) => {
+    const {height, width} = useWindowDimensions();
     return ( 
         <div name = 'home' className="w-full h-max bg-white">
 
@@ -169,7 +190,12 @@ const Home = ({nav}) => {
 
             </div>
             {/* Brick 2 */}
+
             
+            <div>
+                <YandexMap />
+            </div>
+
         </div>
      );
 }
