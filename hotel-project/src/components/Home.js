@@ -48,6 +48,48 @@ const StandartPlusCard = () => {
     )
 }
 
+const Box = ({ className,imgAlt, imgSrc, children }) => {
+
+    const boxClass = `
+    ${className}
+    items-start
+    flex flex-row
+    rounded-lg
+    shadow-xl
+    my-2
+    p-4`;
+
+    const imgClasses = `
+    w-20 h-20
+    rounded-full`;
+
+    return(
+        <div className={boxClass}>
+            {imgSrc && (
+                <img
+                    className={imgClasses}
+                    src={imgSrc}
+                    alt={imgAlt}
+                />
+            )}
+            {children}
+        </div>
+    )
+
+}
+
+const FeatureBox = ({ title, image }) => {
+    return (
+        <div className="relative w-full md:w-1/4 mb-4 md:mb-0">
+            <div className="flex flex-row items-start">
+                <div className="absolute top-0 left-0 p-3">
+                    <img src={image} alt="icon" className="w-10 h-10 rounded-full" />
+                </div>
+                <h2 className="text-lg font-semibold mt-4">{title}</h2>
+            </div>
+        </div>
+    );
+  };
 
 
 const Home = ({nav}) => {
@@ -125,35 +167,6 @@ const Home = ({nav}) => {
 
                 <div className='flex flex-col xl:justify-center'>
 
-                    {/* <Card
-                        className="max-w-xl mt-5 mr-5"
-                        imgAlt="Meaningful alt text for an image that is not purely decorative"
-                        imgSrc="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg"
-                        >
-                        <h5 className="text-2xl font-bold tracking-tight text-gray-900">
-                            Номер Стандарт+
-                        </h5>
-                        <p className="font-light text-gray-700">
-                            Включены все услуги плюс баня 
-                        </p>
-                    </Card> */}
-
-                    {/* <button className = "mt-8 mr-8 transition ease-in-out delay-150 hover:scale-105">
-                        <Card
-                            horizontal
-                            imgAlt="Image alt text"
-                            imgSrc="https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWxzfGVufDB8fDB8fHww"
-                            >
-                            <div className='flex flex-col ml-5'>
-                                <h2 className="text-2xl font-bold mb-2">Номер Стандарт+</h2>
-                                <p className="text-gray-700">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
-                                </p>
-                            </div>
-                            
-                        </Card>
-                    </button> */}
-
                     <ExtCard
                     Card={StandartPlusCard}
                     ExtContent={ExtStandartPlus}
@@ -174,6 +187,59 @@ const Home = ({nav}) => {
 
             </div>
             {/* Brick 2 */}
+
+            {/* Brick 3 */}
+            <div className='w-3/4 mt-14 mx-8 mx-auto justify-center font-body xl:w-full max-w-[1300px]'>
+
+                <p className='text-4xl text-gray-700 font-bold pt-4 lg:text-5xl xl:text-6xl pt-8'>Ваш отдых - наша ответственность</p>
+
+                <ul className='flex flex-wrap flex-row'>
+                    <li>
+                        <Box
+                        imgAlt={"Трансфер"}
+                        imgSrc={'https://kursk-kortezh.ru/admin/Data-Gallery/pictures/tuazev8six-uslugi-transfera-v-prage.jpg'}
+                        >
+                            <p className='mx-10 my-auto text-2xl font-semibold'>Трансфер</p>
+                        </Box>
+                    </li>
+                    <li>
+                        <Box
+                        imgAlt={"Изысканная кухня"}
+                        imgSrc={'https://media.istockphoto.com/id/500466008/ru/%D1%84%D0%BE%D1%82%D0%BE/%D0%B3%D0%BE%D0%B2%D1%8F%D0%B4%D0%B8%D0%BD%D1%8B-%D1%81%D1%82%D0%B5%D0%B9%D0%BA.jpg?s=612x612&w=0&k=20&c=RN33VmjFFu06kFNyM_8vRe_A5eDgKlV6u86t1FZnpSM='}
+                        >
+                            <p className='mx-10 my-auto text-2xl font-semibold'>Изысканная кухня</p>
+                        </Box>
+                    </li>
+                    <li>
+                        <Box
+                        imgAlt={"Современный дизайн"}
+                        imgSrc={'https://mykaleidoscope.ru/uploads/posts/2021-03/1616624585_56-p-dizain-modern-interera-58.jpg'}
+                        >
+                            <p className='mx-10 my-auto text-2xl font-semibold'>Современный дизайн</p>
+                        </Box>
+                    </li>
+                    <li>
+                        <Box
+                        imgAlt={"Сервис"}
+                        imgSrc={'https://habrastorage.org/webt/gt/pc/ia/gtpciaxhxff_iswdxx-qhwizuo8.jpeg'}
+                        >
+                            <p className='mx-10 my-auto text-2xl font-semibold'>Сервис</p>
+                        </Box>
+                    </li>
+                    <li>
+                        <Box
+                        imgAlt={"Качественное вино"}
+                        imgSrc={'https://forumsamogon.ru/wp-content/uploads/e/e/e/eeeb1c2d5d567758dbf6327fd1b0d490.jpg'}
+                        >
+                            <p className='mx-10 my-auto text-2xl font-semibold'>Качественное вино</p>
+                        </Box>
+                    </li>
+
+                </ul>
+
+
+
+            </div>
 
         </div>
      );
