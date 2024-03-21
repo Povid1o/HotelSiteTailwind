@@ -36,7 +36,7 @@ const ExtCard = ({ Card, ExtContent }) => {
   return (
     <div className="flex items-center justify-center">
         <button
-          className='mt-8 mr-8 transition ease-in-out delay-150 hover:scale-105'
+          className='mt-8 transition ease-in-out delay-150 hover:scale-105'
           onClick={handleClick}
         >
           <Card/>
