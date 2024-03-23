@@ -26,11 +26,11 @@ const Navbar = ({nav, setNav}) => {
 
             {/*  Menu */}
             <ul className='hidden md:flex '>
-                <li className='underlineDescktop'><a href='#'>О нас</a></li>
-                <li className='underlineDescktop'><a href='#'>Отель</a></li>
-                <li className='underlineDescktop'><a href='#'>Винодельня</a></li>
-                <li className='underlineDescktop'><a href='#'>Ресторан</a></li>
-                <li className='underlineDescktop'><a href='#'>Мероприятия</a></li>
+                <li className='underlineDesktop text-lg '><a href='#'>О нас</a></li>
+                <li className='underlineDesktop text-lg'><a href='#'>Отель</a></li>
+                <li className='underlineDesktop text-lg'><a href='#'>Винодельня</a></li>
+                <li className='underlineDesktop text-lg'><a href='#'>Ресторан</a></li>
+                <li className='underlineDesktop text-lg'><a href='#'>Мероприятия</a></li>
             </ul>
             
 

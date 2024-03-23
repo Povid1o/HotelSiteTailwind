@@ -20,14 +20,14 @@
   transform: scaleX(1);
 }
 
-.underlineDescktop {
+.underlineDesktop {
   text-decoration: none;
 }
 
-.underlineDescktop::before {
+.underlineDesktop::before {
   content: "";
   position: relative;
-  top: 22px;
+  top: 26px;
   display: block;
   width: 100%;
   height: 1px;
@@ -38,6 +38,6 @@
   transition: transform 0.5s ease;
 }
 
-.underlineDescktop:hover::before {
+.underlineDesktop:hover::before {
   transform: scaleX(1);
 }

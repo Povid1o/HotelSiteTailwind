@@ -36,17 +36,17 @@ const Footer = () => {
                 </div>
             </div>
             <hr className="border-gray-400 my-8" />
-            <div className="flex flex-wrap justify-center flex-row mx-auto">
+            <div className="flex flex-wrap justify-center flex-row mx-auto text-nowrap">
                 <div className="w-full md:w-1/4 mb-4 md:mb-0">
-                    <h2 className="text-lg text-[#F8F7F4] font-semibold mb-2">Апартаменты</h2>
+                    <h2 className="text-lg text-[#F8F7F4] font-body mb-2 w-min "><a href='#' className='underlineDesktop'>Апартаменты</a></h2>
                 
                 </div>
                 <div className="w-full md:w-1/4 mb-4 md:mb-0">
-                    <h2 className="text-lg text-[#F8F7F4] font-semibold mb-2">Как добраться</h2>
+                    <h2 className="text-lg text-[#F8F7F4] font-body mb-2 w-min"><a href='#' className='underlineDesktop'>Как добраться</a></h2>
                 
                 </div>
                 <div className="w-full md:w-1/4 mb-4 md:mb-0">
-                    <h2 className="text-lg text-[#F8F7F4] font-semibold mb-2">Контакты</h2>
+                    <h2 className="text-lg text-[#F8F7F4] font-body mb-2 w-min"><a href='#' className='underlineDesktop'>Контакты</a></h2>
                 
                 </div>
                 {/* <div className="w-full md:w-1/4 mb-4 md:mb-0">
@@ -54,7 +54,7 @@ const Footer = () => {
                 
                 </div> */}
                 <div className="w-full md:w-1/4 mb-4 md:mb-0">
-                    <h2 className="text-lg text-[#F8F7F4] font-semibold mb-2">Политика конфиденциальности</h2>
+                    <h2 className="text-lg text-[#F8F7F4] font-body mb-2 w-min"><a href='#' className='underlineDesktop'>Политика конфиденциальности</a></h2>
                 
                 </div>
 
@@ -67,7 +67,7 @@ const Footer = () => {
                 </div> */}
             </div>
             <div className="w-full md:w-1/3 my-4 mx-auto md:mb-0 text-center">
-                <p className="text-[#F8F7F4]">© 2023 Винные Терассы</p>
+                <p className="text-[#F8F7F4] font-body">© 2023 Винные Терассы</p>
             </div>
           </div>
         </footer>
