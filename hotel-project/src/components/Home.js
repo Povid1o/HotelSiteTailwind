@@ -82,18 +82,6 @@ const Box = ({ className,imgAlt, imgSrc, children }) => {
 
 }
 
-const FeatureBox = ({ title, image }) => {
-    return (
-        <div className="relative w-full md:w-1/4 mb-4 md:mb-0">
-            <div className="flex flex-row items-start">
-                <div className="absolute top-0 left-0 p-3">
-                    <img src={image} alt="icon" className="w-10 h-10 rounded-full" />
-                </div>
-                <h2 className="text-lg font-semibold mt-4">{title}</h2>
-            </div>
-        </div>
-    );
-  };
 
 
 const Home = ({nav}) => {
