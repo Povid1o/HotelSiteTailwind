@@ -1,5 +1,6 @@
 import React from 'react'
 import BlueSwiper from './BlSwiper'
+import './hover.css'
 
 const prices = [
   { title: 'Ночь', price: '₽ 20000' },
@@ -8,8 +9,8 @@ const prices = [
 
 const HotelRoom = () => {
   return (
-    <div className="flex flex-col items-center justify-center p-8 max-h-4/5 max-w-4/5">
-      <div className= " relative h-56 w-full mx-auto z-0 sm:h-96">
+    <div className="flex flex-col items-center justify-center p-8 max-h-4/5 max-w-4/5 ">
+      <div className= " flex flex-col h-60 w-full md:h-80 z-0 min-w-60 lg:h-96">
         <BlueSwiper/>
       </div>
       {/* <img
@@ -18,10 +19,10 @@ const HotelRoom = () => {
         alt="Hotel Room"
         className="w-full h-full object-cover mb-4 rounded-lg"
       /> */}
-      <h2 className="text-2xl font-semibold my-2">Deluxe King Room</h2>
-      <p className="text-gray-600 mb-6 text-center">
+      <h2 className="text-2xl font-semibold my-4">Deluxe King Room</h2>
+      <h1 className="text-gray-600 mb-6 text-center">
         Enjoy a spacious and comfortable room with a king-size bed, a flat-screen TV, and a modern bathroom.
-      </p>
+      </h1>
       <div className="w-full max-w-md space-y-2">
         {prices.map((price, index) => (
           <div
@@ -29,10 +30,23 @@ const HotelRoom = () => {
             className="p-4 border border-gray-300 rounded-lg flex justify-between items-center"
           >
             <span className="text-lg font-semibold">{price.title}</span>
-            <span className="text-lg font-semibold text-blue-600">{price.price}</span>
+            <span className="text-lg font-semibold text-main_theme underlineCard ">{price.price}</span>
           </div>
         ))}
       </div>
+      <h1 className='text-lg mt-8 font-body'>Deluxe room – это:</h1>
+      <p className='mt-4 font-body text-gray-600 text-wrap text-left'>
+        - комфортная, обустроенная по современным меркам комната площадью 20-40 квадратных метров (реже – две);<br/><br/>
+        - хороший, но не уникальный ремонт;<br/><br/>
+        - отдельный санузел с душем, унитазом и биде;<br/><br/>
+        - качественная и стильная, но не слишком дорогая мебель;<br/><br/>
+        - мягкая и удобная кровать (или кровати) с ортопедическим матрасом, возможно – дополнительно диван или кресло;<br/><br/>
+        - уютное и приятное постельное белье;<br/><br/>
+        - лучшие в отеле виды из окон (не обязательно они должны быть самыми красивыми в городе);<br/><br/>
+        - качественная ежедневная уборка;<br/><br/>
+        - скромный, но достойный ассортимент услуг.<br/><br/>
+        - Типовой номер класса Делюкс рассчитан на двух человек, но по договоренности в нем может поселиться третий гость, к примеру – со спальным местом на диване.<br/>
+      </p>
     </div>
   )
 }

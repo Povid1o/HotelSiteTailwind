@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import './hover.css'
 
 const ExtCard = ({ Card, ExtContent }) => {
   const [showDialog, setShowDialog] = useState(false);
@@ -42,14 +43,14 @@ const ExtCard = ({ Card, ExtContent }) => {
           <Card/>
         </button>
       {showDialog && (
-        <div className="fixed mt-20 inset-0 bg-black bg-opacity-50 flex items-center justify-center " ref={dialogRef}>
-          <div className="bg-white p-8 rounded-lg shadow-md  w-5/6 mt-20 lg:mt-14 mb-12 max-w-[1040px]" >
+        <div className="fixed mt-20 inset-0 bg-black bg-opacity-50 flex items-center justify-center" ref={dialogRef}>
+          <div className="bg-white p-8 rounded-lg shadow-md  w-5/6 overflow-y-scroll h-5/6  mt-20 lg:mt-14 mb-12 max-w-[1040px]  " > 
             <ExtContent/>
             <button
-              className="bg-red-500 hover:bg-red-700 p-2 rounded-lg text-white mt-4"
+              className="p-2 text-lg rounded-2xl text-gray-600 mt-4 hover:text-gray-900 "
               onClick={handleClose}
             >
-              Close Dialog
+              ⛌
             </button>
           </div>
         </div>

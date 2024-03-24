@@ -8,7 +8,9 @@ import BlueSwiper from './BlSwiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import './hover.css'
 import useWindowDimensions from './WindowResizeListener';
+import Footer from './Footer';
 
 
 
@@ -18,11 +20,12 @@ const StandartCard = () => {
         imgAlt="Image alt text"
         imgSrc="https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWxzfGVufDB8fDB8fHww"
         >
-            <div className='flex flex-col ml-5'>
-                <h2 className="text-2xl font-bold mb-2">Номер Стандарт</h2>
-                <p className="text-gray-700">
+            <div className='flex flex-col mx-2 min-w-28 sm:mx-4 md:mx-6 lg:mx-8'>
+                <h2 className="font-bold mb-2 text-center text-base sm:text-2xl">Номер Стандарт</h2>
+                <p className="text-gray-700 mb-4 text-justify text-xs  sm:text-base">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
                 </p>
+                <a href='#' className='underlineCard w-min text-nowrap mb-4 mx-2 text-left  font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4'>От 1.000₽</a>
             </div>
                             
         </Card>
@@ -36,11 +39,12 @@ const StandartPlusCard = () => {
         imgAlt="Image alt text"
         imgSrc="https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWxzfGVufDB8fDB8fHww"
         >
-            <div className='flex flex-col ml-5'>
-                <h2 className="text-2xl font-bold mb-2">Номер Стандарт+</h2>
-                <p className="text-gray-700">
+            <div className='flex flex-col mx-2 min-w-28 sm:mx-4 md:mx-6 lg:mx-8 '>
+                <h2 className="font-bold mb-2 text-center text-base sm:text-2xl">Номер Стандарт+</h2>
+                <p className="text-gray-700 mb-4 text-justify text-xs  sm:text-base">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
                 </p>
+                <a href='#' className='underlineCard w-min text-nowrap mb-4 mx-2 text-left  font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4'>От 20.000₽</a>
             </div>
                             
         </Card>
@@ -163,9 +167,9 @@ const Home = ({nav}) => {
 
             {/* Brick 2 */}
             <div className='w-3/4 mt-14 mx-8 mx-auto justify-center font-body xl:w-full max-w-[1300px]' >
-                <p className='text-4xl text-gray-700 font-bold pt-4 lg:text-5xl xl:text-6xl pt-8'>Номерной Фонд</p>
+                <p className='text-4xl text-gray-700 font-bold pt-4 text-nowrap lg:text-5xl xl:text-6xl pt-8'>Номерной Фонд</p>
 
-                <div className='flex flex-col xl:justify-center'>
+                <div className='flex mobile:flex-col sm:flex-row xl:justify-center'>
 
                     <ExtCard
                     Card={StandartPlusCard}
@@ -199,7 +203,7 @@ const Home = ({nav}) => {
                         imgAlt={"Трансфер"}
                         imgSrc={'https://kursk-kortezh.ru/admin/Data-Gallery/pictures/tuazev8six-uslugi-transfera-v-prage.jpg'}
                         >
-                            <p className='mx-10 my-auto text-2xl font-semibold'>Трансфер</p>
+                            <p className='mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold'>Трансфер</p>
                         </Box>
                     </li>
                     <li>
@@ -207,7 +211,7 @@ const Home = ({nav}) => {
                         imgAlt={"Изысканная кухня"}
                         imgSrc={'https://media.istockphoto.com/id/500466008/ru/%D1%84%D0%BE%D1%82%D0%BE/%D0%B3%D0%BE%D0%B2%D1%8F%D0%B4%D0%B8%D0%BD%D1%8B-%D1%81%D1%82%D0%B5%D0%B9%D0%BA.jpg?s=612x612&w=0&k=20&c=RN33VmjFFu06kFNyM_8vRe_A5eDgKlV6u86t1FZnpSM='}
                         >
-                            <p className='mx-10 my-auto text-2xl font-semibold'>Изысканная кухня</p>
+                            <p className='mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold'>Изысканная кухня</p>
                         </Box>
                     </li>
                     <li>
@@ -215,7 +219,7 @@ const Home = ({nav}) => {
                         imgAlt={"Современный дизайн"}
                         imgSrc={'https://mykaleidoscope.ru/uploads/posts/2021-03/1616624585_56-p-dizain-modern-interera-58.jpg'}
                         >
-                            <p className='mx-10 my-auto text-2xl font-semibold'>Современный дизайн</p>
+                            <p className='mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold'>Современный дизайн</p>
                         </Box>
                     </li>
                     <li>
@@ -223,7 +227,7 @@ const Home = ({nav}) => {
                         imgAlt={"Сервис"}
                         imgSrc={'https://habrastorage.org/webt/gt/pc/ia/gtpciaxhxff_iswdxx-qhwizuo8.jpeg'}
                         >
-                            <p className='mx-10 my-auto text-2xl font-semibold'>Сервис</p>
+                            <p className='mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold'>Сервис</p>
                         </Box>
                     </li>
                     <li>
@@ -231,7 +235,7 @@ const Home = ({nav}) => {
                         imgAlt={"Качественное вино"}
                         imgSrc={'https://forumsamogon.ru/wp-content/uploads/e/e/e/eeeb1c2d5d567758dbf6327fd1b0d490.jpg'}
                         >
-                            <p className='mx-10 my-auto text-2xl font-semibold'>Качественное вино</p>
+                            <p className='mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold'>Качественное вино</p>
                         </Box>
                     </li>
 
