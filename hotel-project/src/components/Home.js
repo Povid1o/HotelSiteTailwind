@@ -3,6 +3,7 @@ import Card from './Card';
 import ExtCard from './ExtCard';
 import ExtStandartPlus  from './ExtStandartplus';
 import ExtStandart from  './ExtStandart';
+import ExtGaleryCard from './Galerycard';
 import BlueSwiper from './BlSwiper';
 
 import 'swiper/css';
@@ -47,6 +48,15 @@ const StandartPlusCard = () => {
                 <a href='#' className='underlineCard w-min text-nowrap mb-4 mx-2 text-left  font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4'>От 20.000₽</a>
             </div>
                             
+        </Card>
+
+    )
+}
+
+const GaleryCard = () => {
+    return(
+        <Card >
+            <h1 className='font-bold mb-2 text-center text-base sm:text-2xl'>Больше</h1>              
         </Card>
 
     )
@@ -135,6 +145,11 @@ const Home = ({nav}) => {
 
             </div>
             {/* Brick 1 */}
+            
+            {/* Brick 2 */}
+                
+                
+
 
             
 
@@ -180,6 +195,53 @@ const Home = ({nav}) => {
             </div>
             {/* Brick 2 */}
 
+            {/* Galery */}
+                <div class="container mx-auto mt-16 mx md:w-5/6 lg:mt-24">
+                    <h2 className='text-4xl text-gray-700 font-bold pb-8 text-nowrap lg:text-5xl xl:text-6xl '>Чекай як классно</h2>
+                    <div class="-m-1 flex flex-wrap  md:-m-2 ">
+                        
+                        <div class="flex w-1/3 flex-wrap">
+                            <div class="w-full h-full p-1 md:p-2 ">
+                                <img
+                                alt=""
+                                class="block  h-full w-full rounded-xl object-cover object-center max-h-[360px]  "
+                                src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1" />
+                            </div>
+                        </div>
+
+                        <div class="flex w-2/3  flex-wrap ">
+                            <div class="w-full h-full p-1 md:p-2">
+                                <img
+                                alt=""
+                                class="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
+                                src="https://flowbite.com/docs/images/carousel/carousel-1.svg" />
+                            </div>
+                        </div>
+                                                
+                        <div class=" h-full w-2/3  p-1 md:p-2 ">
+                            <img
+                            alt=""
+                            class="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
+                            src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" />
+                        </div>
+                        
+                        <div class="flex w-1/3 flex-wrap">
+                            <div class="w-full h-full p-1 md:p-2">
+                                <img
+                                alt=""
+                                class="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
+                                src="https://flowbite.com/docs/images/carousel/carousel-1.svg" />
+                            </div>
+                         </div>
+                    </div>
+                    <div className=' flex m-auto w-44 h-22 rounded-x'>
+                        <ExtCard
+                        Card={GaleryCard}
+                        ExtContent={ExtGaleryCard}
+                        /> 
+                    </div>
+                </div>
+    
             {/* Brick 3 */}
             <div className='w-3/4 mt-14 mx-8 mx-auto justify-center font-body xl:w-full max-w-[1300px]'>
 
