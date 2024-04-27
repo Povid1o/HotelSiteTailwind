@@ -1,5 +1,5 @@
 import React from 'react'
-import BlueSwiper from './BlSwiper';
+import BlueSwiper from './BlueSwiper';
 
 const prices = [
   { title: 'Ночь', price: '₽1000' },

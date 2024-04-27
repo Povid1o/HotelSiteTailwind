@@ -63,6 +63,3 @@
 .underlineCard:hover::before {
   transform: scaleX(1);
 }
-
-
-

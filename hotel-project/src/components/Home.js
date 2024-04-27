@@ -3,14 +3,16 @@ import Card from './Card';
 import ExtCard from './ExtCard';
 import ExtStandartPlus  from './ExtStandartplus';
 import ExtStandart from  './ExtStandart';
-import ExtGaleryCard from './Galerycard';
-import BlueSwiper from './BlSwiper';
+import ExtGaleryCard from './ExtGalerycard';
+import BlueSwiper from './BlueSwiper';
+import ThSlider from './ThumbSlider';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import './hover.css'
 import useWindowDimensions from './WindowResizeListener';
+import VPlayer from './VideoPlayer';
 import Footer from './Footer';
 
 
@@ -196,9 +198,9 @@ const Home = ({nav}) => {
             {/* Brick 2 */}
 
             {/* Galery */}
-                <div class="container mx-auto mt-16 mx md:w-5/6 lg:mt-24">
+                <div class="container mx-auto px-2 mt-16 w-[90%] lg:mt-24">
                     <h2 className='text-4xl text-gray-700 font-bold pb-8 text-nowrap lg:text-5xl xl:text-6xl '>Чекай як классно</h2>
-                    <div class="-m-1 flex flex-wrap  md:-m-2 ">
+                    <div class="-m-1 flex flex-wrap md:-m-2 ">
                         
                         <div class="flex w-1/3 flex-wrap">
                             <div class="w-full h-full p-1 md:p-2 ">
@@ -234,14 +236,19 @@ const Home = ({nav}) => {
                             </div>
                          </div>
                     </div>
-                    <div className=' flex m-auto w-44 h-22 rounded-x'>
+                    <div className=' flex m-auto w-64 h-22 rounded-x'>
                         <ExtCard
                         Card={GaleryCard}
                         ExtContent={ExtGaleryCard}
                         /> 
                     </div>
                 </div>
-    
+            <div className='container mx-auto mt-16 px-2 w-[90%] lg:mt-24'>
+                <h1 className=' text-4xl text-gray-700 font-bold pb-4 sm:pb-8 text-wrap lg:text-5xl xl:text-6xl'>Видосы для Никитосы </h1>
+                <VPlayer/>
+            </div>
+            
+
             {/* Brick 3 */}
             <div className='w-3/4 mt-14 mx-8 mx-auto justify-center font-body xl:w-full max-w-[1300px]'>
 

@@ -1,0 +1,50 @@
+.cl-btn-6 {
+  position: relative;
+  margin: 0px auto;
+  width: 27px;
+  cursor: pointer;
+}
+.cl-btn-6-in {
+  width: inherit;
+  text-align: center;
+}
+.cl-btn-6-txt { 
+  font-size: 8px; 
+  line-height: 4px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: all .3s ease-in;
+  opacity: 0;
+  cursor: pointer;
+  font-family: Bitter;
+}
+.cl-btn-6-in:before, .cl-btn-6-in:after {
+  position: absolute;
+  content: '';
+  height: 2px;
+  width: inherit;
+  background: #80143c;
+  left: 0;
+  transition: all .3s ease-in;
+}
+.cl-btn-6-in:before {
+  top: calc(50% - 2px); 
+  transform: rotate(45deg);  
+}
+.cl-btn-6-in:after {  
+  bottom: 50%;
+  transform: rotate(-45deg);  
+}
+.cl-btn-6:hover .cl-btn-6-txt {
+  opacity: 1;
+}
+.cl-btn-6:hover .cl-btn-6-in:before,
+.cl-btn-6:hover .cl-btn-6-in:after {
+  transform: rotate(0);
+}
+.cl-btn-6:hover .cl-btn-6-in:before {
+  top: 5px;
+}
+.cl-btn-6:hover .cl-btn-6-in:after {
+  bottom: 1px;
+}

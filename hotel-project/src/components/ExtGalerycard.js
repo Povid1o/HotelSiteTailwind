@@ -1,11 +1,10 @@
 import React from 'react'
-import BlueSwiper from './BlSwiper';
-
+import ThSlider from './ThumbSlider';
 
 const ExtGaleryCard = () => {
   return (
     <div className="">
-        <BlueSwiper/>
+        <ThSlider/>
     </div>
   )
 }
