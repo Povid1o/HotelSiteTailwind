@@ -23,6 +23,16 @@ const HotelRoom = () => {
       <h1 className="text-gray-600 mb-6 text-center">
         Enjoy a spacious and comfortable room with a king-size bed, a flat-screen TV, and a modern bathroom.
       </h1>
+      <div className='w-full'>
+        <div className='w-1/2 flex flex-col'>
+          <h1 className='text-base'>Описание</h1>
+          <p className='text-sm'>Enjoy a spacious and comfortable room with a king-size bed, a flat-screen TV, and a modern bathroom.</p>
+
+
+        </div>
+        
+
+      </div>
       <div className="w-full max-w-md space-y-2">
         {prices.map((price, index) => (
           <div

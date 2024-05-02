@@ -2,6 +2,8 @@ import React from 'react';
 import {ReactComponent as Logo} from './assets/Logo2.svg';
 import { YMaps, Map, Placemark} from '@pbe/react-yandex-maps';
 import useWindowDimensions from './WindowResizeListener';
+import { Link } from 'react-router-dom';
+
 
 
 const YandexMap = () => {

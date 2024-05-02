@@ -1,6 +1,7 @@
 import React from 'react';
 import {ReactComponent as Logo} from './assets/Logo2.svg';
 import {FaBars, FaTimes} from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import './hover.css';
 
 // import { useState } from 'react';
@@ -26,11 +27,11 @@ const Navbar = ({nav, setNav}) => {
 
             {/*  Menu */}
             <ul className='hidden md:flex '>
-                <li className='underlineDesktop text-lg '><a href='#'>О нас</a></li>
-                <li className='underlineDesktop text-lg'><a href='#'>Отель</a></li>
-                <li className='underlineDesktop text-lg'><a href='#'>Винодельня</a></li>
-                <li className='underlineDesktop text-lg'><a href='#'>Ресторан</a></li>
-                <li className='underlineDesktop text-lg'><a href='#'>Мероприятия</a></li>
+                <li className='underlineDesktop text-lg '><Link to='/'>О нас</Link></li>
+                <li className='underlineDesktop text-lg'><Link to='/'>Отель</Link ></li>
+                <li className='underlineDesktop text-lg'><Link to='/Винодельня'>Винодельня</Link ></li>
+                <li className='underlineDesktop text-lg'><Link to='/Ресторан'>Ресторан</Link ></li>
+                <li className='underlineDesktop text-lg'><Link to='/Мероприятия'>Мероприятия</Link ></li>
             </ul>
             
 

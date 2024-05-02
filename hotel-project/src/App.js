@@ -1,15 +1,37 @@
-import Navbar from "./components/Navbar.js"
-import Home from './components/Home'
-import Footer from "./components/Footer.js";
-import { useState } from "react";
+import WineHotel from "./WineHotel.js";
+import Ivents from "./Ivents.js";
+import Restaurant from "./Restaurant.js";
+import Vinery from "./Vinery.js";
+import React from "react";
+import ReactDOM from 'react-dom/client'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <WineHotel />,
+  },
+  {
+    path:"/Мероприятия",
+    element: <Ivents />,
+  },
+  {
+    path:"/Ресторан",
+    element: <Restaurant />,
+  },
+  {
+    path:"/Винодельня",
+    element: <Vinery />,
+  },
+]);
 
 function App() {
-  const [nav, setNav] = useState(false);
+
+
   return (
     <div>
-      <Navbar nav = {nav} setNav = {setNav}/>
-      <Home nav = {nav}/>
-      <Footer />
+      <RouterProvider router={router}/>
+      {/* <WineHotel/> */}
     </div>
   );
 }
