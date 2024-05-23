@@ -11,7 +11,7 @@ const YandexMap = () => {
   return (
     // <div className="w-3/4 rounded-xl bg-gray-200 mx-auto">
     <div className="w-full -z-50">
-      <YMaps>
+      <YMaps >
         <Map defaultState={{
             center: [55.684758, 37.738521],
             zoom: 15
@@ -38,38 +38,26 @@ const Footer = () => {
                 </div>
             </div>
             <hr className="border-gray-400 my-8" />
-            <div className="flex flex-wrap justify-center flex-row mx-auto text-nowrap">
-                <div className="w-full md:w-1/4 mb-4 md:mb-0">
+            <ul className="flex flex-wrap justify-center flex-row mx-auto text-nowrap md:gap-8 lg:gap-12 xl:gap-16">
+                <div className="max-md:w-full mb-4 md:mb-0">
                     <h2 className="text-lg text-[#F8F7F4] font-body mb-2 w-min "><a href='#' className='underlineDesktop'>Апартаменты</a></h2>
-                
                 </div>
-                <div className="w-full md:w-1/4 mb-4 md:mb-0">
+
+                <div className="max-md:w-full mb-4 md:mb-0">
                     <h2 className="text-lg text-[#F8F7F4] font-body mb-2 w-min"><a href='#' className='underlineDesktop'>Как добраться</a></h2>
-                
                 </div>
-                <div className="w-full md:w-1/4 mb-4 md:mb-0">
+
+                <div className="max-md:w-full mb-4 md:mb-0">
                     <h2 className="text-lg text-[#F8F7F4] font-body mb-2 w-min"><a href='#' className='underlineDesktop'>Контакты</a></h2>
-                
                 </div>
-                {/* <div className="w-full md:w-1/4 mb-4 md:mb-0">
-                    <h2 className="text-lg text-[#F8F7F4] font-semibold mb-2">Отзывы</h2>
-                
-                </div> */}
-                <div className="w-full md:w-1/4 mb-4 md:mb-0">
+
+                <div className="max-md:w-full mb-4 md:mb-0">
                     <h2 className="text-lg text-[#F8F7F4] font-body mb-2 w-min"><a href='#' className='underlineDesktop'>Политика конфиденциальности</a></h2>
-                
                 </div>
 
-
-                {/* <div className="w-full md:w-1/3 my-4 mx-auto md:mb-0 text-center">
-                    <p className="text-[#F8F7F4]">© 2023 Винные Терассы</p>
-                </div> */}
-                {/* <div className="w-full md:w-1/3 mb-4 md:mb-0 text-center">
-                    <p className="text-gray-700">Политика конфиденциальности</p>
-                </div> */}
-            </div>
+            </ul>
             <div className="w-full md:w-1/3 my-4 mx-auto md:mb-0 text-center">
-                <p className="text-[#F8F7F4] font-body">© 2023 Винные Терассы</p>
+                <p className="text-[#F8F7F4] font-body">© {new Date().getFullYear()} Винные Терассы</p>
             </div>
           </div>
         </footer>

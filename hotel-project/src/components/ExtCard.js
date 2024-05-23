@@ -7,7 +7,8 @@ const ExtCard = ({ Card, ExtContent }) => {
   const [dialogOverflow, setDialogOverflow] = useState('hidden');
 
 
-  const handleClick = () => {
+  const handleClick = (event) => {
+    event.stopPropagation();
     setShowDialog(true);
     // document.body.classList.add('no-scroll');
   };
@@ -47,8 +48,8 @@ const ExtCard = ({ Card, ExtContent }) => {
           <div className="bg-white p-8 rounded-lg shadow-md  w-5/6 overflow-y-scroll h-5/6  mt-20 lg:mt-14 mb-12 max-w-[1040px]  " > 
           <div className="relative">
             <div onClick={handleClose} className="cl-btn-6 absolute left-[99%]">
-              <div class="cl-btn-6-in ">
-                <label class="cl-btn-6-txt text-gray-600">Close</label>
+              <div className="cl-btn-6-in ">
+                <label className="cl-btn-6-txt text-gray-600">Close</label>
               </div>
             </div>
           </div>

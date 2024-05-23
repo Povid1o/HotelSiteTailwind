@@ -13,7 +13,6 @@ import 'swiper/css/pagination';
 import './hover.css'
 import useWindowDimensions from './WindowResizeListener';
 import VPlayer from './VideoPlayer';
-import Footer from './Footer';
 
 
 
@@ -116,10 +115,10 @@ const Home = ({nav}) => {
 
 
             {/* Brick 1 */}
-            <div className='mt-14 justify-center flex flex-row '>
+            <div className='mt-14 mx-auto justify-center flex flex-row xl:container'>
 
                 {/* Text Block */}
-                <div className='w-3/4 max-w-[700px] mx-auto bg-white rounded-xl drop-shadow-2xl lg:max-w-[900px] xl:mx-8'>
+                <div className='max-w-[700px] mx-auto bg-white rounded-xl drop-shadow-2xl max-sm:w-5/6 md:w-3/4 lg:max-w-[900px] xl:mx-8'>
 
                     <div className="w-full flex flex-col p-10 py-5 font-body md:flex-row">
                         <h1 className="font-bold text-4xl text-gray-700 bg-white pt-4 pr-4 lg:text-5xl xl:text-6xl pt-8 pr-16">Кто мы?</h1>
@@ -135,9 +134,9 @@ const Home = ({nav}) => {
 
             </div>
 
-            <div className='mt-8 justify-center flex flex-row'>
+            <div className='mt-8 mx-auto justify-center flex flex-row xl:container'>
 
-                <div className='hidden xl:flex w-3/4 max-w-[900px] mx-8 rounded-xl'>
+                <div className='hidden xl:flex max-w-[900px] mx-8 rounded-xl max-sm:w-5/6 md:w-3/4'>
                     <img src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" alt="" className='object-cover rounded-xl'/>
 
                 </div>
@@ -147,20 +146,10 @@ const Home = ({nav}) => {
 
             </div>
             {/* Brick 1 */}
-            
-            {/* Brick 2 */}
-                
-                
-
-
-            
-
-
-            {/*  Images Carousel */}
 
 
             {/* Blue Swiper */}
-            <div className="w-3/4 mx-auto xl:hidden ">
+            <div className="mx-auto max-sm:w-5/6 md:w-3/4 xl:hidden ">
                 <BlueSwiper />
             </div>
             
@@ -171,7 +160,7 @@ const Home = ({nav}) => {
 
 
             {/* Brick 2 */}
-            <div className='w-3/4 mt-14 mx-8 mx-auto justify-center font-body xl:w-full max-w-[1300px]' >
+            <div className='mt-14 mx-auto justify-center font-body max-sm:w-5/6 md:w-3/4 xl:container' >
                 <p className='text-4xl text-gray-700 font-bold pt-4 text-nowrap lg:text-5xl xl:text-6xl pt-8'>Номерной Фонд</p>
 
                 <div className='flex mobile:flex-col sm:flex-row xl:justify-center'>
@@ -198,59 +187,59 @@ const Home = ({nav}) => {
             {/* Brick 2 */}
 
             {/* Galery */}
-                <div class="container mx-auto px-2 mt-16 w-[90%] lg:mt-24">
-                    <h2 className='text-4xl text-gray-700 font-bold pb-8 text-nowrap lg:text-5xl xl:text-6xl '>Чекай як классно</h2>
-                    <div class="-m-1 flex flex-wrap md:-m-2 ">
+                <div className="mx-auto px-2 mt-16 max-sm:w-5/6 md:w-3/4 lg:mt-24 xl:container">
+                    <h2 className='text-4xl text-gray-700 font-bold pb-8 flex flex-wrap lg:text-5xl xl:text-6xl '>Отель расположен в самой живописной локации Абрау</h2>
+                    <div className="-m-1 flex flex-wrap md:-m-2 ">
                         
-                        <div class="flex w-1/3 flex-wrap">
-                            <div class="w-full h-full p-1 md:p-2 ">
+                        <div className="flex w-1/3 flex-wrap">
+                            <div className="w-full h-full p-1 md:p-2 ">
                                 <img
                                 alt=""
-                                class="block  h-full w-full rounded-xl object-cover object-center max-h-[360px]  "
+                                className="block  h-full w-full rounded-xl object-cover object-center max-h-[360px]  "
                                 src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1" />
                             </div>
                         </div>
 
-                        <div class="flex w-2/3  flex-wrap ">
-                            <div class="w-full h-full p-1 md:p-2">
+                        <div className="flex w-2/3  flex-wrap ">
+                            <div className="w-full h-full p-1 md:p-2">
                                 <img
                                 alt=""
-                                class="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
+                                className="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
                                 src="https://flowbite.com/docs/images/carousel/carousel-1.svg" />
                             </div>
                         </div>
                                                 
-                        <div class=" h-full w-2/3  p-1 md:p-2 ">
+                        <div className=" h-full w-2/3  p-1 md:p-2 ">
                             <img
                             alt=""
-                            class="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
+                            className="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
                             src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" />
                         </div>
                         
-                        <div class="flex w-1/3 flex-wrap">
-                            <div class="w-full h-full p-1 md:p-2">
+                        <div className="flex w-1/3 flex-wrap">
+                            <div className="w-full h-full p-1 md:p-2">
                                 <img
                                 alt=""
-                                class="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
+                                className="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
                                 src="https://flowbite.com/docs/images/carousel/carousel-1.svg" />
                             </div>
                          </div>
                     </div>
-                    <div className=' flex m-auto w-64 h-22 rounded-x'>
+                    <div className='flex mx-auto justify-center items-center w-64 h-22 rounded-xl'>
                         <ExtCard
                         Card={GaleryCard}
                         ExtContent={ExtGaleryCard}
                         /> 
                     </div>
                 </div>
-            <div className='container mx-auto mt-16 px-2 w-[90%] lg:mt-24'>
-                <h1 className=' text-4xl text-gray-700 font-bold pb-4 sm:pb-8 text-wrap lg:text-5xl xl:text-6xl'>Видосы для Никитосы </h1>
+            <div className='mx-auto mt-16 px-2 max-sm:w-5/6 md:w-3/4 lg:mt-24 xl:container'>
+                <h1 className=' text-4xl text-gray-700 font-bold pb-4 sm:pb-8 text-wrap lg:text-5xl xl:text-6xl'>Посмотрите видео-презентацию</h1>
                 <VPlayer/>
             </div>
             
 
             {/* Brick 3 */}
-            <div className='w-3/4 mt-14 mx-8 mx-auto justify-center font-body xl:w-full max-w-[1300px]'>
+            <div className='mt-14 mx-8 mx-auto justify-center font-body max-sm:w-5/6 md:w-3/4 xl:container'>
 
                 <p className='text-4xl text-gray-700 font-bold pt-4 lg:text-5xl xl:text-6xl pt-8'>Ваш отдых - наша ответственность</p>
 
