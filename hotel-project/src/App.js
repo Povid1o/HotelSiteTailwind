@@ -2,7 +2,8 @@ import WineHotel from "./WineHotel.js";
 import Ivents from "./Ivents.js";
 import Restaurant from "./Restaurant.js";
 import Vinery from "./Vinery.js";
-import React from "react";
+import React, { useState } from "react";
+import EventsList from "./components/EventsList.js";
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
   {
     path:"/Мероприятия",
     element: <Ivents />,
+  },
+  {
+    path:"/Мероприятия/:categorie",
+    element: <EventsList />,
   },
   {
     path:"/Ресторан",

@@ -8,18 +8,17 @@ const EventCard = ({ className, horizontal, imgAlt, imgSrc, title, description, 
   const isBelow600px = useMediaQuery({ query: '(max-width: 689px)' });
 
   const cardClasses = `
-    ${horizontal && !isBelow600px ? 'flex flex-col' : 'flex flex-col'}
     ${className}
+    w-full
     rounded-lg
     shadow-2xl
-    //p
-    mx-4
     ${horizontal && !isBelow600px ? 'items-center' : 'items-start'}
   `;
 
   const imgClasses = `
-    w-[400px]
-    h-[250px]
+    w-full
+    h-auto 
+    object-cover
     rounded-t-lg
     mb-2
   `;

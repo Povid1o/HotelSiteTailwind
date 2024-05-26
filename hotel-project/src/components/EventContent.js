@@ -9,6 +9,7 @@ import ExcursionIcon from "./assets/excursion.png";
 import SeasonIcon from "./assets/calendar.png";
 import RunningIcon from "./assets/running.png";
 import OpenAirIcon from "./assets/open-air.png";
+import { Link } from "react-router-dom";
 
 
 const EventCard1 = () => {
@@ -44,20 +45,22 @@ const EventCard3 = () => {
 
 function EventContent() {
 
+    const categories = [{header : "Дегустации", image : WineBottlePng}, {header : "Ресторан", image : RestaurantIcon}, {header : "Экскурсии", image : ExcursionIcon}, {header : "Сезонные", image : SeasonIcon}, {header : "Спорт", image : RunningIcon}, {header : "Open-air", image : OpenAirIcon}];
+
     return (
         <div>
 
             <div className="bg-[#f0f0f0]">
 
-                <div className=" font-body w-3/4 mx-auto">
-                    <div className="w-full h-[625px] pt-[7rem]">
+                <div className="font-body w-3/4 mx-auto">
+                    <div className="w-full flex justify-center items-center h-[425px] pt-[7rem] lg:h-[625px] mb-6">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/Robert_Young_Vineyards.jpg" className="flex mx-auto max-w-[300px] rounded-[14rem] sm:max-w-[400px] lg:max-w-[700px]"/>
 
                     </div>
 
                     <div className="w-3/4">
-                        <p className="font-extrabold text-6xl">Дегустация вина</p>
-                        <h1 className="mt-4 font-bold text-2xl">Познайте настоящее искусство создания вина вместе с нашими сомелье и виноделами</h1>
+                        <p className="font-extrabold max-sm:text-4xl sm:text-6xl">Дегустация вина</p>
+                        <h1 className="mt-4 font-bold max-sm:text-xl sm:text-2xl">Познайте настоящее искусство создания вина вместе с нашими сомелье и виноделами</h1>
                     </div>
 
                     <hr className="border-gray-400 my-8" />
@@ -72,53 +75,29 @@ function EventContent() {
 
             <div>
 
-                <div className=" font-body w-3/4 mx-auto my-16">
+                <div className=" font-body mx-auto my-16 max-sm:w-5/6 sm:w-3/4">
 
                     <div className="w-3/4">
-                        <h1 className="mt-4 font-bold text-3xl">Предстоящие</h1>
-                        <p className="font-extrabold text-6xl">Мероприятия</p>
+                        <h1 className="mt-4 font-bold max-sm:text-2xl sm:text-3xl">Предстоящие</h1>
+                        <p className="font-extrabold max-sm:text-4xl sm:text-6xl">Мероприятия</p>
                     </div>
 
                     <ul className="mx-auto my-8 flex flex-wrap flex-row justify-evenly">
-                        
-                        <li className="flex flex-col w-[150px]">
-                            <img src={WineBottlePng} className="w-[100px] h-[100px] mx-auto bg-[#f0f0f0] p-2 rounded-xl" />
-                            <p className="mx-auto my-2 font-bold text-lg">Дегустации</p>
-                        </li>
-
-                        <li className="flex flex-col w-[150px]">
-                            <img src={RestaurantIcon} className="w-[100px] h-[100px] mx-auto bg-[#f0f0f0] p-2 rounded-xl" />
-                            <p className="mx-auto my-2 font-bold text-lg">Ресторан</p>
-                        </li>
-
-                        <li className="flex flex-col w-[150px]">
-                            <img src={ExcursionIcon} className="w-[100px] h-[100px] mx-auto bg-[#f0f0f0] p-2 rounded-xl" />
-                            <p className="mx-auto my-2 font-bold text-lg">Экскурсии</p>
-                        </li>
-
-                        <li className="flex flex-col w-[150px]">
-                            <img src={SeasonIcon} className="w-[100px] h-[100px] mx-auto bg-[#f0f0f0] p-2 rounded-xl" />
-                            <p className="mx-auto my-2 font-bold text-lg">Сезонные</p>
-                        </li>
-
-                        <li className="flex flex-col w-[150px]">
-                            <img src={RunningIcon} className="w-[100px] h-[100px] mx-auto bg-[#f0f0f0] p-2 rounded-xl" />
-                            <p className="mx-auto my-2 font-bold text-lg">Спорт</p>
-                        </li>
-
-                        <li className="flex flex-col w-[150px]">
-                            <img src={OpenAirIcon} className="w-[100px] h-[100px] mx-auto bg-[#f0f0f0] p-2 rounded-xl" />
-                            <p className="mx-auto my-2 font-bold text-lg">Open-air</p>
-                        </li>
+                        {categories.map(({header, image}) => (
+                            <Link key={header} to={`/Мероприятия/${header}`} className="flex flex-col w-[150px]">
+                                <img src={image} className="w-[100px] h-[100px] mx-auto bg-[#f0f0f0] p-2 rounded-xl" />
+                                <p className="mx-auto my-2 font-bold text-lg">{header}</p>
+                            </Link>
+                        ))}
                     </ul>
 
-                    <div className="relative h-[120px]">
+                    <div className="relative max-sm:h-[90px] sm:h-[120px]">
                         <div className="absolute top-0 right-0">
-                            <h1 className="mt-4 font-bold text-3xl">Откройте для себя</h1>
-                            <p className="font-extrabold text-6xl">Винодельню</p>
+                            <h1 className="mt-4 font-bold max-sm:text-2xl sm:text-3xl">Откройте для себя</h1>
+                            <p className="font-extrabold max-sm:text-4xl sm:text-6xl">Винодельню</p>
                         </div>
                     </div>
-                    <ul className="flex flex-row">
+                    <ul className="grid gap-4 grid-cols-2 mx-auto ">
                         <ExtCard
                         Card={EventCard1}
                         ExtContent={ExtStandart}/>
