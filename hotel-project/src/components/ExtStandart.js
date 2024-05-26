@@ -1,39 +1,165 @@
 import React from 'react'
-import BlueSwiper from './BlueSwiper';
+import BlueSwiper from './BlueSwiper'
+import './hover.css'
 
 const prices = [
-  { title: 'Ночь', price: '₽1000' },
-  { title: 'Неделя', price: '₽7000' },
+  { title: 'Ночь', price: '₽ 10000' },
+  { title: 'Неделя', price: '₽ 50000' },
 ]
 
 const HotelRoom = () => {
   return (
-    <div className="flex flex-col items-center justify-center p-8 max-h-4/5 max-w-4/5 ">
-      <div className= "flex flex-col h-60 w-full md:h-80 z-0 min-w-60 lg:h-96">
+    <div className="flex flex-col items-center justify-center max-h-4/5 max-w-5/6">
+      {/* Image Swiper */}
+      <div className= " flex flex-col h-60 w-full md:h-80 z-0 min-w-60 lg:h-96">
         <BlueSwiper/>
       </div>
-      {/* <img
-        src="https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWxzfGVufDB8fDB8fHww"
-        
-        alt="Hotel Room"
-        className="w-full h-full object-cover mb-4 rounded-lg"
-      /> */}
-      <h2 className="text-base text-center font-semibold my-2 md:text-xl  lg:text-2xl">Deluxe King Room</h2>
-      <p className="text-gray-600 mb-6 text-center text-xs md:text-base  lg:text-lg">
-        Enjoy a spacious and comfortable room with a king-size bed, a flat-screen TV, and a modern bathroom.
-      </p>
+      {/* Image Swiper */}
+
+
+      {/* Header */}
+      <h2 className="text-2xl font-semibold my-4">Стандарт</h2>
+      {/* Header */}
+
+
+
+      <ul className='flex flex-wrap justify-center flex-row mx-auto mb-5'>
+
+        <li className='flex flex-row'>
+          <span className='h-2 w-2 bg-main_theme rounded-full my-auto mr-2'/>
+          <p>3 человека</p>
+        </li>
+
+        <li className='flex flex-row'>
+          <span className='h-2 w-2 bg-main_theme rounded-full my-auto mr-2'/>
+          <p>2 кровати</p>
+        </li>
+        <li className='flex flex-row'>
+          <span className='h-2 w-2 bg-main_theme rounded-full my-auto mr-2'/>
+          <p>2 спальни</p>
+        </li>
+        <li className='flex flex-row'>
+          <span className='h-2 w-2 bg-main_theme rounded-full my-auto mr-2'/>
+          <p>160 м до моря</p>
+        </li>
+        <li className='flex flex-row'>
+          <span className='h-2 w-2 bg-main_theme rounded-full my-auto mr-2'/>
+          <p>Свой мангал</p>
+        </li>
+
+      </ul>
+
+
+      <div className='grid grid-cols-1 mb-5 md:grid-cols-2 gap-5 lg:gap-32'>
+
+        <div className=' flex flex-col max-md:mb-5 '>
+          <h1 className='text-2xl font-semibold mb-3'>Описание</h1>
+          <p className='text-base'>Аппартаменты расположены в 160 м. От моря, красивой набережной и открытыми пляжами. Разнообразие кофеин, ресторанов на любой вкус и бюджет. Велодорожка вдоль всей набережной, протяжённостью 12 км. </p>
+        </div>
+
+        <div className=' flex flex-col'>
+          <h1 className='text-2xl font-semibold mb-3'>Удобства</h1>
+
+          <ul className='grid grid-cols-2 gap-1'>
+
+            <div className='flex flex-row'>
+              <span className='h-1 w-1 bg-main_theme rounded-full my-auto mr-1'/>
+              <p className='my-auto'>Бассейн</p>
+            </div>
+            <div className='flex flex-row'>
+              <span className='h-1 w-1 bg-main_theme rounded-full my-auto mr-1'/>
+              <p className='my-auto'>Автостоянка</p>
+            </div>
+            <div className='flex flex-row'>
+              <span className='h-1 w-1 bg-main_theme rounded-full my-auto mr-1'/>
+              <p className='my-auto'>Wi-Fi</p>
+            </div>
+            <div className='flex flex-row'>
+              <span className='h-1 w-1 bg-main_theme rounded-full my-auto mr-1'/>
+              <p className='my-auto'>Свой двор</p>
+            </div>
+            <div className='flex flex-row'>
+              <span className='h-1 w-1 bg-main_theme rounded-full my-auto mr-1'/>
+              <p className='my-auto'>Спутник/кабель ТВ</p>
+            </div>
+            <div className='flex flex-row'>
+              <span className='h-1 w-1 bg-main_theme rounded-full my-auto mr-1'/>
+              <p className='my-auto'>Холодильник</p>
+            </div>
+            <div className='flex flex-row'>
+              <span className='h-1 w-1 bg-main_theme rounded-full my-auto mr-1'/>
+              <p className='my-auto'>Душ</p>
+            </div>
+            <div className='flex flex-row'>
+              <span className='h-1 w-1 bg-main_theme rounded-full my-auto mr-1'/>
+              <p className='my-auto'>Сейф</p>
+            </div>
+
+          </ul>
+
+        </div>
+
+      </div>
+
+
+
       <div className="w-full max-w-md space-y-2">
+        <h2 className="text-2xl font-semibold my-4">Цены</h2>
         {prices.map((price, index) => (
           <div
             key={index}
             className="p-4 border border-gray-300 rounded-lg flex justify-between items-center"
           >
-            <span className="text-base font-semibold md:text-lg  lg:text-xl">{price.title}</span>
-            <span className="text-base font-semibold text-blue-600 md:text-lg  lg:text-xl">{price.price}</span>
+            <span className="text-lg font-semibold">{price.title}</span>
+            <span className="text-lg font-semibold text-main_theme underlineCard ">{price.price}</span>
           </div>
-          
         ))}
       </div>
+
+      
+      <div className='my-9 mr-auto'>
+        <strong className='text-2xl font-semibold'>Правила Размещения</strong>
+
+        <ul className='my-5 grid grid-cols-1 gap-x-20 gap-y-5 md:grid-cols-2'>
+
+          <div className='grid grid-cols-2 gap-x-20 gap-y-5'>
+            <div>
+              <h1 className='text-xl font-bold'>Заезд</h1>
+              <p>С 13:00</p>
+            </div>
+
+            <div>
+              <h1 className='text-xl font-bold'>Выезд</h1>
+              <p>до 22:00</p>
+            </div>
+          </div>
+
+          <div>
+            <h1 className='text-xl font-bold'>Минимальный срок проживания</h1>
+            <p>С 14:00 до 22:00</p>
+          </div>
+
+        </ul>
+
+        <ul className='grid grid-cols-1 gap-4 sm:grid-cols-3 sm:flex flex-row justify-around'>
+          <div className='flex flex-row mr-5'>
+            <span className='h-1 w-1 bg-main_theme rounded-full my-auto mr-1'/>
+            <p className='my-auto'>18+</p>
+          </div>
+          <div className='flex flex-row mr-5'>
+            <span className='h-1 w-1 bg-main_theme rounded-full my-auto mr-1'/>
+            <p className='my-auto'>Нельзя с животными</p>
+          </div>
+          <div className='flex flex-row mr-5'>
+            <span className='h-1 w-1 bg-main_theme rounded-full my-auto mr-1'/>
+            <p className='my-auto'>Не больше указанного количества человек на дом</p>
+          </div>
+        </ul>
+
+
+
+      </div>
+
     </div>
   )
 }

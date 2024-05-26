@@ -71,12 +71,6 @@ const ThSlider=() => {
             <img className='rounded-lg' src="https://flowbite.com/docs/images/carousel/carousel-5.svg" alt="..." />
         </SwiperSlide>
       </Swiper>
-      <div>
-      <h2 className="text-base text-center font-semibold my-2 md:text-xl  lg:text-2xl">Deluxe King Room</h2>
-      <p className="text-gray-600 mb-6 text-center text-xs md:text-base  lg:text-lg">
-        Enjoy a spacious and comfortable room with a king-size bed, a flat-screen TV, and a modern bathroom.
-      </p>
-      </div>
     </>
   );
 }

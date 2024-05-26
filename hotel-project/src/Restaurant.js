@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
+
 import Navbar from "./components/Navbar.js"
-import ExtMenucard from './components/ExtMenucard.js';
+import ExtDishcard from './components/ExtDishcard.js';
 import FoodCard from './components/FoodCard.js';
 import ExtCard from './components/ExtCard';
 import Footer from "./components/Footer.js";
-import { useState } from "react";
 
 
 function Restaurant () {

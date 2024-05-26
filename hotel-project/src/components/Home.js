@@ -27,7 +27,7 @@ const StandartCard = () => {
                 <p className="text-gray-700 mb-4 text-justify text-xs  sm:text-base">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
                 </p>
-                <a href='#' className='underlineCard w-min text-nowrap mb-4 mx-2 text-left  font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4'>От 1.000₽</a>
+                <a href='#' className='underlineCard w-min text-nowrap mb-4 mx-2 text-left  font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4'>От 10.000₽</a>
             </div>
                             
         </Card>
@@ -56,8 +56,8 @@ const StandartPlusCard = () => {
 
 const GaleryCard = () => {
     return(
-        <Card >
-            <h1 className='font-bold mb-2 text-center text-base sm:text-2xl'>Больше</h1>              
+        <Card className="bg-[#f0f0f08c] px-2">
+            <h1 className='font-bold mb-2 text-center text-base sm:text-2xl'>Больше фото</h1>              
         </Card>
 
     )

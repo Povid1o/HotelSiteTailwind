@@ -44,9 +44,9 @@ const ExtCard = ({ Card, ExtContent }) => {
           <Card/>
         </button>
       {showDialog && (
-        <div className="fixed z-50 flex-wrap mt-20 inset-0 bg-black bg-opacity-50 flex items-center justify-center" ref={dialogRef}>
-          <div className="bg-white p-8 rounded-lg shadow-md  w-5/6 overflow-y-scroll h-5/6  mt-20 lg:mt-14 mb-12 max-w-[1040px]  " > 
-          <div className="relative">
+        <div className="fixed z-50 flex-wrap mt-15 inset-0 bg-black bg-opacity-50 flex items-center justify-center" ref={dialogRef}>
+          <div className="bg-white px-8 py-4 rounded-lg shadow-md  w-5/6 overflow-y-scroll mt-20 lg:mt-14 mb-5 max-w-[1040px]  " > 
+          <div className="relative mb-2">
             <div onClick={handleClose} className="cl-btn-6 absolute left-[99%]">
               <div className="cl-btn-6-in ">
                 <label className="cl-btn-6-txt text-gray-600">Close</label>
