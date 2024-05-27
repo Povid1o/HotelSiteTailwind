@@ -1,0 +1,7 @@
+.plyr {
+  z-index: 1;
+  max-height: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 12px;
+}

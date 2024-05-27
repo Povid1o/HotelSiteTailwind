@@ -1,0 +1,65 @@
+.underlineMobile {
+  text-decoration: none;
+}
+
+.underlineMobile::before {
+  content: "";
+  position: relative;
+  top: 40px;
+  display: block;
+  width: 100%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+  transform: scaleX(0);
+  transition: transform 0.5s ease;
+}
+
+.underlineMobile:hover::before {
+  transform: scaleX(1);
+}
+
+.underlineDesktop {
+  text-decoration: none;
+}
+
+.underlineDesktop::before {
+  content: "";
+  position: relative;
+  top: 26px;
+  display: block;
+  width: 100%;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+  transform: scaleX(0);
+  transition: transform 0.5s ease;
+}
+
+.underlineDesktop:hover::before {
+  transform: scaleX(1);
+}
+
+.underlineCard {
+  text-decoration: none;
+}
+
+.underlineCard::before {
+  content: "";
+  position: relative;
+  top: 26px;
+  display: block;
+  width: 100%;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  background-color: #80143c;
+  transform: scaleX(0);
+  transition: transform 0.5s ease;
+}
+
+.underlineCard:hover::before {
+  transform: scaleX(1);
+}

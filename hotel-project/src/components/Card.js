@@ -7,18 +7,20 @@ const Card = ({ className, horizontal, imgAlt, imgSrc, children }) => {
   const isBelow600px = useMediaQuery({ query: '(max-width: 689px)' });
 
   const cardClasses = `
-    ${horizontal && !isBelow600px ? 'flex flex-row' : 'flex flex-col'}
+    ${horizontal && !isBelow600px ? 'flex flex-col' : 'flex flex-col'}
     ${className}
     rounded-lg
     shadow-2xl
-    p-4
+    //p
+    mx-4
     ${horizontal && !isBelow600px ? 'items-center' : 'items-start'}
   `;
 
   const imgClasses = `
-    ${horizontal && !isBelow600px ? 'w-1/2' : 'w-full'}
+    ${horizontal && !isBelow600px ? 'w-full' : 'w-full'}
     h-auto
-    rounded-lg
+    rounded-t-lg
+    mb-2
   `;
 
   return (

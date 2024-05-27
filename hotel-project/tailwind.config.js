@@ -10,12 +10,13 @@ module.exports = {
       colors:{
         'main_theme': '#80143c'
       },
+      
       fontFamily: {
         body : ['Bitter'],
         // sans: ['Graphik', 'sans-serif'],
       },
       screens: {
-        'mobile': '420px'
+        'mobile': '320px'
       }
     },
   },

@@ -1,17 +1,79 @@
-import Navbar from "./components/Navbar.js"
-import Home from './components/Home'
-import Footer from "./components/Footer.js";
-import { useState } from "react";
+import WineHotel from "./WineHotel.js";
+import Ivents from "./Ivents.js";
+import Restaurant from "./Restaurant.js";
+import Vinery from "./Vinery.js";
+import Auth from "./Auth.js"
+import React, {useContext, useState, useEffect} from "react";
+import { createBrowserRouter, RouterProvider} from 'react-router-dom'
+import AdminPage from "./AdminPage.js";
+import { observer } from "mobx-react-lite";
+import {Context} from "./index";
 
-function App() {
-  const [nav, setNav] = useState(false);
+
+
+
+const publicrouter = createBrowserRouter([
+  
+  {
+    path: "/",
+    element: <WineHotel />,
+  },
+  {
+    path:"/Мероприятия",
+    element: <Ivents />,
+  },
+  {
+    path:"/Ресторан",
+    element: <Restaurant />,
+  },
+  {
+    path:"/Винодельня",
+    element: <Vinery />,
+  },
+  {
+    path: "/login",
+    element: <Auth/>
+  },
+]);
+
+const hiderouter = createBrowserRouter([
+  
+  {
+    path: "/",
+    element: <WineHotel />,
+  },
+
+  {
+    path:"/Ресторан",
+    element: <Restaurant />,
+  },
+  {
+    path:"/Винодельня",
+    element: <Vinery />,
+  },
+  {
+    path: "/login",
+    element: <Auth/>
+  },
+  {
+    path: '/admin-pusttusinadjusi',
+    element: <AdminPage/>
+  },
+]);
+
+
+const App= observer(() => {
+  const { user} = useContext(Context);
+
+
   return (
     <div>
-      <Navbar nav = {nav} setNav = {setNav}/>
-      <Home nav = {nav}/>
-      <Footer />
+      {!user.isAuth && <RouterProvider router={publicrouter}/>}
+      {user.isAuth && <RouterProvider router={hiderouter}/>}
+      {/* <WineHotel/> */}
     </div>
+
   );
-}
+})
 
 export default App;
