@@ -5,7 +5,8 @@ import ExtStandartPlus  from './ExtStandartplus';
 import ExtStandart from  './ExtStandart';
 import ExtGaleryCard from './ExtGalerycard';
 import BlueSwiper from './BlueSwiper';
-import ThSlider from './ThumbSlider';
+// import ThSlider from './ThumbSlider';
+import ExtHotelExample from './ExtHotelExample';
 
 import 'swiper/css';
 import 'swiper/css/navigation';

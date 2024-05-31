@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ExtMenucard = () => {
+const ExtDishcard = () => {
   return (
     <div className='mt-6 size-[95%] max-w-[520px] font-body mx-auto'>
       <div className=' mx-auto rounded-lg my-2'> 
@@ -21,4 +21,4 @@ const ExtMenucard = () => {
   )
 }
 
-export default ExtMenucard
+export default ExtDishcard
