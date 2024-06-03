@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Navbar from "./components/Navbar.js"
-import ExtDishcard from './components/ExtDishCard.js'
+import ExtDishCard from './components/ExtDishcard.js'
 import FoodCard from './components/FoodCard.js';
 import ExtCard from './components/ExtCard';
 import Footer from "./components/Footer.js";
@@ -48,7 +48,7 @@ const Dish = observer(() => {
   
         <div class="container mx-auto font-body sm:px-4 sm:py-8">
           <h1 className="text-center text-3xl font-bold mb-8">Menu</h1>
-          <ExtCard Card={FoodCard} ExtContent={ExtDishcard} />
+          <ExtCard Card={FoodCard} ExtContent={ExtDishCard} />
   
           {product.clases.map((clase) => (
             <>
