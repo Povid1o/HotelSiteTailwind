@@ -1,73 +1,66 @@
-import React, { useContext, useEffect, useState } from 'react'
-import Navbar from "./components/Navbar.js"
-import ExtDishCard from './components/ExtDishcard.js'
+import React, { useContext, useEffect } from 'react';
+import Navbar from "./components/Navbar.js";
 import FoodCard from './components/FoodCard.js';
-import ExtCard from './components/ExtCard';
 import Footer from "./components/Footer.js";
 import { observer } from 'mobx-react-lite';
 import { Context } from './index.js';
-import {useParams} from 'react-router-dom'
-import {fetchOneProduct} from "./components/http/productAPI.js";
+import { useParams } from 'react-router-dom';
+import { fetchClase, fetchProducts } from "./components/http/productAPI.js";
 
+const Restaurant = observer(() => {
+  const { id } = useParams();
+  const { product } = useContext(Context);
 
-const Dish = observer(() => {
-    const { product } = useContext(Context);
-  
-    return (
-      <div className="flex flex-wrap -mx-4 md:mx-auto max-w-[750px]">
-        {product.products.map((products) => (
-          <div className="px-4 mb-8 w-1/2" key={products.id}>
-            <img
-              src={`${process.env.REACT_APP_API_URL || ''}${products.img}`}
-              alt="Spaghetti Carbonara"
-              className="w-full h-auto rounded-lg mb-3 sm:mb-4"
-            />
-            <h3 className="font-bold text-base sm:text-lg sm:mb-2">
-              {products.name}
-            </h3>
-            <p className="text-gray-600">$ {products.price}</p>
+  useEffect(() => {
+    fetchProducts().then(data => {
+      console.log('Fetched products:', data); // Отладочный лог
+      product.setProducts(data.rows); // Используем data.rows вместо data
+    }).catch(err => console.error('Error fetching products:', err));
+
+    fetchClase().then(data => {
+      console.log('Fetched clases:', data); // Отладочный лог
+      product.setClases(data);
+    }).catch(err => console.error('Error fetching clases:', err));
+  }, [product]);
+
+  if (!product || !Array.isArray(product.products) || !Array.isArray(product.clases)) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <>
+      <div>
+        <Navbar />
+      </div>
+
+      <div className="container mx-auto font-body sm:px-4">
+        <h1 className="flex mx-auto justify-center items-center text-3xl font-bold pt-[7rem] mb-8">Меню</h1>
+        {product.clases.map((clase) => (
+          <div key={clase.id}>
+            <h2 className="font-bold pt-2 mb-3 text-lg sm:pt-6 sm:mb-4 sm:text-xl text-center">
+              {clase.name}
+            </h2>
+            <div className='grid gap-0 grid-cols-2 mx-auto max-w-[1000px]'>
+              {product.products
+                .filter((product) => product.claseId === clase.id)
+                .map((filteredProduct) => (
+                  <FoodCard
+                    key={filteredProduct.id}
+                    imgSrc={`${process.env.REACT_APP_API_URL || ''}${filteredProduct.img}`}
+                    header={filteredProduct.name}
+                    description={filteredProduct.description}
+                  />
+                ))}
+            </div>
           </div>
         ))}
       </div>
-    );
-  });
-  
-  const Restaurant = observer(() => {
-    const { id } = useParams();
-    const { product } = useContext(Context);
-  
-    if (!product || !product.clases || !product.products) {
-      return <div>Loading...</div>;
-    }
-  
-    return (
-      <>
-        <div>
-          <Navbar />
-        </div>
-  
-        <div class="container mx-auto font-body sm:px-4 sm:py-8">
-          <h1 className="text-center text-3xl font-bold mb-8">Menu</h1>
-          <ExtCard Card={FoodCard} ExtContent={ExtDishCard} />
-  
-          {product.clases.map((clase) => (
-            <>
-              <h2
-                className="font-bold pt-2 mb-3 text-lg sm:pt-6 sm:mb-4 sm:text-xl text-center"
-                key={clase.id}
-              >
-                {clase.name}
-              </h2>
-              <Dish />
-            </>
-          ))}
-        </div>
-  
-        <div>
-          <Footer />
-        </div>
-      </>
-    );
-  });
 
-export default Restaurant
+      <div>
+        <Footer />
+      </div>
+    </>
+  );
+});
+
+export default Restaurant;
