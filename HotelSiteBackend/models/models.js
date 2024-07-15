@@ -42,9 +42,7 @@ const TypeClase = sequelize.define('type_clase',{
   id:{type:DataTypes.INTEGER, primaryKey: true, autoIncrement:true},
 })
 
-const ClaseType = sequelize.define('clase_type',{
-  id:{type:DataTypes.INTEGER, primaryKey: true, autoIncrement:true},
-})
+
 
 
 User.hasOne(Basket)

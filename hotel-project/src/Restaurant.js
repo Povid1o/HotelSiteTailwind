@@ -48,10 +48,11 @@ const Restaurant = observer(() => {
                     key={filteredProduct.id}
                     imgSrc={`${process.env.REACT_APP_API_URL || ''}${filteredProduct.img}`}
                     header={filteredProduct.name}
-                    description={filteredProduct.description}
+                    description={`${filteredProduct.price} ₽`}
                   />
                 ))}
             </div>
+            <hr className="border-gray-400 my-8" />
           </div>
         ))}
       </div>
