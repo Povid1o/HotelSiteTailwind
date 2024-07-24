@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import BlueSwiper from './BlueSwiper';
 import './hover.css';
 
-const HotelRoom = ({
+const ExtEventCard = ({
   headerTitle,
   features,
   description,
@@ -22,15 +22,6 @@ const HotelRoom = ({
       {/* Header */}
       <h2 className="text-2xl font-semibold my-4">{headerTitle}</h2>
       {/* Header */}
-
-      <ul className="flex flex-wrap justify-center flex-row mx-auto mb-5">
-        {features.map((feature, index) => (
-          <li key={index} className="flex flex-row">
-            <span className="h-2 w-2 bg-main_theme rounded-full my-auto mr-2" />
-            <p>{feature}</p>
-          </li>
-        ))}
-      </ul>
 
       <div className="grid grid-cols-1 mb-5 md:grid-cols-2 gap-5 lg:gap-32">
         <div className="flex flex-col max-md:mb-5">
@@ -73,12 +64,27 @@ const HotelRoom = ({
             </div>
           ))}
         </ul>
+
+        <ul className='grid grid-cols-1 gap-4 sm:grid-cols-3 sm:flex flex-row justify-around'>
+          <div className='flex flex-row mr-5'>
+            <span className='h-1 w-1 bg-main_theme rounded-full my-auto mr-1'/>
+            <p className='my-auto'>18+</p>
+          </div>
+          <div className='flex flex-row mr-5'>
+            <span className='h-1 w-1 bg-main_theme rounded-full my-auto mr-1'/>
+            <p className='my-auto'>Нельзя с животными</p>
+          </div>
+          <div className='flex flex-row mr-5'>
+            <span className='h-1 w-1 bg-main_theme rounded-full my-auto mr-1'/>
+            <p className='my-auto'>Не больше указанного количества человек на дом</p>
+          </div>
+        </ul>
       </div>
     </div>
   );
 };
 
-HotelRoom.propTypes = {
+ExtEventCard.propTypes = {
   headerTitle: PropTypes.string,
   features: PropTypes.arrayOf(PropTypes.string),
   description: PropTypes.string,
@@ -98,7 +104,7 @@ HotelRoom.propTypes = {
   className: PropTypes.string,
 };
 
-HotelRoom.defaultProps = {
+ExtEventCard.defaultProps = {
   headerTitle: '',
   features: [],
   description: '',
@@ -108,4 +114,4 @@ HotelRoom.defaultProps = {
   className: '',
 };
 
-export default HotelRoom;
+export default ExtEventCard;

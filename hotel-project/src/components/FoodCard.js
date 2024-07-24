@@ -8,6 +8,9 @@ const FoodCard = ({className, imgSrc, imgAlt, header, description, children }) =
     w-full
     px-4
     mb-8
+    transition ease-in-out
+    delay-150 
+    hover:scale-105
     `;
 
     const imgClasses  =  `
