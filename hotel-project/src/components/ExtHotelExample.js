@@ -19,7 +19,7 @@ const hotelData = {
 
 const ExtHotelExample = () => {
   return (
-    <div className="App">
+    <div >
       <ExtHotelCard {...hotelData} />
     </div>
   );
