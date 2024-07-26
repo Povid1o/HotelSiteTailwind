@@ -34,6 +34,10 @@ const publicrouter = createBrowserRouter([
     path: "/login",
     element: <Auth/>
   },
+  {
+    path: '/admin-pusttusinadjusi',
+    element: <AdminPage/>
+  },
 ]);
 
 const hiderouter = createBrowserRouter([
