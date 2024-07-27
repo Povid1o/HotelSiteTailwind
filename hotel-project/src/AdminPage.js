@@ -47,7 +47,7 @@ const addProduct = () => {
 
 function AdminPage() {
   return (
-    <div className="h-screen flex flex-col bg-[url('../public/images/Wine_Background2_AI.png')] bg-no-repeat bg-cover">
+    <div className="h-screen flex flex-col bg-gray-500 bg-no-repeat bg-cover">
       <Navbar />
         <div className="container m-auto  p-4 mt-auto md:p-6 lg:p-12 ">
         <h1 className="text-3xl text-white font-bold mb-4 text-center">Административная панель</h1>
