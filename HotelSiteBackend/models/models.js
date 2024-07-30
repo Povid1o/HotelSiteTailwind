@@ -27,6 +27,17 @@ const Product = sequelize.define('product',{
   img:{type: DataTypes.STRING, allowNull:false},
 })
 
+const Room = sequelize.define('room',{
+  id:{type:DataTypes.INTEGER, primaryKey: true, autoIncrement:true},
+  name:{type: DataTypes.STRING, unique:true, allowNull:false},
+  shortdescription:{type: DataTypes.STRING, unique:true, allowNull:false},
+  description:{type: DataTypes.STRING, unique:true, allowNull:false},
+  rules:{type: DataTypes.STRING, unique:true, allowNull:false},
+  conveniences:{type: DataTypes.STRING, unique:true, allowNull:false},
+  price:{type: DataTypes.INTEGER, allowNull:false},
+  img:{type: DataTypes.STRING, allowNull:false},
+})
+
 const Type = sequelize.define('type',{
   id:{type:DataTypes.INTEGER, primaryKey: true, autoIncrement:true},
   name:{type: DataTypes.STRING, unique:true, allowNull:false},
@@ -57,9 +68,14 @@ Product.belongsTo(Type)
 Clase.hasMany(Product)
 Product.belongsTo(Clase)
 
+Type.hasMany(Room)
+Room.belongsTo(Type)
+
+Clase.hasMany(Room)
+Room.belongsTo(Clase)
+
 Product.hasMany(BasketProduct)
 BasketProduct.belongsTo(Product)
-
 
 Type.belongsToMany(Clase, {through: TypeClase})
 Clase.belongsToMany(Type, {through: TypeClase})
@@ -71,6 +87,7 @@ module.exports ={
   Basket,
   BasketProduct,
   Product,
+  Room,
   Clase,
   Type,
   TypeClase,

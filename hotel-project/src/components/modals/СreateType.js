@@ -19,7 +19,7 @@ const CreateType = observer(() => {
       alert(error.message);
     }
   }
-  
+
   return (
     <div className='mt-6 size-[95%] max-w-[520px] font-body mx-auto '>
 
