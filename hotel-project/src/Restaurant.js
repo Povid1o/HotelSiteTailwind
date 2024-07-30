@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 
 import Navbar from "./components/Navbar.js"
-import ExtDishcard from './components/ExtDishcard.js';
+import ExtDishcard from './components/cards/ExtDishcard.js';
 import FoodCard from './components/FoodCard.js';
-import ExtCard from './components/ExtCard';
+import ExtCard from './components/cards/ExtCard.js';
 import Footer from "./components/Footer.js";
 
 

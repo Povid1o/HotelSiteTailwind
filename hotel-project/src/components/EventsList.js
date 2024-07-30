@@ -4,7 +4,7 @@ import { Dropdown, DropdownItem } from "flowbite-react";
 
 import Navbar from './Navbar';
 import Footer from './Footer';
-import EventCard from './EventCard';
+import EventCard from './cards/EventCard';
 
 
 function EventsList() {

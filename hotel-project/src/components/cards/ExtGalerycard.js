@@ -1,5 +1,5 @@
 import React from 'react'
-import ThSlider from './ThumbSlider';
+import ThSlider from '../ThumbSlider';
 
 const ExtGaleryCard = () => {
   return (

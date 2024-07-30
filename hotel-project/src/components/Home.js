@@ -1,12 +1,12 @@
 import React from 'react';
-import Card from './Card';
-import ExtCard from './ExtCard';
+import Card from './cards/Card';
+import ExtCard from './cards/ExtCard';
 import ExtStandartPlus  from './ExtStandartplus';
 import ExtStandart from  './ExtStandart';
-import ExtGaleryCard from './ExtGalerycard';
+import ExtGaleryCard from './cards/ExtGalerycard';
 import BlueSwiper from './BlueSwiper';
 // import ThSlider from './ThumbSlider';
-import ExtHotelExample from './ExtHotelExample';
+import ExtHotelExample from './cards/ExtHotelExample';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -116,7 +116,7 @@ const Home = ({nav}) => {
 
 
             {/* Brick 1 */}
-            <div className='mt-14 mx-auto justify-center flex flex-row xl:container'>
+            <section className='mt-14 mx-auto justify-center flex flex-row xl:container'>
 
                 {/* Text Block */}
                 <div className='max-w-[700px] mx-auto bg-white rounded-xl drop-shadow-2xl max-sm:w-5/6 md:w-3/4 lg:max-w-[900px] xl:mx-8'>
@@ -133,9 +133,9 @@ const Home = ({nav}) => {
 
                 <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg" alt="" className='hidden xl:flex max-h-[400px] rounded-xl'/>
 
-            </div>
+            </section>
 
-            <div className='mt-8 mx-auto justify-center flex flex-row xl:container'>
+            <section className='mt-8 mx-auto justify-center flex flex-row xl:container'>
 
                 <div className='hidden xl:flex max-w-[900px] mx-8 rounded-xl max-sm:w-5/6 md:w-3/4'>
                     <img src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" alt="" className='object-cover rounded-xl'/>
@@ -145,7 +145,7 @@ const Home = ({nav}) => {
                 <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1" alt="" className='hidden xl:flex max-h-[600px] rounded-xl'/>
 
 
-            </div>
+            </section>
             {/* Brick 1 */}
 
 

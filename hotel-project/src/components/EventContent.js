@@ -1,8 +1,8 @@
 import { useState } from "react";
 import React from 'react';
 import ExtStandart from "./ExtStandart"
-import ExtCard from "./ExtCard";
-import EventCard from "./EventCard";
+import ExtCard from "./cards/ExtCard";
+import EventCard from "./cards/EventCard";
 import WineBottlePng from "./assets/wine-bottle.png"
 import RestaurantIcon from "./assets/tray.png";
 import ExcursionIcon from "./assets/excursion.png";

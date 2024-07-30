@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import BlueSwiper from './BlueSwiper';
-import './hover.css';
+import BlueSwiper from '../BlueSwiper';
+import '../hover.css';
 
 const HotelRoom = ({
   headerTitle,
