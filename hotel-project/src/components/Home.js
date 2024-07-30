@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from './cards/Card';
 import ExtCard from './cards/ExtCard';
 import ExtStandartPlus  from './ExtStandartplus';
@@ -14,6 +14,8 @@ import 'swiper/css/pagination';
 import './hover.css'
 import useWindowDimensions from './WindowResizeListener';
 import VPlayer from './VideoPlayer';
+import './effects/appear.css';
+import { entries } from 'mobx';
 
 
 
@@ -98,6 +100,32 @@ const Box = ({ className,imgAlt, imgSrc, children }) => {
 
 const Home = ({nav}) => {
     const {height, width} = useWindowDimensions();
+    const [hotelState, setHotelState] = useState('unShown');
+
+    setTimeout(() => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !entry.target.classList.contains('animated')){
+              entry.target.classList.add('show');
+              entry.target.classList.add('animated');
+              if (entry.target.classList.contains('card')) {entry.target.classList.add('show-remove-blur');}
+            //   observer.unobserve(entry.target);
+            } 
+            // else {
+            //   entry.target.classList.remove('show');
+            // }
+          })
+        });
+      
+        const hiddenElements = document.querySelectorAll('.unShown')
+        hiddenElements.forEach((element) => observer.observe(element));
+      
+        window.addEventListener('scroll', () => {
+          hiddenElements.forEach((element) => observer.unobserve(element));
+          hiddenElements.forEach((element) => observer.observe(element));
+        });
+      }, 150);
+
     return ( 
         <div name = 'home' className="w-full h-max bg-white">
 
@@ -116,6 +144,7 @@ const Home = ({nav}) => {
 
 
             {/* Brick 1 */}
+            <section className='unShown'>
             <section className='mt-14 mx-auto justify-center flex flex-row xl:container'>
 
                 {/* Text Block */}
@@ -146,13 +175,14 @@ const Home = ({nav}) => {
 
 
             </section>
+            </section>
             {/* Brick 1 */}
 
 
             {/* Blue Swiper */}
-            <div className="mx-auto max-sm:w-5/6 md:w-3/4 xl:hidden ">
+            <section className="mx-auto unShown max-sm:w-5/6 md:w-3/4 xl:hidden show">
                 <BlueSwiper />
-            </div>
+            </section>
             
             
             {/* Brick 1 */}
@@ -161,7 +191,8 @@ const Home = ({nav}) => {
 
 
             {/* Brick 2 */}
-            <div className='mt-14 mx-auto justify-center font-body max-sm:w-5/6 md:w-3/4 xl:container' >
+            <section className='unShown card'>
+            <section className='mt-14 mx-auto justify-center font-body max-sm:w-5/6 md:w-3/4 xl:container'>
                 <p className='text-4xl text-gray-700 font-bold pt-4 text-nowrap lg:text-5xl xl:text-6xl pt-8'>Номерной Фонд</p>
 
                 <div className='flex mobile:flex-col sm:flex-row xl:justify-center'>
@@ -176,18 +207,15 @@ const Home = ({nav}) => {
                     ExtContent={ExtStandart}
                     /> 
 
-                    
-
-
-
-
                 </div>
                 
 
-            </div>
+            </section>
+            </section>
             {/* Brick 2 */}
 
             {/* Galery */}
+            <section className='unShown card'>
                 <div className="mx-auto px-2 mt-16 max-sm:w-5/6 md:w-3/4 lg:mt-24 xl:container">
                     <h2 className='text-4xl text-gray-700 font-bold pb-8 flex flex-wrap lg:text-5xl xl:text-6xl '>Отель расположен в самой живописной локации Абрау</h2>
                     <div className="-m-1 flex flex-wrap md:-m-2 ">
@@ -233,14 +261,18 @@ const Home = ({nav}) => {
                         /> 
                     </div>
                 </div>
-            <div className='mx-auto mt-16 px-2 max-sm:w-5/6 md:w-3/4 lg:mt-24 xl:container'>
-                <h1 className=' text-4xl text-gray-700 font-bold pb-4 sm:pb-8 text-wrap lg:text-5xl xl:text-6xl'>Посмотрите видео-презентацию</h1>
-                <VPlayer/>
-            </div>
+            </section>
+
+            <section className='unShown card'>
+                <div className='mx-auto mt-16 px-2 max-sm:w-5/6 md:w-3/4 lg:mt-24 xl:container'>
+                    <h1 className=' text-4xl text-gray-700 font-bold pb-4 sm:pb-8 text-wrap lg:text-5xl xl:text-6xl'>Посмотрите видео-презентацию</h1>
+                    <VPlayer/>
+                </div>
+            </section>
             
 
             {/* Brick 3 */}
-            <div className='mt-14 mx-8 mx-auto justify-center font-body max-sm:w-5/6 md:w-3/4 xl:container'>
+            <section className='unShown mt-14 mx-8 mx-auto justify-center font-body max-sm:w-5/6 md:w-3/4 xl:container'>
 
                 <p className='text-4xl text-gray-700 font-bold pt-4 lg:text-5xl xl:text-6xl pt-8'>Ваш отдых - наша ответственность</p>
 
@@ -290,7 +322,7 @@ const Home = ({nav}) => {
 
 
 
-            </div>
+            </section>
 
         </div>
      );
