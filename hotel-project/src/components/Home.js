@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Card from './cards/Card';
 import ExtCard from './cards/ExtCard';
 import ExtStandartPlus  from './ExtStandartplus';
@@ -6,7 +6,7 @@ import ExtStandart from  './ExtStandart';
 import ExtGaleryCard from './cards/ExtGalerycard';
 import BlueSwiper from './BlueSwiper';
 // import ThSlider from './ThumbSlider';
-import ExtHotelExample from './cards/ExtHotelExample';
+// import ExtHotelExample from './cards/ExtHotelExample';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -15,7 +15,7 @@ import './hover.css'
 import useWindowDimensions from './WindowResizeListener';
 import VPlayer from './VideoPlayer';
 import './effects/appear.css';
-import { entries } from 'mobx';
+// import { entries } from 'mobx';
 
 
 
@@ -30,6 +30,7 @@ const StandartCard = () => {
                 <p className="text-gray-700 mb-4 text-justify text-xs  sm:text-base">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
                 </p>
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                 <a href='#' className='underlineCard w-min text-nowrap mb-4 mx-2 text-left  font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4'>От 10.000₽</a>
             </div>
                             
@@ -49,6 +50,7 @@ const StandartPlusCard = () => {
                 <p className="text-gray-700 mb-4 text-justify text-xs  sm:text-base">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
                 </p>
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                 <a href='#' className='underlineCard w-min text-nowrap mb-4 mx-2 text-left  font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4'>От 20.000₽</a>
             </div>
                             
@@ -99,8 +101,8 @@ const Box = ({ className,imgAlt, imgSrc, children }) => {
 
 
 const Home = ({nav}) => {
+    // eslint-disable-next-line no-unused-vars
     const {height, width} = useWindowDimensions();
-    const [hotelState, setHotelState] = useState('unShown');
 
     setTimeout(() => {
         const observer = new IntersectionObserver((entries) => {

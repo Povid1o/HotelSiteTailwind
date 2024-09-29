@@ -18,7 +18,9 @@ function Vinery() {
                 </div>
             </div> */}
 
-            <div className="w-full h-max bg-white">
+            
+
+            <section className="w-full h-max bg-white">
 
                 {/* <div className="bg-[url('https://jooinn.com/images/Бельцы-закат-над-рапсовом-поле-balti-apus-de-soare-peste-câmpul-de-rapiță.jpg')] bg-no-repeat bg-cover bg-gray-300 bg-blend-multiply w-full h-screen rounded-xl"/> */}
                 <div className="bg-[url('https://jooinn.com/images/Бельцы-закат-над-рапсовом-поле-balti-apus-de-soare-peste-câmpul-de-rapiță.jpg')] bg-no-repeat bg-cover bg-blend-multiply w-full h-screen rounded-xl backdrop-filter backdrop-blur-md bg-gray-600 bg-opacity-50">
@@ -27,7 +29,7 @@ function Vinery() {
                     </div>
                 </div>
             
-            </div>
+            </section>
 
             <Footer />
 
