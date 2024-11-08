@@ -37,12 +37,18 @@ const ExtCard = ({ Card, ExtContent }) => {
 
   return (
     <div className="flex items-center justify-center">
-        <button
+        {/* <button
           className='mt-8 transition ease-in-out delay-150 hover:scale-105'
           onClick={handleClick}
         >
           <Card/>
-        </button>
+        </button> */}
+        <div 
+          className="cursor-pointer transition ease-in-out delay-150 hover:scale-105 w-full"
+          onClick={handleClick}
+        >
+          <Card />
+        </div>
       {showDialog && (
         <div className="fixed z-50 flex-wrap mt-15 inset-0 bg-black bg-opacity-50 flex items-center justify-center" ref={dialogRef}>
           <div className="bg-white px-8 py-4 rounded-lg shadow-md  w-5/6 overflow-y-scroll mt-20 lg:mt-14 mb-5 max-w-[1040px]  " > 

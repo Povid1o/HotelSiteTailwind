@@ -1,0 +1,15 @@
+.tabsContainer button:hover {
+    color: #80143c;
+    border-color: #80143c;
+  }
+
+.tabsContainer button:focus{
+    color: #80143c;
+    border-color: #80143c;
+}
+
+/* .tabsContainer button: */
+
+.tabsContainer > Tabs button{
+    color: #80143c;
+}
