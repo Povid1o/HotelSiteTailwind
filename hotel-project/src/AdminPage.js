@@ -4,11 +4,11 @@ import HomeEdit from './components/pages_editable/HomeEdit';
 import CreateClase from './components/modals/CreateClase';
 import CreateType from './components/modals/СreateType';
 import ModalsCard from './components/modals/ModalsCard'
-import Card from './components/Card';
+import Card from './components/cards/Card';
 import CreateProduct from './components/modals/CreateProduct';
 import NewRoomCard from './components/modals/NewRoomCard';
 import NewDishCard from './components/modals/NewDishCard';
-import ExtCard from './components/ExtCard';
+import ExtCard from './components/cards/ExtCard';
 import { Tabs } from "flowbite-react";
 import { Table } from "flowbite-react";
 import "./AdminPage.css"
@@ -217,7 +217,7 @@ function AdminPage() {
           <h1 className="text-3xl text-white font-bold mb-4 text-center">Административная панель</h1>
           <div className="flex flex-col space-y-4 pt-4">
 
-            <ModalsCard
+            {/* <ModalsCard
                 Card={addType}
                 ExtContent={CreateType}
             /> 
@@ -228,7 +228,7 @@ function AdminPage() {
             <ModalsCard
                 Card={addProduct}
                 ExtContent={CreateProduct}
-            /> 
+            />  */}
                 
           </div>
 

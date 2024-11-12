@@ -1,0 +1,7 @@
+.text{
+    @apply text-lg text-[#F8F7F4] font-body mb-2 w-min
+}
+
+.footer-element{
+    @apply max-md:w-full mb-4 md:mb-0
+}

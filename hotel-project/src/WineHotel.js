@@ -1,5 +1,6 @@
 import Navbar from "./components/Navbar.js"
-import Home from './components/Home'
+// import Home from './components/Home'
+import Home from './components/Home.js'
 import Footer from "./components/Footer.js";
 import { useState } from "react";
 

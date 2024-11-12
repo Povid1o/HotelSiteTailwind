@@ -1,6 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import Navbar from "./components/Navbar.js";
-import FoodCard from './components/FoodCard.js';
+import FoodCard from './components/cards/FoodCard.js';
+import ExtDishcard from './components/cards/ExtDishcard.js';
+import ExtCard from './components/cards/ExtCard.js';
 import Footer from "./components/Footer.js";
 import { observer } from 'mobx-react-lite';
 import { Context } from './index.js';
@@ -44,12 +46,27 @@ const Restaurant = observer(() => {
               {product.products
                 .filter((product) => product.claseId === clase.id)
                 .map((filteredProduct) => (
-                  <FoodCard
-                    key={filteredProduct.id}
-                    imgSrc={`${process.env.REACT_APP_API_URL || ''}${filteredProduct.img}`}
-                    header={filteredProduct.name}
-                    description={`${filteredProduct.price} ₽`}
+                  <ExtCard
+                    Card={() => 
+                      <FoodCard
+                        key={filteredProduct.id}
+                        imgSrc={`${process.env.REACT_APP_API_URL || ''}${filteredProduct.img}`}
+                        header={filteredProduct.name}
+                        description={""}
+                      />
+                    }
+                    ExtContent={() => 
+                      <ExtDishcard
+                        imgSrc={`${process.env.REACT_APP_API_URL || ''}${filteredProduct.img}`}
+                        header={filteredProduct.name}
+                        description={""}
+                        price={`${filteredProduct.price} ₽`}
+                        weight={""}
+                      />
+                    }
+                  
                   />
+                  
                 ))}
             </div>
             <hr className="border-gray-400 my-8" />

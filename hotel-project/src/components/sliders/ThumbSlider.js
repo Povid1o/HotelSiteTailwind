@@ -8,7 +8,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/thumbs';
 
-import './ThumbSlider.css'
+import '../styles/ThumbSlider.css'
 
 import { FreeMode, Navigation, Thumbs} from 'swiper/modules';
 

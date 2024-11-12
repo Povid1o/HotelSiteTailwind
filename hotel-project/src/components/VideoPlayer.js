@@ -1,7 +1,7 @@
 import React from "react";
 import Plyr from "plyr-react";
 import "../../node_modules/plyr/dist/plyr.css";
-import './Vp.css'
+import './styles/Vp.css'
 
 const videoSrc = {
   type: "video",

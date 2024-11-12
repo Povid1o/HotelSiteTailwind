@@ -1,0 +1,24 @@
+.unShown{
+    opacity: 0;
+    filter:blur(3px);
+    transform: translateY(25%);
+    transition: all 1s;
+}
+
+@media(prefers-reduced-motion) {
+    .unShown{
+        transition: none;
+    }
+}
+
+.show{
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+}
+
+.show-remove-blur {
+    filter: none;
+    transform: none;
+    transition-delay: 0.3s;
+}

@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
-import {ReactComponent as Logo} from './assets/Logo2.svg';
+// import {ReactComponent as Logo} from './assets/Logo2.svg';
+import Logo from './assets/VineTerracesLogo.png'
 import {FaBars, FaTimes} from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import './hover.css';
+import './styles/hover.css';
 import { Context } from '../index';
 import {observer} from "mobx-react-lite"
 
@@ -18,10 +19,11 @@ const Navbar = observer( ({nav, setNav}) => {
 
     return (
         <div className='fixed w-full h-[80px] font-body flex justify-between items-center px-4 bg-main_theme text-white z-[9]'>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" integrity="sha512-wnea99uKIC3TJF7v4eKk4Y+lMz2Mklv18+r4na2Gn1abDRPPOeef95xTzdwGD9e6zXJBteMIhZ1+68QC5byJZw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" integrity="sha512-wnea99uKIC3TJF7v4eKk4Y+lMz2Mklv18+r4na2Gn1abDRPPOeef95xTzdwGD9e6zXJBteMIhZ1+68QC5byJZw==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
             
             <div>
-                <Logo className='w-[50px]'/>
+                {/* <Logo className='w-[50px]'/> */}
+                <img src={Logo} className='w-[100px]' />
             </div>
 
             {/*  Menu */}

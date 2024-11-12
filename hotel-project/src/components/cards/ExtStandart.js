@@ -1,6 +1,6 @@
 import React from 'react'
-import BlueSwiper from './BlueSwiper'
-import './hover.css'
+import BlueSwiper from '../sliders/BlueSwiper'
+import '../styles/hover.css'
 
 const prices = [
   { title: 'Ночь', price: '₽ 10000' },

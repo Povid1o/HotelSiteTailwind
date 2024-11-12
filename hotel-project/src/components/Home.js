@@ -1,58 +1,123 @@
-import React from 'react';
-import Card from './Card';
-import ExtCard from './ExtCard';
-import ExtStandartPlus  from './ExtStandartplus';
-import ExtStandart from  './ExtStandart';
-import ExtGaleryCard from './ExtGalerycard';
-import BlueSwiper from './BlueSwiper';
-import ThSlider from './ThumbSlider';
+import React, {useEffect, useState} from 'react';
+import Card from './cards/Card';
+import ExtCard from './cards/ExtCard';
+import ExtGaleryCard from './cards/ExtGalerycard';
+import BlueSwiper from './sliders/BlueSwiper';
+import HotelRoom from './cards/HotelRoom';
+// import ThSlider from './sliders/ThumbSlider';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import './hover.css'
+import './styles/hover.css'
 import useWindowDimensions from './WindowResizeListener';
 import VPlayer from './VideoPlayer';
+import './styles/appear.css';
+import './styles/base.css';
+// import { entries } from 'mobx';
+
+const standardRoomData = {
+    title: "Номер Стандарт",
+    description: "Аппартаменты расположены в 160 м. От моря, красивой набережной и открытыми пляжами. Разнообразие кофеин, ресторанов на любой вкус и бюджет. Велодорожка вдоль всей набережной, протяжённостью 12 км.",
+    // Массив изображений может содержать как строки URL, так и объекты с src и alt
+    images: [
+      {
+        src: "https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg",
+        alt: "Вид спальни"
+      },
+      {
+        src: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1",
+        alt: "Вид ванной"
+      },
+      {
+        src: "https://flowbite.com/docs/images/carousel/carousel-3.svg",
+        alt: "Вид балкона"
+      }
+    ],
+    prices: {
+      night: "10000",
+      week: "50000"
+    },
+    features: [
+      "3 человека",
+      "2 кровати",
+      "2 спальни",
+      "160 м до моря",
+      "Свой мангал"
+    ],
+    amenities: [
+      "Бассейн",
+      "Автостоянка",
+      "Wi-Fi",
+      "Свой двор",
+      "Спутник/кабель ТВ",
+      "Холодильник",
+      "Душ",
+      "Сейф"
+    ],
+    checkInOut: {
+      checkIn: "С 13:00",
+      checkOut: "до 22:00",
+      minStay: "С 14:00 до 22:00"
+    },
+    restrictions: [
+      "18+",
+      "Нельзя с животными",
+      "Не больше указанного количества человек на дом"
+    ]
+  };
 
 
+const standardPlusRoomData = {
+  title: "Номер Стандарт+",
+  description: "Аппартаменты расположены в 160 м. От моря, красивой набережной и открытыми пляжами. Разнообразие кофеин, ресторанов на любой вкус и бюджет. Велодорожка вдоль всей набережной, протяжённостью 12 км.",
+  images: [
+    {
+      src: "https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg",
+      alt: "Вид спальни"
+    },
+    {
+      src: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1",
+      alt: "Вид ванной"
+    },
+    {
+      src: "https://flowbite.com/docs/images/carousel/carousel-3.svg",
+      alt: "Вид балкона"
+    }
+  ],
+  prices: {
+    night: "20000",
+    week: "100000"
+  },
+  features: [
+    "3 человека",
+    "2 кровати",
+    "2 спальни",
+    "160 м до моря",
+    "Свой мангал"
+  ],
+  amenities: [
+    "Бассейн",
+    "Автостоянка",
+    "Wi-Fi",
+    "Свой двор",
+    "Спутник/кабель ТВ",
+    "Холодильник",
+    "Душ",
+    "Сейф"
+  ],
+  checkInOut: {
+    checkIn: "С 13:00",
+    checkOut: "до 22:00",
+    minStay: "С 14:00 до 22:00"
+  },
+  restrictions: [
+    "18+",
+    "Нельзя с животными",
+    "Не больше указанного количества человек на дом"
+  ]
+};
 
-const StandartCard = () => {
-    return(
-        <Card
-        imgAlt="Image alt text"
-        imgSrc="https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWxzfGVufDB8fDB8fHww"
-        >
-            <div className='flex flex-col mx-2 min-w-28 sm:mx-4 md:mx-6 lg:mx-8'>
-                <h2 className="font-bold mb-2 text-center text-base sm:text-2xl">Номер Стандарт</h2>
-                <p className="text-gray-700 mb-4 text-justify text-xs  sm:text-base">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
-                </p>
-                <a href='#' className='underlineCard w-min text-nowrap mb-4 mx-2 text-left  font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4'>От 10.000₽</a>
-            </div>
-                            
-        </Card>
-
-    )
-}
-
-const StandartPlusCard = () => {
-    return(
-        <Card
-        imgAlt="Image alt text"
-        imgSrc="https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWxzfGVufDB8fDB8fHww"
-        >
-            <div className='flex flex-col mx-2 min-w-28 sm:mx-4 md:mx-6 lg:mx-8 '>
-                <h2 className="font-bold mb-2 text-center text-base sm:text-2xl">Номер Стандарт+</h2>
-                <p className="text-gray-700 mb-4 text-justify text-xs  sm:text-base">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
-                </p>
-                <a href='#' className='underlineCard w-min text-nowrap mb-4 mx-2 text-left  font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4'>От 20.000₽</a>
-            </div>
-                            
-        </Card>
-
-    )
-}
 
 const GaleryCard = () => {
     return(
@@ -96,18 +161,76 @@ const Box = ({ className,imgAlt, imgSrc, children }) => {
 
 
 const Home = ({nav}) => {
+    // eslint-disable-next-line no-unused-vars
     const {height, width} = useWindowDimensions();
+    // const [blur, setBlur] = useState(0);
+
+    // const handleScroll = (entries) => {
+    //   entries.forEach(entry => {
+    //     // Если элемент полностью виден
+    //     if (entry.isIntersecting) {
+    //       setBlur(0);
+    //     } else {
+    //       // Если элемент не виден, вычисляем его видимость
+    //       const rect = entry.boundingClientRect;
+    //       const percentageVisible = Math.max(0, rect.bottom / window.innerHeight);
+    //       const newBlur = Math.min(30, (1 - percentageVisible) * 30); // Максимальное размытие 30
+    //       setBlur(newBlur);
+    //     }
+    //   });
+    // };
+  
+    // useEffect(() => {
+    //   const observer = new IntersectionObserver(handleScroll, {
+    //     threshold: [0, 0.1, 0.9, 1], // Настройка порогов для отслеживания
+    //   });
+  
+    //   const section = document.getElementById('welcome-section');
+    //   if (section) {
+    //     observer.observe(section);
+    //   }
+  
+    //   return () => {
+    //     if (section) {
+    //       observer.unobserve(section);
+    //     }
+    //   };
+    // }, []);
+
+    setTimeout(() => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !entry.target.classList.contains('animated')){
+              entry.target.classList.add('show');
+              entry.target.classList.add('animated');
+              if (entry.target.classList.contains('card')) {entry.target.classList.add('show-remove-blur');}
+            } 
+          })
+        });
+      
+        const hiddenElements = document.querySelectorAll('.unShown')
+        hiddenElements.forEach((element) => observer.observe(element));
+      
+        window.addEventListener('scroll', () => {
+          hiddenElements.forEach((element) => observer.unobserve(element));
+          hiddenElements.forEach((element) => observer.observe(element));
+        });
+      }, 150);
+
     return ( 
-        <div name = 'home' className="w-full h-max bg-white">
+        <tbody name = 'home' className="w-full h-max bg-white">
 
 
             {/*  Intro */}
-            <div className=" bg-[url('../public/images/Wine_Background2_AI.png')] bg-no-repeat bg-cover bg-gray-300 bg-blend-multiply w-full h-screen rounded-xl">
+            <section 
+              className=" bg-[url('../public/images/Wine_Background2_AI.png')] mainBackground-page "
+              // style={{ filter: `blur(${blur}px)`, transition: 'filter 0.1s ease' }}
+            >
+                <div className="pic__masked"></div>
                 <div className="max-w-[700px] h-screen mx-auto px-16 flex flex-col justify-center content-center text-center xl:max-w-[900px]">
-                    {/* <p className='text-5xl font-bold py-3 text-white relative backdrop-blur bg-grey/30 rounded-lg'>Добро пожаловать на Винные Террасссы</p> */}
-                    <p className='text-3xl font-bold font-body py-3 relative text-white drop-shadow-2xl isolate md:text-5xl xl:text-7xl'>Добро пожаловать на Винные Террасссы</p>
+                    <h1 className='header-page'>Добро пожаловать на Винные Террасы</h1>
                 </div>
-            </div>
+            </section>
             {/*  Intro */}
 
             {/* Brick */}
@@ -115,43 +238,45 @@ const Home = ({nav}) => {
 
 
             {/* Brick 1 */}
-            <div className='mt-14 mx-auto justify-center flex flex-row xl:container'>
+            <section className='unShown'>
+              <section className='mt-14 mx-auto justify-center flex flex-row xl:container'>
 
-                {/* Text Block */}
-                <div className='max-w-[700px] mx-auto bg-white rounded-xl drop-shadow-2xl max-sm:w-5/6 md:w-3/4 lg:max-w-[900px] xl:mx-8'>
+                  {/* Text Block */}
+                  <div className='max-w-[700px] mx-auto bg-white rounded-xl drop-shadow-2xl max-sm:w-5/6 md:w-3/4 lg:max-w-[900px] xl:mx-8'>
 
-                    <div className="w-full flex flex-col p-10 py-5 font-body md:flex-row">
-                        <h1 className="font-bold text-4xl text-gray-700 bg-white pt-4 pr-4 lg:text-5xl xl:text-6xl pt-8 pr-16">Кто мы?</h1>
-                        <p className="max-w-screen-lg font-light text-left text-gray-700 bg-white text-xs md:text-base lg:text-lg xl:text-2xl pt-8">
-                            Отель-винодельня "Винные Террассы" - это уникальное место, сочетающее в себе шарм и гостеприимство с изысканными винами, произведенным нашими виноделами по собственному рецепту. Мы предлагаем гостям возможность насладиться роскошью и комфортом, а также окунуться в удивительный мир виноделия, попробовать уникальные сорта вин и узнать историю их создания.
-                        </p>
-                    </div>
+                      <div className="w-full flex flex-col p-10 py-5 font-body md:flex-row">
+                          <h1 className="header-section pr-16">Кто мы?</h1>
+                          <p className="max-w-screen-lg font-light text-left text-gray-700 bg-white text-xs md:text-base lg:text-lg xl:text-2xl pt-8">
+                              Отель-винодельня "Винные Террассы" - это уникальное место, сочетающее в себе шарм и гостеприимство с изысканными винами, произведенным нашими виноделами по собственному рецепту. Мы предлагаем гостям возможность насладиться роскошью и комфортом, а также окунуться в удивительный мир виноделия, попробовать уникальные сорта вин и узнать историю их создания.
+                          </p>
+                      </div>
 
-                </div>
-                {/* Text Block */}
+                  </div>
+                  {/* Text Block */}
 
-                <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg" alt="" className='hidden xl:flex max-h-[400px] rounded-xl'/>
+                  <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg" alt="" className='hidden xl:flex max-h-[400px] rounded-xl'/>
 
-            </div>
+              </section>
 
-            <div className='mt-8 mx-auto justify-center flex flex-row xl:container'>
+              <section className='mt-8 mx-auto justify-center flex flex-row xl:container'>
 
-                <div className='hidden xl:flex max-w-[900px] mx-8 rounded-xl max-sm:w-5/6 md:w-3/4'>
-                    <img src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" alt="" className='object-cover rounded-xl'/>
+                  <div className='hidden xl:flex max-w-[900px] mx-8 rounded-xl max-sm:w-5/6 md:w-3/4'>
+                      <img src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" alt="" className='object-cover rounded-xl'/>
 
-                </div>
+                  </div>
 
-                <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1" alt="" className='hidden xl:flex max-h-[600px] rounded-xl'/>
+                  <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1" alt="" className='hidden xl:flex max-h-[600px] rounded-xl'/>
 
 
-            </div>
+              </section>
+            </section>
             {/* Brick 1 */}
 
 
             {/* Blue Swiper */}
-            <div className="mx-auto max-sm:w-5/6 md:w-3/4 xl:hidden ">
+            <section className="mx-auto unShown max-sm:w-5/6 md:w-3/4 xl:hidden show">
                 <BlueSwiper />
-            </div>
+            </section>
             
             
             {/* Brick 1 */}
@@ -160,35 +285,35 @@ const Home = ({nav}) => {
 
 
             {/* Brick 2 */}
-            <div className='mt-14 mx-auto justify-center font-body max-sm:w-5/6 md:w-3/4 xl:container' >
-                <p className='text-4xl text-gray-700 font-bold pt-4 text-nowrap lg:text-5xl xl:text-6xl pt-8'>Номерной Фонд</p>
-
+            <section className='unShown card'>
+            <section className='section-format'>
+                {/* <p className='text-4xl text-gray-700 font-bold pt-4 text-nowrap lg:text-5xl xl:text-6xl pt-8'>Номерной Фонд</p> */}
+                <h2 className='header-section'>Номерной Фонд</h2>
                 <div className='flex mobile:flex-col sm:flex-row xl:justify-center'>
 
                     <ExtCard
-                    Card={StandartPlusCard}
-                    ExtContent={ExtStandartPlus}
+                    Card={() => <HotelRoom viewType="card" data={standardPlusRoomData} />}
+                    ExtContent={() => <HotelRoom viewType="extended" data={standardPlusRoomData} />}
                     /> 
 
                     <ExtCard
-                    Card={StandartCard}
-                    ExtContent={ExtStandart}
+                    Card={() => <HotelRoom viewType="card" data={standardRoomData} />}
+                    ExtContent={() => <HotelRoom viewType="extended" data={standardRoomData} />}
                     /> 
-
-                    
-
-
-
 
                 </div>
                 
 
-            </div>
+            </section>
+            </section>
             {/* Brick 2 */}
 
             {/* Galery */}
-                <div className="mx-auto px-2 mt-16 max-sm:w-5/6 md:w-3/4 lg:mt-24 xl:container">
-                    <h2 className='text-4xl text-gray-700 font-bold pb-8 flex flex-wrap lg:text-5xl xl:text-6xl '>Отель расположен в самой живописной локации Абрау</h2>
+            <section className='unShown card'>
+                {/* <div className="mx-auto px-2 mt-14 max-sm:w-5/6 md:w-3/4 lg:mt-24 xl:container"> */}
+                <div className="section-format">
+                    {/* <h2 className='text-4xl text-gray-700 font-bold pb-8 flex flex-wrap lg:text-5xl xl:text-6xl '>Отель расположен в самой живописной локации Абрау</h2> */}
+                    <h2 className='header-section'>Отель расположен в самой живописной локации Абрау</h2>
                     <div className="-m-1 flex flex-wrap md:-m-2 ">
                         
                         <div className="flex w-1/3 flex-wrap">
@@ -232,24 +357,28 @@ const Home = ({nav}) => {
                         /> 
                     </div>
                 </div>
-            <div className='mx-auto mt-16 px-2 max-sm:w-5/6 md:w-3/4 lg:mt-24 xl:container'>
-                <h1 className=' text-4xl text-gray-700 font-bold pb-4 sm:pb-8 text-wrap lg:text-5xl xl:text-6xl'>Посмотрите видео-презентацию</h1>
-                <VPlayer/>
-            </div>
+            </section>
+
+            <section className='unShown card'>
+                <div className='section-format'>
+                    <h1 className='header-section'>Посмотрите видео-презентацию</h1>
+                    <VPlayer/>
+                </div>
+            </section>
             
 
             {/* Brick 3 */}
-            <div className='mt-14 mx-8 mx-auto justify-center font-body max-sm:w-5/6 md:w-3/4 xl:container'>
+            <section className='unShown section-format'>
 
-                <p className='text-4xl text-gray-700 font-bold pt-4 lg:text-5xl xl:text-6xl pt-8'>Ваш отдых - наша ответственность</p>
+                <p className='header-section'>Ваш отдых - наша ответственность</p>
 
-                <ul className='flex flex-wrap flex-row'>
+                <ul className='horizontal-list'>
                     <li>
                         <Box
                         imgAlt={"Трансфер"}
                         imgSrc={'https://kursk-kortezh.ru/admin/Data-Gallery/pictures/tuazev8six-uslugi-transfera-v-prage.jpg'}
                         >
-                            <p className='mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold'>Трансфер</p>
+                            <p className='horizontal-list-boxElement'>Трансфер</p>
                         </Box>
                     </li>
                     <li>
@@ -257,7 +386,7 @@ const Home = ({nav}) => {
                         imgAlt={"Изысканная кухня"}
                         imgSrc={'https://media.istockphoto.com/id/500466008/ru/%D1%84%D0%BE%D1%82%D0%BE/%D0%B3%D0%BE%D0%B2%D1%8F%D0%B4%D0%B8%D0%BD%D1%8B-%D1%81%D1%82%D0%B5%D0%B9%D0%BA.jpg?s=612x612&w=0&k=20&c=RN33VmjFFu06kFNyM_8vRe_A5eDgKlV6u86t1FZnpSM='}
                         >
-                            <p className='mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold'>Изысканная кухня</p>
+                            <p className='horizontal-list-boxElement'>Изысканная кухня</p>
                         </Box>
                     </li>
                     <li>
@@ -265,7 +394,7 @@ const Home = ({nav}) => {
                         imgAlt={"Современный дизайн"}
                         imgSrc={'https://mykaleidoscope.ru/uploads/posts/2021-03/1616624585_56-p-dizain-modern-interera-58.jpg'}
                         >
-                            <p className='mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold'>Современный дизайн</p>
+                            <p className='horizontal-list-boxElement'>Современный дизайн</p>
                         </Box>
                     </li>
                     <li>
@@ -273,7 +402,7 @@ const Home = ({nav}) => {
                         imgAlt={"Сервис"}
                         imgSrc={'https://habrastorage.org/webt/gt/pc/ia/gtpciaxhxff_iswdxx-qhwizuo8.jpeg'}
                         >
-                            <p className='mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold'>Сервис</p>
+                            <p className='horizontal-list-boxElement'>Сервис</p>
                         </Box>
                     </li>
                     <li>
@@ -281,7 +410,7 @@ const Home = ({nav}) => {
                         imgAlt={"Качественное вино"}
                         imgSrc={'https://forumsamogon.ru/wp-content/uploads/e/e/e/eeeb1c2d5d567758dbf6327fd1b0d490.jpg'}
                         >
-                            <p className='mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold'>Качественное вино</p>
+                            <p className='horizontal-list-boxElement'>Качественное вино</p>
                         </Box>
                     </li>
 
@@ -289,9 +418,9 @@ const Home = ({nav}) => {
 
 
 
-            </div>
+            </section>
 
-        </div>
+        </tbody>
      );
 }
 

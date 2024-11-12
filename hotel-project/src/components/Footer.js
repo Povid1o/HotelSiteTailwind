@@ -1,8 +1,9 @@
 import React from 'react';
-import {ReactComponent as Logo} from './assets/Logo2.svg';
+import Logo from './assets/VineTerracesLogo.png'
 import { YMaps, Map, Placemark} from '@pbe/react-yandex-maps';
 import useWindowDimensions from './WindowResizeListener';
-import { Link } from 'react-router-dom';
+
+import "./styles/footer.css"
 
 
 
@@ -34,25 +35,25 @@ const Footer = () => {
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap">
                 <div className="w-full md:w-1/4 mb-4 md:mb-0">
-                    <Logo className='w-[100px]'/>
+                  <img src={Logo} className='w-[100px]' />
                 </div>
             </div>
             <hr className="border-gray-400 my-8" />
             <ul className="flex flex-wrap justify-center flex-row mx-auto text-nowrap md:gap-8 lg:gap-12 xl:gap-16">
-                <div className="max-md:w-full mb-4 md:mb-0">
-                    <h2 className="text-lg text-[#F8F7F4] font-body mb-2 w-min "><a href='#' className='underlineDesktop'>Апартаменты</a></h2>
+                <div className="footer-element">
+                    <h2 className="text"><a href='#' className='underlineDesktop'>Апартаменты</a></h2>
                 </div>
 
-                <div className="max-md:w-full mb-4 md:mb-0">
-                    <h2 className="text-lg text-[#F8F7F4] font-body mb-2 w-min"><a href='#' className='underlineDesktop'>Как добраться</a></h2>
+                <div className="footer-element">
+                    <h2 className="text"><a href='#' className='underlineDesktop'>Как добраться</a></h2>
                 </div>
 
-                <div className="max-md:w-full mb-4 md:mb-0">
-                    <h2 className="text-lg text-[#F8F7F4] font-body mb-2 w-min"><a href='#' className='underlineDesktop'>Контакты</a></h2>
+                <div className="footer-element">
+                    <h2 className="text"><a href='#' className='underlineDesktop'>Контакты</a></h2>
                 </div>
 
-                <div className="max-md:w-full mb-4 md:mb-0">
-                    <h2 className="text-lg text-[#F8F7F4] font-body mb-2 w-min"><a href='#' className='underlineDesktop'>Политика конфиденциальности</a></h2>
+                <div className="footer-element">
+                    <h2 className="text"><a href='#' className='underlineDesktop'>Политика конфиденциальности</a></h2>
                 </div>
 
             </ul>

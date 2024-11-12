@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import './ExitButton.css'
+import '../styles/ExitButton.css'
 
 const ExtCard = ({ Card, ExtContent }) => {
   const [showDialog, setShowDialog] = useState(false);

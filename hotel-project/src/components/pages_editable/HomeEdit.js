@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import Card from '../Card';
-import ExtCard from '../ExtCard';
-import ExtGaleryCard from '../ExtGalerycard';
-import BlueSwiper from '../BlueSwiper';
-import ImageWithButton from '../text_inputs/ImageWithButton';
+import Card from '../cards/Card';
+import ExtCard from '../cards/ExtCard';
+import ExtGaleryCard from '../cards/ExtGalerycard';
+import BlueSwiper from '../sliders/BlueSwiper';
+import PhotoSelector from '../text_inputs/PhotoSelector';
+import ImageWithButton from '../text_inputs/ImageEdit';
 import BackgroundImage from '../../images/Wine_Background2_AI.png';
 import TextEditor from '../text_inputs/TextEditor';
-import ThSlider from '../ThumbSlider';
+import ThSlider from '../sliders/ThumbSlider';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import '../hover.css'
+import '../styles/hover.css'
 // import VPlayer from './components/VideoPlayer';
 
 // const BackgroundImage = require('../../images/Wine_Background2_AI.png').default;
@@ -102,8 +103,16 @@ const HomeEdit = () => {
         }
     };
 
+    const imageArray = [
+        { src: "https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg", alt: "Room 9 St Andrea" },
+        { src: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1", alt: "Sant Andrea" },
+        { src: "https://flowbite.com/docs/images/carousel/carousel-3.svg", alt: "Carousel Image 3" },
+        { src: "https://flowbite.com/docs/images/carousel/carousel-4.svg", alt: "Carousel Image 4" },
+        { src: "https://flowbite.com/docs/images/carousel/carousel-5.svg", alt: "Carousel Image 5" },
+      ];
+
     return ( 
-        <div name = 'home' className="w-full h-max bg-white">
+        <tbody name = 'home' className="w-full h-max bg-white">
 
 
            {/* <div className=" bg-[url('../public/images/Wine_Background2_AI.png')] bg-no-repeat bg-cover bg-gray-300 bg-blend-multiply w-full h-screen rounded-xl">
@@ -114,7 +123,11 @@ const HomeEdit = () => {
             </div> */}
 
             <ImageWithButton image={BackgroundImage} isBackground={true}>
-                <TextEditor text="Добро пожаловать на Винные Терассы" format="header" onSave={(newText) => console.log(newText)} />
+                <div className="max-w-[700px] mx-auto px-16 flex flex-col justify-center content-center text-center">
+                    <div className="flex max-w-screen-lg flex-wrap items-end gap-4 px-4 py-3">
+                        <TextEditor text="Добро пожаловать на Винные Терассы" format="header" isShort={true} onSave={(newText) => console.log(newText)} />
+                    </div>
+                </div>
             </ImageWithButton>
 
             
@@ -125,39 +138,29 @@ const HomeEdit = () => {
             <section className='mt-14 mx-auto justify-center flex flex-row xl:container'>
 
                 {/* Text Block */}
-                <div className='max-w-[700px] mx-auto bg-white rounded-xl drop-shadow-2xl max-sm:w-5/6 md:w-3/4 lg:max-w-[900px] xl:mx-8'>
+                <div className='mx-auto bg-white rounded-xl drop-shadow-2xl max-sm:w-5/6  xl:mx-2'>
 
                     <div className="w-full flex flex-col p-10 py-5 font-body md:flex-row">
-                        <h1 className="font-bold text-4xl text-gray-700 bg-white pt-4 pr-4 lg:text-5xl xl:text-6xl pt-8 pr-16">Кто мы?</h1>
-                        <p className="max-w-screen-lg font-light text-left text-gray-700 bg-white text-xs md:text-base lg:text-lg xl:text-2xl pt-8">
+                        {/* <h1 className="font-bold text-4xl text-gray-700 bg-white pt-4 pr-4 lg:text-5xl xl:text-6xl pt-8 pr-16">Кто мы?</h1> */}
+                        <TextEditor text="Кто мы?" format="custom" style={"font-bold text-4xl text-gray-700 bg-white pt-4 pr-4 lg:text-5xl xl:text-6xl pt-8 pr-16"} isShort={true} onSave={(newText) => console.log(newText)} />
+                        <TextEditor text='Отель-винодельня "Винные Террассы" - это уникальное место, сочетающее в себе шарм и гостеприимство с изысканными винами, произведенным нашими виноделами по собственному рецепту. Мы предлагаем гостям возможность насладиться роскошью и комфортом, а также окунуться в удивительный мир виноделия, попробовать уникальные сорта вин и узнать историю их создания.' format="paragraph" onSave={(newText) => console.log(newText)} />
+                        {/* <p className="max-w-screen-lg font-light text-left text-gray-700 bg-white text-xs md:text-base lg:text-lg xl:text-2xl pt-8">
                             Отель-винодельня "Винные Террассы" - это уникальное место, сочетающее в себе шарм и гостеприимство с изысканными винами, произведенным нашими виноделами по собственному рецепту. Мы предлагаем гостям возможность насладиться роскошью и комфортом, а также окунуться в удивительный мир виноделия, попробовать уникальные сорта вин и узнать историю их создания.
-                        </p>
+                        </p> */}
                     </div>
 
                 </div>
-                {/* Text Block */}
-
-                <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg" alt="" className='hidden xl:flex max-h-[400px] rounded-xl'/>
-
+                
             </section>
-
-            <section className='mt-8 mx-auto justify-center flex flex-row xl:container'>
-
-                <div className='hidden xl:flex max-w-[900px] mx-8 rounded-xl max-sm:w-5/6 md:w-3/4'>
-                    <img src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" alt="" className='object-cover rounded-xl'/>
-
-                </div>
-
-                <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1" alt="" className='hidden xl:flex max-h-[600px] rounded-xl'/>
-
-
-            </section>
-            {/* Brick 1 */}
 
 
             {/* Blue Swiper */}
-            <div className="mx-auto max-sm:w-5/6 md:w-3/4 xl:hidden ">
+            {/* <div className="mx-auto max-sm:w-5/6 md:w-3/4 xl:hidden ">
                 <BlueSwiper />
+            </div> */}
+
+            <div className="mx-auto max-sm:w-5/6">
+                <PhotoSelector photos={imageArray} withSlider={true}/>
             </div>
             
             
@@ -167,66 +170,34 @@ const HomeEdit = () => {
 
 
             {/* Brick 2 */}
-            <div className='mt-14 mx-auto justify-center font-body max-sm:w-5/6 md:w-3/4 xl:container' >
-                <p className='text-4xl text-gray-700 font-bold pt-4 text-nowrap lg:text-5xl xl:text-6xl pt-8'>Номерной Фонд</p>
-
+            <section className='mt-14 mx-auto justify-center font-body max-sm:w-5/6 md:w-3/4 xl:container' >
+                {/* <h2 className='text-4xl text-gray-700 font-bold pt-4 text-nowrap lg:text-5xl xl:text-6xl pt-8'>Номерной Фонд</h2> */}
+                <TextEditor text="Номерной Фонд" format="modal" isShort={true} onSave={(newText) => console.log(newText)} />
                 <div className='flex mobile:flex-col sm:flex-row xl:justify-center'>
                     
 
                 </div>
                 
 
-            </div>
+            </section>
             {/* Brick 2 */}
 
             {/* Galery */}
-                <div className="mx-auto px-2 mt-16 max-sm:w-5/6 md:w-3/4 lg:mt-24 xl:container">
-                    <h2 className='text-4xl text-gray-700 font-bold pb-8 flex flex-wrap lg:text-5xl xl:text-6xl '>Отель расположен в самой живописной локации Абрау</h2>
-                    <div className="-m-1 flex flex-wrap md:-m-2 ">
-                        
-                        <div className="flex w-1/3 flex-wrap">
-                            <div className="w-full h-full p-1 md:p-2 ">
-                                <img
-                                alt=""
-                                className="block  h-full w-full rounded-xl object-cover object-center max-h-[360px]  "
-                                src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1" />
-                            </div>
-                        </div>
-
-                        <div className="flex w-2/3  flex-wrap ">
-                            <div className="w-full h-full p-1 md:p-2">
-                                <img
-                                alt=""
-                                className="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
-                                src="https://flowbite.com/docs/images/carousel/carousel-1.svg" />
-                            </div>
-                        </div>
-                                                
-                        <div className=" h-full w-2/3  p-1 md:p-2 ">
-                            <img
-                            alt=""
-                            className="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
-                            src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" />
-                        </div>
-                        
-                        <div className="flex w-1/3 flex-wrap">
-                            <div className="w-full h-full p-1 md:p-2">
-                                <img
-                                alt=""
-                                className="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
-                                src="https://flowbite.com/docs/images/carousel/carousel-1.svg" />
-                            </div>
-                         </div>
+                <div className="mx-auto font-body px-2 mt-16 max-sm:w-5/6 md:w-3/4 lg:mt-24 xl:container">
+                    {/* <h2 className='text-4xl text-gray-700 font-bold pb-8 flex flex-wrap lg:text-5xl xl:text-6xl '>Отель расположен в самой живописной локации Абрау</h2> */}
+                    <TextEditor text="Отель расположен в самой живописной локации Абрау" format="modal" isShort={true} onSave={(newText) => console.log(newText)} />
+                    
+                    <div className="mx-auto max-sm:w-5/6">
+                        <PhotoSelector photos={imageArray} withSlider={true}/>
                     </div>
-                    <div className='flex mx-auto justify-center items-center w-64 h-22 rounded-xl'>
-                        <ExtCard
-                        Card={GaleryCard}
-                        ExtContent={ExtGaleryCard}
-                        /> 
-                    </div>
+                    
+                    
+                    
                 </div>
-            <div className='mx-auto mt-16 px-2 max-sm:w-5/6 md:w-3/4 lg:mt-24 xl:container'>
-                <h1 className=' text-4xl text-gray-700 font-bold pb-4 sm:pb-8 text-wrap lg:text-5xl xl:text-6xl'>Посмотрите видео-презентацию</h1>
+            <div className='mx-auto mt-16 px-2 font-body max-sm:w-5/6 md:w-3/4 lg:mt-24 xl:container'>
+                {/* <h1 className=' text-4xl text-gray-700 font-bold pb-4 sm:pb-8 text-wrap lg:text-5xl xl:text-6xl'>Посмотрите видео-презентацию</h1> */}
+                <TextEditor text="Посмотрите видео-презентацию" format="modal" isShort={true} onSave={(newText) => console.log(newText)} />
+                
                 {/* <VPlayer/> */}
             </div>
             
@@ -284,7 +255,7 @@ const HomeEdit = () => {
 
             </div>
 
-        </div>
+        </tbody>
      );
 }
 
