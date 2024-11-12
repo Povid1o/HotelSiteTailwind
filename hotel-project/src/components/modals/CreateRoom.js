@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Context } from '../../index'
 import { observer } from 'mobx-react-lite';
-import { createProduct, fetchClase, fetchTypes,  } from '../http/productAPI';
+import { createProduct, createRoom, fetchClase, fetchTypes,  } from '../http/productAPI';
 
 const CreateProduct = observer(() => {
   const {product} = useContext(Context)

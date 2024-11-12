@@ -44,3 +44,29 @@ export const deleteProduct = async (id) => {
     const {data} = await $authHost.delete('api/product/' + id)
     return data
 }
+
+
+export const createRoom = async (room) => {
+    const {data} = await $authHost.post('api/room', room)
+    return data
+}
+
+export const fetchRoom = async (typeId, claseId) => {
+    const {data} = await $host.get('api/room',)
+    return data
+}
+ 
+export const fetchOneRoom = async (id) => {
+    const {data} = await $host.get('api/room/' + id)
+    return data
+}
+
+export const updateRoom = async (id, room) => {
+    const {data} = await $authHost.put('api/room/' + id, room)
+    return data
+}
+
+export const deleteRoom = async (id) => {
+    const {data} = await $authHost.delete('api/room/' + id)
+    return data
+}

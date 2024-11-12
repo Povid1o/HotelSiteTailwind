@@ -68,6 +68,9 @@ Product.belongsTo(Type)
 Clase.hasMany(Product)
 Product.belongsTo(Clase)
 
+Type.hasMany(Clase)
+Clase.belongsTo(Type)
+
 Type.hasMany(Room)
 Room.belongsTo(Type)
 

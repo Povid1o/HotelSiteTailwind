@@ -11,6 +11,7 @@ const CreateClase = observer(() => {
     fetchTypes().then(data => product.setTypes(data))
   }, [])
   
+  
   const addClase = async () => {
     
 
@@ -21,7 +22,7 @@ const CreateClase = observer(() => {
       if (clases.some(clase => clase.name.toLowerCase() === value.toLowerCase())) {
         throw new Error('Класс с таким именем уже существует');
       }
-      await createClase({name: value});
+      await createClase({name: value, typeId: product.selectedType.id});
       setValue('');
       alert('Готово!');
     } catch (error) {

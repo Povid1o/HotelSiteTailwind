@@ -3,8 +3,8 @@ const ApiError = require('../error/ApiError')
 
 class ClaseConroller {
   async create(req,res) {
-    const {name} = req.body
-    const clase = await Clase.create({name})
+    const {name, typeId} = req.body
+    const clase = await Clase.create({name, typeId})
     return res.json(clase)
   }
 
