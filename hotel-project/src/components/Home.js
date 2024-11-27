@@ -1,3 +1,7 @@
+// Удалить компоненты BlueSwiper, ExtStandart и ExtStandartPlus
+
+
+
 import React from 'react';
 import Card from './cards/Card';
 import ExtCard from './cards/ExtCard';
@@ -5,6 +9,7 @@ import ExtStandartPlus  from './ExtStandartplus';
 import ExtStandart from  './ExtStandart';
 import ExtGaleryCard from './cards/ExtGalerycard';
 import BlueSwiper from './BlueSwiper';
+import HotelRoom from './cards/HotelRoom';
 // import ThSlider from './ThumbSlider';
 // import ExtHotelExample from './cards/ExtHotelExample';
 
@@ -17,47 +22,147 @@ import VPlayer from './VideoPlayer';
 import './effects/appear.css';
 // import { entries } from 'mobx';
 
+const standardRoomData = {
+    title: "Номер Стандарт",
+    description: "Аппартаменты расположены в 160 м. От моря, красивой набережной и открытыми пляжами. Разнообразие кофеин, ресторанов на любой вкус и бюджет. Велодорожка вдоль всей набережной, протяжённостью 12 км.",
+    // Массив изображений может содержать как строки URL, так и объекты с src и alt
+    images: [
+      {
+        src: "https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg",
+        alt: "Вид спальни"
+      },
+      {
+        src: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1",
+        alt: "Вид ванной"
+      },
+      {
+        src: "https://flowbite.com/docs/images/carousel/carousel-3.svg",
+        alt: "Вид балкона"
+      }
+    ],
+    prices: {
+      night: "10000",
+      week: "50000"
+    },
+    features: [
+      "3 человека",
+      "2 кровати",
+      "2 спальни",
+      "160 м до моря",
+      "Свой мангал"
+    ],
+    amenities: [
+      "Бассейн",
+      "Автостоянка",
+      "Wi-Fi",
+      "Свой двор",
+      "Спутник/кабель ТВ",
+      "Холодильник",
+      "Душ",
+      "Сейф"
+    ],
+    checkInOut: {
+      checkIn: "С 13:00",
+      checkOut: "до 22:00",
+      minStay: "С 14:00 до 22:00"
+    },
+    restrictions: [
+      "18+",
+      "Нельзя с животными",
+      "Не больше указанного количества человек на дом"
+    ]
+  };
 
 
-const StandartCard = () => {
-    return(
-        <Card
-        imgAlt="Image alt text"
-        imgSrc="https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWxzfGVufDB8fDB8fHww"
-        >
-            <div className='flex flex-col mx-2 min-w-28 sm:mx-4 md:mx-6 lg:mx-8'>
-                <h2 className="font-bold mb-2 text-center text-base sm:text-2xl">Номер Стандарт</h2>
-                <p className="text-gray-700 mb-4 text-justify text-xs  sm:text-base">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
-                </p>
-                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                <a href='#' className='underlineCard w-min text-nowrap mb-4 mx-2 text-left  font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4'>От 10.000₽</a>
-            </div>
+const standardPlusRoomData = {
+  title: "Номер Стандарт+",
+  description: "Аппартаменты расположены в 160 м. От моря, красивой набережной и открытыми пляжами. Разнообразие кофеин, ресторанов на любой вкус и бюджет. Велодорожка вдоль всей набережной, протяжённостью 12 км.",
+  images: [
+    {
+      src: "https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg",
+      alt: "Вид спальни"
+    },
+    {
+      src: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1",
+      alt: "Вид ванной"
+    },
+    {
+      src: "https://flowbite.com/docs/images/carousel/carousel-3.svg",
+      alt: "Вид балкона"
+    }
+  ],
+  prices: {
+    night: "20000",
+    week: "100000"
+  },
+  features: [
+    "3 человека",
+    "2 кровати",
+    "2 спальни",
+    "160 м до моря",
+    "Свой мангал"
+  ],
+  amenities: [
+    "Бассейн",
+    "Автостоянка",
+    "Wi-Fi",
+    "Свой двор",
+    "Спутник/кабель ТВ",
+    "Холодильник",
+    "Душ",
+    "Сейф"
+  ],
+  checkInOut: {
+    checkIn: "С 13:00",
+    checkOut: "до 22:00",
+    minStay: "С 14:00 до 22:00"
+  },
+  restrictions: [
+    "18+",
+    "Нельзя с животными",
+    "Не больше указанного количества человек на дом"
+  ]
+};
+
+// const StandartCard = () => {
+//     return(
+//         <Card
+//         imgAlt="Image alt text"
+//         imgSrc="https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWxzfGVufDB8fDB8fHww"
+//         >
+//             <div className='flex flex-col mx-2 min-w-28 sm:mx-4 md:mx-6 lg:mx-8'>
+//                 <h2 className="font-bold mb-2 text-center text-base sm:text-2xl">Номер Стандарт</h2>
+//                 <p className="text-gray-700 mb-4 text-justify text-xs  sm:text-base">
+//                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
+//                 </p>
+//                 {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+//                 <a href='#' className='underlineCard w-min text-nowrap mb-4 mx-2 text-left  font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4'>От 10.000₽</a>
+//             </div>
                             
-        </Card>
+//         </Card>
 
-    )
-}
+//     )
+// }
 
-const StandartPlusCard = () => {
-    return(
-        <Card
-        imgAlt="Image alt text"
-        imgSrc="https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWxzfGVufDB8fDB8fHww"
-        >
-            <div className='flex flex-col mx-2 min-w-28 sm:mx-4 md:mx-6 lg:mx-8 '>
-                <h2 className="font-bold mb-2 text-center text-base sm:text-2xl">Номер Стандарт+</h2>
-                <p className="text-gray-700 mb-4 text-justify text-xs  sm:text-base">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
-                </p>
-                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                <a href='#' className='underlineCard w-min text-nowrap mb-4 mx-2 text-left  font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4'>От 20.000₽</a>
-            </div>
+// const StandartPlusCard = () => {
+//     return(
+//         <Card
+//         imgAlt="Image alt text"
+//         imgSrc="https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWxzfGVufDB8fDB8fHww"
+//         >
+//             <div className='flex flex-col mx-2 min-w-28 sm:mx-4 md:mx-6 lg:mx-8 '>
+//                 <h2 className="font-bold mb-2 text-center text-base sm:text-2xl">Номер Стандарт+</h2>
+//                 <p className="text-gray-700 mb-4 text-justify text-xs  sm:text-base">
+//                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.
+//                 </p>
+//                 {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+//                 <a href='#' className='underlineCard w-min text-nowrap mb-4 mx-2 text-left  font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4'>От 20.000₽</a>
+//             </div>
                             
-        </Card>
+//         </Card>
 
-    )
-}
+//     )
+// }
 
 const GaleryCard = () => {
     return(
@@ -200,13 +305,13 @@ const Home = ({nav}) => {
                 <div className='flex mobile:flex-col sm:flex-row xl:justify-center'>
 
                     <ExtCard
-                    Card={StandartPlusCard}
-                    ExtContent={ExtStandartPlus}
+                    Card={() => <HotelRoom viewType="card" data={standardPlusRoomData} />}
+                    ExtContent={() => <HotelRoom viewType="extended" data={standardPlusRoomData} />}
                     /> 
 
                     <ExtCard
-                    Card={StandartCard}
-                    ExtContent={ExtStandart}
+                    Card={() => <HotelRoom viewType="card" data={standardRoomData} />}
+                    ExtContent={() => <HotelRoom viewType="extended" data={standardRoomData} />}
                     /> 
 
                 </div>

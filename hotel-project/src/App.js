@@ -49,20 +49,23 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const handleLoad = () => {
-      // Give a little extra time for everything to settle
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-    };
+    // const handleLoad = () => {
+    //   setTimeout(() => {
+    //     setLoading(false);
+    //   }, 1000);
+    // };
 
-    if (document.readyState === 'complete') {
-      handleLoad();
-    } else {
-      window.addEventListener('load', handleLoad);
-      return () => window.removeEventListener('load', handleLoad);
-    }
-  }, []);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    // if (document.readyState === 'complete') {
+    //   handleLoad();
+    // } else {
+    //   window.addEventListener('load', handleLoad);
+    //   return () => window.removeEventListener('load', handleLoad);
+    // }
+  }, [App]);
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh' }}>
