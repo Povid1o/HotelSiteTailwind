@@ -131,7 +131,7 @@ const App= observer(() => {
       : 
       (
         <div  style={{ position: 'relative', minHeight: '100vh' }}>
-          <tbody
+          <section
             style={{
               position: 'fixed',
               top: 0,
@@ -145,8 +145,8 @@ const App= observer(() => {
             }}
           >
             <LoadingScreen />
-          </tbody>
-          <tbody
+          </section>
+          <section
             style={{
                     opacity: loading ? 0 : 1,
                     transition: 'opacity 1s ease-in',
@@ -156,7 +156,7 @@ const App= observer(() => {
             {!user.isAuth && <RouterProvider router={publicrouter}/>}
             {/* {user.isAuth && <RouterProvider router={hiderouter}/>} */}
             {/* <WineHotel/> */}
-          </tbody>
+          </section>
         </div>
       )
     }

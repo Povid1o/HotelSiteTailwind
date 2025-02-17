@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Navbar from "./components/Navbar.js";
 import FoodCard from './components/cards/FoodCard.js';
 import ExtDishcard from './components/cards/ExtDishcard.js';
@@ -12,6 +12,7 @@ import { fetchClase, fetchProducts } from "./components/http/productAPI.js";
 const Restaurant = observer(() => {
   const { id } = useParams();
   const { product } = useContext(Context);
+  const [nav, setNav] = useState(false);
 
   useEffect(() => {
     fetchProducts().then(data => {
@@ -31,9 +32,7 @@ const Restaurant = observer(() => {
 
   return (
     <>
-      <div>
-        <Navbar />
-      </div>
+      <Navbar nav = {nav} setNav = {setNav} isTransparent={true}/>
 
       <div className="container mx-auto font-body sm:px-4">
         <h1 className="flex mx-auto justify-center items-center text-3xl font-bold pt-[7rem] mb-8">Меню</h1>

@@ -1,0 +1,7 @@
+.header-page{
+    @apply font-bold font-body py-3 relative text-[#FFFBF0] drop-shadow-2xl isolate
+}
+
+.header-background{
+    @apply bg-no-repeat bg-cover bg-blend-multiply w-full h-screen rounded-b-xl backdrop-filter backdrop-blur-md bg-gray-600 bg-opacity-50 flex items-center justify-center text-center px-16
+}

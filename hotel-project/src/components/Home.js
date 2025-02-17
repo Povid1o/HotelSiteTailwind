@@ -163,39 +163,6 @@ const Box = ({ className,imgAlt, imgSrc, children }) => {
 const Home = ({nav}) => {
     // eslint-disable-next-line no-unused-vars
     const {height, width} = useWindowDimensions();
-    // const [blur, setBlur] = useState(0);
-
-    // const handleScroll = (entries) => {
-    //   entries.forEach(entry => {
-    //     // Если элемент полностью виден
-    //     if (entry.isIntersecting) {
-    //       setBlur(0);
-    //     } else {
-    //       // Если элемент не виден, вычисляем его видимость
-    //       const rect = entry.boundingClientRect;
-    //       const percentageVisible = Math.max(0, rect.bottom / window.innerHeight);
-    //       const newBlur = Math.min(30, (1 - percentageVisible) * 30); // Максимальное размытие 30
-    //       setBlur(newBlur);
-    //     }
-    //   });
-    // };
-  
-    // useEffect(() => {
-    //   const observer = new IntersectionObserver(handleScroll, {
-    //     threshold: [0, 0.1, 0.9, 1], // Настройка порогов для отслеживания
-    //   });
-  
-    //   const section = document.getElementById('welcome-section');
-    //   if (section) {
-    //     observer.observe(section);
-    //   }
-  
-    //   return () => {
-    //     if (section) {
-    //       observer.unobserve(section);
-    //     }
-    //   };
-    // }, []);
 
     setTimeout(() => {
         const observer = new IntersectionObserver((entries) => {
@@ -218,15 +185,13 @@ const Home = ({nav}) => {
       }, 150);
 
     return ( 
-        <tbody name = 'home' className="w-full h-max bg-white">
+        <div name = 'home' className="w-full h-max bg-white">
 
 
             {/*  Intro */}
             <section 
               className=" bg-[url('../public/images/Wine_Background2_AI.png')] mainBackground-page "
-              // style={{ filter: `blur(${blur}px)`, transition: 'filter 0.1s ease' }}
             >
-                <div className="pic__masked"></div>
                 <div className="max-w-[700px] h-screen mx-auto px-16 flex flex-col justify-center content-center text-center xl:max-w-[900px]">
                     <h1 className='header-page'>Добро пожаловать на Винные Террасы</h1>
                 </div>
@@ -420,7 +385,7 @@ const Home = ({nav}) => {
 
             </section>
 
-        </tbody>
+        </div>
      );
 }
 
