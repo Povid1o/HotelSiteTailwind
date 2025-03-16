@@ -5,3 +5,89 @@
 .header-background{
     @apply bg-no-repeat bg-cover bg-blend-multiply w-full h-screen rounded-b-xl backdrop-filter backdrop-blur-md bg-gray-600 bg-opacity-50 flex items-center justify-center text-center px-16
 }
+
+.paragraph-content{
+    @apply text-[12px] leading-[24px] font-normal md:text-[16px] md:leading-[24px] lg:text-2xl lg:leading-[32px] xl:text-3xl xl:leading-[42px] 2xl:text-4xl 2xl:leading-[52px]
+}
+
+.section-header {
+    @apply text-[#3E4756] font-bold max-w-[150px] text-[24px] leading-[29px]
+           sm:text-[32px] sm:leading-[38px]
+           lg:text-[48px] lg:leading-[58px] lg:max-w-[180px]
+           xl:text-[56px] xl:leading-[68px] xl:max-w-[220px]
+           2xl:text-[64px] 2xl:leading-[76px] 2xl:max-w-[300px]
+}
+
+.date-header {
+    @apply font-bold text-white text-shadow-md
+           text-[20px] leading-[28px]
+           sm:text-[36px] sm:leading-[42px]
+           md:text-[42px] md:leading-[48px] 
+           lg:text-[48px] lg:leading-[54px]
+           xl:text-[54px] xl:leading-[64px]
+           2xl:text-[64px] 2xl:leading-[72px]
+}
+
+.date-content {
+    @apply text-white text-shadow-md
+           text-[12px] leading-[16px] max-w-[120px]
+           sm:text-[20px] sm:leading-[24px] sm:max-w-[160px]
+           md:text-[24px] md:leading-[28px] md:max-w-[200px]
+           lg:text-[28px] lg:leading-[32px] lg:max-w-[240px]
+           xl:text-[32px] xl:leading-[38px] xl:max-w-[280px]
+           2xl:text-[38px] 2xl:leading-[44px] 2xl:max-w-[320px]
+}
+
+.timeline-item {
+    @apply flex flex-col mb-2;
+}
+
+/* Правильное выравнивание для правой колонки */
+.right-column .timeline-item {
+    @apply items-end text-right;
+}
+
+/* Тень для лучшей читаемости текста на изображении */
+.text-shadow-md {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+/* Утилита для создания гибкой колонки дат */
+.timeline-column {
+    @apply flex flex-col justify-between;
+}
+
+/* Специфичные правила для разрешений */
+@media (max-width: 639px) {
+    .timeline-item > .date-header {
+        @apply mb-0;
+    }
+    .timeline-item > .date-content {
+        @apply leading-[14px];
+    }
+}
+
+@media (min-width: 640px) and (max-width: 767px) {
+    .timeline-item > .date-header {
+        @apply mb-1;
+    }
+}
+
+@media (min-width: 768px) {
+    .timeline-item > .date-header {
+        @apply mb-2;
+    }
+}
+
+/* Правило для гибкого количества дат */
+.timeline-column:has(.timeline-item:only-child) {
+    @apply justify-center;
+}
+
+.timeline-column:has(.timeline-item:nth-child(2):last-child) {
+    @apply justify-around;
+}
+
+.timeline-column:has(.timeline-item:nth-child(4)) {
+    @apply justify-evenly;
+}

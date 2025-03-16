@@ -124,7 +124,7 @@ const App= observer(() => {
 
   return (
     <>
-    {user.isAuth ? 
+    {!user.isAuth ? 
       (
       <RouterProvider router={hiderouter}/>
       ) 
