@@ -1,7 +1,11 @@
+// заменить роутер. Поменял авторизацию, чтобы не мучиться с бэком
+
+
 import WineHotel from "./WineHotel.js";
 import Ivents from "./Ivents.js";
 import Restaurant from "./Restaurant.js";
 import Vinery from "./Vinery.js";
+import Shop from "./Shop.js"
 import EventsList from "./components/EventsList.js";
 import LoadingScreen from './components/LoadingScreen.js';
 import Auth from "./Auth.js"
@@ -42,6 +46,10 @@ const publicrouter = createBrowserRouter([
       {
         path: "/login",
         element: <Auth/>
+      },
+      {
+        path: "/catalog",
+        element: <Shop/>
       }
     ],
   }
@@ -71,6 +79,11 @@ const hiderouter = createBrowserRouter([
       {
         path:"/Винодельня",
         element: <Vinery />,
+      },
+      ,
+      {
+        path: "/catalog",
+        element: <Shop/>
       },
       {
         path: "/login",

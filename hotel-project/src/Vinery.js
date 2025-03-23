@@ -2,12 +2,15 @@
 // 1)Заменить процесс производства с иконок, существующих сейчас на слайдер по ссылке https://www.reactbits.dev/components/rolling-gallery
 // 2)Доделать даты 
 
+// "npm i ogl" - команда, добавить в записи об установке
+
 
 import React, { useState } from 'react'
 
 import Navbar from "./components/Navbar.js"
 import Footer from "./components/Footer.js";
 import ProcessCard from './components/cards/ProcessCard.js';
+import CircularGallery from './components/sliders/CircularGallery.js';
 import { FaLongArrowAltRight } from "react-icons/fa";
 
 import "./components/styles/hover.css"
@@ -49,7 +52,7 @@ const Timeline = ({ leftDates = [], rightDates = [] }) => {
             <div className="relative w-full overflow-visible aspect-[16/9]">
                 <img
                     src={WineCaps}
-                    className="absolute w-full h-full object-cover scale-125"
+                    className="absolute w-full h-full object-cover scale-[1.35] sm:scale-125"
                     alt="История винодельни"
                 />
                     
@@ -98,9 +101,9 @@ function Vinery() {
             { year: '2000', description: 'Модернизация производства' }
         ]}
     ]
+    const photos4Slider = [{"Сбор винограда" : Grape}, {"Дробление Прессование" : BottleProduce}, {"Ферментация Выдержка Фильтрация" : WineBarrel}, {"Розлив Созревание" : WineReservour}]
     return (
         <>
-
             <Navbar nav = {nav} setNav = {setNav} isTransparent={true}/>
         
             <main className="w-full h-max overflow-hidden bg-white font-body 3xl:max-w-screen-3xl 3xl:mx-auto">
@@ -178,6 +181,9 @@ function Vinery() {
 
                     </section>
                     {/* Brick 1 Mobile*/}
+
+                    {/* Brick 1 Mobile Fix*/}
+
                 </section>
                 {/* Brick 1*/}
 
@@ -193,18 +199,18 @@ function Vinery() {
 
 
                 {/* Brick 3*/}
-                <section className='relative w-[92%] mx-auto xl:w-[85%] 2xl:max-w-screen-2xl 2xl:mx-auto'>
+                <section className='relative w-[92%] mx-auto xl:w-[85%] 2xl:mx-auto'>
                     <div className='hidden md:grid md:grid-flow-row-dense md:grid-cols-4'>
-                        <p className='col-span-1 paragraph-content'>
+                        <p className='col-span-1 paragraph-content 2xl:my-auto'>
                             {texts[2].text[0]}
                         </p>
-                        <div className="col-span-2 relative flex justify-center items-center">
+                        <div className="col-span-2 relative flex justify-center items-center 2xl:scale-125">
                             <img 
                                 src={BottleTransparent} 
                                 className='mx-auto h-auto transform -translate-y-1/2 scale-110 xl:scale-125 2xl:scale-150'
                             />
                         </div>
-                        <div className='col-span-1'>
+                        <div className='col-span-1 2xl:my-auto'>
                             <Button text="Наша винотека"/>
                             <p className='paragraph-content'>
                                 {texts[2].text[1]}
@@ -227,16 +233,28 @@ function Vinery() {
                 {/* Brick 3*/}
 
                 {/* Brick 4*/}
-                <section className='w-[92%] mx-auto md:-mt-[30rem] lg:-mt-[25rem] xl:-mt-[15rem] 2xl:-mt-[5rem]'>
-                    <h1 className='section-header mb-4 sm:mb-8'>ЭТАПЫ НАШЕГО ПРОИЗВОДСТВА</h1>
+                <section className='overflow-visible mx-auto md:-mt-[30rem] lg:-mt-[25rem] xl:-mt-[15rem] 2xl:-mt-[5rem]'>
+                    <div className='w-[92%] mx-auto'>
+                        <h1 className='section-header mb-4 sm:mb-8'>ЭТАПЫ НАШЕГО ПРОИЗВОДСТВА</h1>
+                    </div>
 
-                    <div className='grid grid-cols-2 gap-4 sm:gap-6 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 mx-auto'>
+                    <div className='overflow-visible w-screen font-body h-[300px] sm:h-[400px] lg:h-[600px] xl:h-[700px]' style={{ position: 'relative' }}>
+                        <CircularGallery 
+                            bend={1} 
+                            textColor="#3E4756" 
+                            font="bold 50px Bitter" 
+                            borderRadius={0.05} 
+                            content={photos4Slider}
+                        />
+                    </div>
+
+                    {/* <div className='grid grid-cols-2 gap-4 sm:gap-6 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 mx-auto'>
                         <div className='mx-auto'><ProcessCard imgSrc={Grape} header={"Сбор винограда"}/></div>
                         <div className='mx-auto'><ProcessCard imgSrc={BottleProduce} header={"Дробление Прессование"}/></div>
                         <div className='mx-auto'><ProcessCard imgSrc={WineBarrel} header={"Ферментация Выдержка Фильтрация"}/></div>
                         <div className='mx-auto'><ProcessCard imgSrc={WineReservour} header={"Розлив Созревание"}/></div>
 
-                    </div>
+                    </div> */}
 
                 </section>
                 {/* Brick 4*/}

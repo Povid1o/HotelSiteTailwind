@@ -34,7 +34,7 @@ const HotelRoom = ({
           <p className="text-gray-700 mb-4 text-justify text-xs sm:text-base">
             {description}
           </p>
-          <a href="#" className="underlineCard text-nowrap mb-4 mx-2 text-left font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4">
+          <a className="underlineCard inline-block  w-fit text-nowrap mb-4 mx-2 text-left font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4">
             От {prices.night}₽
           </a>
         </div>

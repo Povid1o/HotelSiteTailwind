@@ -255,11 +255,13 @@ const Home = ({nav}) => {
                 {/* <p className='text-4xl text-gray-700 font-bold pt-4 text-nowrap lg:text-5xl xl:text-6xl pt-8'>Номерной Фонд</p> */}
                 <h2 className='header-section'>Номерной Фонд</h2>
                 <div className='flex mobile:flex-col sm:flex-row xl:justify-center'>
-
-                    <ExtCard
-                    Card={() => <HotelRoom viewType="card" data={standardPlusRoomData} />}
-                    ExtContent={() => <HotelRoom viewType="extended" data={standardPlusRoomData} />}
-                    /> 
+                    <div className='mb-4 sm:mb-0'>
+                      <ExtCard
+                      Card={() => <HotelRoom viewType="card" data={standardPlusRoomData} />}
+                      ExtContent={() => <HotelRoom viewType="extended" data={standardPlusRoomData} />}
+                      /> 
+                    </div>
+                    
 
                     <ExtCard
                     Card={() => <HotelRoom viewType="card" data={standardRoomData} />}
