@@ -1,19 +1,33 @@
-// заменить роутер. Поменял авторизацию, чтобы не мучиться с бэком
+// import WineHotel from "./WineHotel.js";
+// import Ivents from "./Ivents.js";
+// import Restaurant from "./Restaurant.js";
+// import Vinery from "./Vinery.js";
+// import Shop from "./Shop.js"
+// import EventsList from "./components/EventsList.js";
+// import LoadingScreen from './components/LoadingScreen.js';
+// import Auth from "./Auth.js"
+// import React, {useContext, useState, useEffect} from "react";
+// import { createBrowserRouter, RouterProvider, ScrollRestoration, Outlet } from 'react-router-dom';
+// import AdminPage from "./AdminPage.js";
+// import { observer } from "mobx-react-lite";
+// import {Context} from "./index";
 
-
-import WineHotel from "./WineHotel.js";
-import Ivents from "./Ivents.js";
-import Restaurant from "./Restaurant.js";
-import Vinery from "./Vinery.js";
-import Shop from "./Shop.js"
-import EventsList from "./components/EventsList.js";
-import LoadingScreen from './components/LoadingScreen.js';
-import Auth from "./Auth.js"
-import React, {useContext, useState, useEffect} from "react";
+import React, { Suspense, lazy, useContext, useState, useEffect } from "react";
 import { createBrowserRouter, RouterProvider, ScrollRestoration, Outlet } from 'react-router-dom';
-import AdminPage from "./AdminPage.js";
 import { observer } from "mobx-react-lite";
-import {Context} from "./index";
+import { Context } from "./index";
+import LoadingScreen from './components/LoadingScreen';
+
+// Ленивая загрузка компонентов
+const WineHotel = lazy(() => import("./WineHotel.js"));
+const Ivents = lazy(() => import("./Ivents.js"));
+const Restaurant = lazy(() => import("./Restaurant.js"));
+const Vinery = lazy(() => import("./Vinery.js"));
+const Shop = lazy(() => import("./Shop.js"));
+const EventsList = lazy(() => import("./components/EventsList.js"));
+const Auth = lazy(() => import("./Auth.js"));
+const AdminPage = lazy(() => import("./AdminPage.js"));
+
 
 
 
@@ -48,7 +62,7 @@ const publicrouter = createBrowserRouter([
         element: <Auth/>
       },
       {
-        path: "/catalog",
+        path: "/Каталог",
         element: <Shop/>
       }
     ],
@@ -82,7 +96,7 @@ const hiderouter = createBrowserRouter([
       },
       ,
       {
-        path: "/catalog",
+        path: "/Каталог",
         element: <Shop/>
       },
       {
@@ -105,7 +119,9 @@ function Layout() {
   return (
     <div>
       <ScrollRestoration />
-      <Outlet />
+      <Suspense fallback={<LoadingScreen />}>
+        <Outlet />
+      </Suspense>
     </div>
   );
 }
@@ -115,24 +131,16 @@ const App= observer(() => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // задержка в секунду, шоб плебей остыл
-    // const handleLoad = () => {
-    //   setTimeout(() => {
-    //     setLoading(false);
-    //   }, 1000);
-    // };
-
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       setLoading(false);
     }, 1000);
-
-    // if (document.readyState === 'complete') {
-    //   handleLoad();
-    // } else {
-    //   window.addEventListener('load', handleLoad);
-    //   return () => window.removeEventListener('load', handleLoad);
-    // }
+    
+    // Очистка при размонтировании компонента
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, []);
+  
 
 
   return (

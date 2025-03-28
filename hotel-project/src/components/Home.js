@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, memo} from 'react';
 import Card from './cards/Card';
 import ExtCard from './cards/ExtCard';
 import ExtGaleryCard from './cards/ExtGalerycard';
@@ -128,35 +128,33 @@ const GaleryCard = () => {
     )
 }
 
-const Box = ({ className,imgAlt, imgSrc, children }) => {
+const Box = memo(({ className, imgAlt, imgSrc, children }) => {
+  const boxClass = `
+  ${className}
+  items-start
+  flex flex-row
+  rounded-lg
+  shadow-xl
+  my-2
+  p-4`;
 
-    const boxClass = `
-    ${className}
-    items-start
-    flex flex-row
-    rounded-lg
-    shadow-xl
-    my-2
-    p-4`;
+  const imgClasses = `
+  w-20 h-20
+  rounded-full`;
 
-    const imgClasses = `
-    w-20 h-20
-    rounded-full`;
-
-    return(
-        <div className={boxClass}>
-            {imgSrc && (
-                <img
-                    className={imgClasses}
-                    src={imgSrc}
-                    alt={imgAlt}
-                />
-            )}
-            {children}
-        </div>
-    )
-
-}
+  return(
+    <div className={boxClass}>
+      {imgSrc && (
+        <img
+          className={imgClasses}
+          src={imgSrc}
+          alt={imgAlt}
+        />
+      )}
+      {children}
+    </div>
+  )
+});
 
 
 
@@ -164,7 +162,8 @@ const Home = ({nav}) => {
     // eslint-disable-next-line no-unused-vars
     const {height, width} = useWindowDimensions();
 
-    setTimeout(() => {
+    useEffect(() => {
+      const timeoutId = setTimeout(() => {
         const observer = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting && !entry.target.classList.contains('animated')){
@@ -178,11 +177,22 @@ const Home = ({nav}) => {
         const hiddenElements = document.querySelectorAll('.unShown')
         hiddenElements.forEach((element) => observer.observe(element));
       
-        window.addEventListener('scroll', () => {
+        const scrollHandler = () => {
           hiddenElements.forEach((element) => observer.unobserve(element));
           hiddenElements.forEach((element) => observer.observe(element));
-        });
+        };
+        
+        window.addEventListener('scroll', scrollHandler);
+        
+        // Очистка при размонтировании компонента
+        return () => {
+          clearTimeout(timeoutId);
+          window.removeEventListener('scroll', scrollHandler);
+          observer.disconnect();
+        };
       }, 150);
+    }, []);
+    
 
     return ( 
         <div name = 'home' className="w-full h-max bg-white">

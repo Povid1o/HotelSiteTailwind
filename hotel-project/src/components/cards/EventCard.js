@@ -17,21 +17,29 @@ const EventCard = ({ className, horizontal, imgAlt, imgSrc, title, description, 
 
   const imgClasses = `
     w-full
-    h-auto 
+    h-full
     object-cover
     rounded-t-lg
-    mb-2
   `;
 
   return (
     <div className={cardClasses}>
-      {imgSrc && (
+      <div className='w-auto h-[300px] overflow-hidden mb-3 '>
+        {imgSrc && (
+          <img
+            className={imgClasses}
+            src={imgSrc}
+            alt={imgAlt}
+          />
+        )}
+      </div>
+      {/* {imgSrc && (
         <img
           className={imgClasses}
           src={imgSrc}
           alt={imgAlt}
         />
-      )}
+      )} */}
       <div className='flex flex-col mx-2 min-w-28 sm:mx-4 md:mx-6 lg:mx-8'>
         <h2 className="font-bold mb-2 text-center text-base sm:text-2xl">{title}</h2>
         <p className="text-gray-700 mb-4 text-justify text-xs  sm:text-base">{description}</p>

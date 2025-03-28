@@ -153,7 +153,7 @@ function EventsList() {
 
             <div className='w-5/6 mx-auto flex justify-between'>
 
-                <Dropdown label="Dropdown" size="xl" className=''>
+                <Dropdown label="Категории" size="xl" className=''>
                     {categories.map(({header}) => (
                         <DropdownItem as='a' href={`/Мероприятия/${header}`} 
                         key={header}>
@@ -168,7 +168,7 @@ function EventsList() {
 
 
 
-            <div className=" font-body mx-auto my-16 max-sm:w-5/6 sm:w-3/4">
+            <div className=" font-body mx-auto my-16 w-5/6">
 
                 <ul className="grid gap-4 mobile:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                     {currentCards.map((event) => (

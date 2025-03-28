@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {memo} from 'react';
 import BlueSwiper from '../sliders/BlSwiper';
 import Card from './Card';
 import '../styles/hover.css';
 
-const HotelRoom = ({ 
+const HotelRoom = memo(({ 
   viewType = 'card', 
   data 
 }) => {
@@ -134,6 +134,9 @@ const HotelRoom = ({
       </div>
     </div>
   );
-};
+},(prevProps, nextProps) => {
+  return prevProps.viewType === nextProps.viewType && 
+         (prevProps.data.id === nextProps.data.id || JSON.stringify(prevProps.data) === JSON.stringify(nextProps.data));
+});
 
 export default HotelRoom;

@@ -6,6 +6,7 @@
 
 
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom';
 
 import Navbar from "./components/Navbar.js"
 import Footer from "./components/Footer.js";
@@ -140,11 +141,13 @@ function Vinery() {
                             
                             <button className="flex justify-start">
                                 <div className='flex-col inline-block py-8 pr-8 bottom-3'>
-                                    <div className='flex flex-row'>
-                                        <a href="#" className='underlineDesktop text-[#3E4756] leading-[38px] mx-2 text-lg mobile:text-xl md:text-2xl xl:text-3xl 2xl:text-4xl font-semibold'>Ассортимент вин</a>
-                                        <FaLongArrowAltRight className='w-[25px] h-[15px] xl:w-[30px] xl:h-[20px] 2xl:w-[35px] 2xl:h-[25px] left-[35px] my-auto'/>
-                                    </div>
-                                    <hr className="border-gray-400 w-full my-2" />
+                                    <Link to='/Каталог'>
+                                        <div className='flex flex-row'>
+                                            <a className='underlineDesktop text-[#3E4756] leading-[38px] mx-2 text-lg mobile:text-xl md:text-2xl xl:text-3xl 2xl:text-4xl font-semibold'>Ассортимент вин</a>
+                                            <FaLongArrowAltRight className='w-[25px] h-[15px] xl:w-[30px] xl:h-[20px] 2xl:w-[35px] 2xl:h-[25px] left-[35px] my-auto'/>
+                                        </div>
+                                        <hr className="border-gray-400 w-full my-2" />
+                                    </Link>
                                 </div>
                             </button>
                         </div>
@@ -166,13 +169,13 @@ function Vinery() {
                                 
                                 <button className="flex justify-start">
                                     <div className='flex-col inline-block py-8 pr-8 bottom-3'>
-                                        
+                                    <Link to='/Каталог'>
                                         <div className='flex flex-row '>
                                             <a href="#" className='underlineDesktop text-[#3E4756] text-[18px] leading-[22px] font-semibold mx-2'>Ассортимент вин</a>
                                             <FaLongArrowAltRight className='w-[25px] h-[15px] left-[35px] my-auto'/>
                                         </div>
                                         <hr className="border-gray-400 w-full my-2" />
-
+                                    </Link>
                                     </div>
                                 </button>
                             </div>
