@@ -1,9 +1,9 @@
-import Navbar from "./components/Navbar.js"
+import Navbar from "./components/Navbar"
 // import EventContent from "./components/EventContent.js"
-import Footer from "./components/Footer.js";
+import Footer from "./components/Footer";
 import { useState, lazy } from "react";
 
-const EventContent = lazy(() => import("./components/EventContent.js"));
+const EventContent = lazy(() => import("./components/EventContent"));
 
 function Ivents() {
 

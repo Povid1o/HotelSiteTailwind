@@ -19,14 +19,14 @@ import { Context } from "./index";
 import LoadingScreen from './components/LoadingScreen';
 
 // Ленивая загрузка компонентов
-const WineHotel = lazy(() => import("./WineHotel.js"));
-const Ivents = lazy(() => import("./Ivents.js"));
-const Restaurant = lazy(() => import("./Restaurant.js"));
-const Vinery = lazy(() => import("./Vinery.js"));
-const Shop = lazy(() => import("./Shop.js"));
-const EventsList = lazy(() => import("./components/EventsList.js"));
-const Auth = lazy(() => import("./Auth.js"));
-const AdminPage = lazy(() => import("./AdminPage.js"));
+const WineHotel = lazy(() => import("./WineHotel.tsx"));
+const Ivents = lazy(() => import("./Ivents.tsx"));
+const Restaurant = lazy(() => import("./Restaurant.tsx"));
+const Vinery = lazy(() => import("./Vinery.tsx"));
+const Shop = lazy(() => import("./Shop.tsx"));
+const EventsList = lazy(() => import("./components/EventsList.tsx"));
+const Auth = lazy(() => import("./Auth.tsx"));
+const AdminPage = lazy(() => import("./AdminPage.tsx"));
 
 
 

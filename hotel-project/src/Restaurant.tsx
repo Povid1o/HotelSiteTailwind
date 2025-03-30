@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Navbar from "./components/Navbar.js";
-import FoodCard from './components/cards/FoodCard.js';
-import ExtDishcard from './components/cards/ExtDishcard.js';
-import ExtCard from './components/cards/ExtCard.js';
-import Footer from "./components/Footer.js";
+import Navbar from "./components/Navbar";
+import FoodCard from './components/cards/FoodCard';
+import ExtDishcard from './components/cards/ExtDishcard';
+import ExtCard from './components/cards/ExtCard';
+import Footer from "./components/Footer";
 import { observer } from 'mobx-react-lite';
-import { Context } from './index.js';
+import { Context } from './index';
 import { useParams } from 'react-router-dom';
-import { fetchClase, fetchProducts } from "./components/http/productAPI.js";
+import { fetchClase, fetchProducts } from "./components/http/productAPI";
 
 const Restaurant = observer(() => {
   const { id } = useParams();

@@ -8,10 +8,10 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 
-import Navbar from "./components/Navbar.js"
-import Footer from "./components/Footer.js";
-import ProcessCard from './components/cards/ProcessCard.js';
-import CircularGallery from './components/sliders/CircularGallery.js';
+import Navbar from "./components/Navbar"
+import Footer from "./components/Footer";
+// import ProcessCard from './components/cards/ProcessCard';
+import CircularGallery from './components/sliders/CircularGallery';
 import { FaLongArrowAltRight } from "react-icons/fa";
 
 import "./components/styles/hover.css"
@@ -102,7 +102,7 @@ function Vinery() {
             { year: '2000', description: 'Модернизация производства' }
         ]}
     ]
-    const photos4Slider = [{"Сбор винограда" : Grape}, {"Дробление Прессование" : BottleProduce}, {"Ферментация Выдержка Фильтрация" : WineBarrel}, {"Розлив Созревание" : WineReservour}]
+    const photos4Slider = [{"Сбор винограда" : Grape}, {"Дробление Прессование" : BottleProduce}, {"Ферментация" : WineBarrel}, {"Выдержка" : WineBarrel}, {"Фильтрация" : WineBarrel}, {"Розлив Созревание" : WineReservour}]
     return (
         <>
             <Navbar nav = {nav} setNav = {setNav} isTransparent={true}/>
@@ -245,7 +245,7 @@ function Vinery() {
                         <CircularGallery 
                             bend={1} 
                             textColor="#3E4756" 
-                            font="bold 50px Bitter" 
+                            font="bold 30px Bitter" 
                             borderRadius={0.05} 
                             content={photos4Slider}
                         />

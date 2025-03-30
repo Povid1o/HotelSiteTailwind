@@ -1,11 +1,11 @@
-import Navbar from "./components/Navbar.js"
-import Footer from "./components/Footer.js";
+import Navbar from "./components/Navbar"
+import Footer from "./components/Footer";
 import { useState } from "react";
 
 import ThreeBottles from "./components/assets/ThreeBottles.png"
 import BottlesShop from "./components/assets/BottlesShop.jpg"
 
-import WineCard from "./components/cards/WineCard.js";
+import WineCard from "./components/cards/WineCard";
 
 function Shop() {
   const [nav, setNav] = useState(false);
