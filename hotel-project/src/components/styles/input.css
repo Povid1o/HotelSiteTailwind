@@ -1,0 +1,10 @@
+input {
+    outline: none !important; 
+    border: none !important;  
+    box-shadow: none !important; 
+}
+
+input:focus {
+    outline: none !important; 
+    border-bottom: none !important;
+}

@@ -32,7 +32,7 @@ const Restaurant = observer(() => {
 
   return (
     <>
-      <Navbar nav = {nav} setNav = {setNav} isTransparent={true}/>
+      <Navbar nav = {nav} setNav = {setNav}/>
 
       <div className="container mx-auto font-body sm:px-4">
         <h1 className="flex mx-auto justify-center items-center text-3xl font-bold pt-[7rem] mb-8">Меню</h1>

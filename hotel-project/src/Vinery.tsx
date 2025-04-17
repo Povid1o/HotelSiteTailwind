@@ -105,7 +105,7 @@ function Vinery() {
     const photos4Slider = [{"Сбор винограда" : Grape}, {"Дробление Прессование" : BottleProduce}, {"Ферментация" : WineBarrel}, {"Выдержка" : WineBarrel}, {"Фильтрация" : WineBarrel}, {"Розлив Созревание" : WineReservour}]
     return (
         <>
-            <Navbar nav = {nav} setNav = {setNav} isTransparent={true}/>
+            <Navbar nav = {nav} setNav = {setNav}/>
         
             <main className="w-full h-max overflow-hidden bg-white font-body 3xl:max-w-screen-3xl 3xl:mx-auto">
                 {/*  Intro */}

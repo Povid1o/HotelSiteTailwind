@@ -1,0 +1,132 @@
+/* Дополнительные стили для адаптивного дизайна */
+
+/* Базовые стили для всех устройств */
+.App {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+  }
+  
+  /* Стили для кнопки "Подробнее" */
+  button.wine-button {
+    transition: all 0.3s ease;
+  }
+  
+  button.wine-button:hover {
+    background-color: #5A2A41;
+  }
+  
+  /* Стили для слайдера диапазона годов */
+  .year-slider {
+    position: relative;
+    height: 2px;
+    background-color: #e2e8f0;
+    border-radius: 9999px;
+  }
+  
+  .year-slider-track {
+    position: absolute;
+    height: 2px;
+    background-color: #7D1F3D;
+    border-radius: 9999px;
+  }
+  
+  .year-slider-thumb {
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    background-color: #7D1F3D;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    top: 50%;
+    cursor: pointer;
+  }
+  
+  /* Медиа-запросы для адаптивного дизайна */
+  @media (max-width: 768px) {
+    /* Стили для мобильных устройств */
+    .wine-card {
+      margin-bottom: 2rem;
+    }
+    
+    .wine-card img {
+      max-width: 120px;
+    }
+    
+    .filter-section {
+      padding: 1rem;
+    }
+  }
+  
+  @media (min-width: 769px) and (max-width: 1024px) {
+    /* Стили для планшетов */
+    .wine-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1025px) {
+    /* Стили для десктопов */
+    .wine-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .sidebar {
+      width: 25%;
+    }
+    
+    .main-content {
+      width: 75%;
+    }
+  }
+  
+  /* Анимации и переходы */
+  .fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  /* Улучшения для доступности */
+  :focus {
+    outline: 2px solid #7D1F3D;
+    outline-offset: 2px;
+  }
+  
+  /* Стили для активных состояний */
+  .nav-link.active {
+    border-bottom: 2px solid #7D1F3D;
+    font-weight: 600;
+  }
+  
+  .filter-checkbox:checked + label {
+    color: #7D1F3D;
+    font-weight: 500;
+  }
+  
+  /* Улучшения для мобильной навигации */
+  .mobile-menu {
+    transform: translateY(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .mobile-menu.open {
+    transform: translateY(0);
+  }
+  
+  /* Стили для выпадающих меню */
+  .dropdown {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .dropdown.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  

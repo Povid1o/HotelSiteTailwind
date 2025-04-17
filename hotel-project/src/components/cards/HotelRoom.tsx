@@ -1,29 +1,64 @@
-import React, {memo} from 'react';
+import React, { memo } from 'react';
 import BlueSwiper from '../sliders/BlSwiper';
 import Card from './Card';
 import '../styles/hover.css';
 
-const HotelRoom = memo(({ 
-  viewType = 'card', 
-  data 
+interface Price {
+  night?: number;
+  week?: number;
+  // Другие периоды, если есть
+}
+
+interface CheckInOut {
+  checkIn?: string;
+  checkOut?: string;
+  minStay?: string;
+}
+
+interface ImageData {
+  src?: string;
+  alt?: string;
+}
+
+interface HotelRoomData {
+  id: number; // Добавьте id, если он есть в ваших данных
+  title?: string;
+  description?: string;
+  prices?: Price;
+  features?: string[];
+  amenities?: string[];
+  rules?: string[];
+  checkInOut?: CheckInOut;
+  restrictions?: string[];
+  images?: (string | ImageData)[]; // Массив строк или объектов ImageData
+}
+
+interface HotelRoomProps {
+  viewType?: 'card' | 'extended';
+  data: HotelRoomData;
+}
+
+const HotelRoom: React.MemoExoticComponent<(props: HotelRoomProps) => React.ReactElement | null> = memo(({
+  viewType = 'card',
+  data,
 }) => {
   const {
     title,
     description,
-    prices,
-    features,
-    amenities,
-    rules,
-    checkInOut,
-    restrictions,
-    images, // Теперь это массив изображений
+    prices = {},
+    features = [],
+    amenities = [],
+    rules = [],
+    checkInOut = {},
+    restrictions = [],
+    images = [],
   } = data;
 
   // Card view component - использует только первое изображение
   if (viewType === 'card') {
     const mainImage = Array.isArray(images) ? images[0] : images;
-    const imageSrc = typeof mainImage === 'string' ? mainImage : mainImage.src;
-    const imageAlt = typeof mainImage === 'string' ? 'Room image' : mainImage.alt;
+    const imageSrc = typeof mainImage === 'string' ? mainImage : mainImage?.src;
+    const imageAlt = typeof mainImage === 'string' ? 'Room image' : mainImage?.alt;
 
     return (
       <Card imgAlt={imageAlt} imgSrc={imageSrc}>
@@ -35,7 +70,7 @@ const HotelRoom = memo(({
             {description}
           </p>
           <a className="underlineCard inline-block  w-fit text-nowrap mb-4 mx-2 text-left font-body font-bold text-main_theme text-base sm:text-lg sm:mb-6 sm:mx-4">
-            От {prices.night}₽
+            От {prices?.night}₽
           </a>
         </div>
       </Card>
@@ -109,17 +144,17 @@ const HotelRoom = memo(({
           <div className="grid grid-cols-2 gap-x-20 gap-y-5">
             <div>
               <h1 className="text-xl font-bold">Заезд</h1>
-              <p>{checkInOut.checkIn}</p>
+              <p>{checkInOut?.checkIn}</p>
             </div>
             <div>
               <h1 className="text-xl font-bold">Выезд</h1>
-              <p>{checkInOut.checkOut}</p>
+              <p>{checkInOut?.checkOut}</p>
             </div>
           </div>
 
           <div>
             <h1 className="text-xl font-bold">Минимальный срок проживания</h1>
-            <p>{checkInOut.minStay}</p>
+            <p>{checkInOut?.minStay}</p>
           </div>
         </ul>
 
@@ -134,9 +169,9 @@ const HotelRoom = memo(({
       </div>
     </div>
   );
-},(prevProps, nextProps) => {
-  return prevProps.viewType === nextProps.viewType && 
-         (prevProps.data.id === nextProps.data.id || JSON.stringify(prevProps.data) === JSON.stringify(nextProps.data));
+}, (prevProps, nextProps) => {
+  return prevProps.viewType === nextProps.viewType &&
+         prevProps.data.id === nextProps.data.id; // Улучшенное сравнение по id
 });
 
 export default HotelRoom;
