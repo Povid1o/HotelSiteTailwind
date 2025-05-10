@@ -15,6 +15,9 @@ module.exports = {
         body : ['Bitter'],
         // sans: ['Graphik', 'sans-serif'],
       },
+      inset: {
+        '90perc': '0.9',
+      },
       screens: {
         'mobile': '320px'
       }

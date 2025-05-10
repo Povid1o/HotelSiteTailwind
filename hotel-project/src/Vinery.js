@@ -4,6 +4,8 @@ import Navbar from "./components/Navbar.js"
 import Footer from "./components/Footer.js";
 import VectorImage from "./components/assets/Vector1.png"
 import ThreeBottles from "./components/assets/ThreeBottles.png"
+import WineCaps from "./components/assets/WineCaps.png"
+import BottleTransparent from "./components/assets/BottleTransparent.png"
 // import ArrowRight from "./components/assets/Arrow.png"
 import { FaLongArrowAltRight } from "react-icons/fa";
 
@@ -20,7 +22,7 @@ function Vinery() {
 
             <Navbar nav = {nav} setNav = {setNav} isTransparent={true}/>
         
-            <tbody className="w-full h-max bg-white font-body container">
+            <main className="w-full h-max bg-white font-body">
 
                 <section className="flex flex-col relative w-screen h-screen">
 
@@ -64,9 +66,38 @@ function Vinery() {
 
                 </section>
 
+
+                <section className="relative bottom-72 w-screen overflow-hidden">
+                    <h1 className='relative top-20 font-bold text-5xl leading-[58px] text-[#3E4756] ml-12'>НАША ИСТОРИЯ</h1>
+                    <img 
+                        src={WineCaps} 
+                        className="w-[2000px] h-auto max-w-none mx-auto relative left-1/2 -translate-x-1/2" 
+                        alt="" 
+                    />
+                    <div>
+
+                    </div>
+                </section >
+
+                <section>
+                    <div className='w-full grid grid-flow-row-dense grid-cols-4'>
+
+                        <p className='col-span-1 text-2xl leading-[32px]'>
+                            У нас вы сможете попробовать как классические, так и эксклюзивные вина, созданные по уникальным рецептурам. Наши опытные сомелье помогут вам выбрать вино, которое идеально подойдёт именно для вашего случая. 
+                        </p>
+                        <p className='col-span-2'></p>
+                        <p className='col-span-1 text-2xl leading-[32px]'>
+                            Наш каталог включает более 100 наименований вин, среди которых вы обязательно найдете напиток по своему вкусу. Мы гордимся тем, что наши вина получают высокие оценки
+                            от экспертов и ценителей со всего мира.
+                        </p>
+
+                    </div>
+                    <img src={BottleTransparent} className='mx-auto col-span-3 transform -translate-y-full'/>
+                </section>
+
                 
 
-            </tbody>
+            </main>
 
             
 
