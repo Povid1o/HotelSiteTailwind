@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, RefObject  } from 'react';
 import '../styles/ExitButton.css'
 
 const ExtCard = ({ Card, ExtContent }) => {
   const [showDialog, setShowDialog] = useState(false);
-  const dialogRef = useRef(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const [dialogOverflow, setDialogOverflow] = useState('hidden');
 
 

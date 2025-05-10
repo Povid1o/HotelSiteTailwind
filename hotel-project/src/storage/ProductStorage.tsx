@@ -1,13 +1,35 @@
 import {makeAutoObservable} from "mobx"
 
-export default class ProductStorage{
-  constructor(){
-    this._types = []
-    this._clases =[]
+// Определяем интерфейсы для данных
+interface ProductType {
+  id: number;
+  name: string;
+  // другие свойства
+}
 
-    this._products =[]
-    this._selectedType = {}
-    this._selectedClase ={}
+interface ProductClass {
+  id: number;
+  name: string;
+  // другие свойства
+}
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  typeId: number;
+  classId: number;
+  // другие свойства
+}
+
+export default class ProductStorage {
+  private _types: ProductType[] = [];
+  private _clases: ProductClass[] = [];
+  private _products: Product[] = [];
+  private _selectedType: ProductType | Record<string, never> = {};
+  private _selectedClase: ProductClass | Record<string, never> = {};
+
+  constructor() {
     makeAutoObservable(this)
   }
 

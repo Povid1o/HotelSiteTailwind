@@ -1,48 +1,72 @@
-import {makeAutoObservable} from "mobx"
+import { makeAutoObservable } from "mobx";
 
-export default class RoomStorage{
-  constructor(){
-    this._types = []
-    this._clases =[]
+// Определяем интерфейсы для данных
+interface RoomType {
+  id: number;
+  name: string;
+  // другие свойства
+}
 
-    this._rooms =[]
-    this._selectedType = {}
-    this._selectedClase ={}
-    makeAutoObservable(this)
+interface RoomClass {
+  id: number;
+  name: string;
+  // другие свойства
+}
+
+interface Room {
+  id: number;
+  name: string;
+  // другие свойства
+}
+
+export default class RoomStorage {
+  private _types: RoomType[] = [];
+  private _clases: RoomClass[] = [];
+  private _rooms: Room[] = [];
+  private _selectedType: RoomType | Record<string, never> = {};
+  private _selectedClase: RoomClass | Record<string, never> = {};
+
+  constructor() {
+    makeAutoObservable(this);
   }
 
-  setTypes(types){
-    this._types = types
+  setTypes(types: RoomType[]) {
+    this._types = types;
   }
-  setClases(clases){
-    this._clases = clases
+
+  setClases(clases: RoomClass[]) {
+    this._clases = clases;
   }
-  setRooms(rooms) {
+
+  setRooms(rooms: Room[]) {
     this._rooms = Array.isArray(rooms) ? rooms : [];
   }
 
-  setSelectedType(type) {
-    this._selectedType = type
+  setSelectedType(type: RoomType) {
+    this._selectedType = type;
   }
 
-  setSelectedClase(clase) {
-    this._selectedClase = clase
+  setSelectedClase(clase: RoomClass) {
+    this._selectedClase = clase;
   }
 
-  get types(){
-    return this._types
-  }
-  get clases() {
-    return this._clases
-  }
-  get rooms() {
-    return this._rooms
-  }
-  get selectedType() {
-    return this._selectedType
-  }
-  get selectedClase() {
-    return this._selectedClase
+  get types(): RoomType[] {
+    return this._types;
   }
 
+  get clases(): RoomClass[] {
+    return this._clases;
+  }
+
+  get rooms(): Room[] {
+    return this._rooms;
+  }
+
+  get selectedType(): RoomType | Record<string, never> {
+    return this._selectedType;
+  }
+
+  get selectedClase(): RoomClass | Record<string, never> {
+    return this._selectedClase;
+  }
 }

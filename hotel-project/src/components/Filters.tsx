@@ -4,6 +4,7 @@ import { CiSearch } from 'react-icons/ci';
 
 import RangeSlider from './RangeSlider';
 import Sorting from './Sorting';
+import CheckboxGroup from './Checkbox';
 
 // Интерфейс для компонента фильтров
 interface FiltersProps {
@@ -127,48 +128,15 @@ const Filters: React.FC<FiltersProps> = ({ isMobile, yearRange, setYearRange, on
         </button>
       </div>
       
-      <div className="space-y-2 mb-6">
-        <div className="flex items-center">
-          <input 
-            type="checkbox" 
-            id="dry" 
-            className="mr-2"
-            checked={wineTypes.dry}
-            onChange={() => handleWineTypeChange('dry')}
-          />
-          <label htmlFor="dry">Сухие</label>
-        </div>
-        <div className="flex items-center">
-          <input 
-            type="checkbox" 
-            id="sweet" 
-            className="mr-2"
-            checked={wineTypes.sweet}
-            onChange={() => handleWineTypeChange('sweet')}
-          />
-          <label htmlFor="sweet">Сладкие</label>
-        </div>
-        <div className="flex items-center">
-          <input 
-            type="checkbox" 
-            id="semi-sweet" 
-            className="mr-2"
-            checked={wineTypes.semiSweet}
-            onChange={() => handleWineTypeChange('semiSweet')}
-          />
-          <label htmlFor="semi-sweet">Полусладкие</label>
-        </div>
-        <div className="flex items-center">
-          <input 
-            type="checkbox" 
-            id="semi-dry" 
-            className="mr-2"
-            checked={wineTypes.semiDry}
-            onChange={() => handleWineTypeChange('semiDry')}
-          />
-          <label htmlFor="semi-dry">Полусухие</label>
-        </div>
-      </div>
+      <CheckboxGroup
+        isMobile={false}
+        content={[
+          { id: '1', label: 'Cухие' },
+          { id: '2', label: 'Полусухие' },
+          { id: '3', label: 'Полусладкие' },
+          { id: '3', label: 'Сладкие' },
+        ]}
+      />
       
       <div className="mb-6">
         <RangeSlider 

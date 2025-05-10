@@ -1,8 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-const Card = ({ className, horizontal, imgAlt, imgSrc, children }) => {
+interface CardProps {
+  className?: string;
+  horizontal?: boolean;
+  imgAlt?: string;
+  imgSrc?: string;
+  children: ReactNode;
+}
+
+const Card: React.FC<CardProps> = ({
+  className = '',
+  horizontal = true,
+  imgAlt = '',
+  imgSrc = '',
+  children,
+}) => {
   // New: useMediaQuery hook to check screen width
   const isBelow600px = useMediaQuery({ query: '(max-width: 689px)' });
 
@@ -11,7 +24,6 @@ const Card = ({ className, horizontal, imgAlt, imgSrc, children }) => {
     ${className}
     rounded-lg
     shadow-2xl
-    //p
     mx-4
     ${horizontal && !isBelow600px ? 'items-center' : 'items-start'}
   `;
@@ -35,21 +47,6 @@ const Card = ({ className, horizontal, imgAlt, imgSrc, children }) => {
       {children}
     </div>
   );
-};
-
-Card.propTypes = {
-  className: PropTypes.string,
-  horizontal: PropTypes.bool,
-  imgAlt: PropTypes.string,
-  imgSrc: PropTypes.string,
-  children: PropTypes.node.isRequired,
-};
-
-Card.defaultProps = {
-  className: '',
-  horizontal: true, // Set the default value to true
-  imgAlt: '',
-  imgSrc: '',
 };
 
 export default Card;

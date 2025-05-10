@@ -26,36 +26,54 @@ function Shop() {
   const [nav, setNav] = useState(false);
   const [yearRange, setYearRange] = useState<[number, number]>([1970, 1990]);
   const [activeCategory, setActiveCategory] = useState('Каталог');
-  const [searchQuery, setSearchQuery] = useState('');
+  // const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState('По умолчанию');
-
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    // Добавьте логику фильтрации по поисковому запросу
-  };
+  
 
   const handleSortChange = (option: string) => {
     setSortOption(option);
-    let sortedWines = [...wines];
+    setFilteredProducts(prev => {
+      const sortedWines = [...prev];
+      
+      switch(option) {
+        case 'По названию (А-Я)':
+          sortedWines.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case 'По названию (Я-А)':
+          sortedWines.sort((a, b) => b.name.localeCompare(a.name));
+          break;
+        case 'По году (новые)':
+          sortedWines.sort((a, b) => (b.year || 0) - (a.year || 0));
+          break;
+        case 'По году (старые)':
+          sortedWines.sort((a, b) => (a.year || 0) - (b.year || 0));
+          break;
+        default:
+          sortedWines.sort((a, b) => a.id - b.id);
+      }
+
+      return sortedWines;
+    });
+    // let sortedWines = [...wines];
     
-    switch(option) {
-      case 'По названию (А-Я)':
-        sortedWines.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case 'По названию (Я-А)':
-        sortedWines.sort((a, b) => b.name.localeCompare(a.name));
-        break;
-      case 'По году (новые)':
-        sortedWines.sort((a, b) => (b.year || 0) - (a.year || 0));
-        break;
-      case 'По году (старые)':
-        sortedWines.sort((a, b) => (a.year || 0) - (b.year || 0));
-        break;
-      default:
-        sortedWines.sort((a, b) => a.id - b.id);
-    }
+    // switch(option) {
+    //   case 'По названию (А-Я)':
+    //     sortedWines.sort((a, b) => a.name.localeCompare(b.name));
+    //     break;
+    //   case 'По названию (Я-А)':
+    //     sortedWines.sort((a, b) => b.name.localeCompare(a.name));
+    //     break;
+    //   case 'По году (новые)':
+    //     sortedWines.sort((a, b) => (b.year || 0) - (a.year || 0));
+    //     break;
+    //   case 'По году (старые)':
+    //     sortedWines.sort((a, b) => (a.year || 0) - (b.year || 0));
+    //     break;
+    //   default:
+    //     sortedWines.sort((a, b) => a.id - b.id);
+    // }
     
-    setWines(sortedWines);
+    // setWines(sortedWines);
   };
 
   const [wines, setWines] = useState([
@@ -149,6 +167,18 @@ function Shop() {
     }
   ]);
 
+  // const [query, setQuery] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState(wines)
+  const handleSearch = (query) => {
+    const low = query.trim().toLowerCase();
+    setFilteredProducts(
+      low
+        ? wines.filter(p =>
+            p.name.toLowerCase().includes(low)
+          )
+        : wines                     // очистили поиск → показать всё
+    );
+  };
 
   const MobileView = () => (
     <div className="flex flex-col min-h-screen bg-white">
@@ -168,10 +198,11 @@ function Shop() {
         <Search 
           isMobile={false}
           onSearch={handleSearch}
+          suggestionsList={wines.map(p => p.name)}
         />
         
         <div className="flex flex-col items-center mt-4">
-          {wines.map((wine) => (
+          {filteredProducts.map((wine) => (
             <WineCard 
               key={wine.id}
               header={wine.name}
@@ -205,6 +236,7 @@ function Shop() {
             <Search 
               isMobile={false}
               onSearch={handleSearch}
+              suggestionsList={wines.map(p => p.name)}
             />
             <Sorting 
               isMobile={false}
@@ -213,7 +245,7 @@ function Shop() {
           </aside>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-3 2xl:gap-12">
-            {wines.map((wine) => (
+            {filteredProducts.map((wine) => (
               <div className="mx-auto">
               <WineCard 
                 key={wine.id}
