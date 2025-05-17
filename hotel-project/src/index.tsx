@@ -5,6 +5,7 @@ import './index.css';
 import App from './App';
 import UserStorage from './storage/UserStorage';
 import ProductStorage from './storage/ProductStorage';
+import { ThemeProvider } from "@material-tailwind/react";
 
 interface AppContext {
   user: UserStorage;
@@ -28,7 +29,9 @@ if (rootElement) {
       }}
     >
       <React.StrictMode>
-        <App />
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
       </React.StrictMode>
     </Context.Provider>
   );
