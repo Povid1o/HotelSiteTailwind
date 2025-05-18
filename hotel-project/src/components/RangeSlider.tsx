@@ -8,6 +8,7 @@ interface RangeSliderProps {
   initialMax?: number;
   valuePrefix?: string;
   unit?: string;
+  onChange?: (minVal: number, maxVal: number) => void;
 }
 
 const RangeSlider: React.FC<RangeSliderProps> = ({
@@ -18,58 +19,69 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
   initialMax = maxValue,
   valuePrefix = "",
   unit = "",
+  onChange = () => {},
 }) => {
   const [minVal, setMinVal] = useState<number>(initialMin);
   const [maxVal, setMaxVal] = useState<number>(initialMax);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [dragFinished, setDragFinished] = useState<boolean>(false);
+  
   const range = useRef<HTMLDivElement | null>(null);
   const minThumb = useRef<HTMLDivElement | null>(null);
   const maxThumb = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
+  const userChangedRef = useRef<boolean>(false);
 
-  // Convert to percentage
+  useEffect(() => {
+    if (!userChangedRef.current) {
+      setMinVal(initialMin);
+      setMaxVal(initialMax);
+    }
+  }, [initialMin, initialMax]);
+
+  // Эффект для вызова onChange при завершении перетаскивания
+  useEffect(() => {
+    if (dragFinished) {
+      onChange(minVal, maxVal);
+      setDragFinished(false);
+    }
+  }, [dragFinished, minVal, maxVal, onChange]);
+
   const getPercent = (value: number): number => {
     return ((value - minValue) / (maxValue - minValue)) * 100;
   };
 
-  // Update range highlight
   useEffect(() => {
     const minPercent = getPercent(minVal);
     const maxPercent = getPercent(maxVal);
-
     if (range.current) {
       range.current.style.left = `${minPercent}%`;
       range.current.style.width = `${maxPercent - minPercent}%`;
     }
-
     if (minThumb.current) {
       minThumb.current.style.left = `${minPercent}%`;
     }
-
     if (maxThumb.current) {
       maxThumb.current.style.left = `${maxPercent}%`;
     }
   }, [minVal, maxVal, minValue, maxValue]);
 
-  // Handle track click
   const handleTrackClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!trackRef.current) return;
-
     const trackRect = trackRef.current.getBoundingClientRect();
     const percent = (e.clientX - trackRect.left) / trackRect.width;
     const value = Math.round(percent * (maxValue - minValue) + minValue);
 
-    // Determine which thumb to move based on which is closer
-    const minDistance = Math.abs(value - minVal);
-    const maxDistance = Math.abs(value - maxVal);
-
-    if (minDistance <= maxDistance) {
+    userChangedRef.current = true;
+    if (Math.abs(value - minVal) <= Math.abs(value - maxVal)) {
       setMinVal(Math.min(value, maxVal - 1));
     } else {
       setMaxVal(Math.max(value, minVal + 1));
     }
+    // Запускаем эффект, который вызовет onChange
+    setDragFinished(true);
   };
 
-  // Handle min thumb drag
   const handleMinThumbDrag = (
     e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
   ) => {
@@ -77,6 +89,9 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     const startLeft = minThumb.current ? minThumb.current.getBoundingClientRect().left : 0;
     const trackWidth = trackRef.current ? trackRef.current.getBoundingClientRect().width : 0;
     const trackLeft = trackRef.current ? trackRef.current.getBoundingClientRect().left : 0;
+
+    userChangedRef.current = true;
+    setIsDragging(true);
 
     const handleMouseMove = (moveEvent: MouseEvent | TouchEvent) => {
       const clientX = 'clientX' in moveEvent ? moveEvent.clientX : moveEvent.touches[0].clientX;
@@ -94,6 +109,9 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('touchmove', handleMouseMove as EventListener);
       document.removeEventListener('touchend', handleMouseUp);
+      
+      setIsDragging(false);
+      setDragFinished(true);
     };
 
     document.addEventListener('mousemove', handleMouseMove as EventListener);
@@ -102,7 +120,6 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     document.addEventListener('touchend', handleMouseUp);
   };
 
-  // Handle max thumb drag
   const handleMaxThumbDrag = (
     e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
   ) => {
@@ -110,6 +127,9 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     const startLeft = maxThumb.current ? maxThumb.current.getBoundingClientRect().left : 0;
     const trackWidth = trackRef.current ? trackRef.current.getBoundingClientRect().width : 0;
     const trackLeft = trackRef.current ? trackRef.current.getBoundingClientRect().left : 0;
+
+    userChangedRef.current = true;
+    setIsDragging(true);
 
     const handleMouseMove = (moveEvent: MouseEvent | TouchEvent) => {
       const clientX = 'clientX' in moveEvent ? moveEvent.clientX : moveEvent.touches[0].clientX;
@@ -127,6 +147,9 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
       document.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('touchmove', handleMouseMove as EventListener);
       document.removeEventListener('touchend', handleMouseUp);
+      
+      setIsDragging(false);
+      setDragFinished(true);
     };
 
     document.addEventListener('mousemove', handleMouseMove as EventListener);
@@ -149,17 +172,14 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
       </div>
 
       <div className="relative h-6" style={{ touchAction: 'none' }}>
-        {/* Base track */}
         <div
           ref={trackRef}
           className="absolute h-1 rounded bg-gray-200 w-full z-10 top-2 cursor-pointer"
           onClick={handleTrackClick}
         ></div>
 
-        {/* Colored range */}
         <div ref={range} className="absolute h-1 rounded bg-main_theme z-20 top-2"></div>
 
-        {/* Min thumb */}
         <div
           ref={minThumb}
           className="absolute w-5 h-5 rounded-full bg-white border-2 border-main_theme top-2 -ml-2.5 z-40 cursor-pointer"
@@ -168,7 +188,6 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
           onTouchStart={handleMinThumbDrag}
         ></div>
 
-        {/* Max thumb */}
         <div
           ref={maxThumb}
           className="absolute w-5 h-5 rounded-full bg-white border-2 border-main_theme top-2 -ml-2.5 z-40 cursor-pointer"

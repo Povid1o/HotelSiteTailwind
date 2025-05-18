@@ -1,8 +1,7 @@
-// между sm и md сделать компьютерные фильтры, но колонку в один ряд 
+import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer";
-import { useState } from "react";
 
 import BottlesShop from "./components/assets/BottlesShop.jpg"
 
@@ -24,64 +23,23 @@ interface Wine {
 
 function Shop() {
   const [nav, setNav] = useState(false);
-  const [yearRange, setYearRange] = useState<[number, number]>([1970, 1990]);
   const [activeCategory, setActiveCategory] = useState('Каталог');
-  // const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState('По умолчанию');
+  const [searchQuery, setSearchQuery] = useState('');
   
-
-  const handleSortChange = (option: string) => {
-    setSortOption(option);
-    setFilteredProducts(prev => {
-      const sortedWines = [...prev];
-      
-      switch(option) {
-        case 'По названию (А-Я)':
-          sortedWines.sort((a, b) => a.name.localeCompare(b.name));
-          break;
-        case 'По названию (Я-А)':
-          sortedWines.sort((a, b) => b.name.localeCompare(a.name));
-          break;
-        case 'По году (новые)':
-          sortedWines.sort((a, b) => (b.year || 0) - (a.year || 0));
-          break;
-        case 'По году (старые)':
-          sortedWines.sort((a, b) => (a.year || 0) - (b.year || 0));
-          break;
-        default:
-          sortedWines.sort((a, b) => a.id - b.id);
-      }
-
-      return sortedWines;
-    });
-    // let sortedWines = [...wines];
-    
-    // switch(option) {
-    //   case 'По названию (А-Я)':
-    //     sortedWines.sort((a, b) => a.name.localeCompare(b.name));
-    //     break;
-    //   case 'По названию (Я-А)':
-    //     sortedWines.sort((a, b) => b.name.localeCompare(a.name));
-    //     break;
-    //   case 'По году (новые)':
-    //     sortedWines.sort((a, b) => (b.year || 0) - (a.year || 0));
-    //     break;
-    //   case 'По году (старые)':
-    //     sortedWines.sort((a, b) => (a.year || 0) - (b.year || 0));
-    //     break;
-    //   default:
-    //     sortedWines.sort((a, b) => a.id - b.id);
-    // }
-    
-    // setWines(sortedWines);
-  };
-
-  const [wines, setWines] = useState([
+  // Фильтры - применяются только после нажатия кнопки "Применить фильтры"
+  // Активные фильтры (которые применяются к списку)
+  const [activeTypes, setActiveTypes] = useState<string[]>([]);
+  const [activeSweetness, setActiveSweetness] = useState<string[]>([]);
+  const [activeYearRange, setActiveYearRange] = useState<[number, number]>([1970, 2025]);
+  
+  // Данные вин
+  const [wines] = useState<Wine[]>([
     {
       id: 1,
       name: 'Вино игристое белое',
       image: 'https://krymwine.ru/upload/resize_cache/iblock/08a/700_700_140cd750bba9870f18aada2478b24840a/u2usww0s9fsyzy4bbgoaha4bm860mp8a.webp',
-      type: 'Красное', // Исправлено на "Белое" ниже, если это игристое белое
+      type: 'Белое',
       year: 1985,
       sweetness: 'Полусладкое'
     },
@@ -97,7 +55,7 @@ function Shop() {
       id: 3,
       name: 'Вино белое',
       image: 'https://krymwine.ru/upload/resize_cache/iblock/ade/700_700_140cd750bba9870f18aada2478b24840a/tntl3fmkj2j8quxu0on6ucgc0biqbx0m.webp',
-      type: 'Красное', // Возможно, ошибка, должно быть "Белое"
+      type: 'Белое',
       year: 1975,
       sweetness: 'Полусладкое'
     },
@@ -167,18 +125,146 @@ function Shop() {
     }
   ]);
 
-  // const [query, setQuery] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState(wines)
-  const handleSearch = (query) => {
-    const low = query.trim().toLowerCase();
-    setFilteredProducts(
-      low
-        ? wines.filter(p =>
-            p.name.toLowerCase().includes(low)
-          )
-        : wines                     // очистили поиск → показать всё
+  // Вычисляем минимальный и максимальный год для слайдера
+  const { minYear, maxYear } = useMemo(() => {
+    let min = 1970; // Значение по умолчанию
+    let max = 2025; // Значение по умолчанию
+    
+    if (wines.length > 0) {
+      // Фильтруем вина с годом и находим min/max
+      const yearsArray = wines
+        .filter(wine => wine.year !== undefined)
+        .map(wine => wine.year as number);
+      
+      if (yearsArray.length > 0) {
+        min = Math.min(...yearsArray);
+        max = Math.max(...yearsArray);
+      }
+    }
+    
+    return { minYear: min, maxYear: max };
+  }, [wines]);
+
+  // Флаг для отслеживания первой инициализации
+  const isInitialized = useRef(false);
+  
+  // Используем useEffect для установки начальных значений activeYearRange только один раз
+  useEffect(() => {
+    if (!isInitialized.current) {
+      setActiveYearRange([minYear, maxYear]);
+      isInitialized.current = true;
+    }
+  }, [minYear, maxYear]);
+
+  // Обработчики изменения фильтров - эти функции передаются в компонент Filters
+  // и вызываются только когда пользователь нажимает "Применить фильтры"
+  const handleTypeChange = useCallback((types: string[]) => {
+    setActiveTypes(types);
+  }, []);
+
+  const handleSweetnessChange = useCallback((sweetness: string[]) => {
+    setActiveSweetness(sweetness);
+  }, []);
+
+  const handleYearRangeChange = useCallback((min: number, max: number) => {
+    // Проверяем, что значения валидны
+    if (isNaN(min) || isNaN(max)) return;
+    console.log(min, max)
+    // Обновляем активный диапазон годов
+    setActiveYearRange([Number(min), Number(max)]);
+  }, []);
+
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query);
+  }, []);
+
+  const handleSortChange = useCallback((option: string) => {
+    setSortOption(option);
+  }, []);
+
+  // Мемоизируем обработчик сброса фильтров
+  const handleResetFilters = useCallback(() => {
+    setActiveTypes([]);
+    setActiveSweetness([]);
+    setActiveYearRange([minYear, maxYear]);
+    setSearchQuery('');
+    setSortOption('По умолчанию');
+  }, [minYear, maxYear]);
+
+  // Применяем фильтрацию и сортировку с помощью useMemo для оптимизации
+  const filteredProducts = useMemo(() => {
+    // Проверяем корректность activeYearRange
+    if (!activeYearRange || activeYearRange.length !== 2 || isNaN(activeYearRange[0]) || isNaN(activeYearRange[1])) {
+      return wines; // Возвращаем все вина при некорректном activeYearRange
+    }
+    
+    // Шаг 1: Фильтрация по чекбоксам (тип вина)
+    let filtered = wines;
+    
+    if (activeTypes.length > 0) {
+      filtered = filtered.filter(wine => 
+        wine.type && activeTypes.includes(wine.type)
+      );
+    }
+    
+    // Шаг 2: Фильтрация по чекбоксам (сладость)
+    if (activeSweetness.length > 0) {
+      filtered = filtered.filter(wine => 
+        wine.sweetness && activeSweetness.includes(wine.sweetness)
+      );
+    }
+    
+    // Шаг 3: Фильтрация по диапазону годов
+    filtered = filtered.filter(wine => 
+      wine.year !== undefined && 
+      wine.year >= activeYearRange[0] && 
+      wine.year <= activeYearRange[1]
     );
-  };
+    
+    
+    // Шаг 4: Поиск по тексту
+    if (searchQuery.trim()) {
+      const query = searchQuery.trim().toLowerCase();
+      filtered = filtered.filter(wine => 
+        wine.name.toLowerCase().includes(query)
+      );
+    }
+    
+    // Шаг 5: Сортировка
+    const sorted = [...filtered];
+    switch(sortOption) {
+      case 'По названию (А-Я)':
+        sorted.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'По названию (Я-А)':
+        sorted.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case 'По году (новые)':
+        sorted.sort((a, b) => (b.year || 0) - (a.year || 0));
+        break;
+      case 'По году (старые)':
+        sorted.sort((a, b) => (a.year || 0) - (b.year || 0));
+        break;
+      default:
+        sorted.sort((a, b) => a.id - b.id);
+    }
+    
+    return sorted;
+  }, [wines, activeTypes, activeSweetness, activeYearRange, searchQuery, sortOption]);
+
+  // Компонент для отображения пустого результата
+  const EmptyResult = () => (
+    <div className="w-full text-center py-10">
+      <h3 className="text-xl text-gray-600 mb-2">Для вас ничего не нашлось 🙁</h3>
+      <p className="text-gray-500">Попробуйте изменить параметры фильтрации</p>
+      <button 
+        onClick={handleResetFilters}
+        className="mt-4 py-2 px-4 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+      >
+        Сбросить фильтры
+      </button>
+    </div>
+  );
 
   const MobileView = () => (
     <div className="flex flex-col min-h-screen bg-white">
@@ -190,9 +276,16 @@ function Shop() {
       <div className="p-4">
         <Filters 
           isMobile={true} 
-          yearRange={yearRange} 
-          setYearRange={setYearRange} 
+          yearRange={activeYearRange}  // Передаем активное значение как начальное
+          setYearRange={handleYearRangeChange} 
           onSortChange={handleSortChange}
+          selectedTypes={activeTypes}  // Передаем активное значение как начальное
+          onTypeChange={handleTypeChange}
+          selectedSweetness={activeSweetness}  // Передаем активное значение как начальное
+          onSweetnessChange={handleSweetnessChange}
+          onResetFilters={handleResetFilters}
+          minYear={minYear}
+          maxYear={maxYear}
         />
 
         <Search 
@@ -202,14 +295,18 @@ function Shop() {
         />
         
         <div className="flex flex-col items-center mt-4">
-          {filteredProducts.map((wine) => (
-            <WineCard 
-              key={wine.id}
-              header={wine.name}
-              imgSrc={wine.image}
-              onClick={() => console.log(wine.name)}
-            />
-          ))}
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((wine) => (
+              <WineCard 
+                key={wine.id}
+                header={wine.name}
+                imgSrc={wine.image}
+                onClick={() => console.log(wine.name)}
+              />
+            ))
+          ) : (
+            <EmptyResult />
+          )}
         </div>
       </div>
     </div>
@@ -226,8 +323,15 @@ function Shop() {
         <aside className="w-full md:w-1/4 p-4 border-r">
           <Filters 
             isMobile={false} 
-            yearRange={yearRange} 
-            setYearRange={setYearRange} 
+            yearRange={activeYearRange}  // Передаем активное значение как начальное
+            setYearRange={handleYearRangeChange}
+            selectedTypes={activeTypes}  // Передаем активное значение как начальное
+            onTypeChange={handleTypeChange}
+            selectedSweetness={activeSweetness}  // Передаем активное значение как начальное
+            onSweetnessChange={handleSweetnessChange}
+            onResetFilters={handleResetFilters}
+            minYear={minYear}
+            maxYear={maxYear}
           />
         </aside>
 
@@ -244,18 +348,21 @@ function Shop() {
             />
           </aside>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-3 2xl:gap-12">
-            {filteredProducts.map((wine) => (
-              <div className="mx-auto">
-              <WineCard 
-                key={wine.id}
-                header={wine.name}
-                imgSrc={wine.image}
-                onClick={() => console.log(wine.name)}
-              />
-              </div>
-            ))}
-          </div>
+          {filteredProducts.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-3 2xl:gap-12">
+              {filteredProducts.map((wine) => (
+                <div key={wine.id} className="mx-auto">
+                  <WineCard 
+                    header={wine.name}
+                    imgSrc={wine.image}
+                    onClick={() => console.log(wine.name)}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <EmptyResult />
+          )}
         </main>
       </div>
     </div>
