@@ -191,7 +191,7 @@ function Vinery() {
                 {/* Brick 1*/}
 
                 {/* Brick 2*/}
-                <section className="relative w-full overflow-visible pb-16 md:py-24 lg:py-32">
+                <section className="relative w-full overflow-visible pb-16 lg:py-32">
                     
                     <h1 className='section-header ml-4 sm:ml-8 lg:ml-12 xl:ml-16 2xl:ml-20'>НАША ИСТОРИЯ</h1>
                     
@@ -250,14 +250,6 @@ function Vinery() {
                             content={photos4Slider}
                         />
                     </div>
-
-                    {/* <div className='grid grid-cols-2 gap-4 sm:gap-6 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 mx-auto'>
-                        <div className='mx-auto'><ProcessCard imgSrc={Grape} header={"Сбор винограда"}/></div>
-                        <div className='mx-auto'><ProcessCard imgSrc={BottleProduce} header={"Дробление Прессование"}/></div>
-                        <div className='mx-auto'><ProcessCard imgSrc={WineBarrel} header={"Ферментация Выдержка Фильтрация"}/></div>
-                        <div className='mx-auto'><ProcessCard imgSrc={WineReservour} header={"Розлив Созревание"}/></div>
-
-                    </div> */}
 
                 </section>
                 {/* Brick 4*/}

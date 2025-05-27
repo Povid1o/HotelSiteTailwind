@@ -8,6 +8,13 @@ module.exports = withMT({
     "./src/componemts/styles/vinery.css",
   ],
   theme: {
+    screens: {
+      'sm': '640px',
+      'md': '768px', 
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
     extend: {
       colors:{
         'main_theme': '#80143c'
@@ -20,7 +27,7 @@ module.exports = withMT({
       screens: {
         'mobile': '320px',
         'tabletMini': '520px', 
-        "max-sm": { max: "639px" },  // Обратите внимание на кавычки и префикс "max-"
+        "max-sm": { max: "639px" },  
         "max-md": { max: "767px" },
       }
     },

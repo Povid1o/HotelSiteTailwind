@@ -327,7 +327,7 @@ const Home = ({nav}) => {
                             </div>
                          </div>
                     </div>
-                    <div className='flex mx-auto justify-center items-center w-64 h-22 rounded-xl'>
+                    <div className='flex mx-auto justify-center items-center w-64 h-22 rounded-xl mt-4'>
                         <ExtCard
                         Card={GaleryCard}
                         ExtContent={ExtGaleryCard}

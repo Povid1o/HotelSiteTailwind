@@ -9,6 +9,7 @@ import WineCard from "./components/cards/WineCard";
 import Filters from "./components/Filters";
 import Search from "./components/Search";
 import Sorting from "./components/Sorting";
+import CircularPagination from "./components/CircularPagination";
 
 import "./components/styles/shop.css"
 
@@ -26,6 +27,12 @@ function Shop() {
   const [activeCategory, setActiveCategory] = useState('Каталог');
   const [sortOption, setSortOption] = useState('По умолчанию');
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Настраиваемый параметр - количество элементов на странице
+  const itemsPerPage = 6;
+  
+  // Состояние для текущей страницы пагинации
+  const [currentPage, setCurrentPage] = useState(1);
   
   // Фильтры - применяются только после нажатия кнопки "Применить фильтры"
   // Активные фильтры (которые применяются к списку)
@@ -160,10 +167,12 @@ function Shop() {
   // и вызываются только когда пользователь нажимает "Применить фильтры"
   const handleTypeChange = useCallback((types: string[]) => {
     setActiveTypes(types);
+    setCurrentPage(1); // Сбрасываем на первую страницу при изменении фильтров
   }, []);
 
   const handleSweetnessChange = useCallback((sweetness: string[]) => {
     setActiveSweetness(sweetness);
+    setCurrentPage(1); // Сбрасываем на первую страницу при изменении фильтров
   }, []);
 
   const handleYearRangeChange = useCallback((min: number, max: number) => {
@@ -172,14 +181,17 @@ function Shop() {
     console.log(min, max)
     // Обновляем активный диапазон годов
     setActiveYearRange([Number(min), Number(max)]);
+    setCurrentPage(1); // Сбрасываем на первую страницу при изменении фильтров
   }, []);
 
   const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
+    setCurrentPage(1); // Сбрасываем на первую страницу при изменении поиска
   }, []);
 
   const handleSortChange = useCallback((option: string) => {
     setSortOption(option);
+    setCurrentPage(1); // Сбрасываем на первую страницу при изменении сортировки
   }, []);
 
   // Мемоизируем обработчик сброса фильтров
@@ -189,7 +201,18 @@ function Shop() {
     setActiveYearRange([minYear, maxYear]);
     setSearchQuery('');
     setSortOption('По умолчанию');
+    setCurrentPage(1); // Сбрасываем на первую страницу при сбросе фильтров
   }, [minYear, maxYear]);
+
+  // Мемоизированный обработчик изменения страницы
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+    // Прокручиваем страницу вверх при смене страницы
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }, []);
 
   // Применяем фильтрацию и сортировку с помощью useMemo для оптимизации
   const filteredProducts = useMemo(() => {
@@ -252,6 +275,30 @@ function Shop() {
     return sorted;
   }, [wines, activeTypes, activeSweetness, activeYearRange, searchQuery, sortOption]);
 
+  // Мемоизируем пагинацию для оптимизации
+  const paginationData = useMemo(() => {
+    const totalItems = filteredProducts.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    
+    // Если текущая страница больше, чем общее количество страниц, сбрасываем на первую
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(1);
+    }
+    
+    // Вычисляем индексы для текущей страницы
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+    
+    // Получаем элементы для текущей страницы
+    const currentItems = filteredProducts.slice(startIndex, endIndex);
+    
+    return {
+      currentItems,
+      totalPages,
+      showPagination: totalItems > itemsPerPage
+    };
+  }, [filteredProducts, currentPage, itemsPerPage]);
+
   // Компонент для отображения пустого результата
   const EmptyResult = () => (
     <div className="w-full text-center py-10">
@@ -295,8 +342,8 @@ function Shop() {
         />
         
         <div className="flex flex-col items-center mt-4">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((wine) => (
+          {paginationData.currentItems.length > 0 ? (
+            paginationData.currentItems.map((wine) => (
               <WineCard 
                 key={wine.id}
                 header={wine.name}
@@ -308,6 +355,17 @@ function Shop() {
             <EmptyResult />
           )}
         </div>
+        
+        {/* Пагинация для мобильной версии */}
+        {paginationData.showPagination && (
+          <div className="mt-6 mb-8">
+            <CircularPagination 
+              currentPage={currentPage}
+              totalPages={paginationData.totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -348,9 +406,9 @@ function Shop() {
             />
           </aside>
 
-          {filteredProducts.length > 0 ? (
+          {paginationData.currentItems.length > 0 ? (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-3 2xl:gap-12">
-              {filteredProducts.map((wine) => (
+              {paginationData.currentItems.map((wine) => (
                 <div key={wine.id} className="mx-auto">
                   <WineCard 
                     header={wine.name}
@@ -362,6 +420,15 @@ function Shop() {
             </div>
           ) : (
             <EmptyResult />
+          )}
+          
+          {/* Пагинация для десктопной версии */}
+          {paginationData.showPagination && (
+            <CircularPagination 
+              currentPage={currentPage}
+              totalPages={paginationData.totalPages}
+              onPageChange={handlePageChange}
+            />
           )}
         </main>
       </div>
