@@ -1,5 +1,21 @@
 import React, { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
+
 import { FaLongArrowAltRight } from "react-icons/fa";
+
+interface Wine {
+  id: number;
+  name: string;
+  image: string;
+  type?: string;
+  year?: number;
+  sweetness?: string;
+  alcohol?: string;
+  sugar?: string;
+  temperature: string;
+  price?: number;
+  description?: string[];
+}
 
 interface WineCardProps {
   className?: string;
@@ -8,7 +24,8 @@ interface WineCardProps {
   header?: string;
   description?: string;
   children?: ReactNode;
-  onClick?: () => void;
+  to?: string; 
+  state?: {wine: Wine}
 }
 
 const WineCard: React.FC<WineCardProps> = ({
@@ -18,7 +35,8 @@ const WineCard: React.FC<WineCardProps> = ({
   header = '',
   description = '',
   children,
-  onClick = null,
+  to = '',
+  state,
 }) => {
   const cardClasses = `
     ${className}
@@ -48,11 +66,11 @@ const WineCard: React.FC<WineCardProps> = ({
     lg:h-[330px]
   `;
 
-  const handleClick = () => {
-    if (onClick) {
-      onClick();
-    }
-  };
+  // const handleClick = () => {
+  //   if (onClick) {
+  //     onClick();
+  //   }
+  // };
 
   return (
     <div className={cardClasses}>
@@ -61,21 +79,21 @@ const WineCard: React.FC<WineCardProps> = ({
           className={imgClasses}
           src={imgSrc}
           alt={imgAlt}
-          onClick={handleClick}
         />
       )}
       <h3 className="font-bold text-base mx-auto text-center content-center sm:text-[24px] sm:leading-[32px] sm:mb-2 md:h-[48px]">{header}</h3>
       {description && <p className="text-gray-600 text-sm">{description}</p>}
 
       {/* Кнопка "Подробнее" */}
-      <button
+      <Link
+        to={to}
+        state={state}
         className="flex items-center justify-between text-white bg-[#3A2A33] py-2 px-4 w-full mt-3 mb-3 hover:bg-[#5A2A41] transition-colors rounded"
-        onClick={handleClick}
         aria-label="Показать подробную информацию"
       >
         <span className='text-[24px] leading-[32px] font-semibold'>Подробнее</span>
         <FaLongArrowAltRight className='w-[25px] h-[15px] xl:w-[30px] xl:h-[20px] 2xl:w-[35px] 2xl:h-[25px] left-[35px] my-auto'/>
-      </button>
+      </Link>
 
       {children}
     </div>

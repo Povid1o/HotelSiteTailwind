@@ -1,0 +1,27 @@
+.mobile-header{
+    @apply text-2xl font-bold md:text-4xl lg:text-5xl
+}
+
+.mobile-paragraph{
+    @apply font-medium text-sm md:text-xl
+}
+
+.mobile-stats{
+    @apply grid grid-cols-2 gap-2 my-8
+}
+
+.mobile-stats-section{
+    @apply flex flex-row
+}
+
+.mobile-stats-section-stat{
+    @apply text-[24px] leading-[100%] md:text-[48px]
+}
+
+.mobile-stats-section-img{
+    @apply w-[40px] h-[40px] my-1 md:w-[80px] md:h-[80px]
+}
+
+.mobile-stats-section-name{
+    @apply font-medium text-sm md:text-xl
+}

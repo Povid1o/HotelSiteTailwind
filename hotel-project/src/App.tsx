@@ -13,6 +13,7 @@ const Shop = lazy(() => import("./Shop.tsx"));
 const EventsList = lazy(() => import("./components/EventsList.tsx"));
 const Auth = lazy(() => import("./Auth.tsx"));
 const AdminPage = lazy(() => import("./AdminPage.tsx"));
+const WinePage = lazy(() => import("./components/cards/WinePage.tsx"));
 
 
 
@@ -50,6 +51,10 @@ const publicrouter = createBrowserRouter([
       {
         path: "/Каталог",
         element: <Shop/>
+      },
+      {
+        path: "/Каталог/:productId",
+        element: <WinePage />,
       }
     ],
   }
@@ -84,6 +89,10 @@ const hiderouter = createBrowserRouter([
       {
         path: "/Каталог",
         element: <Shop/>
+      },
+      {
+        path: "/Каталог/:productId",
+        element: <WinePage />,
       },
       {
         path: "/login",
