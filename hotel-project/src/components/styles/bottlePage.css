@@ -7,7 +7,7 @@
 }
 
 .mobile-stats{
-    @apply grid grid-cols-2 gap-2 my-8
+    @apply grid grid-cols-2 gap-2 my-8 md:gap-y-8 md:gap-4 lg:gap-8 lg:gap-y-8
 }
 
 .mobile-stats-section{
@@ -24,4 +24,33 @@
 
 .mobile-stats-section-name{
     @apply font-medium text-sm md:text-xl
+}
+
+
+.desktop-stats{
+    @apply flex space-x-8
+}
+
+.desktop-header{
+    @apply text-[48px] leading-[100%] font-semibold 2xl:text-[58px]
+}
+
+.desktop-header-lower{
+    @apply text-[32px] font-semibold leading-[100%] 2xl:text-[40px]
+}
+
+.desktop-paragraph{
+    @apply text-[24px] leading-[100%] font-normal 2xl:text-[30px]
+}
+
+.desktop-stats-section-stat{
+    @apply text-[24px] leading-[100%] 2xl:text-[48px]
+}
+
+.desktop-stats-section-img{
+    @apply w-[50px] h-[50px] my-1 2xl:w-[80px] 2xl:h-[80px]
+}
+
+.desktop-stats-section-name{
+    @apply font-medium text-xl 2xl:text-[24px]
 }

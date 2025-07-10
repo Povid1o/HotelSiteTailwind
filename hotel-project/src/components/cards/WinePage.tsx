@@ -7,8 +7,10 @@ import SmallBackground from "../assets/SmallBackground.png";
 import AlcoIcon from "../assets/AlcoImage.png";
 import SugarIcon from "../assets/SugarImage.png";
 import TemperatureIcon from "../assets/TemperatureImage.png";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 import "../styles/bottlePage.css"
+import '../styles/ExitButton.css'
 
 interface Wine {
   id: number;
@@ -48,12 +50,21 @@ const ProductPage = () => {
   
   const isPortrait = height > width;
 
+  const handleClose = () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+    // Переход на домашнюю страницу, если нет истории
+      window.location.href = '/';
+    }
+  };
+
   // Данные продукта (в реальном приложении получаем через API)
   const [productData] = useState<Wine[]>([
     {
       id: 1,
-      name: 'Вино игристое белое',
-      image: 'https://krymwine.ru/upload/resize_cache/iblock/08a/700_700_140cd750bba9870f18aada2478b24840a/u2usww0s9fsyzy4bbgoaha4bm860mp8a.webp',
+      name: 'Вино игристое Sempre Prosecco Brut белое брют',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1027925-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxNTE2N3xpbWFnZS9hdmlmfGltYWdlcy9oNTEvaDY3LzEwOTM3ODA4MzU1MzU4LmF2aWZ8MzQ0ZTE5NzNhNDM1ODgzNGYxNDkzMDg5NWQwNWYzODUzYjc2NzY3M2RlZTVmNTNjNWUxNzJkNDlmYzBlMjMwZg',
       type: 'Белое',
       year: 1985,
       sweetness: 'Полусладкое',
@@ -71,8 +82,8 @@ const ProductPage = () => {
     },
     {
       id: 2,
-      name: 'Вино красное Красностоп Золотовский',
-      image: 'https://krymwine.ru/upload/resize_cache/iblock/522/700_700_140cd750bba9870f18aada2478b24840a/aizouqgfnwmbpzgpga3mx9f8kre9fnhg.webp',
+      name: 'Вино Ведерниковъ Губернаторское Красностоп Золотовский красное сухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1020457-3-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxNzY2MHxpbWFnZS9hdmlmfGltYWdlcy9oZDgvaDAyLzExNjMxNjU2MzM3NDM4LmF2aWZ8MTMzNmViYTUzMDY2ODlhYTZhNjliYTM5ODUyMjM4NmVkNWU5ZTVkNjczOGUyOGUzODA1ZDc3ZTc1ZjBiZTllYw',
       type: 'Красное',
       year: 1980,
       sweetness: 'Полусладкое',
@@ -90,8 +101,8 @@ const ProductPage = () => {
     },
     {
       id: 3,
-      name: 'Вино белое',
-      image: 'https://krymwine.ru/upload/resize_cache/iblock/ade/700_700_140cd750bba9870f18aada2478b24840a/tntl3fmkj2j8quxu0on6ucgc0biqbx0m.webp',
+      name: 'Вино JP. Chenet Original Colombard-Chardonnay белое полусухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1021991-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxNDAwNXxpbWFnZS9hdmlmfGltYWdlcy9oMGMvaDM0LzEwNTQzMjUxMjI2NjU0LmF2aWZ8MDAwNDQ2ZWZkNTUxNWQ4OGI2YzQ0NjA4ZTY1ODg3OTQ0ZmJlMzc2MTViYjBhNzIxYWRkMTMyNWU5ODE2NzY5Zg',
       type: 'Белое',
       year: 1975,
       sweetness: 'Полусладкое',
@@ -109,8 +120,8 @@ const ProductPage = () => {
     },
     {
       id: 4,
-      name: 'Вино игристое красное Русское игристое полусладкое',
-      image: 'https://krymwine.ru/upload/resize_cache/iblock/b29/700_700_140cd750bba9870f18aada2478b24840a/n0ucqwbcvftwozqoqwyz2w3q0sehg2zo.webp',
+      name: 'Вино игристое Абрау-Дюрсо Русское Игристое красное полусладкое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1001719-1-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wyMzQ3MnxpbWFnZS9hdmlmfGltYWdlcy9oYzkvaGYyLzExNDIwNTQ4NjYxMjc4LmF2aWZ8MjY5ZWQzYjkxZDBlNDllODMwM2ZjNmU4MzU4MjczYmY2Njk1ZmZmMTE3YjQ3YmI5YzIyYzRjNTk2NWFhYjg3ZQ',
       type: 'Красное',
       year: 1990,
       sweetness: 'Полусладкое',
@@ -128,8 +139,8 @@ const ProductPage = () => {
     },
     {
       id: 5,
-      name: 'Вино игристое красное Русское игристое полусладкое',
-      image: 'https://krymwine.ru/upload/resize_cache/iblock/b29/700_700_140cd750bba9870f18aada2478b24840a/n0ucqwbcvftwozqoqwyz2w3q0sehg2zo.webp',
+      name: 'Напиток винный Santo Stefano Rosso Zero безалкогольный сильногазированный',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1028093-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wyMDI2OXxpbWFnZS9hdmlmfGltYWdlcy9oMzgvaDM0LzExMDI0MDg5OTcyNzY2LmF2aWZ8MmMzYjQxNDZmMTQwMmUyMGU1NzYwMTBmY2ZhNGUwNGIxNDcxOWM3YTQ2Y2I0MWRjMWY1YjQ0YTA4NTlkODNlYg',
       type: 'Красное',
       year: 2018,
       sweetness: 'Полусладкое',
@@ -147,8 +158,8 @@ const ProductPage = () => {
     },
     {
       id: 6,
-      name: 'Вино Corvo Irmana Frappato',
-      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1024656-300Wx300H-avif?context=bWFzdGVyfGltYWdlc3wyNzQwfGltYWdlL2F2aWZ8aW1hZ2VzL2g5MC9oNjQvMTAwNTIxOTg5MjQzMTguYXZpZnwyN2RjZDlkM2ZiYTQzMjAyNmFkOGU3ZDBhZDRiMzdlYWI2MzM5YmViMDcwNTFhMGI1NWQ3MTZlOWRhNmM5MTc1', 
+      name: 'Вино Corvo Irmana Frappato красное полусухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1024656-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxMjQ3MnxpbWFnZS9hdmlmfGltYWdlcy9oZWMvaDNjLzEwMDUyMTk4NjYyMTc0LmF2aWZ8MDZhMjM1NGEyZTM5ZWVmMzkyZDk2MWQyMzE4NDNjNTM2NjUwZWJjZmZiMTRiNWZjYmU4NDczNmQ4MmVlZjllOA', 
       type: 'Красное',
       year: 2000, 
       sweetness: 'Полусухое',
@@ -166,8 +177,8 @@ const ProductPage = () => {
     },
     {
       id: 7,
-      name: 'Вино Corvo Irmana Grillo',
-      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1004105.png-300Wx300H-avif?context=bWFzdGVyfGltYWdlc3wzNzAyfGltYWdlL2F2aWZ8aW1hZ2VzL2g4NC9oZjMvMTAxMTYzMzMwNzY1MTAuYXZpZnxmYTM3OTc0YzZiOTAyNDkyZDhlMDZmNWFjNTUzMzUxY2MxYTMxY2MzMGJhOTgyMjI5NzI3ZGNlZDY2YmJlYmM4', 
+      name: 'Вино Corvo Irmana Grillo белое сухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1024655-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxMzI4MXxpbWFnZS9hdmlmfGltYWdlcy9oYzkvaDk5LzEwMDUyMTk4MzM0NDk0LmF2aWZ8ZmE4YmJjZWYzN2M2ZmVjOGZjYTk5ODkyNjJkMmQzNWM1ZThkMDNiZDM2ZDc2ZmIxYmM1MDYxNzIwYzczYjVkZg', 
       type: 'Белое',
       year: 2017, 
       sweetness: 'Сухое',
@@ -185,8 +196,8 @@ const ProductPage = () => {
     },
     {
       id: 8,
-      name: 'Вино Pasqua Montepulciano d\'Abruzzo',
-      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1024655-300Wx300H-avif?context=bWFzdGVyfGltYWdlc3wzMDc2fGltYWdlL2F2aWZ8aW1hZ2VzL2hjMC9oMWIvMTAwNTIxOTg1OTY2MzguYXZpZnwwNDE0MjA5ZDFjNzY4ODc2MzU4NmVlNzE2YmZjMTk3NTAwYjhjM2NhZjhjZmRmYTU0ZWY5YWU5MzhlNjc1Yjk5', 
+      name: 'Вино Pasqua Montepulciano d’Abruzzo красное полусухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1004105.png-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxNDQ5MnxpbWFnZS9hdmlmfGltYWdlcy9oZjEvaDljLzEwMTE2MzMyMjkwMDc4LmF2aWZ8Y2QyZjIxNWFiYTkzMzlmZjFlOGNkYTAzY2Q1YTg1ZWJmMTJjMWVhZWZlNzNiMjFmYmYxMjI5ZGJjMzEyZjM0Nw', 
       type: 'Красное',
       year: 2023, 
       sweetness: 'Полусухое',
@@ -204,8 +215,8 @@ const ProductPage = () => {
     },
     {
       id: 9,
-      name: 'Вино II Gaggio Cabernet-Sauvignon',
-      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1000635.png-300Wx300H-avif?context=bWFzdGVyfGltYWdlc3wzMjY3fGltYWdlL2F2aWZ8aW1hZ2VzL2gwYi9oNWIvMTAxMTU4NDcwNjE1MzQuYXZpZnw1YTA2NDM4MWUxNWYxM2RkMWUzYWQyNGI5NzBjODBlOWZmZmJiYzVkOGExYTUxZTljZTUyMTg1ZWJiNzY5YWU1', 
+      name: 'Вино Faustino Crianza Tempranillo красное сухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1015344-3-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3w5NzE1fGltYWdlL2F2aWZ8aW1hZ2VzL2gwMi9oNjIvMTAzMTgzNTg4NzIwOTQuYXZpZnxiODkzNDU2ZTlkNjA0MGQ3NWFiM2JmNDcwZThmOTA5ODZhM2I1Yzk3YjlmNzMxNDg3ZjAyN2EyY2Q1ZjNkYWQ2', 
       type: 'Красное',
       year: 2022, 
       sweetness: 'Сухое',
@@ -223,8 +234,8 @@ const ProductPage = () => {
     },
     {
       id: 10,
-      name: 'Вино Piccini Collezione Oro Chianti Riserva',
-      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1017106.png-300Wx300H-avif?context=bWFzdGVyfGltYWdlc3wxNzQxMnxpbWFnZS9hdmlmfGltYWdlcy9oMzgvaDc3LzEwMTE2OTQxNDQ3MTk4LmF2aWZ8Y2VjNmNkOTgxNGQwY2Y2ODlhNmI4YzI1ODgzNzRiODI5MTAxOTkzOGIxODQ1MjBiOWQ4YjJmOTEzNWM0NDdhOQ', 
+      name: 'Вино Il Gaggio Grillo Terre Siciliane белое сухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1014538-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wzNjM2MHxpbWFnZS9hdmlmfGltYWdlcy9oYzMvaDFhLzEwMTE3NDg5OTgzNTE4LmF2aWZ8MGY3NWNiOGIzNGIzOWM4MzBlODRkYjVlMGU4MmZiMjEwODk3ZjAzMDg0MjAzMDNiZjFkMGU1NWY1ODMzYzQxMA', 
       type: 'Красное',
       year: 2015, 
       sweetness: 'Сухое',
@@ -242,8 +253,8 @@ const ProductPage = () => {
     },
     {
       id: 11,
-      name: 'Вино Masi Modello Bianco',
-      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1018066-2-300Wx300H-avif?context=bWFzdGVyfGltYWdlc3wzMTg5fGltYWdlL2F2aWZ8aW1hZ2VzL2hjMi9oZTkvMTE2MjUwNjQxMzY3MzQuYXZpZnwzODZkMzg2Yzc5YzgzNDhmMjFkZDVjY2ZiYjBjMTk0MWQ2ZjA1Njc1NmFjYTIzZDJiMmYzNDUyZjNlODk1MGM1', 
+      name: 'Вино Masi Modello Bianco белое полусухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1018066-2-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wyMjM4NXxpbWFnZS9hdmlmfGltYWdlcy9oZDcvaDU0LzExNjI1MDYzNTQ2OTEwLmF2aWZ8MjNlMzg0ODZkNTk1ZDBmMjMxZGQxYmMwMGNiMDE4NzVmYzZhNmU0NTI1ZDZiNDU1MTE3ODE2MmIzZjJjZDNjYQ', 
       type: 'Белое',
       year: 2015, 
       sweetness: 'Полусухое',
@@ -266,13 +277,35 @@ const ProductPage = () => {
       {isPortrait ? (
         // Вертикальный режим (мобильные устройства)
         <div className="flex flex-col">
-          <img 
-            src={SmallBackground} 
-            alt="Фон продукта" 
-            className="w-full h-auto object-cover"
-          />
+
+
+          <div className='relative'>
+
+            <img 
+              src={SmallBackground} 
+              alt="Фон продукта" 
+              className="w-full h-auto object-cover"
+            />
+
+            <img 
+              src={productData[productID].image}
+              alt="Изображение продукта"
+              className="absolute top-0 left-0 w-full h-full object-contain"
+            />
+
+
+            <div className='absolute top-4 right-4 z-10 cursor-pointer'>
+              <div onClick={handleClose} className="cl-btn-6">
+                <div className="cl-btn-6-in ">
+                  <label className="cl-btn-6-txt text-gray-600">Close</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
           
-          <div className="p-4">
+          <div className="p-4 lg:mx-auto lg:w-[900px]">
             <div className='flex justify-center items-center'>
                 <h1 className="inline-block mobile-header">{productData[productID].name}</h1>
             </div>
@@ -281,7 +314,7 @@ const ProductPage = () => {
             <section className="mobile-stats">
 
               <div className='mobile-stats-section'>
-                <img src={AlcoIcon} className='mobile-stats-section-img'/>
+                <img src={AlcoIcon} className='mobile-stats-section-img pr-1'/>
 
                 <div>
                     <p className="mobile-stats-section-name">Алкоголь</p>
@@ -313,7 +346,7 @@ const ProductPage = () => {
             
             <h3 className="mobile-header mb-2">Описание</h3>
             <div className="space-y-2">
-              {productData[productId].description.map((paragraph, index) => (
+              {productData[productID].description.map((paragraph, index) => (
                 <p key={index} className="mobile-paragraph">{paragraph}</p>
               ))}
             </div>
@@ -322,39 +355,73 @@ const ProductPage = () => {
       ) : (
         // Горизонтальный режим (десктоп/планшет)
         <div className="flex h-screen">
-          <div className="w-1/2 flex items-center">
+
+          <div className="relative w-1/2 flex items-center">
             <img 
               src={BigBackground} 
               alt="Фон продукта" 
-              className="max-h-[80vh] object-contain"
+              className="max-h-[120vh] object-contain absolute -top-[15rem]"
             />
+
+            <img 
+              src={productData[productID].image}
+              alt="Изображение продукта"
+              className="absolute top-0 left-0 w-full h-full object-contain"
+            />
+
+            <div className='absolute top-4 right-4 z-10 cursor-pointer'>
+              <div onClick={handleClose} className="cl-btn-6">
+                <div className="cl-btn-6-in ">
+                  <label className="cl-btn-6-txt text-gray-600">Close</label>
+                </div>
+              </div>
+            </div>
+
           </div>
           
           <div className="w-1/2 overflow-y-auto p-8">
-            <h1 className="text-3xl font-bold">{productData[productID].title}</h1>
+
+            <div className='flex flex-row cursor-pointer justify-end p-4' onClick={handleClose}>
+              <p className='desktop-paragraph mr-3'>Вернуться назад</p>
+              <FaArrowRightLong className='h-6 w-6'/>
+            </div>
+
+            <h1 className="desktop-header mb-10">{productData[productID].name}</h1>
             {/* <h2 className="text-2xl text-gray-600 mb-6">{productData.subtitle}</h2> */}
             
-            <div className="flex space-x-8 mb-6">
-              <div>
-                <p className="font-semibold">Алкоголь</p>
-                <p>{productData[productID].alcohol}%</p>
+            <div className="desktop-stats mb-14">
+              <div className='mobile-stats-section'>
+                <img src={AlcoIcon} className='desktop-stats-section-img pr-1'/>
+                <div>
+                    <p className="desktop-stats-section-name">Алкоголь</p>
+                    <p className='desktop-stats-section-stat'>{productData[productID].alcohol}%</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold">Сахар</p>
-                <p>{productData[productID].sugar} г/дм³</p>
+              
+              <div className='mobile-stats-section'>
+                <img src={SugarIcon} className='desktop-stats-section-img pr-1'/>
+                <div>
+                    <p className="desktop-stats-section-name">Сахар</p>
+                    <p className='desktop-stats-section-stat'>{productData[productID].sugar} г/дм³</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold">Температура подачи</p>
-                <p>{productData[productID].temperature} °C</p>
+
+              <div className='mobile-stats-section'>
+                <img src={TemperatureIcon} className='desktop-stats-section-img pr-1'/>
+                <div>
+                    <p className="desktop-stats-section-name">Температура подачи</p>
+                    <p className='desktop-stats-section-stat'>{productData[productID].temperature} °C</p>
+                </div>
               </div>
+
             </div>
             
-            <p className="text-3xl font-bold mb-6">{productData[productID].price} ₽</p>
+            <h2 className="desktop-header-lower mb-14">{productData[productID].price} ₽</h2>
             
-            <h3 className="text-xl font-semibold mb-4">Описание</h3>
+            <h2 className="desktop-header-lower mb-4">Описание</h2>
             <div className="space-y-3">
               {productData[productID].description.map((paragraph, index) => (
-                <p key={index} className="text-gray-700">{paragraph}</p>
+                <p key={index} className="desktop-paragraph">{paragraph}</p>
               ))}
             </div>
           </div>

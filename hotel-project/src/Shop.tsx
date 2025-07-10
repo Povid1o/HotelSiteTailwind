@@ -48,214 +48,214 @@ function Shop() {
   // Данные вин
   const [wines] = useState<Wine[]>([
   {
-    id: 1,
-    name: 'Вино игристое белое',
-    image: 'https://krymwine.ru/upload/resize_cache/iblock/08a/700_700_140cd750bba9870f18aada2478b24840a/u2usww0s9fsyzy4bbgoaha4bm860mp8a.webp',
-    type: 'Белое',
-    year: 1985,
-    sweetness: 'Полусладкое',
-    alcohol: "11.5-12.5",
-    sugar: "35-45",
-    temperature: "6-8",
-    price: 3200,
-    description: [
-      "Виноград: Шардоне, Пино Блан",
-      "Цвет: Светло-соломенный с золотистыми бликами",
-      "Аромат: Ноты зеленого яблока, груши и свежей выпечки",
-      "Вкус: Элегантная игристость с медовыми нюансами",
-      "Сочетания: Устрицы, легкие десерты, фруктовые тарталетки"
-    ]
-  },
-  {
-    id: 2,
-    name: 'Вино красное Красностоп Золотовский',
-    image: 'https://krymwine.ru/upload/resize_cache/iblock/522/700_700_140cd750bba9870f18aada2478b24840a/aizouqgfnwmbpzgpga3mx9f8kre9fnhg.webp',
-    type: 'Красное',
-    year: 1980,
-    sweetness: 'Полусладкое',
-    alcohol: "13-14",
-    sugar: "25-35",
-    temperature: "16-18",
-    price: 8700,
-    description: [
-      "Виноград: Красностоп",
-      "Цвет: Глубокий гранатовый с кирпичными отблесками",
-      "Аромат: Выдержанные тона чернослива, кожи и специй",
-      "Вкус: Мягкие танины и длительное послевкусие",
-      "Сочетания: Дичь, зрелые сыры, мясные пироги"
-    ]
-  },
-  {
-    id: 3,
-    name: 'Вино белое',
-    image: 'https://krymwine.ru/upload/resize_cache/iblock/ade/700_700_140cd750bba9870f18aada2478b24840a/tntl3fmkj2j8quxu0on6ucgc0biqbx0m.webp',
-    type: 'Белое',
-    year: 1975,
-    sweetness: 'Полусладкое',
-    alcohol: "11-12",
-    sugar: "30-40",
-    temperature: "8-10",
-    price: 4500,
-    description: [
-      "Виноград: Ркацители, Рислинг",
-      "Цвет: Янтарный с золотистыми переливами",
-      "Аромат: Сухофрукты, мед и миндальные ноты",
-      "Вкус: Маслянистая текстура с карамельным оттенком",
-      "Сочетания: Фуа-гра, голубые сыры, ореховые десерты"
-    ]
-  },
-  {
-    id: 4,
-    name: 'Вино игристое красное Русское игристое полусладкое',
-    image: 'https://krymwine.ru/upload/resize_cache/iblock/b29/700_700_140cd750bba9870f18aada2478b24840a/n0ucqwbcvftwozqoqwyz2w3q0sehg2zo.webp',
-    type: 'Красное',
-    year: 1990,
-    sweetness: 'Полусладкое',
-    alcohol: "12-13",
-    sugar: "35-45",
-    temperature: "10-12",
-    price: 2800,
-    description: [
-      "Виноград: Каберне Совиньон, Саперави",
-      "Цвет: Ярко-рубиновый с фиолетовыми отблесками",
-      "Аромат: Малина, вишня и легкие дрожжевые ноты",
-      "Вкус: Игристое ягодное настроение с бархатистой пеной",
-      "Сочетания: Клубника в шоколаде, ягодные муссы"
-    ]
-  },
-  {
-    id: 5,
-    name: 'Вино игристое красное Русское игристое полусладкое',
-    image: 'https://krymwine.ru/upload/resize_cache/iblock/b29/700_700_140cd750bba9870f18aada2478b24840a/n0ucqwbcvftwozqoqwyz2w3q0sehg2zo.webp',
-    type: 'Красное',
-    year: 2018,
-    sweetness: 'Полусладкое',
-    alcohol: "12.5-13.5",
-    sugar: "40-50",
-    temperature: "10-12",
-    price: 1900,
-    description: [
-      "Виноград: Мерло, Пино Нуар",
-      "Цвет: Фиолетово-рубиновый с лиловым краем",
-      "Аромат: Свежая клубника, красная смородина",
-      "Вкус: Сочная фруктовость с шелковистыми танинами",
-      "Сочетания: Легкие десерты, фруктовые салаты"
-    ]
-  },
-  {
-    id: 6,
-    name: 'Вино Corvo Irmana Frappato',
-    image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1024656-300Wx300H-avif?context=bWFzdGVyfGltYWdlc3wyNzQwfGltYWdlL2F2aWZ8aW1hZ2VzL2g5MC9oNjQvMTAwNTIxOTg5MjQzMTguYXZpZnwyN2RjZDlkM2ZiYTQzMjAyNmFkOGU3ZDBhZDRiMzdlYWI2MzM5YmViMDcwNTFhMGI1NWQ3MTZlOWRhNmM5MTc1', 
-    type: 'Красное',
-    year: 2000, 
-    sweetness: 'Полусухое',
-    alcohol: "13-14",
-    sugar: "8-12",
-    temperature: "16-18",
-    price: 3500,
-    description: [
-      "Виноград: Фраппато",
-      "Цвет: Прозрачный рубиновый с оранжевыми ободком",
-      "Аромат: Сушеная клюква, кориандр, кожистые ноты",
-      "Вкус: Элегантная кислинка и минеральный финиш",
-      "Сочетания: Паста болоньезе, пицца с салями"
-    ]
-  },
-  {
-    id: 7,
-    name: 'Вино Corvo Irmana Grillo',
-    image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1004105.png-300Wx300H-avif?context=bWFzdGVyfGltYWdlc3wzNzAyfGltYWdlL2F2aWZ8aW1hZ2VzL2g4NC9oZjMvMTAxMTYzMzMwNzY1MTAuYXZpZnxmYTM3OTc0YzZiOTAyNDkyZDhlMDZmNWFjNTUzMzUxY2MxYTMxY2MzMGJhOTgyMjI5NzI3ZGNlZDY2YmJlYmM4', 
-    type: 'Белое',
-    year: 2017, 
-    sweetness: 'Сухое',
-    alcohol: "12.5-13",
-    sugar: "4-6",
-    temperature: "8-10",
-    price: 2200,
-    description: [
-      "Виноград: Грилло",
-      "Цвет: Бледно-соломенный с зеленоватыми бликами",
-      "Аромат: Белый персик, морская галька, миндальные цветы",
-      "Вкус: Освежающая минеральность и соленый финиш",
-      "Сочетания: Мидии гриль, овощи-гриль, средиземноморские салаты"
-    ]
-  },
-  {
-    id: 8,
-    name: 'Вино Pasqua Montepulciano d\'Abruzzo',
-    image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1024655-300Wx300H-avif?context=bWFzdGVyfGltYWdlc3wzMDc2fGltYWdlL2F2aWZ8aW1hZ2VzL2hjMC9oMWIvMTAwNTIxOTg1OTY2MzguYXZpZnwwNDE0MjA5ZDFjNzY4ODc2MzU4NmVlNzE2YmZjMTk3NTAwYjhjM2NhZjhjZmRmYTU0ZWY5YWU5MzhlNjc1Yjk5', 
-    type: 'Красное',
-    year: 2023, 
-    sweetness: 'Полусухое',
-    alcohol: "13-14",
-    sugar: "10-15",
-    temperature: "16-18",
-    price: 1800,
-    description: [
-      "Виноград: Монтепульчано",
-      "Цвет: Насыщенный фиолетовый с пурпурной пеной",
-      "Аромат: Свежая черника, фиалка, легкий перец",
-      "Вкус: Сочные фрукты и бархатистые танины",
-      "Сочетания: Брускетты, паста карбонара, молодые сыры"
-    ]
-  },
-  {
-    id: 9,
-    name: 'Вино II Gaggio Cabernet-Sauvignon',
-    image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1000635.png-300Wx300H-avif?context=bWFzdGVyfGltYWdlc3wzMjY3fGltYWdlL2F2aWZ8aW1hZ2VzL2gwYi9oNWIvMTAxMTU4NDcwNjE1MzQuYXZpZnw1YTA2NDM4MWUxNWYxM2RkMWUzYWQyNGI5NzBjODBlOWZmZmJiYzVkOGExYTUxZTljZTUyMTg1ZWJiNzY5YWU1', 
-    type: 'Красное',
-    year: 2022, 
-    sweetness: 'Сухое',
-    alcohol: "14-14.5",
-    sugar: "3-5",
-    temperature: "17-19",
-    price: 4300,
-    description: [
-      "Виноград: Каберне Совиньон",
-      "Цвет: Глубокий рубиновый с фиолетовым оттенком",
-      "Аромат: Черная смородина, эвкалипт, темный шоколад",
-      "Вкус: Мощные танины и долгое пряное послевкусие",
-      "Сочетания: Стейк рибай, блюда из баранины, выдержанные сыры"
-    ]
-  },
-  {
-    id: 10,
-    name: 'Вино Piccini Collezione Oro Chianti Riserva',
-    image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1017106.png-300Wx300H-avif?context=bWFzdGVyfGltYWdlc3wxNzQxMnxpbWFnZS9hdmlmfGltYWdlcy9oMzgvaDc3LzEwMTE2OTQxNDQ3MTk4LmF2aWZ8Y2VjNmNkOTgxNGQwY2Y2ODlhNmI4YzI1ODgzNzRiODI5MTAxOTkzOGIxODQ1MjBiOWQ4YjJmOTEzNWM0NDdhOQ', 
-    type: 'Красное',
-    year: 2015, 
-    sweetness: 'Сухое',
-    alcohol: "13.5-14",
-    sugar: "4-6",
-    temperature: "18-20",
-    price: 5600,
-    description: [
-      "Виноград: Санджовезе",
-      "Цвет: Гранатовый с кирпичными ободком",
-      "Аромат: Вяленая вишня, кожа, трюфельные ноты",
-      "Вкус: Комплексный и элегантный с шелковистыми танинами",
-      "Сочетания: Флорентийский стейк, дичь, грибные ризотто"
-    ]
-  },
-  {
-    id: 11,
-    name: 'Вино Masi Modello Bianco',
-    image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1018066-2-300Wx300H-avif?context=bWFzdGVyfGltYWdlc3wzMTg5fGltYWdlL2F2aWZ8aW1hZ2VzL2hjMi9oZTkvMTE2MjUwNjQxMzY3MzQuYXZpZnwzODZkMzg2Yzc5YzgzNDhmMjFkZDVjY2ZiYjBjMTk0MWQ2ZjA1Njc1NmFjYTIzZDJiMmYzNDUyZjNlODk1MGM1', 
-    type: 'Белое',
-    year: 2015, 
-    sweetness: 'Полусухое',
-    alcohol: "12-12.5",
-    sugar: "15-20",
-    temperature: "8-10",
-    price: 2700,
-    description: [
-      "Виноград: Гарганега, Пино Гриджио",
-      "Цвет: Светло-золотистый с зеленоватыми рефлексами",
-      "Аромат: Белые цветы, спелый персик, миндаль",
-      "Вкус: Сбалансированная кислотность с медовыми нюансами",
-      "Сочетания: Рыба на гриле, креветки, овощные пасты"
-    ]
-  }
+      id: 1,
+      name: 'Вино игристое Sempre Prosecco Brut белое брют',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1027925-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxNTE2N3xpbWFnZS9hdmlmfGltYWdlcy9oNTEvaDY3LzEwOTM3ODA4MzU1MzU4LmF2aWZ8MzQ0ZTE5NzNhNDM1ODgzNGYxNDkzMDg5NWQwNWYzODUzYjc2NzY3M2RlZTVmNTNjNWUxNzJkNDlmYzBlMjMwZg',
+      type: 'Белое',
+      year: 1985,
+      sweetness: 'Полусладкое',
+      alcohol: "11.5-12.5",
+      sugar: "35-45",
+      temperature: "6-8",
+      price: 3200,
+      description: [
+        "Виноград: Шардоне, Пино Блан",
+        "Цвет: Светло-соломенный с золотистыми бликами",
+        "Аромат: Ноты зеленого яблока, груши и свежей выпечки",
+        "Вкус: Элегантная игристость с медовыми нюансами",
+        "Сочетания: Устрицы, легкие десерты, фруктовые тарталетки"
+      ]
+    },
+    {
+      id: 2,
+      name: 'Вино Ведерниковъ Губернаторское Красностоп Золотовский красное сухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1020457-3-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxNzY2MHxpbWFnZS9hdmlmfGltYWdlcy9oZDgvaDAyLzExNjMxNjU2MzM3NDM4LmF2aWZ8MTMzNmViYTUzMDY2ODlhYTZhNjliYTM5ODUyMjM4NmVkNWU5ZTVkNjczOGUyOGUzODA1ZDc3ZTc1ZjBiZTllYw',
+      type: 'Красное',
+      year: 1980,
+      sweetness: 'Полусладкое',
+      alcohol: "13-14",
+      sugar: "25-35",
+      temperature: "16-18",
+      price: 8700,
+      description: [
+        "Виноград: Красностоп",
+        "Цвет: Глубокий гранатовый с кирпичными отблесками",
+        "Аромат: Выдержанные тона чернослива, кожи и специй",
+        "Вкус: Мягкие танины и длительное послевкусие",
+        "Сочетания: Дичь, зрелые сыры, мясные пироги"
+      ]
+    },
+    {
+      id: 3,
+      name: 'Вино JP. Chenet Original Colombard-Chardonnay белое полусухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1021991-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxNDAwNXxpbWFnZS9hdmlmfGltYWdlcy9oMGMvaDM0LzEwNTQzMjUxMjI2NjU0LmF2aWZ8MDAwNDQ2ZWZkNTUxNWQ4OGI2YzQ0NjA4ZTY1ODg3OTQ0ZmJlMzc2MTViYjBhNzIxYWRkMTMyNWU5ODE2NzY5Zg',
+      type: 'Белое',
+      year: 1975,
+      sweetness: 'Полусладкое',
+      alcohol: "11-12",
+      sugar: "30-40",
+      temperature: "8-10",
+      price: 4500,
+      description: [
+        "Виноград: Ркацители, Рислинг",
+        "Цвет: Янтарный с золотистыми переливами",
+        "Аромат: Сухофрукты, мед и миндальные ноты",
+        "Вкус: Маслянистая текстура с карамельным оттенком",
+        "Сочетания: Фуа-гра, голубые сыры, ореховые десерты"
+      ]
+    },
+    {
+      id: 4,
+      name: 'Вино игристое Абрау-Дюрсо Русское Игристое красное полусладкое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1001719-1-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wyMzQ3MnxpbWFnZS9hdmlmfGltYWdlcy9oYzkvaGYyLzExNDIwNTQ4NjYxMjc4LmF2aWZ8MjY5ZWQzYjkxZDBlNDllODMwM2ZjNmU4MzU4MjczYmY2Njk1ZmZmMTE3YjQ3YmI5YzIyYzRjNTk2NWFhYjg3ZQ',
+      type: 'Красное',
+      year: 1990,
+      sweetness: 'Полусладкое',
+      alcohol: "12-13",
+      sugar: "35-45",
+      temperature: "10-12",
+      price: 2800,
+      description: [
+        "Виноград: Каберне Совиньон, Саперави",
+        "Цвет: Ярко-рубиновый с фиолетовыми отблесками",
+        "Аромат: Малина, вишня и легкие дрожжевые ноты",
+        "Вкус: Игристое ягодное настроение с бархатистой пеной",
+        "Сочетания: Клубника в шоколаде, ягодные муссы"
+      ]
+    },
+    {
+      id: 5,
+      name: 'Напиток винный Santo Stefano Rosso Zero безалкогольный',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1028093-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wyMDI2OXxpbWFnZS9hdmlmfGltYWdlcy9oMzgvaDM0LzExMDI0MDg5OTcyNzY2LmF2aWZ8MmMzYjQxNDZmMTQwMmUyMGU1NzYwMTBmY2ZhNGUwNGIxNDcxOWM3YTQ2Y2I0MWRjMWY1YjQ0YTA4NTlkODNlYg',
+      type: 'Красное',
+      year: 2018,
+      sweetness: 'Полусладкое',
+      alcohol: "12.5-13.5",
+      sugar: "40-50",
+      temperature: "10-12",
+      price: 1900,
+      description: [
+        "Виноград: Мерло, Пино Нуар",
+        "Цвет: Фиолетово-рубиновый с лиловым краем",
+        "Аромат: Свежая клубника, красная смородина",
+        "Вкус: Сочная фруктовость с шелковистыми танинами",
+        "Сочетания: Легкие десерты, фруктовые салаты"
+      ]
+    },
+    {
+      id: 6,
+      name: 'Вино Corvo Irmana Frappato красное полусухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1024656-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxMjQ3MnxpbWFnZS9hdmlmfGltYWdlcy9oZWMvaDNjLzEwMDUyMTk4NjYyMTc0LmF2aWZ8MDZhMjM1NGEyZTM5ZWVmMzkyZDk2MWQyMzE4NDNjNTM2NjUwZWJjZmZiMTRiNWZjYmU4NDczNmQ4MmVlZjllOA', 
+      type: 'Красное',
+      year: 2000, 
+      sweetness: 'Полусухое',
+      alcohol: "13-14",
+      sugar: "8-12",
+      temperature: "16-18",
+      price: 3500,
+      description: [
+        "Виноград: Фраппато",
+        "Цвет: Прозрачный рубиновый с оранжевыми ободком",
+        "Аромат: Сушеная клюква, кориандр, кожистые ноты",
+        "Вкус: Элегантная кислинка и минеральный финиш",
+        "Сочетания: Паста болоньезе, пицца с салями"
+      ]
+    },
+    {
+      id: 7,
+      name: 'Вино Corvo Irmana Grillo белое сухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1024655-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxMzI4MXxpbWFnZS9hdmlmfGltYWdlcy9oYzkvaDk5LzEwMDUyMTk4MzM0NDk0LmF2aWZ8ZmE4YmJjZWYzN2M2ZmVjOGZjYTk5ODkyNjJkMmQzNWM1ZThkMDNiZDM2ZDc2ZmIxYmM1MDYxNzIwYzczYjVkZg', 
+      type: 'Белое',
+      year: 2017, 
+      sweetness: 'Сухое',
+      alcohol: "12.5-13",
+      sugar: "4-6",
+      temperature: "8-10",
+      price: 2200,
+      description: [
+        "Виноград: Грилло",
+        "Цвет: Бледно-соломенный с зеленоватыми бликами",
+        "Аромат: Белый персик, морская галька, миндальные цветы",
+        "Вкус: Освежающая минеральность и соленый финиш",
+        "Сочетания: Мидии гриль, овощи-гриль, средиземноморские салаты"
+      ]
+    },
+    {
+      id: 8,
+      name: 'Вино Pasqua Montepulciano d’Abruzzo красное полусухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1004105.png-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxNDQ5MnxpbWFnZS9hdmlmfGltYWdlcy9oZjEvaDljLzEwMTE2MzMyMjkwMDc4LmF2aWZ8Y2QyZjIxNWFiYTkzMzlmZjFlOGNkYTAzY2Q1YTg1ZWJmMTJjMWVhZWZlNzNiMjFmYmYxMjI5ZGJjMzEyZjM0Nw', 
+      type: 'Красное',
+      year: 2023, 
+      sweetness: 'Полусухое',
+      alcohol: "13-14",
+      sugar: "10-15",
+      temperature: "16-18",
+      price: 1800,
+      description: [
+        "Виноград: Монтепульчано",
+        "Цвет: Насыщенный фиолетовый с пурпурной пеной",
+        "Аромат: Свежая черника, фиалка, легкий перец",
+        "Вкус: Сочные фрукты и бархатистые танины",
+        "Сочетания: Брускетты, паста карбонара, молодые сыры"
+      ]
+    },
+    {
+      id: 9,
+      name: 'Вино Faustino Crianza Tempranillo красное сухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1015344-3-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3w5NzE1fGltYWdlL2F2aWZ8aW1hZ2VzL2gwMi9oNjIvMTAzMTgzNTg4NzIwOTQuYXZpZnxiODkzNDU2ZTlkNjA0MGQ3NWFiM2JmNDcwZThmOTA5ODZhM2I1Yzk3YjlmNzMxNDg3ZjAyN2EyY2Q1ZjNkYWQ2', 
+      type: 'Красное',
+      year: 2022, 
+      sweetness: 'Сухое',
+      alcohol: "14-14.5",
+      sugar: "3-5",
+      temperature: "17-19",
+      price: 4300,
+      description: [
+        "Виноград: Каберне Совиньон",
+        "Цвет: Глубокий рубиновый с фиолетовым оттенком",
+        "Аромат: Черная смородина, эвкалипт, темный шоколад",
+        "Вкус: Мощные танины и долгое пряное послевкусие",
+        "Сочетания: Стейк рибай, блюда из баранины, выдержанные сыры"
+      ]
+    },
+    {
+      id: 10,
+      name: 'Вино Il Gaggio Grillo Terre Siciliane белое сухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1014538-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wzNjM2MHxpbWFnZS9hdmlmfGltYWdlcy9oYzMvaDFhLzEwMTE3NDg5OTgzNTE4LmF2aWZ8MGY3NWNiOGIzNGIzOWM4MzBlODRkYjVlMGU4MmZiMjEwODk3ZjAzMDg0MjAzMDNiZjFkMGU1NWY1ODMzYzQxMA', 
+      type: 'Красное',
+      year: 2015, 
+      sweetness: 'Сухое',
+      alcohol: "13.5-14",
+      sugar: "4-6",
+      temperature: "18-20",
+      price: 5600,
+      description: [
+        "Виноград: Санджовезе",
+        "Цвет: Гранатовый с кирпичными ободком",
+        "Аромат: Вяленая вишня, кожа, трюфельные ноты",
+        "Вкус: Комплексный и элегантный с шелковистыми танинами",
+        "Сочетания: Флорентийский стейк, дичь, грибные ризотто"
+      ]
+    },
+    {
+      id: 11,
+      name: 'Вино Masi Modello Bianco белое полусухое',
+      image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1018066-2-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wyMjM4NXxpbWFnZS9hdmlmfGltYWdlcy9oZDcvaDU0LzExNjI1MDYzNTQ2OTEwLmF2aWZ8MjNlMzg0ODZkNTk1ZDBmMjMxZGQxYmMwMGNiMDE4NzVmYzZhNmU0NTI1ZDZiNDU1MTE3ODE2MmIzZjJjZDNjYQ', 
+      type: 'Белое',
+      year: 2015, 
+      sweetness: 'Полусухое',
+      alcohol: "12-12.5",
+      sugar: "15-20",
+      temperature: "8-10",
+      price: 2700,
+      description: [
+        "Виноград: Гарганега, Пино Гриджио",
+        "Цвет: Светло-золотистый с зеленоватыми рефлексами",
+        "Аромат: Белые цветы, спелый персик, миндаль",
+        "Вкус: Сбалансированная кислотность с медовыми нюансами",
+        "Сочетания: Рыба на гриле, креветки, овощные пасты"
+      ]
+    }
 ]);
 
   // Вычисляем минимальный и максимальный год для слайдера
