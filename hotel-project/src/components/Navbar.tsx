@@ -28,7 +28,7 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
   };
 
   return (
-    <nav className='fixed w-full h-[80px] font-body flex justify-between items-center px-4 bg-main_theme text-white z-[19]'>
+    <nav className='fixed w-screen h-[80px] font-body flex justify-between items-center px-4 bg-main_theme text-white z-[30]'>
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
@@ -87,7 +87,7 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
       )}
 
       {/* Hamburger */}
-      <div onClick={handleClick} className="md:hidden z-20">
+      <div onClick={handleClick} className="md:hidden z-[31]">
         {!nav ? <FaBars /> : <FaTimes />}
       </div>
 

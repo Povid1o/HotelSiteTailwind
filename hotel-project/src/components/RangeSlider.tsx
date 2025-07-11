@@ -182,7 +182,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
 
         <div
           ref={minThumb}
-          className="absolute w-5 h-5 rounded-full bg-white border-2 border-main_theme top-2 -ml-2.5 z-40 cursor-pointer"
+          className="absolute w-5 h-5 rounded-full bg-white border-2 border-main_theme top-2 -ml-2.5 z-[21] cursor-pointer"
           style={{ transform: 'translateY(-50%)' }}
           onMouseDown={handleMinThumbDrag}
           onTouchStart={handleMinThumbDrag}
@@ -190,7 +190,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
 
         <div
           ref={maxThumb}
-          className="absolute w-5 h-5 rounded-full bg-white border-2 border-main_theme top-2 -ml-2.5 z-40 cursor-pointer"
+          className="absolute w-5 h-5 rounded-full bg-white border-2 border-main_theme top-2 -ml-2.5 z-[21] cursor-pointer"
           style={{ transform: 'translateY(-50%)' }}
           onMouseDown={handleMaxThumbDrag}
           onTouchStart={handleMaxThumbDrag}

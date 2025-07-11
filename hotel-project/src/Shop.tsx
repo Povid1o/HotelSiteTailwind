@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 
 import Navbar from "./components/Navbar"
@@ -47,7 +49,7 @@ function Shop() {
   
   // Данные вин
   const [wines] = useState<Wine[]>([
-  {
+    {
       id: 1,
       name: 'Вино игристое Sempre Prosecco Brut белое брют',
       image: 'https://jmrkpxyvei.a.trbcdn.net/medias/1027925-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxNTE2N3xpbWFnZS9hdmlmfGltYWdlcy9oNTEvaDY3LzEwOTM3ODA4MzU1MzU4LmF2aWZ8MzQ0ZTE5NzNhNDM1ODgzNGYxNDkzMDg5NWQwNWYzODUzYjc2NzY3M2RlZTVmNTNjNWUxNzJkNDlmYzBlMjMwZg',
@@ -255,8 +257,8 @@ function Shop() {
         "Вкус: Сбалансированная кислотность с медовыми нюансами",
         "Сочетания: Рыба на гриле, креветки, овощные пасты"
       ]
-    }
-]);
+    },
+  ]);
 
   // Вычисляем минимальный и максимальный год для слайдера
   const { minYear, maxYear } = useMemo(() => {

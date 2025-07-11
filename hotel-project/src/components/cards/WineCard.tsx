@@ -81,7 +81,7 @@ const WineCard: React.FC<WineCardProps> = ({
           alt={imgAlt}
         />
       )}
-      <h3 className="font-bold text-base mx-auto text-center content-center sm:text-[24px] sm:leading-[32px] sm:mb-2 md:h-[48px]">{header}</h3>
+      <h3 className="font-bold text-base mx-auto text-center content-center sm:text-[24px] sm:leading-[32px] sm:mb-2 md:h-[72px]">{header}</h3>
       {description && <p className="text-gray-600 text-sm">{description}</p>}
 
       {/* Кнопка "Подробнее" */}

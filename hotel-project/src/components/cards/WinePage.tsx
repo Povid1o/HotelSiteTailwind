@@ -369,22 +369,29 @@ const ProductPage = () => {
               className="absolute top-0 left-0 w-full h-full object-contain"
             />
 
-            <div className='absolute top-4 right-4 z-10 cursor-pointer'>
+            {/* <div className='absolute top-4 right-4 z-10 cursor-pointer'>
               <div onClick={handleClose} className="cl-btn-6">
                 <div className="cl-btn-6-in ">
                   <label className="cl-btn-6-txt text-gray-600">Close</label>
                 </div>
               </div>
-            </div>
+            </div> */}
 
           </div>
           
           <div className="w-1/2 overflow-y-auto p-8">
 
-            <div className='flex flex-row cursor-pointer justify-end p-4' onClick={handleClose}>
-              <p className='desktop-paragraph mr-3'>Вернуться назад</p>
-              <FaArrowRightLong className='h-6 w-6'/>
-            </div>
+            <label className='flex justify-end'>
+              <div 
+                className='inline-flex flex-row cursor-pointer justify-end p-4 mb-5 group rounded-lg hover:bg-gray-100 transition-all duration-300'
+                onClick={handleClose}
+              >
+                <p className='desktop-paragraph mr-3 transition-all duration-300 group-hover:text-main_theme'>
+                  Вернуться назад
+                </p>
+                <FaArrowRightLong className='h-6 w-6 transform transition-transform duration-300 ease-in-out group-hover:translate-x-2 group-hover:text-main_theme' />
+              </div>
+            </label>
 
             <h1 className="desktop-header mb-10">{productData[productID].name}</h1>
             {/* <h2 className="text-2xl text-gray-600 mb-6">{productData.subtitle}</h2> */}
