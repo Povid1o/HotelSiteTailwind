@@ -1,7 +1,5 @@
-//Ебани сюда в пропс загружаемый массив цен и прочей хуйни
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IoIosClose } from "react-icons/io";
-
 
 const Button = ({ icon, text, func }) => {
   return (
@@ -10,7 +8,6 @@ const Button = ({ icon, text, func }) => {
         icon ? 'bg-[#FAC638] text-[#AB2217]' : 'bg-[#F5EFDB] text-[#201A09]'
       } text-base font-bold leading-normal tracking-[0.015em]`}
       onClick={func}
-      
     >
       {icon ? (
         <div className="text-[#201A09]" data-icon={icon} data-size="20px" data-weight="regular">
@@ -25,83 +22,114 @@ const Button = ({ icon, text, func }) => {
   );
 };
 
-//пряяяям сюда, вот в прайс лист, ага, как сделать посмотри в баттоне сверху
-function PriceList({globalPrices, onSave = () => {}}) {
-  // const [prices, setPrices] = useState([
-  //   { title: '', price: '' },
-  // ]);
+function PriceList({ globalPrices = [], onSave = () => {} }) {
   const [prices, setPrices] = useState(globalPrices);
   const [isDirty, setDirty] = useState(false);
 
+  // Синхронизация с внешним состоянием
+  useEffect(() => {
+    setPrices(globalPrices);
+    setDirty(false);
+  }, [globalPrices]);
+
   const handleTitleChange = (index, value) => {
     setPrices((prevPrices) => {
-      prevPrices[index].title = value;
+      const newPrices = [...prevPrices];
+      newPrices[index] = { ...newPrices[index], title: value };
       setDirty(true);
-      return [...prevPrices];
+      return newPrices;
     });
   };
 
   const handlePriceChange = (index, value) => {
     setPrices((prevPrices) => {
-      prevPrices[index].price = value;
+      const newPrices = [...prevPrices];
+      newPrices[index] = { ...newPrices[index], price: value };
       setDirty(true);
-      return [...prevPrices];
+      return newPrices;
     });
   };
 
   const handleAddField = () => {
-    setPrices((prevPrices) => [...prevPrices, { title: '', price: '' }]);
+    const newPrices = [...prices, { title: '', price: '' }];
+    setPrices(newPrices);
+    setDirty(true);
   };
 
   const handleRemoveField = (index) => {
-    setPrices((prevPrices) => prevPrices.filter((_, i) => i !== index));
+    const newPrices = prices.filter((_, i) => i !== index);
+    setPrices(newPrices);
+    setDirty(true);
+    
+    // Автоматически сохраняем при удалении
+    const filteredPrices = newPrices.filter(price => 
+      price.title.trim() !== '' || price.price.trim() !== ''
+    );
+    if (onSave) {
+      onSave(filteredPrices);
+    }
   };
 
-  const handleResetDirty = () => {
+  const handleSave = () => {
     setDirty(false);
+    // Фильтруем пустые записи перед сохранением
+    const filteredPrices = prices.filter(price => 
+      price.title.trim() !== '' || price.price.trim() !== ''
+    );
     if (onSave) {
-      onSave(prices); 
+      onSave(filteredPrices); 
     }
+  };
+
+  // Автосохранение при потере фокуса с задержкой
+  const handleBlur = () => {
+    setTimeout(() => {
+      if (isDirty) {
+        handleSave();
+      }
+    }, 100);
   };
 
   return (
     <div className="w-full max-w-lg">
-
       {prices.map((price, index) => (
-        <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-            <label className="flex flex-col min-w-40 flex-1">
-                <input
-                    placeholder="Период..."
-                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#201A09] focus:outline-0 focus:ring-0 border border-[#EFE3C3] bg-[#FBF8EF] focus:border-[#EFE3C3] h-14 placeholder:text-[#A07D1C] p-[15px] text-base font-normal leading-normal"
-                    value={price.title}
-                    onChange={(e) => handleTitleChange(index, e.target.value)}
-                />
-            </label>
-            <label className="flex flex-col min-w-40 flex-1">
-                <input
-                    placeholder="Цена..."
-                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#201A09] focus:outline-0 focus:ring-0 border border-[#EFE3C3] bg-[#FBF8EF] focus:border-[#EFE3C3] h-14 placeholder:text-[#A07D1C] p-[15px] text-base font-normal leading-normal"
-                    value={price.price}
-                    onChange={(e) => handlePriceChange(index, e.target.value)}
-                />
-            </label>
-            <label>
-                <Button func={() => handleRemoveField(index)} text="Удалить" icon={<IoIosClose className='h-[20px] w-[20px]'/>}/>
-            </label>
-        
+        <div key={index} className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+          <label className="flex flex-col min-w-40 flex-1">
+            <input
+              placeholder="Период..."
+              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#201A09] focus:outline-0 focus:ring-0 border border-[#EFE3C3] bg-[#FBF8EF] focus:border-[#EFE3C3] h-14 placeholder:text-[#A07D1C] p-[15px] text-base font-normal leading-normal"
+              value={price.title}
+              onChange={(e) => handleTitleChange(index, e.target.value)}
+              onBlur={handleBlur}
+            />
+          </label>
+          <label className="flex flex-col min-w-40 flex-1">
+            <input
+              placeholder="Цена..."
+              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#201A09] focus:outline-0 focus:ring-0 border border-[#EFE3C3] bg-[#FBF8EF] focus:border-[#EFE3C3] h-14 placeholder:text-[#A07D1C] p-[15px] text-base font-normal leading-normal"
+              value={price.price}
+              onChange={(e) => handlePriceChange(index, e.target.value)}
+              onBlur={handleBlur}
+            />
+          </label>
+          <label>
+            <Button 
+              func={() => handleRemoveField(index)} 
+              text="Удалить" 
+              icon={<IoIosClose className='h-[20px] w-[20px]'/>}
+            />
+          </label>
         </div>
       ))}
-        <div className="flex justify-stretch">
-            <div className="flex flex-1 gap-3 flex-wrap px-4 py-3 justify-start">
-              <Button text="Добавить" func={handleAddField} />
-              {/* <Button text="Cancel" /> */}
-              {isDirty && (
-                <Button text="Сохранить" func={handleResetDirty} />
-              )}
-            </div>
+      <div className="flex justify-stretch">
+        <div className="flex flex-1 gap-3 flex-wrap px-4 py-3 justify-start">
+          <Button text="Добавить" func={handleAddField} />
+          {isDirty && (
+            <Button text="Сохранить" func={handleSave} />
+          )}
         </div>
+      </div>
     </div>
-    
   );
 }
 

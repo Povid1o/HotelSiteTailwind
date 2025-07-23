@@ -1,0 +1,8 @@
+
+.section-header{
+    @apply text-[#201A09] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 text-left pb-3 pt-5
+}
+
+.second-header{
+    @apply text-[#201A09] text-base font-medium mt-2 mb-1
+}

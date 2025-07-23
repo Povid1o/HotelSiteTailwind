@@ -6,6 +6,7 @@ import CreateType from './components/modals/СreateType';
 import ModalsCard from './components/modals/ModalsCard'
 import Card from './components/cards/Card';
 import CreateProduct from './components/modals/CreateProduct';
+import EditProduct from './components/modals/EditProduct';
 import NewRoomCard from './components/modals/NewRoomCard';
 import NewDishCard from './components/modals/NewDishCard';
 import ExtCard from './components/cards/ExtCard';
@@ -80,6 +81,7 @@ function AdminPage() {
       category: "Antipasti",
       products: [
         {
+          id: 1,
           img: "https://i.imgur.com/GuUbM8Q.png",
           name: "Bruschetta",
           header: "Bruschetta",
@@ -90,6 +92,7 @@ function AdminPage() {
           isActive: true,
         },
         {
+          id: 2,
           img: "https://i.imgur.com/44wBlh1.png",
           name: "Caprese Salad",
           header: "Caprese Salad",
@@ -105,6 +108,7 @@ function AdminPage() {
       category: "Primi Platti",
       products: [
         {
+          id: 3,
           img: "https://i.imgur.com/jJBWmPu.png",
           name: "Spaghetti Carbonara",
           header: "Spaghetti Carbonara",
@@ -115,6 +119,7 @@ function AdminPage() {
           isActive: true,
         },
         {
+          id: 4,
           img: "https://i.imgur.com/NflqYmH.png",
           name: "Risotto ai Funghi",
           header: "Risotto ai Funghi",
@@ -130,6 +135,7 @@ function AdminPage() {
       category: "Soups",
       products: [
         {
+          id: 5,
           img: "https://i.imgur.com/4VIMe45.png",
           name: "Borsch",
           header: "Borsch",
@@ -140,6 +146,7 @@ function AdminPage() {
           isActive: true,
         },
         {
+          id: 6,
           img: "https://i.imgur.com/PraiyRI.png",
           name: "Unnamed thing",
           header: "Dunno what's it",
@@ -199,6 +206,18 @@ function AdminPage() {
     }));
   };
 
+  const deleteProduct = (categoryName, productName) => {
+    setDishes(dishes.map(category => {
+      if (category.category === categoryName) {
+        return {
+          ...category,
+          products: category.products.filter(product => product.name !== productName),
+        };
+      }
+      return category;
+    }));
+  };
+
   const toggleIsActiveRoom = (roomName) => {
     setRooms(hotelRooms.map(room => {
       if (room.name === roomName) {
@@ -217,7 +236,7 @@ function AdminPage() {
           <h1 className="text-3xl text-white font-bold mb-4 text-center">Административная панель</h1>
           <div className="flex flex-col space-y-4 pt-4">
 
-            {/* <ModalsCard
+            <ModalsCard
                 Card={addType}
                 ExtContent={CreateType}
             /> 
@@ -228,7 +247,7 @@ function AdminPage() {
             <ModalsCard
                 Card={addProduct}
                 ExtContent={CreateProduct}
-            />  */}
+            /> 
                 
           </div>
 
@@ -362,13 +381,19 @@ function AdminPage() {
                     <Table.HeadCell>Название блюда</Table.HeadCell>
                     <Table.HeadCell>Цена</Table.HeadCell>
                     <Table.HeadCell>Статус</Table.HeadCell>
+                    <Table.HeadCell>
+                      <ModalsCard
+                          Card={addProduct}
+                          ExtContent={CreateProduct}
+                      /> 
+                    </Table.HeadCell>
                   </Table.Head>
 
                   <Table.Body className="divide-y">
                     {dishes.map(({category, products}) => (
                       <>
                         <div><h3 className='my-5 mx-auto flex justify-center w-full font-bold text-main_theme text-lg font-body'>{category}</h3></div>
-                        {products.map(({img, name, header, description, descriptionFull, weight, price, isActive}) => (
+                        {products.map(({id, img, name, header, description, descriptionFull, weight, price, isActive}) => (
                           <Table.Row key={name} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                             <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                               {name}
@@ -381,18 +406,17 @@ function AdminPage() {
                                   Править
                                 </a>}
                                 ExtContent={() => 
-                                <NewDishCard 
-                                  dishName={name} 
-                                  photos={imagesPool} 
-                                  price={price} 
-                                  description={descriptionFull}
-                                  descriptionBrief={description}
-                                  weight={weight}/>}
+                                <EditProduct 
+                                  productId={id}
+                                />}
                                 />
                               
                             </Table.Cell>
                             <Table.Cell>
                               <a href="#" onClick={() => toggleIsActiveProduct(category, name)} className="font-medium text-main_theme hover:underline dark:text-cyan-500">{isActive ? "В архив" : "Активировать"}</a>
+                            </Table.Cell>
+                            <Table.Cell>
+                              <a href="#" onClick={() => deleteProduct(category, name)} className="font-medium text-main_theme hover:underline dark:text-cyan-500">Удалить</a>
                             </Table.Cell>
                           </Table.Row>
                         ))}

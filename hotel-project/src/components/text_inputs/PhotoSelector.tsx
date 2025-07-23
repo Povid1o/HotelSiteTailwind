@@ -5,42 +5,52 @@ import BlueSwiperUniversal from '../sliders/BlSwiper';
 import { MdOutlinePhotoCamera } from "react-icons/md";
 import Bottle from '../assets/wine-bottle.png';
 
-
-
 const PhotosLayout = ({content, onImageChange}) => {
     const [images, setImages] = useState(content);
+
+    // Синхронизация с внешним состоянием
+    useEffect(() => {
+        setImages(content);
+    }, [content]);
 
     const handleImageUpdate = (updatedImage, index) => {
         const newImages = [...images];
         if (updatedImage !== null) {
             if (updatedImage instanceof File) {
-                // Преобразуем File в объект с src
                 const fileUrl = URL.createObjectURL(updatedImage);
                 newImages[index] = {
                     src: fileUrl,
                     alt: updatedImage.name || 'Uploaded image'
                 };
             } else if (typeof updatedImage === 'string' && updatedImage.startsWith('blob:')) {
-                // Если пришел blob URL, тоже преобразуем в объект
                 newImages[index] = {
                     src: updatedImage,
                     alt: 'Uploaded image'
                 };
             } else {
-                // Для остальных случаев (предзагруженные изображения)
                 newImages[index] = updatedImage;
             }
         } else {
-            // При удалении очищаем blob URL
             if (newImages[index]?.src?.startsWith('blob:')) {
                 URL.revokeObjectURL(newImages[index].src);
             }
             newImages.splice(index, 1);
         }
-        console.log('Updated images:', newImages); // Для отладки
+        console.log('Updated images:', newImages);
         setImages(newImages);
-        onImageChange(newImages);
+        // Передаем данные наверх
+        if (onImageChange) {
+            onImageChange(newImages);
+        }
     }
+
+    const handleAddImage = () => {
+        const newImages = [...images, Bottle]; 
+        setImages(newImages);
+        if (onImageChange) {
+            onImageChange(newImages);
+        }
+    };
 
     return ( 
         <div className=''>
@@ -55,18 +65,13 @@ const PhotosLayout = ({content, onImageChange}) => {
 
             <button
                 className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48"
-                onClick={() => {
-                    const newImages = [...images, Bottle]; 
-                    setImages(newImages);
-                    onImageChange(newImages);
-                }}
+                onClick={handleAddImage}
             >
                 Добавить картинку
             </button>
         </div>
     );
 }
-
 
 const PhotoSelectorButton = ({header}) => {
     return ( 
@@ -88,11 +93,15 @@ const PhotoSelectorButton = ({header}) => {
     );
 }
 
-const PhotoSelector = ({ photos, header, ButtonCard, withSlider=false }) => {
+const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhotosChange }) => {
     const [currentPhotos, setCurrentPhotos] = useState(photos);
     const [photoUrls, setPhotoUrls] = useState([]);
 
-    // Эффект для преобразования File объектов в URL
+    // Синхронизация с внешним состоянием
+    useEffect(() => {
+        setCurrentPhotos(photos);
+    }, [photos]);
+
     useEffect(() => {
         const urls = [];
         
@@ -107,7 +116,6 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider=false }) => {
 
         setPhotoUrls(urls);
 
-        // Очистка URL при размонтировании
         return () => {
             urls.forEach(url => {
                 if (typeof url === 'string' && url.startsWith('blob:')) {
@@ -119,6 +127,10 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider=false }) => {
 
     const handlePhotosChange = (updatedPhotos) => {
         setCurrentPhotos(updatedPhotos);
+        // Передаем данные наверх
+        if (onPhotosChange) {
+            onPhotosChange(updatedPhotos);
+        }
     }
 
     const renderCard = () => {
@@ -126,8 +138,7 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider=false }) => {
             return <ButtonCard />;
         }
         if (withSlider) {
-            console.log(photoUrls)
-            // Передаем преобразованные URL вместо File объектов
+            console.log(photoUrls);
             return <BlueSwiperUniversal images={photoUrls} />;
         }
         return <PhotoSelectorButton header={header} />;
@@ -146,5 +157,5 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider=false }) => {
         </div>
     );
 }
- 
+
 export default PhotoSelector;

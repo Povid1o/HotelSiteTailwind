@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { Context } from '../../index'
 import { observer } from 'mobx-react-lite';
-import {createType, fetchTypes} from "../http/productAPI.js";
+import { updateProduct, fetchClase, fetchTypes, fetchOneProduct } from '../http/productAPI';
 
 const CreateType = observer(() => {
   const [value, setValue] = useState('')

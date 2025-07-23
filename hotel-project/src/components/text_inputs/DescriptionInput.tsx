@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from './Button';
 
 function DescriptionInput({ text, height, width, horizontal=false, inputField = false, onSave }) {
   const [description, setDescription] = useState(text || '');
   const [isDirty, setDirty] = useState(false);
 
+  useEffect(() => {
+    setDescription(text || '');
+  }, [text]);
+
+  // Обработчик изменений в поле ввода
   const handleChange = (event) => {
     setDescription(event.target.value);
     setDirty(true);
   };
 
+  // --- ИЗМЕНЕНО ---
+  // Функция `handleResetDirty` переименована в `handleSave` для ясности.
+  // Теперь она вызывает колбэк `onSave` и передает ему текущее значение.
   const handleResetDirty = () => {
     setDirty(false);
     if (onSave) {

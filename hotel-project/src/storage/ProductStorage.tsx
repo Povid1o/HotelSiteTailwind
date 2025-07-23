@@ -19,7 +19,12 @@ interface Product {
   price: number;
   typeId: number;
   classId: number;
-  // другие свойства
+  description?: string;    // Описание блюда
+  weight?: string;         // Вес блюда
+  nutrients?: string;      // БЖУ (белки, жиры, углеводы)
+  img?: string;           // Имя файла изображения
+  header?: string;         // Заголовок продукта
+  descriptionFull?: string; // Полное описание продукта
 }
 
 export default class ProductStorage {
