@@ -5,58 +5,50 @@ import BlueSwiperUniversal from '../sliders/BlSwiper';
 import { MdOutlinePhotoCamera } from "react-icons/md";
 import Bottle from '../assets/wine-bottle.png';
 
-
-
-const PhotosLayout = ({content, onImageChange}) => {
+const PhotosLayout = ({ content, onImageChange }) => {
     const [images, setImages] = useState(content);
 
     const handleImageUpdate = (updatedImage, index) => {
         const newImages = [...images];
         if (updatedImage !== null) {
             if (updatedImage instanceof File) {
-                // Преобразуем File в объект с src
                 const fileUrl = URL.createObjectURL(updatedImage);
+                // Если старый URL был blob, отзываем его
+                if (newImages[index]?.src?.startsWith('blob:')) {
+                    URL.revokeObjectURL(newImages[index].src);
+                }
                 newImages[index] = {
                     src: fileUrl,
-                    alt: updatedImage.name || 'Uploaded image'
-                };
-            } else if (typeof updatedImage === 'string' && updatedImage.startsWith('blob:')) {
-                // Если пришел blob URL, тоже преобразуем в объект
-                newImages[index] = {
-                    src: updatedImage,
-                    alt: 'Uploaded image'
+                    alt: updatedImage.name || 'Uploaded image',
+                    file: updatedImage
                 };
             } else {
-                // Для остальных случаев (предзагруженные изображения)
                 newImages[index] = updatedImage;
             }
         } else {
-            // При удалении очищаем blob URL
             if (newImages[index]?.src?.startsWith('blob:')) {
                 URL.revokeObjectURL(newImages[index].src);
             }
             newImages.splice(index, 1);
         }
-        console.log('Updated images:', newImages); // Для отладки
         setImages(newImages);
         onImageChange(newImages);
-    }
+    };
 
     return ( 
         <div className=''>
             {images.map((photo, index) => (
                 <div key={index} className='mb-4'>
                     <ImageWithButton 
-                        image={photo.src || photo}
+                        image={photo.src}
                         onImageChange={(updatedImage) => handleImageUpdate(updatedImage, index)}
                     />
                 </div>
             ))}
-
             <button
                 className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48"
                 onClick={() => {
-                    const newImages = [...images, Bottle]; 
+                    const newImages = [...images, { src: Bottle, alt: 'Default image' }];
                     setImages(newImages);
                     onImageChange(newImages);
                 }}
@@ -65,10 +57,9 @@ const PhotosLayout = ({content, onImageChange}) => {
             </button>
         </div>
     );
-}
+};
 
-
-const PhotoSelectorButton = ({header}) => {
+const PhotoSelectorButton = ({ header }) => {
     return ( 
         <div className="@container w-full">
             <div className="sm:px-4 sm:py-3 ">
@@ -86,56 +77,54 @@ const PhotoSelectorButton = ({header}) => {
             </div>
         </div>
     );
-}
+};
 
-const PhotoSelector = ({ photos, header, ButtonCard, withSlider=false }) => {
-    const [currentPhotos, setCurrentPhotos] = useState(photos);
-    const [photoUrls, setPhotoUrls] = useState([]);
-
-    // Эффект для преобразования File объектов в URL
-    useEffect(() => {
-        const urls = [];
-        
-        currentPhotos.forEach(photo => {
-            if (photo instanceof File) {
+const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhotosChange }) => {
+    const [currentPhotos, setCurrentPhotos] = useState(
+        photos.map(photo => {
+            if (typeof photo === 'string') {
+                return { src: photo, alt: 'Image' };
+            } else if (photo instanceof File) {
                 const url = URL.createObjectURL(photo);
-                urls.push(url);
+                return { src: url, alt: photo.name || 'Uploaded image', file: photo };
             } else {
-                urls.push(photo);
+                return photo; // Если уже объект { src, alt, file? }
             }
-        });
-
-        setPhotoUrls(urls);
-
-        // Очистка URL при размонтировании
-        return () => {
-            urls.forEach(url => {
-                if (typeof url === 'string' && url.startsWith('blob:')) {
-                    URL.revokeObjectURL(url);
-                }
-            });
-        };
-    }, [currentPhotos]);
+        })
+    );
 
     const handlePhotosChange = (updatedPhotos) => {
         setCurrentPhotos(updatedPhotos);
-    }
+        if (onPhotosChange) {
+            onPhotosChange(updatedPhotos.map(photo => photo.file || photo.src));
+        }
+    };
 
     const renderCard = () => {
         if (ButtonCard) {
             return <ButtonCard />;
         }
         if (withSlider) {
-            console.log(photoUrls)
-            // Передаем преобразованные URL вместо File объектов
+            const photoUrls = currentPhotos.map(photo => photo.src);
             return <BlueSwiperUniversal images={photoUrls} />;
         }
         return <PhotoSelectorButton header={header} />;
-    }
+    };
 
     const renderContent = () => {
-        return <PhotosLayout content={currentPhotos} onImageChange={handlePhotosChange}/>;
-    }
+        return <PhotosLayout content={currentPhotos} onImageChange={handlePhotosChange} />;
+    };
+
+    // Очистка blob URL при размонтировании
+    useEffect(() => {
+        return () => {
+            currentPhotos.forEach(photo => {
+                if (photo.src?.startsWith('blob:')) {
+                    URL.revokeObjectURL(photo.src);
+                }
+            });
+        };
+    }, []);
 
     return ( 
         <div className='w-full'>
@@ -145,6 +134,6 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider=false }) => {
             />
         </div>
     );
-}
+};
  
 export default PhotoSelector;
