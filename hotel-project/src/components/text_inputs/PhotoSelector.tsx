@@ -1,14 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import ExtCard from '../cards/ExtCard';
 import ImageWithButton from './ImageWithButton';
 import BlueSwiperUniversal from '../sliders/BlSwiper';
 import { MdOutlinePhotoCamera } from "react-icons/md";
 import Bottle from '../assets/wine-bottle.png';
 
-const PhotosLayout = ({ content, onImageChange }) => {
+const PhotosLayout = ({ content, onImageChange, onSave }) => {
     const [images, setImages] = useState(content);
+    const [hasChanges, setHasChanges] = useState(false);
+    const [originalImages, setOriginalImages] = useState(content);
+    const addImageInputRef = useRef(null);
 
-    const handleImageUpdate = (updatedImage, index) => {
+    // Синхронизируем локальное состояние с пропсами при их изменении
+    useEffect(() => {
+        console.log('PhotosLayout: content changed', content);
+        setImages(content);
+        setOriginalImages(content);
+        setHasChanges(false);
+    }, [content]);
+
+    const handleImageUpdate = useCallback((updatedImage, index) => {
         const newImages = [...images];
         if (updatedImage !== null) {
             if (updatedImage instanceof File) {
@@ -31,30 +42,136 @@ const PhotosLayout = ({ content, onImageChange }) => {
             }
             newImages.splice(index, 1);
         }
+        console.log('PhotosLayout: updating images locally', newImages);
         setImages(newImages);
-        onImageChange(newImages);
-    };
+        setHasChanges(true);
+    }, [images]);
+
+    const handleAddImageClick = useCallback(() => {
+        console.log('PhotosLayout: opening file selector for new image');
+        addImageInputRef.current?.click();
+    }, []);
+
+    const handleAddImageFile = useCallback(async (e) => {
+        const selectedFile = e.target.files[0];
+        if (!selectedFile) return;
+
+        console.log(`PhotosLayout: adding new file: ${selectedFile.name}`);
+        
+        try {
+            if (!selectedFile.type.startsWith('image/')) {
+                throw new Error('Выбранный файл не является изображением');
+            }
+
+            // Проверяем, что файл может быть загружен как изображение
+            await new Promise((resolve, reject) => {
+                const img = new Image();
+                const testUrl = URL.createObjectURL(selectedFile);
+                img.onload = () => {
+                    URL.revokeObjectURL(testUrl);
+                    resolve();
+                };
+                img.onerror = () => {
+                    URL.revokeObjectURL(testUrl);
+                    reject();
+                };
+                img.src = testUrl;
+            });
+
+            // Создаем новый blob URL
+            const newBlobUrl = URL.createObjectURL(selectedFile);
+            const newImageObj = {
+                src: newBlobUrl,
+                alt: selectedFile.name || 'Uploaded image',
+                file: selectedFile
+            };
+
+            const newImages = [...images, newImageObj];
+            console.log('PhotosLayout: adding new image locally', newImages);
+            setImages(newImages);
+            setHasChanges(true);
+
+            // Очищаем input
+            if (addImageInputRef.current) {
+                addImageInputRef.current.value = '';
+            }
+        } catch (error) {
+            console.error('Ошибка при загрузке изображения:', error);
+            alert('Не удалось загрузить изображение. Пожалуйста, попробуйте другой файл.');
+        }
+    }, [images]);
+
+    const handleSave = useCallback(() => {
+        console.log('PhotosLayout: saving changes', images);
+        onSave(images);
+        setOriginalImages(images);
+        setHasChanges(false);
+    }, [images, onSave]);
+
+    const handleCancel = useCallback(() => {
+        console.log('PhotosLayout: canceling changes');
+        // Очищаем blob URLs для отмененных изменений
+        images.forEach(image => {
+            if (image.src?.startsWith('blob:') && 
+                !originalImages.some(orig => orig.src === image.src)) {
+                URL.revokeObjectURL(image.src);
+            }
+        });
+        setImages(originalImages);
+        setHasChanges(false);
+    }, [images, originalImages]);
 
     return ( 
         <div className=''>
             {images.map((photo, index) => (
-                <div key={index} className='mb-4'>
+                <div key={`${photo.src}-${index}`} className='mb-4'>
                     <ImageWithButton 
                         image={photo.src}
                         onImageChange={(updatedImage) => handleImageUpdate(updatedImage, index)}
                     />
                 </div>
             ))}
-            <button
-                className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48"
-                onClick={() => {
-                    const newImages = [...images, { src: Bottle, alt: 'Default image' }];
-                    setImages(newImages);
-                    onImageChange(newImages);
-                }}
-            >
-                Добавить картинку
-            </button>
+            
+            <div className="flex gap-4 mt-4">
+                <button
+                    className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48"
+                    onClick={handleAddImageClick}
+                >
+                    Добавить картинку
+                </button>
+                
+                {/* Скрытый input для выбора файла */}
+                <input 
+                    ref={addImageInputRef}
+                    type="file"
+                    onChange={handleAddImageFile}
+                    className="hidden"
+                    accept="image/*"
+                />
+                
+                {hasChanges && (
+                    <>
+                        <button
+                            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl w-32"
+                            onClick={handleSave}
+                        >
+                            Сохранить
+                        </button>
+                        <button
+                            className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-xl w-32"
+                            onClick={handleCancel}
+                        >
+                            Отменить
+                        </button>
+                    </>
+                )}
+            </div>
+            
+            {hasChanges && (
+                <p className="text-orange-600 text-sm mt-2 font-medium">
+                    У вас есть несохраненные изменения
+                </p>
+            )}
         </div>
     );
 };
@@ -80,8 +197,9 @@ const PhotoSelectorButton = ({ header }) => {
 };
 
 const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhotosChange }) => {
-    const [currentPhotos, setCurrentPhotos] = useState(
-        photos.map(photo => {
+    const [currentPhotos, setCurrentPhotos] = useState(() => {
+        // Инициализируем состояние один раз
+        return photos.map(photo => {
             if (typeof photo === 'string') {
                 return { src: photo, alt: 'Image' };
             } else if (photo instanceof File) {
@@ -90,17 +208,44 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhoto
             } else {
                 return photo; // Если уже объект { src, alt, file? }
             }
-        })
-    );
+        });
+    });
 
-    const handlePhotosChange = (updatedPhotos) => {
+    // Синхронизируем с пропсами только если они реально изменились
+    useEffect(() => {
+        console.log('PhotoSelector: photos prop changed', photos);
+        const normalizedPhotos = photos.map(photo => {
+            if (typeof photo === 'string') {
+                return { src: photo, alt: 'Image' };
+            } else if (photo instanceof File) {
+                const url = URL.createObjectURL(photo);
+                return { src: url, alt: photo.name || 'Uploaded image', file: photo };
+            } else {
+                return photo;
+            }
+        });
+
+        // Проверяем, действительно ли изменились фото
+        const photosChanged = JSON.stringify(currentPhotos.map(p => ({ src: p.src, alt: p.alt }))) !== 
+                              JSON.stringify(normalizedPhotos.map(p => ({ src: p.src, alt: p.alt })));
+
+        if (photosChanged) {
+            console.log('PhotoSelector: updating currentPhotos due to props change');
+            setCurrentPhotos(normalizedPhotos);
+        }
+    }, [photos]); // Убираем currentPhotos из зависимостей, чтобы избежать бесконечного цикла
+
+    const handlePhotosSave = useCallback((updatedPhotos) => {
+        console.log('PhotoSelector: photos saved', updatedPhotos);
         setCurrentPhotos(updatedPhotos);
         if (onPhotosChange) {
-            onPhotosChange(updatedPhotos.map(photo => photo.file || photo.src));
+            const processedPhotos = updatedPhotos.map(photo => photo.file || photo.src);
+            console.log('PhotoSelector: calling onPhotosChange with', processedPhotos);
+            onPhotosChange(processedPhotos);
         }
-    };
+    }, [onPhotosChange]);
 
-    const renderCard = () => {
+    const renderCard = useCallback(() => {
         if (ButtonCard) {
             return <ButtonCard />;
         }
@@ -109,11 +254,11 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhoto
             return <BlueSwiperUniversal images={photoUrls} />;
         }
         return <PhotoSelectorButton header={header} />;
-    };
+    }, [ButtonCard, withSlider, currentPhotos, header]);
 
-    const renderContent = () => {
-        return <PhotosLayout content={currentPhotos} onImageChange={handlePhotosChange} />;
-    };
+    const renderContent = useCallback(() => {
+        return <PhotosLayout content={currentPhotos} onSave={handlePhotosSave} />;
+    }, [currentPhotos, handlePhotosSave]);
 
     // Очистка blob URL при размонтировании
     useEffect(() => {
@@ -124,7 +269,7 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhoto
                 }
             });
         };
-    }, []);
+    }, []); // Пустой массив зависимостей - выполняется только при размонтировании
 
     return ( 
         <div className='w-full'>

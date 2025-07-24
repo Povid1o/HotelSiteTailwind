@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Navbar from './components/Navbar';
 import HomeEdit from './components/pages_editable/HomeEdit';
 import CreateClase from './components/modals/CreateClase';
@@ -215,7 +215,8 @@ function AdminPage() {
     );
   };
 
-  const updateRoomData = (index, updatedRoomData) => {
+  const updateRoomData = useCallback((index, updatedRoomData) => {
+    console.log('AdminPage: updating room data for index', index, updatedRoomData);
     setRooms(prevRooms => {
       const newRooms = [...prevRooms];
       newRooms[index] = {
@@ -228,10 +229,10 @@ function AdminPage() {
         },
         images: updatedRoomData.images || newRooms[index].images,
       };
+      console.log('AdminPage: room updated', newRooms[index]);
       return newRooms;
     });
-    console.log('Room data updated in AdminPage:', updatedRoomData);
-  };
+  }, []);
 
   return (
     <div className="h-screen flex flex-col bg-no-repeat bg-cover">

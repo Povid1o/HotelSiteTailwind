@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import PhotoSelector from '../text_inputs/PhotoSelector';
 import PriceList from '../text_inputs/PriceList';
 import DescriptionInput from '../text_inputs/DescriptionInput';
 import MultiInputField from '../text_inputs/MultiInputField';
 import Button from '../text_inputs/Button';
 import { MdModeEdit } from "react-icons/md";
+
+import "../styles/newRoomCard.css"; 
 
 const NewRoomCard = ({
   roomName,
@@ -30,68 +32,70 @@ const NewRoomCard = ({
   const [localCheckOut, setLocalCheckOut] = useState(checkOut);
   const [localNotes, setLocalNotes] = useState(notes);
 
-  // Функция для поднятия обновленных данных
-  const updateRoomData = (updatedData) => {
+  // Мемоизированная функция для поднятия обновленных данных
+  const updateRoomData = useCallback((updatedData) => {
     const newData = {
       name: localName,
-      photos: localPhotos,
+      images: localPhotos, // Изменено с photos на images для соответствия структуре
       properties: localProperties,
       conviniences: localConviniences,
       description: localDescription,
       price: localPrices,
-      checkStandart: { checkIn: localCheckIn, checkOut: localCheckOut },
+      checkIn: localCheckIn,
+      checkOut: localCheckOut,
       notes: localNotes,
       ...updatedData
     };
     onDataChange(newData);
-  };
+  }, [localName, localPhotos, localProperties, localConviniences, localDescription, localPrices, localCheckIn, localCheckOut, localNotes, onDataChange]);
 
-  // Обработчики для каждого поля
-  const handleNameSave = (newName) => {
+  // Мемоизированные обработчики для каждого поля
+  const handleNameSave = useCallback((newName) => {
     setLocalName(newName);
     setChangeNameState(false);
     updateRoomData({ name: newName });
-  };
+  }, [updateRoomData]);
 
-  const handlePhotosChange = (newPhotos) => {
+  const handlePhotosChange = useCallback((newPhotos) => {
+    console.log('Photos changed in NewRoomCard:', newPhotos);
     setLocalPhotos(newPhotos);
-    updateRoomData({ photos: newPhotos });
-  };
+    updateRoomData({ images: newPhotos });
+  }, [updateRoomData]);
 
-  const handlePropertiesChange = (newProperties) => {
+  const handlePropertiesChange = useCallback((newProperties) => {
     setLocalProperties(newProperties);
     updateRoomData({ properties: newProperties });
-  };
+  }, [updateRoomData]);
 
-  const handleConviniencesChange = (newConviniences) => {
+  const handleConviniencesChange = useCallback((newConviniences) => {
     setLocalConviniences(newConviniences);
     updateRoomData({ conviniences: newConviniences });
-  };
+  }, [updateRoomData]);
 
-  const handleDescriptionChange = (newDescription) => {
+  const handleDescriptionChange = useCallback((newDescription) => {
     setLocalDescription(newDescription);
     updateRoomData({ description: newDescription });
-  };
+  }, [updateRoomData]);
 
-  const handlePricesChange = (newPrices) => {
+  const handlePricesChange = useCallback((newPrices) => {
     setLocalPrices(newPrices);
     updateRoomData({ price: newPrices });
-  };
+  }, [updateRoomData]);
 
-  const handleCheckInChange = (newCheckIn) => {
+  const handleCheckInChange = useCallback((newCheckIn) => {
     setLocalCheckIn(newCheckIn);
-    updateRoomData({ checkStandart: { checkIn: newCheckIn, checkOut: localCheckOut } });
-  };
+    updateRoomData({ checkIn: newCheckIn });
+  }, [updateRoomData]);
 
-  const handleCheckOutChange = (newCheckOut) => {
+  const handleCheckOutChange = useCallback((newCheckOut) => {
     setLocalCheckOut(newCheckOut);
-    updateRoomData({ checkStandart: { checkIn: localCheckIn, checkOut: newCheckOut } });
-  };
+    updateRoomData({ checkOut: newCheckOut });
+  }, [updateRoomData]);
 
-  const handleNotesChange = (newNotes) => {
+  const handleNotesChange = useCallback((newNotes) => {
     setLocalNotes(newNotes);
     updateRoomData({ notes: newNotes });
-  };
+  }, [updateRoomData]);
 
   return (
     <div className="relative flex w-full min-h-screen flex-col bg-[#FBF8EF] rounded-lg overflow-x-hidden">
@@ -99,7 +103,7 @@ const NewRoomCard = ({
         <div className="flex items-center gap-4 text-[#201A09]">
           {!changeNameState ? (
             <>
-              <h2 className="text-[#201A09] text-lg font-bold leading-tight tracking-[-0.015em]">{localName}</h2>
+              <h1 className="text-[#201A09] text-lg font-bold leading-tight tracking-[-0.015em]">{localName}</h1>
               <label>
                 <Button
                   icon={<MdModeEdit className='h-[20px] w-[20px]' />}
@@ -129,14 +133,14 @@ const NewRoomCard = ({
           <div className="flex justify-stretch">
             <div className="flex flex-1 gap-10 flex-wrap px-4 py-3 justify-around">
               <div className='flex flex-col'>
-                <h2 className="text-[#201A09] text-[22px] font-bold leading-tight tracking-[-0.015em] text-left pb-3 pt-5">Свойства</h2>
+                <h1 className="first-header">Свойства</h1>
                 <MultiInputField
                   initialValues={localProperties}
                   onSave={handlePropertiesChange}
                 />
               </div>
               <div className='flex flex-col'>
-                <h3 className="text-[#201A09] text-[22px] font-bold leading-tight tracking-[-0.015em] text-left pb-3 pt-5">Удобства</h3>
+                <h1 className="first-header">Удобства</h1>
                 <MultiInputField
                   initialValues={localConviniences}
                   onSave={handleConviniencesChange}
@@ -145,22 +149,22 @@ const NewRoomCard = ({
             </div>
           </div>
 
-          <h4 className="text-[#201A09] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 text-left pb-3 pt-5">Описание</h4>
+          <h1 className="first-header">Описание</h1>
           <DescriptionInput
             text={localDescription}
             onSave={handleDescriptionChange}
           />
 
-          <h1 className="text-[#201A09] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 text-left pb-3 pt-5">Цены</h1>
+          <h1 className="first-header">Цены</h1>
           <PriceList
             globalPrices={localPrices}
             onSave={handlePricesChange}
           />
 
-          <h5 className="text-[#201A09] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 text-left pb-3 pt-5">Правила размещения</h5>
+          <h1 className="first-header px-4">Правила размещения</h1>
           <div className="flex flex-row flex-wrap gap-4">
             <div className="flex-1 min-w-[200px]">
-              <p className="text-[#201A09] text-base font-medium mt-2 mb-1 sm:px-6">Заезд</p>
+              <h2 className="second-header sm:px-6">Заезд</h2>
               <DescriptionInput
                 inputField={true}
                 text={localCheckIn}
@@ -168,7 +172,7 @@ const NewRoomCard = ({
               />
             </div>
             <div className="flex-1 min-w-[200px]">
-              <p className="text-[#201A09] text-base font-medium mt-2 mb-1 sm:px-6">Выезд</p>
+              <h2 className="second-header sm:px-6">Выезд</h2>
               <DescriptionInput
                 inputField={true}
                 text={localCheckOut}
@@ -176,7 +180,7 @@ const NewRoomCard = ({
               />
             </div>
             <div className="flex-1 min-w-[200px] max-w-[350px]">
-              <p className="text-[#201A09] text-base font-medium mt-2 mb-1 sm:px-4">Примечания</p>
+              <h2 className="second-header sm:px-4">Примечания</h2>
               <MultiInputField
                 initialValues={localNotes}
                 onSave={handleNotesChange}
