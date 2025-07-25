@@ -1,10 +1,17 @@
 import React from 'react';
 
-const Button = ({ icon, text, func }) => {
+const Button = ({ icon, text, func, customBackground }) => {
+    const getBackgroundColor = () => {
+        if (customBackground) {
+            return customBackground;
+        }
+        return icon ? 'bg-[#FAC638]' : 'bg-[#F5EFDB]';
+    };
+
     return (
       <button
-        className={`flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-5 ${
-          icon ? 'bg-[#FAC638] text-[#AB2217]' : 'bg-[#F5EFDB] text-[#201A09]'
+        className={`flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-5 ${getBackgroundColor()} ${
+          icon ? 'text-[#AB2217]' : 'text-[#201A09]'
         } text-base font-bold leading-normal tracking-[0.015em]`}
         onClick={func}
         

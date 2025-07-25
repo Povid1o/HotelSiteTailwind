@@ -9,6 +9,8 @@ import CreateProduct from './components/modals/CreateProduct';
 import NewRoomCard from './components/modals/NewRoomCard';
 import NewDishCard from './components/modals/NewDishCard';
 import ExtCard from './components/cards/ExtCard';
+import DescriptionInput from './components/text_inputs/DescriptionInput';
+import Button from './components/text_inputs/Button';
 import { Tabs } from "flowbite-react";
 import { Table } from "flowbite-react";
 import "./AdminPage.css";
@@ -17,11 +19,13 @@ import Bottle from './components/assets/wine-bottle.png';
 import Calendar from './components/assets/calendar.png';
 import Excursion from './components/assets/excursion.png';
 import Running from './components/assets/running.png';
+
 import { HiAdjustments, HiClipboardList, HiUserCircle } from "react-icons/hi";
+import { FaTrashAlt } from "react-icons/fa";
 import { IoTicket } from "react-icons/io5";
 import { FaHotel } from "react-icons/fa6";
 import { FaHome } from "react-icons/fa";
-import { MdOutlineRestaurant } from "react-icons/md";
+import { MdOutlineRestaurant, MdModeEdit } from "react-icons/md";
 
 // Начальные изображения для комнат
 const initialImages = [
@@ -61,6 +65,16 @@ const addProduct = () => {
   );
 };
 
+const AddCategory = ({onClick}) => {
+  return (
+    <Card>
+      <button className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48" onClick={onClick}>
+        Добавить Категорию
+      </button>
+    </Card>
+  );
+};
+
 function AdminPage() {
   const [dishes, setDishes] = useState([
     {
@@ -68,25 +82,23 @@ function AdminPage() {
       products: [
         {
           id: 1,
-          img: "https://i.imgur.com/GuUbM8Q.png",
           name: "Bruschetta",
+          images: ["https://i.imgur.com/GuUbM8Q.png",...initialImages],
           header: "Bruschetta",
           description: "Very delicious slice of bread with vegetables",
           descriptionFull: "Our Bruschetta features toasted artisanal bread topped with ripe tomatoes, fresh basil, and garlic. Drizzled with extra virgin olive oil, it's a perfect balance of flavors and textures.",
           weight: "150g",
           price: 8.99,
-          isActive: true,
         },
         {
           id: 2,
-          img: "https://i.imgur.com/44wBlh1.png",
           name: "Caprese Salad",
+          images: ["https://i.imgur.com/44wBlh1.png",...initialImages],
           header: "Caprese Salad",
           description: "What Salad could be more Italian, than Caprese?",
           descriptionFull: "Our Caprese Salad showcases layers of fresh mozzarella, ripe tomatoes, and fragrant basil leaves. Finished with a drizzle of balsamic glaze and extra virgin olive oil, it's a refreshing start to any meal.",
           weight: "200g",
           price: 10.99,
-          isActive: true,
         },
       ],
     },
@@ -95,25 +107,23 @@ function AdminPage() {
       products: [
         {
           id: 3,
-          img: "https://i.imgur.com/jJBWmPu.png",
           name: "Spaghetti Carbonara",
+          images: ["https://i.imgur.com/jJBWmPu.png",...initialImages],
           header: "Spaghetti Carbonara",
           description: "Well, that's now the most italian thing here",
           descriptionFull: "Our Spaghetti Carbonara is a classic Roman dish made with al dente pasta, crispy pancetta, eggs, and Pecorino Romano cheese. Finished with freshly ground black pepper, it's rich, creamy, and utterly satisfying.",
           weight: "300g",
           price: 14.99,
-          isActive: true,
         },
         {
           id: 4,
-          img: "https://i.imgur.com/NflqYmH.png",
           name: "Risotto ai Funghi",
+          images: ["https://i.imgur.com/NflqYmH.png",...initialImages],
           header: "Risotto ai Funghi",
           description: "You probably gonna like it",
           descriptionFull: "Our Risotto ai Funghi is a creamy Arborio rice dish cooked with a medley of wild mushrooms, white wine, and Parmigiano-Reggiano. Finished with a drizzle of truffle oil, it's a luxurious and comforting Italian classic.",
           weight: "280g",
           price: 16.99,
-          isActive: true,
         },
       ],
     },
@@ -122,25 +132,23 @@ function AdminPage() {
       products: [
         {
           id: 5,
-          img: "https://i.imgur.com/4VIMe45.png",
           name: "Borsch",
+          images: ["https://i.imgur.com/4VIMe45.png",...initialImages],
           header: "Borsch",
           description: "For the most patriotic ppl",
           descriptionFull: "Our Borsch is a hearty Eastern European soup featuring tender beef, beets, cabbage, and other vegetables. Served with a dollop of sour cream and fresh dill, it's a comforting and flavorful dish perfect for cold days.",
           weight: "400ml",
           price: 9.99,
-          isActive: true,
         },
         {
           id: 6,
-          img: "https://i.imgur.com/PraiyRI.png",
           name: "Unnamed thing",
+          images: ["https://i.imgur.com/PraiyRI.png",...initialImages],
           header: "Dunno what's it",
           description: "I mean...I really dunno",
           descriptionFull: "This mysterious soup is a chef's special creation, featuring a unique blend of seasonal ingredients. With a rich broth and surprising textures, it's an adventurous choice for curious diners looking to expand their culinary horizons.",
           weight: "350ml",
           price: 12.99,
-          isActive: false,
         },
       ],
     },
@@ -178,17 +186,42 @@ function AdminPage() {
     { name: "Мероприятия", path: "/Мероприятия", isActive: true },
   ]);
 
-  const toggleIsActiveProduct = (categoryName, productName) => {
+  // Состояние для отслеживания режима редактирования категорий
+  const [editingCategory, setEditingCategory] = useState<string | null>(null);
+
+  const addCategory = (newCategory) => {
+    const existingCategories = dishes.filter(dish => 
+      dish.category === newCategory || dish.category.startsWith(`${newCategory} (`)
+    );
+  
+    if (existingCategories.length === 0) {
+      setDishes([...dishes, { category: newCategory, products: [] }]);
+      return;
+    }
+  
+    const existingNumbers = existingCategories.map(dish => {
+      const match = dish.category.match(/\((\d+)\)$/);
+      return match ? parseInt(match[1]) : 0; // 0 для базовой категории без номера
+    });
+  
+    const maxNumber = Math.max(...existingNumbers);
+    
+    const finalCategory = `${newCategory} (${maxNumber + 1})`;
+    
+    setDishes([...dishes, { category: finalCategory, products: [] }]);
+  };
+
+  const deleteCategory = (categoryName) => {
+    setDishes(dishes.filter(category => category.category !== categoryName));
+  };
+
+
+  const addProduct = (categoryName, newProduct) => {
     setDishes(dishes.map(category => {
       if (category.category === categoryName) {
         return {
           ...category,
-          products: category.products.map(product => {
-            if (product.name === productName) {
-              return { ...product, isActive: !product.isActive };
-            }
-            return product;
-          }),
+          products: [...category.products, newProduct],
         };
       }
       return category;
@@ -233,6 +266,17 @@ function AdminPage() {
       return newRooms;
     });
   }, []);
+
+  // Функция для сохранения нового названия категории
+  const handleCategorySave = (oldCategoryName: string, newCategoryName: string) => {
+    setDishes(dishes.map(category => {
+      if (category.category === oldCategoryName) {
+        return { ...category, category: newCategoryName };
+      }
+      return category;
+    }));
+    setEditingCategory(null);
+  };
 
   return (
     <div className="h-screen flex flex-col bg-no-repeat bg-cover">
@@ -338,23 +382,47 @@ function AdminPage() {
                 <Table.Head>
                   <Table.HeadCell>Название блюда</Table.HeadCell>
                   <Table.HeadCell>Цена</Table.HeadCell>
-                  <Table.HeadCell>Статус</Table.HeadCell>
+                  <Table.HeadCell>Действия</Table.HeadCell>
+                  <Table.HeadCell>
+                    <AddCategory onClick={() => addCategory("Новая категория")} />
+                  </Table.HeadCell>
                 </Table.Head>
                 <Table.Body className="divide-y">
                   {dishes.map(({ category, products }) => (
                     <>
                       <div>
-                        <h3 className="my-5 mx-auto flex justify-center w-full font-bold text-main_theme text-lg font-body">
-                          {category}
-                        </h3>
+                        <div className="my-5 mx-auto flex justify-center items-center gap-4 w-full">
+                          {editingCategory !== category ? (
+                            <>
+                              <h3 className="font-bold text-main_theme text-lg font-body">
+                                {category}
+                              </h3>
+                              <Button
+                                icon={<MdModeEdit className='h-[20px] w-[20px]' />}
+                                func={() => setEditingCategory(category)}
+                              />
+                              <Button
+                                icon={<FaTrashAlt className='h-[20px] w-[20px]' />}
+                                func={() => deleteCategory(category)}
+                                customBackground={"bg-[#ff6b6b]"}
+                              />
+                            </>
+                          ) : (
+                            <DescriptionInput
+                              inputField={true}
+                              horizontal={true}
+                              text={category}
+                              onSave={(newName) => handleCategorySave(category, newName)}
+                            />
+                          )}
+                        </div>
                       </div>
-                      {products.map(({ img, name, header, description, descriptionFull, weight, price, isActive }) => (
+                      {products.map(({ images, name, header, description, descriptionFull, weight, price}) => (
                         <Table.Row key={name} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                             {name}
                           </Table.Cell>
                           <Table.Cell>{price}</Table.Cell>
-                          <Table.Cell>{isActive ? "Активно" : "В архиве"}</Table.Cell>
                           <Table.Cell>
                             <ExtCard
                               Card={() => (
@@ -365,7 +433,7 @@ function AdminPage() {
                               ExtContent={() => (
                                 <NewDishCard
                                   dishName={name}
-                                  photos={initialImages}
+                                  photos={images}
                                   price={price}
                                   description={descriptionFull}
                                   descriptionBrief={description}
@@ -377,10 +445,10 @@ function AdminPage() {
                           <Table.Cell>
                             <a
                               href="#"
-                              onClick={() => toggleIsActiveProduct(category, name)}
+                              onClick={() => deleteProduct(category, name)}
                               className="font-medium text-main_theme hover:underline dark:text-cyan-500"
                             >
-                              {isActive ? "В архив" : "Активировать"}
+                              Удалить
                             </a>
                           </Table.Cell>
                         </Table.Row>
