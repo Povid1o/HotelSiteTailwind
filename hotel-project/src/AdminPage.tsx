@@ -22,7 +22,9 @@ import Running from './components/assets/running.png';
 
 import { HiAdjustments, HiClipboardList, HiUserCircle } from "react-icons/hi";
 import { FaTrashAlt } from "react-icons/fa";
+import { IoMdAdd } from "react-icons/io";
 import { IoTicket } from "react-icons/io5";
+import { FaWineGlassAlt } from "react-icons/fa";
 import { FaHotel } from "react-icons/fa6";
 import { FaHome } from "react-icons/fa";
 import { MdOutlineRestaurant, MdModeEdit } from "react-icons/md";
@@ -215,8 +217,17 @@ function AdminPage() {
     setDishes(dishes.filter(category => category.category !== categoryName));
   };
 
-
-  const addProduct = (categoryName, newProduct) => {
+  const addProduct = (categoryName) => {
+    const newProduct = {
+      id: Date.now(),
+      name: "Новый продукт",
+      images: [],
+      header: "Новый продукт",
+      description: "",
+      descriptionFull: "",
+      weight: "",
+      price: 0,
+    };
     setDishes(dishes.map(category => {
       if (category.category === categoryName) {
         return {
@@ -264,6 +275,31 @@ function AdminPage() {
       };
       console.log('AdminPage: room updated', newRooms[index]);
       return newRooms;
+    });
+  }, []);
+
+  // Функция для обновления данных блюда
+  const updateDishData = useCallback((categoryName, productId, updatedDishData) => {
+    console.log('AdminPage: updating dish data for category', categoryName, 'product id', productId, updatedDishData);
+    setDishes(prevDishes => {
+      return prevDishes.map(category => {
+        if (category.category === categoryName) {
+          return {
+            ...category,
+            products: category.products.map(product => {
+              if (product.id === productId) {
+                return {
+                  ...product,
+                  ...updatedDishData,
+                  images: updatedDishData.images || product.images,
+                };
+              }
+              return product;
+            })
+          };
+        }
+        return category;
+      });
     });
   }, []);
 
@@ -406,6 +442,11 @@ function AdminPage() {
                                 func={() => deleteCategory(category)}
                                 customBackground={"bg-[#ff6b6b]"}
                               />
+                              <Button
+                                icon={<IoMdAdd className='h-[20px] w-[20px]' />}
+                                func={() => addProduct(category, "Новый продукт")}
+                                customBackground={"bg-[#2ecc71]"}
+                              />
                             </>
                           ) : (
                             <DescriptionInput
@@ -417,7 +458,7 @@ function AdminPage() {
                           )}
                         </div>
                       </div>
-                      {products.map(({ images, name, header, description, descriptionFull, weight, price}) => (
+                      {products.map(({ id, images, name, header, description, descriptionFull, weight, price}) => (
                         <Table.Row key={name} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                             {name}
@@ -438,6 +479,7 @@ function AdminPage() {
                                   description={descriptionFull}
                                   descriptionBrief={description}
                                   weight={weight}
+                                  onDataChange={(updatedData) => updateDishData(category, id, updatedData)}
                                 />
                               )}
                             />
@@ -461,6 +503,12 @@ function AdminPage() {
           </Tabs.Item>
 
           <Tabs.Item title="Мероприятия" icon={IoTicket}>
+            This is <span className="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</span>.
+            Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to
+            control the content visibility and styling.
+          </Tabs.Item>
+
+          <Tabs.Item title="Ассортимент винодельни" icon={FaWineGlassAlt}>
             This is <span className="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</span>.
             Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to
             control the content visibility and styling.
