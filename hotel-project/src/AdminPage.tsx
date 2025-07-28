@@ -562,6 +562,7 @@ function AdminPage() {
 
   const updateRoomData = useCallback((index, updatedRoomData) => {
     console.log('AdminPage: updating room data for index', index, updatedRoomData);
+    console.log('Тип description:', Array.isArray(updatedRoomData.properties) ? 'массив' : typeof updatedRoomData.properties, 'Значение:', updatedRoomData.properties);
     setRooms(prevRooms => {
       const newRooms = [...prevRooms];
       newRooms[index] = {
@@ -648,6 +649,7 @@ function AdminPage() {
   // Функция для обновления данных вина
   const updateWineData = useCallback((wineType, sweetness, wineId, updatedWineData) => {
     console.log('AdminPage: updating wine data for type', wineType, 'sweetness', sweetness, 'wine id', wineId, updatedWineData);
+    console.log('Тип description:', Array.isArray(updatedWineData.description) ? 'массив' : typeof updatedWineData.description, 'Значение:', updatedWineData.description);
     setWines(prevWines => {
       return prevWines.map(wineCategory => {
         if (wineCategory.type === wineType) {
@@ -663,11 +665,7 @@ function AdminPage() {
                         ...wine,
                         ...updatedWineData,
                         images: updatedWineData.images || wine.images,
-                        // Правильная обработка description - это массив строк
-                        description: Array.isArray(updatedWineData.description) 
-                          ? updatedWineData.description 
-                          : wine.description,
-                        // Убираем неправильное преобразование year из weight
+                        description: updatedWineData.description || wine.description,
                         year: updatedWineData.year || wine.year
                       };
                     }

@@ -33,7 +33,7 @@ const NewDishCard = ({
     const newData = {
       name: localName,
       images: localPhotos,
-      descriptionFull: localDescription,
+      description: localDescription,
       sugar: localSugar,
       price: localPrice,
       alcohol: localAlcohol,
@@ -58,7 +58,7 @@ const NewDishCard = ({
 
   const handleDescriptionChange = useCallback((newDescription) => {
     setLocalDescription(newDescription);
-    updateDishData({ descriptionFull: newDescription });
+    updateDishData({ description: newDescription });
   }, [updateDishData]);
 
   const handleSugarChange = useCallback((newSugar) => {
