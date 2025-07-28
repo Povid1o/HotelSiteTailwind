@@ -10,9 +10,11 @@ const NewDishCard = ({
   dishName, 
   photos, 
   description, 
-  descriptionBrief, 
+  sugar,
   price, 
-  weight,
+  alcohol,
+  temperature,
+  year,
   onDataChange = () => {}
 }) => {
   // Локальные состояния для отслеживания изменений
@@ -20,23 +22,27 @@ const NewDishCard = ({
   const [changeNameState, setChangeNameState] = useState(false);
   const [localPhotos, setLocalPhotos] = useState(photos);
   const [localDescription, setLocalDescription] = useState(description);
-  const [localDescriptionBrief, setLocalDescriptionBrief] = useState(descriptionBrief);
+  const [localSugar, setLocalSugar] = useState(sugar);
   const [localPrice, setLocalPrice] = useState(price);
-  const [localWeight, setLocalWeight] = useState(weight);
+  const [localAlcohol, setLocalAlcohol] = useState(alcohol);
+  const [localTemperature, setLocalTemperature] = useState(temperature);
+  const [localYear, setLocalYear] = useState(year);
 
   // Мемоизированная функция для поднятия обновленных данных
   const updateDishData = useCallback((updatedData) => {
     const newData = {
       name: localName,
       images: localPhotos,
-      description: localDescriptionBrief,
       descriptionFull: localDescription,
+      sugar: localSugar,
       price: localPrice,
-      weight: localWeight,
+      alcohol: localAlcohol,
+      temperature: localTemperature,
+      year: localYear,
       ...updatedData
     };
     onDataChange(newData);
-  }, [localName, localPhotos, localDescription, localDescriptionBrief, localPrice, localWeight, onDataChange]);
+  }, [localName, localPhotos, localDescription, localSugar, localPrice, localAlcohol, localTemperature, localYear, onDataChange]);
 
   // Мемоизированные обработчики для каждого поля
   const handleNameSave = useCallback((newName) => {
@@ -55,9 +61,9 @@ const NewDishCard = ({
     updateDishData({ descriptionFull: newDescription });
   }, [updateDishData]);
 
-  const handleDescriptionBriefChange = useCallback((newDescriptionBrief) => {
-    setLocalDescriptionBrief(newDescriptionBrief);
-    updateDishData({ description: newDescriptionBrief });
+  const handleSugarChange = useCallback((newSugar) => {
+    setLocalSugar(newSugar);
+    updateDishData({ sugar: newSugar });
   }, [updateDishData]);
 
   const handlePriceChange = useCallback((newPrice) => {
@@ -65,9 +71,19 @@ const NewDishCard = ({
     updateDishData({ price: newPrice });
   }, [updateDishData]);
 
-  const handleWeightChange = useCallback((newWeight) => {
-    setLocalWeight(newWeight);
-    updateDishData({ weight: newWeight });
+  const handleYearChange = useCallback((newYear) => {
+    setLocalYear(newYear);
+    updateDishData({ year: newYear });
+  }, [updateDishData]);
+
+  const handleAlcoholChange = useCallback((newAlcohol) => {
+    setLocalAlcohol(newAlcohol);
+    updateDishData({ alcohol: newAlcohol });
+  }, [updateDishData]);
+
+  const handleTemperatureChange = useCallback((newTemperature) => {
+    setLocalTemperature(newTemperature);
+    updateDishData({ temperature: newTemperature });
   }, [updateDishData]);
 
   return (
@@ -96,21 +112,15 @@ const NewDishCard = ({
         <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
           <PhotoSelector 
             photos={localPhotos} 
-            header={"Фото Блюда"}
+            header={"Фото Бутылки Вина"}
             onPhotosChange={handlePhotosChange}
             withSlider={true}
           />
           
           <h4 className="text-[#201A09] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 text-left pb-3 pt-5">Описание</h4>
-          <DescriptionInput 
-            text={localDescription}
+          <MultiInputField
+            initialValues={localDescription}
             onSave={handleDescriptionChange}
-          />
-
-          <h4 className="text-[#201A09] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 text-left pb-3 pt-5">Краткое описание</h4>
-          <DescriptionInput 
-            text={localDescriptionBrief}
-            onSave={handleDescriptionBriefChange}
           />
           
           <div className="flex justify-stretch">
@@ -123,13 +133,40 @@ const NewDishCard = ({
                   onSave={handlePriceChange}
                 />
               </div>
-              
+
               <div className='flex flex-col'>
-                <h3 className="text-[#201A09] text-[22px] font-bold leading-tight tracking-[-0.015em] text-left pb-3 pt-5">Вес</h3>
+                <h2 className="text-[#201A09] text-[22px] font-bold leading-tight tracking-[-0.015em] text-left pb-3 pt-5">Год</h2>
                 <DescriptionInput 
                   inputField={true} 
-                  text={localWeight} 
-                  onSave={handleWeightChange}
+                  text={localYear}
+                  onSave={handleYearChange} 
+                />
+              </div>
+              
+              <div className='flex flex-col'>
+                <h3 className="text-[#201A09] text-[22px] font-bold leading-tight tracking-[-0.015em] text-left pb-3 pt-5">Алкоголь</h3>
+                <DescriptionInput 
+                  inputField={true} 
+                  text={localAlcohol} 
+                  onSave={handleAlcoholChange}
+                />
+              </div>
+
+              <div className='flex flex-col'>
+                <h3 className="text-[#201A09] text-[22px] font-bold leading-tight tracking-[-0.015em] text-left pb-3 pt-5">Сахар</h3>
+                <DescriptionInput 
+                  inputField={true} 
+                  text={localSugar} 
+                  onSave={handleSugarChange}
+                />
+              </div>
+
+              <div className='flex flex-col'>
+                <h3 className="text-[#201A09] text-[22px] font-bold leading-tight tracking-[-0.015em] text-left pb-3 pt-5">Температура подачи</h3>
+                <DescriptionInput 
+                  inputField={true} 
+                  text={localTemperature} 
+                  onSave={handleTemperatureChange}
                 />
               </div>
             </div>

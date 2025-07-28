@@ -128,6 +128,7 @@ const NewRoomCard = ({
             photos={localPhotos}
             header={"Фото Номера"}
             onPhotosChange={handlePhotosChange}
+            withSlider={true}
           />
           
           <div className="flex justify-stretch">

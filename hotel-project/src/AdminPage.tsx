@@ -8,6 +8,7 @@ import Card from './components/cards/Card';
 import CreateProduct from './components/modals/CreateProduct';
 import NewRoomCard from './components/modals/NewRoomCard';
 import NewDishCard from './components/modals/NewDishCard';
+import NewWineCard from './components/modals/NewWineCard';
 import ExtCard from './components/cards/ExtCard';
 import DescriptionInput from './components/text_inputs/DescriptionInput';
 import Button from './components/text_inputs/Button';
@@ -78,6 +79,7 @@ const AddCategory = ({onClick}) => {
 };
 
 function AdminPage() {
+  //Список блюд
   const [dishes, setDishes] = useState([
     {
       category: "Antipasti",
@@ -155,7 +157,7 @@ function AdminPage() {
       ],
     },
   ]);
-
+  //Список отельных комнат
   const [hotelRooms, setRooms] = useState([
     {
       name: "Стандарт",
@@ -180,13 +182,274 @@ function AdminPage() {
       isActive: true,
     },
   ]);
-
+  //Список страниц
   const [pagesList, setPages] = useState([
     { name: "Главная", path: "/", isActive: true },
     { name: "Ресторан", path: "/Ресторан", isActive: true },
     { name: "Винодельня", path: "/Винодельня", isActive: true },
     { name: "Мероприятия", path: "/Мероприятия", isActive: true },
   ]);
+  // Список вин
+  const [wines, setWines] = useState([
+    {
+      type: "Красное",
+      assortment: [
+        {
+          sweetness: "Сухое",
+          wines: [
+            {
+              id: 9,
+              name: 'Вино Faustino Crianza Tempranillo красное сухое',
+              images: ['https://jmrkpxyvei.a.trbcdn.net/medias/1015344-3-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3w5NzE1fGltYWdlL2F2aWZ8aW1hZ2VzL2gwMi9oNjIvMTAzMTgzNTg4NzIwOTQuYXZpZnxiODkzNDU2ZTlkNjA0MGQ3NWFiM2JmNDcwZThmOTA5ODZhM2I1Yzk3YjlmNzMxNDg3ZjAyN2EyY2Q1ZjNkYWQ2',],
+              year: 2022,
+              alcohol: "14-14.5",
+              sugar: "3-5",
+              temperature: "17-19",
+              price: 4300,
+              description: [
+                "Виноград: Каберне Совиньон",
+                "Цвет: Глубокий рубиновый с фиолетовым оттенком",
+                "Аромат: Черная смородина, эвкалипт, темный шоколад",
+                "Вкус: Мощные танины и долгое пряное послевкусие",
+                "Сочетания: Стейк рибай, блюда из баранины, выдержанные сыры"
+              ]
+            },
+            {
+              id: 10,
+              name: 'Вино Il Gaggio Grillo Terre Siciliane белое сухое',
+              images: ['https://jmrkpxyvei.a.trbcdn.net/medias/1014538-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wzNjM2MHxpbWFnZS9hdmlmfGltYWdlcy9oYzMvaDFhLzEwMTE3NDg5OTgzNTE4LmF2aWZ8MGY3NWNiOGIzNGIzOWM4MzBlODRkYjVlMGU4MmZiMjEwODk3ZjAzMDg0MjAzMDNiZjFkMGU1NWY1ODMzYzQxMA',],
+              year: 2015,
+              alcohol: "13.5-14",
+              sugar: "4-6",
+              temperature: "18-20",
+              price: 5600,
+              description: [
+                "Виноград: Санджовезе",
+                "Цвет: Гранатовый с кирпичными ободком",
+                "Аромат: Вяленая вишня, кожа, трюфельные ноты",
+                "Вкус: Комплексный и элегантный с шелковистыми танинами",
+                "Сочетания: Флорентийский стейк, дичь, грибные ризотто"
+              ]
+            }
+          ]
+        },
+        {
+          sweetness: "Полусухое",
+          wines: [
+            {
+              id: 6,
+              name: 'Вино Corvo Irmana Frappato красное полусухое',
+              images: ['https://jmrkpxyvei.a.trbcdn.net/medias/1024656-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxMjQ3MnxpbWFnZS9hdmlmfGltYWdlcy9oZWMvaDNjLzEwMDUyMTk4NjYyMTc0LmF2aWZ8MDZhMjM1NGEyZTM5ZWVmMzkyZDk2MWQyMzE4NDNjNTM2NjUwZWJjZmZiMTRiNWZjYmU4NDczNmQ4MmVlZjllOA',],
+              year: 2000,
+              alcohol: "13-14",
+              sugar: "8-12",
+              temperature: "16-18",
+              price: 3500,
+              description: [
+                "Виноград: Фраппато",
+                "Цвет: Прозрачный рубиновый с оранжевыми ободком",
+                "Аромат: Сушеная клюква, кориандр, кожистые ноты",
+                "Вкус: Элегантная кислинка и минеральный финиш",
+                "Сочетания: Паста болоньезе, пицца с салями"
+              ]
+            },
+            {
+              id: 8,
+              name: 'Вино Pasqua Montepulciano d’Abruzzo красное полусухое',
+              images: ['https://jmrkpxyvei.a.trbcdn.net/medias/1004105.png-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxNDQ5MnxpbWFnZS9hdmlmfGltYWdlcy9oZjEvaDljLzEwMTE2MzMyMjkwMDc4LmF2aWZ8Y2QyZjIxNWFiYTkzMzlmZjFlOGNkYTAzY2Q1YTg1ZWJmMTJjMWVhZWZlNzNiMjFmYmYxMjI5ZGJjMzEyZjM0Nw',],
+              year: 2023,
+              alcohol: "13-14",
+              sugar: "10-15",
+              temperature: "16-18",
+              price: 1800,
+              description: [
+                "Виноград: Монтепульчано",
+                "Цвет: Насыщенный фиолетовый с пурпурной пеной",
+                "Аромат: Свежая черника, фиалка, легкий перец",
+                "Вкус: Сочные фрукты и бархатистые танины",
+                "Сочетания: Брускетты, паста карбонара, молодые сыры"
+              ]
+            }
+          ]
+        },
+        {
+          sweetness: "Полусладкое",
+          wines: [
+            {
+              id: 2,
+              name: 'Вино Ведерниковъ Губернаторское Красностоп Золотовский красное сухое',
+              images: ['https://jmrkpxyvei.a.trbcdn.net/medias/1020457-3-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxNzY2MHxpbWFnZS9hdmlmfGltYWdlcy9oZDgvaDAyLzExNjMxNjU2MzM3NDM4LmF2aWZ8MTMzNmViYTUzMDY2ODlhYTZhNjliYTM5ODUyMjM4NmVkNWU5ZTVkNjczOGUyOGUzODA1ZDc3ZTc1ZjBiZTllYw',],
+              year: 1980,
+              alcohol: "13-14",
+              sugar: "25-35",
+              temperature: "16-18",
+              price: 8700,
+              description: [
+                "Виноград: Красностоп",
+                "Цвет: Глубокий гранатовый с кирпичными отблесками",
+                "Аромат: Выдержанные тона чернослива, кожи и специй",
+                "Вкус: Мягкие танины и длительное послевкусие",
+                "Сочетания: Дичь, зрелые сыры, мясные пироги"
+              ]
+            },
+            {
+              id: 4,
+              name: 'Вино игристое Абрау-Дюрсо Русское Игристое красное полусладкое',
+              images: ['https://jmrkpxyvei.a.trbcdn.net/medias/1001719-1-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wyMzQ3MnxpbWFnZS9hdmlmfGltYWdlcy9oYzkvaGYyLzExNDIwNTQ4NjYxMjc4Lmavif%7Cjmrkpxyvei.a.trbcdn.net/medias/1001719-1-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wyMzQ3MnxpbWFnZS9hdmlmfGltYWdlcy9oYzkvaGYyLzExNDIwNTQ4NjYxMjc4LmF2aWZ8MjY5ZWQzYjkxZDBlNDllODMwM2ZjNmU4MzU4MjczYmY2Njk1ZmZmMTE3YjQ3YmI5YzIyYzRjNTk2NWFhYjg3ZQ',],
+              year: 1990,
+              alcohol: "12-13",
+              sugar: "35-45",
+              temperature: "10-12",
+              price: 2800,
+              description: [
+                "Виноград: Каберне Совиньон, Саперави",
+                "Цвет: Ярко-рубиновый с фиолетовыми отблесками",
+                "Аромат: Малина, вишня и легкие дрожжевые ноты",
+                "Вкус: Игристое ягодное настроение с бархатистой пеной",
+                "Сочетания: Клубника в шоколаде, ягодные муссы"
+              ]
+            },
+            {
+              id: 5,
+              name: 'Напиток винный Santo Stefano Rosso Zero безалкогольный',
+              images: ['https://jmrkpxyvei.a.trbcdn.net/medias/1028093-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wyMDI2OXxpbWFnZS9hdmlmfGltYWdlcy9oMzgvaDM0LzExMDI0MDg5OTcyNzY2LmF2aWZ8MmMzYjQxNDZmMTQwMmUyMGU1NzYwMTBmY2ZhNGUwNGIxNDcxOWM3YTQ2Y2I0MWRjMWY1YjQ0YTA4NTlkODNlYg',],
+              year: 2018,
+              alcohol: "12.5-13.5",
+              sugar: "40-50",
+              temperature: "10-12",
+              price: 1900,
+              description: [
+                "Виноград: Мерло, Пино Нуар",
+                "Цвет: Фиолетово-рубиновый с лиловым краем",
+                "Аромат: Свежая клубника, красная смородина",
+                "Вкус: Сочная фруктовость с шелковистыми танинами",
+                "Сочетания: Легкие десерты, фруктовые салаты"
+              ]
+            },
+          ]
+        },
+        {
+          sweetness: "Сладкое",
+          wines: []
+        }
+      ]
+    },
+    {
+      type: "Белое",
+      assortment: [
+        {
+          sweetness: "Сухое",
+          wines: [
+            {
+              id: 7,
+              name: 'Вино Corvo Irmana Grillo белое сухое',
+              images: ['https://jmrkpxyvei.a.trbcdn.net/medias/1024655-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxMzI4MXxpbWFnZS9hdmlmfGltYWdlcy9oYzkvaDk5LzEwMDUyMTk4MzM0NDk0LmF2aWZ8ZmE4YmJjZWYzN2M2ZmVjOGZjYTk5ODkyNjJkMmQzNWM1ZThkMDNiZDM2ZDc2ZmIxYmM1MDYxNzIwYzczYjVkZg',],
+              year: 2017,
+              alcohol: "12.5-13",
+              sugar: "4-6",
+              temperature: "8-10",
+              price: 2200,
+              description: [
+                "Виноград: Грилло",
+                "Цвет: Бледно-соломенный с зеленоватыми бликами",
+                "Аромат: Белый персик, морская галька, миндальные цветы",
+                "Вкус: Освежающая минеральность и соленый финиш",
+                "Сочетания: Мидии гриль, овощи-гриль, средиземноморские салаты"
+              ]
+            }
+          ]
+        },
+        {
+          sweetness: "Полусухое",
+          wines: [
+            {
+              id: 3,
+              name: 'Вино JP. Chenet Original Colombard-Chardonnay белое полусухое',
+              images: ['https://jmrkpxyvei.a.trbcdn.net/medias/1021991-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxNDAwNXxpbWFnZS9hdmlmfGltYWdlcy9oMGMvaDM0LzEwNTQzMjUxMjI2NjU0LmF2aWZ8MDAwNDQ2ZWZkNTUxNWQ4OGI2YzQ0NjA4ZTY1ODg3OTQ0ZmJlMzc2MTViYjBhNzIxYWRkMTMyNWU5ODE2NzY5Zg',],
+              year: 1975,
+              alcohol: "11-12",
+              sugar: "30-40",
+              temperature: "8-10",
+              price: 4500,
+              description: [
+                "Виноград: Ркацители, Рислинг",
+                "Цвет: Янтарный с золотистыми переливами",
+                "Аромат: Сухофрукты, мед и миндальные ноты",
+                "Вкус: Маслянистая текстура с карамельным оттенком",
+                "Сочетания: Фуа-гра, голубые сыры, ореховые десерты"
+              ]
+            },
+            {
+              id: 11,
+              name: 'Вино Masi Modello Bianco белое полусухое',
+              images: ['https://jmrkpxyvei.a.trbcdn.net/medias/1018066-2-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wyMjM4NXxpbWFnZS9hdmlmfGltYWdlcy9oZDcvaDU0LzExNjI1MDYzNTQ2OTEwLmF2aWZ8MjNlMzg0ODZkNTk1ZDBmMjMxZGQxYmMwMGNiMDE4NzVmYzZhNmU0NTI1ZDZiNDU1MTE3ODE2MmIzZjJjZDNjYQ',],
+              year: 2015,
+              alcohol: "12-12.5",
+              sugar: "15-20",
+              temperature: "8-10",
+              price: 2700,
+              description: [
+                "Виноград: Гарганега, Пино Гриджио",
+                "Цвет: Светло-золотистый с зеленоватыми рефлексами",
+                "Аромат: Белые цветы, спелый персик, миндаль",
+                "Вкус: Сбалансированная кислотность с медовыми нюансами",
+                "Сочетания: Рыба на гриле, креветки, овощные пасты"
+              ]
+            }
+          ]
+        },
+        {
+          sweetness: "Полусладкое",
+          wines: [
+            {
+              id: 1,
+              name: 'Вино игристое Sempre Prosecco Brut белое брют',
+              images: ['https://jmrkpxyvei.a.trbcdn.net/medias/1027925-1200Wx1200H-avif?context=bWFzdGVyfGltYWdlc3wxNTE2N3xpbWFnZS9hdmlmfGltYWdlcy9oNTEvaDY3LzEwOTM3ODA4MzU1MzU4LmF2aWZ8MzQ0ZTE5NzNhNDM1ODgzNGYxNDkzMDg5NWQwNWYzODUzYjc2NzY3M2RlZTVmNTNjNWUxNzJkNDlmYzBlMjMwZg',],
+              year: 1985,
+              alcohol: "11.5-12.5",
+              sugar: "35-45",
+              temperature: "6-8",
+              price: 3200,
+              description: [
+                "Виноград: Шардоне, Пино Блан",
+                "Цвет: Светло-соломенный с золотистыми бликами",
+                "Аромат: Ноты зеленого яблока, груши и свежей выпечки",
+                "Вкус: Элегантная игристость с медовыми нюансами",
+                "Сочетания: Устрицы, легкие десерты, фруктовые тарталетки"
+              ]
+            }
+          ]
+        },
+        {
+          sweetness: "Сладкое",
+          wines: []
+        }
+      ]
+    },
+    {
+      type: "Розовое",
+      assortment: [
+        {
+          sweetness: "Сухое",
+          wines: []
+        },
+        {
+          sweetness: "Полусухое",
+          wines: []
+        },
+        {
+          sweetness: "Полусладкое",
+          wines: []
+        },
+        {
+          sweetness: "Сладкое",
+          wines: []
+        }
+      ]
+    }
+  ]);
+  
+  // НАЧАЛО ФУНКЦИЙ ДЛЯ ПРОДУКТОВ
 
   // Состояние для отслеживания режима редактирования категорий
   const [editingCategory, setEditingCategory] = useState<string | null>(null);
@@ -251,35 +514,8 @@ function AdminPage() {
     }));
   };
 
-  const toggleIsActiveRoom = (index) => {
-    setRooms(prevRooms =>
-      prevRooms.map((room, i) =>
-        i === index ? { ...room, isActive: !room.isActive } : room
-      )
-    );
-  };
-
-  const updateRoomData = useCallback((index, updatedRoomData) => {
-    console.log('AdminPage: updating room data for index', index, updatedRoomData);
-    setRooms(prevRooms => {
-      const newRooms = [...prevRooms];
-      newRooms[index] = {
-        ...newRooms[index],
-        ...updatedRoomData,
-        price: updatedRoomData.price || newRooms[index].price,
-        checkStandart: {
-          checkIn: updatedRoomData.checkIn || newRooms[index].checkStandart.checkIn,
-          checkOut: updatedRoomData.checkOut || newRooms[index].checkStandart.checkOut,
-        },
-        images: updatedRoomData.images || newRooms[index].images,
-      };
-      console.log('AdminPage: room updated', newRooms[index]);
-      return newRooms;
-    });
-  }, []);
-
-  // Функция для обновления данных блюда
-  const updateDishData = useCallback((categoryName, productId, updatedDishData) => {
+   // Функция для обновления данных блюда
+   const updateDishData = useCallback((categoryName, productId, updatedDishData) => {
     console.log('AdminPage: updating dish data for category', categoryName, 'product id', productId, updatedDishData);
     setDishes(prevDishes => {
       return prevDishes.map(category => {
@@ -313,6 +549,143 @@ function AdminPage() {
     }));
     setEditingCategory(null);
   };
+  // КОНЕЦ ФУНКЦИЙ ДЛЯ ПРОДУКТОВ
+
+  // НАЧАЛО ФУНКЦИЙ ДЛЯ НОМЕРОВ
+  const toggleIsActiveRoom = (index) => {
+    setRooms(prevRooms =>
+      prevRooms.map((room, i) =>
+        i === index ? { ...room, isActive: !room.isActive } : room
+      )
+    );
+  };
+
+  const updateRoomData = useCallback((index, updatedRoomData) => {
+    console.log('AdminPage: updating room data for index', index, updatedRoomData);
+    setRooms(prevRooms => {
+      const newRooms = [...prevRooms];
+      newRooms[index] = {
+        ...newRooms[index],
+        ...updatedRoomData,
+        price: updatedRoomData.price || newRooms[index].price,
+        checkStandart: {
+          checkIn: updatedRoomData.checkIn || newRooms[index].checkStandart.checkIn,
+          checkOut: updatedRoomData.checkOut || newRooms[index].checkStandart.checkOut,
+        },
+        images: updatedRoomData.images || newRooms[index].images,
+      };
+      console.log('AdminPage: room updated', newRooms[index]);
+      return newRooms;
+    });
+  }, []);
+  // КОНЕЦ ФУНКЦИЙ ДЛЯ НОМЕРОВ
+
+
+  // НАЧАЛО ФУНКЦИЙ ДЛЯ ВИН
+  const addWine = (wineType, sweetness) => {
+    const newWine = {
+      id: Date.now(),
+      name: "Новая бутылка",
+      images: [],
+      year: new Date().getFullYear(),
+      alcohol: "12-13",
+      sugar: "5-10",
+      temperature: "16-18",
+      price: 0,
+      description: [
+        "Виноград: Не указан",
+        "Цвет: Не указан",
+        "Аромат: Не указан",
+        "Вкус: Не указан",
+        "Сочетания: Не указано"
+      ]
+    };
+
+    setWines(prevWines => {
+      return prevWines.map(wineCategory => {
+        if (wineCategory.type === wineType) {
+          return {
+            ...wineCategory,
+            assortment: wineCategory.assortment.map(assortmentItem => {
+              if (assortmentItem.sweetness === sweetness) {
+                return {
+                  ...assortmentItem,
+                  wines: [...assortmentItem.wines, newWine]
+                };
+              }
+              return assortmentItem;
+            })
+          };
+        }
+        return wineCategory;
+      });
+    });
+  };
+
+  // Функция для удаления вина
+  const deleteWine = (wineType, sweetness, wineId) => {
+    setWines(prevWines => {
+      return prevWines.map(wineCategory => {
+        if (wineCategory.type === wineType) {
+          return {
+            ...wineCategory,
+            assortment: wineCategory.assortment.map(assortmentItem => {
+              if (assortmentItem.sweetness === sweetness) {
+                return {
+                  ...assortmentItem,
+                  wines: assortmentItem.wines.filter(wine => wine.id !== wineId)
+                };
+              }
+              return assortmentItem;
+            })
+          };
+        }
+        return wineCategory;
+      });
+    });
+  };
+
+  // Функция для обновления данных вина
+  const updateWineData = useCallback((wineType, sweetness, wineId, updatedWineData) => {
+    console.log('AdminPage: updating wine data for type', wineType, 'sweetness', sweetness, 'wine id', wineId, updatedWineData);
+    setWines(prevWines => {
+      return prevWines.map(wineCategory => {
+        if (wineCategory.type === wineType) {
+          return {
+            ...wineCategory,
+            assortment: wineCategory.assortment.map(assortmentItem => {
+              if (assortmentItem.sweetness === sweetness) {
+                return {
+                  ...assortmentItem,
+                  wines: assortmentItem.wines.map(wine => {
+                    if (wine.id === wineId) {
+                      return {
+                        ...wine,
+                        ...updatedWineData,
+                        images: updatedWineData.images || wine.images,
+                        // Правильная обработка description - это массив строк
+                        description: Array.isArray(updatedWineData.description) 
+                          ? updatedWineData.description 
+                          : wine.description,
+                        // Убираем неправильное преобразование year из weight
+                        year: updatedWineData.year || wine.year
+                      };
+                    }
+                    return wine;
+                  })
+                };
+              }
+              return assortmentItem;
+            })
+          };
+        }
+        return wineCategory;
+      });
+    });
+  }, []);
+  // КОНЕЦ ФУНКЦИЙ ДЛЯ ВИН
+
+  
 
   return (
     <div className="h-screen flex flex-col bg-no-repeat bg-cover">
@@ -509,9 +882,84 @@ function AdminPage() {
           </Tabs.Item>
 
           <Tabs.Item title="Ассортимент винодельни" icon={FaWineGlassAlt}>
-            This is <span className="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</span>.
-            Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to
-            control the content visibility and styling.
+          <div className="overflow-x-auto">
+              <Table hoverable>
+                <Table.Head>
+                  <Table.HeadCell>Название</Table.HeadCell>
+                  <Table.HeadCell>Цена</Table.HeadCell>
+                  <Table.HeadCell>Действия</Table.HeadCell>
+                  <Table.HeadCell>
+                    <AddCategory onClick={() => addCategory("Новая категория")} />
+                  </Table.HeadCell>
+                </Table.Head>
+                <Table.Body className="divide-y">
+                  {wines.map(({ type, assortment }) => (
+                    <>
+                      <div >
+                        <div className="my-5 mx-auto flex justify-center items-center gap-4 w-full">
+                          <h3 className="font-bold text-main_theme text-2xl font-body">
+                            {type}
+                          </h3>
+                        </div>
+                      </div>
+                      {assortment.map(({ sweetness, wines }) => (
+                        <>
+                        <div className="my-2 mx-auto flex justify-center items-center gap-4 w-full">
+                          <h4 className="font-bold text-main_theme text-base font-body">
+                            {sweetness}
+                          </h4>
+                          <Button
+                            icon={<IoMdAdd className='h-[20px] w-[20px]' />}
+                            func={() => addWine(type, sweetness)}
+                            customBackground={"bg-[#2ecc71]"}
+                          />
+                        </div>
+                        {wines.map(({ id, name, images, year, alcohol, sugar, temperature, price, description }) => (
+                          <Table.Row key={id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              {name}
+                            </Table.Cell>
+                            <Table.Cell>{price}</Table.Cell>
+                            <Table.Cell>
+                              <ExtCard
+                                Card={() => (
+                                  <a href="#" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
+                                    Править
+                                  </a>
+                                )}
+                                ExtContent={() => (
+                                  <NewWineCard
+                                    dishName={name}
+                                    photos={images}
+                                    price={price}
+                                    description={description}
+                                    year={year}
+                                    alcohol={alcohol}
+                                    sugar={sugar}
+                                    temperature={temperature}
+                                    onDataChange={(updatedData) => updateWineData(type, sweetness, id, updatedData)}
+                                  />
+                                )}
+                              />
+                            </Table.Cell>
+                            <Table.Cell>
+                              <a
+                                href="#"
+                                onClick={() => deleteWine(type, sweetness, id)}
+                                className="font-medium text-main_theme hover:underline dark:text-cyan-500"
+                              >
+                                Удалить
+                              </a>
+                            </Table.Cell>
+                          </Table.Row>
+                        ))}
+                      </>
+                      ))}
+                    </>
+                  ))}
+                </Table.Body>
+              </Table>
+            </div>
           </Tabs.Item>
         </Tabs>
       </div>
