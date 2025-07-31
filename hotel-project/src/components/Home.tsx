@@ -339,7 +339,7 @@ const Home = ({nav}) => {
             <section className='unShown card'>
                 <div className='section-format'>
                     <h1 className='header-section'>Посмотрите видео-презентацию</h1>
-                    <VPlayer/>
+                    <VPlayer sourceUrl={"https://youtu.be/LOHDnKI1U8A?si=42WUOqixTglw4kl1"}/>
                 </div>
             </section>
             

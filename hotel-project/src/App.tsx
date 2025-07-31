@@ -103,7 +103,7 @@ const hiderouter = createBrowserRouter([
         element: <Auth/>
       },
       {
-        path: '/admin-pusttusinadjusi',
+        path: '/admin',
         element: <AdminPage/>
       },
     ] 

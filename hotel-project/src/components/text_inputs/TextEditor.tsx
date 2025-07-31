@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from './Button';
 import { FaPen } from "react-icons/fa";
 
@@ -6,6 +6,12 @@ function TextEditor({ text, format = 'paragraph', style, onSave, isShort = false
   const [description, setDescription] = useState(text || '');
   const [isDirty, setDirty] = useState(false);
   const [isEditing, setEditing] = useState(false);
+
+  // Синхронизация внутреннего состояния с пропсом text
+  useEffect(() => {
+    setDescription(text || '');
+    setDirty(false);
+  }, [text]);
 
   const handleChange = (event) => {
     setDescription(event.target.value);
@@ -23,6 +29,15 @@ function TextEditor({ text, format = 'paragraph', style, onSave, isShort = false
   const handleEditClick = () => {
     setEditing(true);
     setDirty(false);
+  };
+
+  // Автосохранение при потере фокуса с небольшой задержкой
+  const handleBlur = () => {
+    setTimeout(() => {
+      if (isDirty) {
+        handleSave();
+      }
+    }, 100);
   };
 
   const getTextStyle = () => {
@@ -48,6 +63,7 @@ function TextEditor({ text, format = 'paragraph', style, onSave, isShort = false
                 <input
                     value={description}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     className="w-full min-w-0 rounded-xl text-[#201A09] focus:outline-0 focus:ring-0 border border-[#EFE3C3] bg-[#FBF8EF] focus:border-[#EFE3C3] placeholder:text-[#A07D1C] p-[15px] text-base font-normal leading-normal"
                 />
             ) : (
@@ -55,6 +71,7 @@ function TextEditor({ text, format = 'paragraph', style, onSave, isShort = false
                     placeholder="Введите описание..."
                     value={description}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     className="w-full rounded-xl text-[#201A09] focus:outline-0 focus:ring-0 border border-[#EFE3C3] bg-[#FBF8EF] focus:border-[#EFE3C3] min-h-48 placeholder:text-[#A07D1C] p-[15px] text-base font-normal leading-normal"
                 />
             )}
@@ -85,7 +102,7 @@ function TextEditor({ text, format = 'paragraph', style, onSave, isShort = false
           {renderTextArea()}
         </label>
       </div>
-      {isEditing && (
+      {isEditing && isDirty && (
         <div className="px-4 py-3">
           <Button text="Сохранить" func={handleSave} />
         </div>

@@ -20,7 +20,22 @@ import Bottle from './components/assets/wine-bottle.png';
 import Calendar from './components/assets/calendar.png';
 import Excursion from './components/assets/excursion.png';
 import Running from './components/assets/running.png';
-
+// начало фоток для страниц
+import VectorImage from './components/assets/Vector1.png';
+import ThreeBottles from './components/assets/ThreeBottles.png';
+import WineCaps from './components/assets/WineCaps.png';
+import BottleTransparent from './components/assets/BottleTransparent.png';
+import BottleTransparentHorizontal from './components/assets/BottleTransparentHorizontal.png';
+import WineReservour from './components/assets/WineReservour.png';
+import WineBarrel from './components/assets/WineBarrel.png';
+import Grape from './components/assets/Grape.png';
+import BottleProduce from './components/assets/BottleProduce.png';
+import GeografieMobile from './components/assets/GeografieMobile.svg';
+import GeografieTablet from './components/assets/GeografieTablet.svg';
+import GeografieComputer from './components/assets/GeografieComputer.svg';
+import GrapeLines from './components/assets/GrapeLines.jpg';
+import BackgroundImage from './images/Wine_Background2_AI.png';
+// конец фоток для страниц
 import { HiAdjustments, HiClipboardList, HiUserCircle } from "react-icons/hi";
 import { FaTrashAlt } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
@@ -183,11 +198,142 @@ function AdminPage() {
     },
   ]);
   //Список страниц
-  const [pagesList, setPages] = useState([
-    { name: "Главная", path: "/", isActive: true },
-    { name: "Ресторан", path: "/Ресторан", isActive: true },
-    { name: "Винодельня", path: "/Винодельня", isActive: true },
-    { name: "Мероприятия", path: "/Мероприятия", isActive: true },
+  // В AdminPage.tsx добавить эти импорты и заменить объект pagesList
+
+  // Начальные изображения для галерей
+  const initialGalleryImages = [
+    { src: "https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg", alt: "Room 9 St Andrea" },
+    { src: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1", alt: "Sant Andrea" },
+    { src: "https://flowbite.com/docs/images/carousel/carousel-3.svg", alt: "Carousel Image 3" },
+    { src: "https://flowbite.com/docs/images/carousel/carousel-4.svg", alt: "Carousel Image 4" },
+    { src: "https://flowbite.com/docs/images/carousel/carousel-5.svg", alt: "Carousel Image 5" },
+  ];
+  // Список страниц
+  const [pagesContent, setPagesContent] = useState([
+    { 
+      name: "Главная", 
+      path: "/", 
+      isActive: true,
+      content: {
+        mainBackground: {
+          image: BackgroundImage,
+          title: "Добро пожаловать на Винные Терассы"
+        },
+        aboutSection: {
+          title: "Кто мы?",
+          description: 'Отель-винодельня "Винные Террассы" - это уникальное место, сочетающее в себе шарм и гостеприимство с изысканными винами, произведенным нашими виноделами по собственному рецепту. Мы предлагаем гостям возможность насладиться роскошью и комфортом, а также окунуться в удивительный мир виноделия, попробовать уникальные сорта вин и узнать историю их создания.'
+        },
+        firstGallery: {
+          title: "Номерной Фонд",
+          images: [...initialGalleryImages]
+        },
+        secondGallery: {
+          title: "Отель расположен в самой живописной локации Абрау",
+          images: [...initialGalleryImages]
+        },
+        videoSection: {
+          title: "Посмотрите видео-презентацию",
+          videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        },
+        servicesSection: {
+          title: "Ваш отдых - наша ответственность",
+          services: [
+            {
+              name: "Трансфер",
+              image: "https://kursk-kortezh.ru/admin/Data-Gallery/pictures/tuazev8six-uslugi-transfera-v-prage.jpg"
+            },
+            {
+              name: "Изысканная кухня", 
+              image: "https://media.istockphoto.com/id/500466008/ru/%D1%84%D0%BE%D1%82%D0%BE/%D0%B3%D0%BE%D0%B2%D1%8F%D0%B4%D0%B8%D0%BD%D1%8B-%D1%81%D1%82%D0%B5%D0%B9%D0%BA.jpg?s=612x612&w=0&k=20&c=RN33VmjFFu06kFNyM_8vRe_A5eDgKlV6u86t1FZnpSM="
+            },
+            {
+              name: "Современный дизайн",
+              image: "https://mykaleidoscope.ru/uploads/posts/2021-03/1616624585_56-p-dizain-modern-interera-58.jpg"
+            },
+            {
+              name: "Сервис",
+              image: "https://habrastorage.org/webt/gt/pc/ia/gtpciaxhxff_iswdxx-qhwizuo8.jpeg"
+            },
+            {
+              name: "Качественное вино",
+              image: "https://forumsamogon.ru/wp-content/uploads/e/e/e/eeeb1c2d5d567758dbf6327fd1b0d490.jpg"
+            }
+          ]
+        }
+      }
+    },
+    {
+      name: "Винодельня",
+      path: "/Винодельня",
+      isActive: true,
+      content: {
+        mainBackground: {
+          image: "./components/assets/VineryBackground.png",
+          title: "Винодельня"
+        },
+        introSection: {
+          title: "Винодельня",
+          description: "Откройте для себя мир превосходных вин в нашей винодельне! Мы предлагаем уникальные и высококачественные сорта вин, созданные с любовью и вниманием к каждой детали. Посетите нашу винодельню и убедитесь в качестве наших вин самостоятельно. Здесь вы сможете насладиться изысканными напитками, отдохнуть и провести время в уютной атмосфере.",
+          image: ThreeBottles,
+          buttonText: "Ассортимент вин",
+          buttonLink: "/Каталог"
+        },
+        historySection: {
+          title: "НАША ИСТОРИЯ",
+          backgroundImage: WineCaps,
+          leftDates: [
+            { year: '1960', description: 'Основание винодельни' },
+            { year: '1966', description: 'Первый урожай' },
+            { year: '1970', description: 'Выпуск первого вина' }
+          ],
+          rightDates: [
+            { year: '1980', description: 'Расширение производства' },
+            { year: '1999', description: 'Международное признание' },
+            { year: '2000', description: 'Модернизация производства' }
+          ]
+        },
+        wineSection: {
+          firstText: "У нас вы сможете попробовать как классические, так и эксклюзивные вина, созданные по уникальным рецептурам. Наши опытные сомелье помогут вам выбрать вино, которое идеально подойдёт именно для вашего случая.",
+          secondText: "Наш каталог включает более 100 наименований вин, среди которых вы обязательно найдете напиток по своему вкусу. Мы гордимся тем, что наши вина получают высокие оценки от экспертов и ценителей со всего мира.",
+          bottleImage: BottleTransparent,
+          bottleImageHorizontal: BottleTransparentHorizontal,
+          buttonText: "Наша винотека",
+          buttonLink: "/Каталог"
+        },
+        productionSection: {
+          title: "ЭТАПЫ НАШЕГО ПРОИЗВОДСТВА",
+          stages: [
+            { name: "Сбор винограда", image: Grape },
+            { name: "Дробление Прессование", image: BottleProduce },
+            { name: "Ферментация", image: WineBarrel },
+            { name: "Выдержка", image: WineBarrel },
+            { name: "Фильтрация", image: WineBarrel },
+            { name: "Розлив Созревание", image: WineReservour }
+          ]
+        },
+        regionSection: {
+          title: "ВИННЫЙ РЕГИОН",
+          firstText: "Краснодарский край — главный винодельческий регион России с разнообразными сортами винограда и высококачественными винами. Здесь выращивают Каберне Совиньон, Мерло, Шардоне и Ркацители.",
+          secondText: "Регион сочетает культуру, красоту природы и винодельческое искусство.",
+          mapImageMobile: GeografieMobile,
+          mapImageTablet: GeografieTablet,
+          mapImageComputer: GeografieComputer,
+          backgroundImage: GrapeLines
+        }
+      }
+    },
+    {
+      name: "Ресторан", 
+      path: "/Ресторан", 
+      isActive: true,
+      content: "Контент, содержащийся на этой странице редактируется в другом разделе"
+    },
+    {
+      name: "Мероприятия", 
+      path: "/Мероприятия", 
+      isActive: true,
+      content: "Контент, содержащийся на этой странице редактируется в другом разделе"
+    }
   ]);
   // Список вин
   const [wines, setWines] = useState([
@@ -683,6 +829,25 @@ function AdminPage() {
   }, []);
   // КОНЕЦ ФУНКЦИЙ ДЛЯ ВИН
 
+  // НАЧАЛО ФУНКЦИЙ ДЛЯ СТРАНИЦ
+  const updatePageContent = useCallback((pageName, sectionName, updatedData) => {
+    console.log('AdminPage: updating page content for', pageName, 'section', sectionName, updatedData);
+    setPagesContent(prevPages => {
+      return prevPages.map(page => {
+        if (page.name === pageName) {
+          return {
+            ...page,
+            content: {
+              ...page.content,
+              [sectionName]: updatedData
+            }
+          };
+        }
+        return page;
+      });
+    });
+  }, []);
+
   
 
   return (
@@ -690,11 +855,7 @@ function AdminPage() {
       <Navbar />
       <div className="container m-auto p-4 mt-auto md:p-6 lg:p-12">
         <h1 className="text-3xl text-white font-bold mb-4 text-center">Административная панель</h1>
-        <div className="flex flex-col space-y-4 pt-4">
-          {/* <ModalsCard Card={addType} ExtContent={CreateType} />
-          <ModalsCard Card={addClase} ExtContent={CreateClase} />
-          <ModalsCard Card={addProduct} ExtContent={CreateProduct} /> */}
-        </div>
+        
 
         <Tabs aria-label="Tabs with underline" className="tabsContainer" variant="underline">
           <Tabs.Item active title="Контент на страницах" icon={FaHome}>
@@ -705,12 +866,12 @@ function AdminPage() {
                   <Table.HeadCell>Статус</Table.HeadCell>
                 </Table.Head>
                 <Table.Body className="divide-y">
-                  {pagesList.map(({ name, path, isActive }) => (
-                    <Table.Row key={name} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  {pagesContent.map((page) => (
+                    <Table.Row key={page.name} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                        {name}
+                        {page.name}
                       </Table.Cell>
-                      <Table.Cell>{isActive ? "Сохранено" : "Есть изменения"}</Table.Cell>
+                      <Table.Cell>{page.isActive ? "Сохранено" : "Есть изменения"}</Table.Cell>
                       <Table.Cell>
                         <ExtCard
                           Card={() => (
@@ -718,7 +879,18 @@ function AdminPage() {
                               Править
                             </a>
                           )}
-                          ExtContent={() => <HomeEdit />}
+                          ExtContent={() => (
+                            page.name === "Главная" ? (
+                              <HomeEdit 
+                                pageData={page.content}
+                                onContentChange={(sectionName, updatedData) => 
+                                  updatePageContent(page.name, sectionName, updatedData)
+                                }
+                              />
+                            ) : (
+                              <div>Редактирование этой страницы пока не реализовано</div>
+                            )
+                          )}
                         />
                       </Table.Cell>
                     </Table.Row>
@@ -797,8 +969,7 @@ function AdminPage() {
                 <Table.Body className="divide-y">
                   {dishes.map(({ category, products }) => (
                     <>
-                      <div>
-                        <div className="my-5 mx-auto flex justify-center items-center gap-4 w-full">
+                        <div className="my-5 mx-auto flex justify-center items-center gap-4 w-full" key={category}>
                           {editingCategory !== category ? (
                             <>
                               <h3 className="font-bold text-main_theme text-lg font-body">
@@ -828,7 +999,6 @@ function AdminPage() {
                             />
                           )}
                         </div>
-                      </div>
                       {products.map(({ id, images, name, header, description, descriptionFull, weight, price}) => (
                         <Table.Row key={name} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
@@ -886,14 +1056,11 @@ function AdminPage() {
                   <Table.HeadCell>Название</Table.HeadCell>
                   <Table.HeadCell>Цена</Table.HeadCell>
                   <Table.HeadCell>Действия</Table.HeadCell>
-                  <Table.HeadCell>
-                    <AddCategory onClick={() => addCategory("Новая категория")} />
-                  </Table.HeadCell>
                 </Table.Head>
                 <Table.Body className="divide-y">
                   {wines.map(({ type, assortment }) => (
                     <>
-                      <div >
+                      <div key={type} >
                         <div className="my-5 mx-auto flex justify-center items-center gap-4 w-full">
                           <h3 className="font-bold text-main_theme text-2xl font-body">
                             {type}
@@ -902,7 +1069,7 @@ function AdminPage() {
                       </div>
                       {assortment.map(({ sweetness, wines }) => (
                         <>
-                        <div className="my-2 mx-auto flex justify-center items-center gap-4 w-full">
+                        <div className="flex items-center gap-4 w-full" key={sweetness}>
                           <h4 className="font-bold text-main_theme text-base font-body">
                             {sweetness}
                           </h4>
