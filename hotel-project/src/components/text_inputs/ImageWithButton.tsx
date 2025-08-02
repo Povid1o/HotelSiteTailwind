@@ -9,18 +9,47 @@ const ImageWithButton = ({
   children 
 }) => {
   const [showButton, setShowButton] = useState(false);
-  const [currentImageUrl, setCurrentImageUrl] = useState(image);
+  const [currentImageUrl, setCurrentImageUrl] = useState('');
   const fileInputRef = useRef(null);
   const currentBlobRef = useRef(null);
 
+  // Функция для получения display URL из любого типа изображения
+  const getDisplayUrl = useCallback((imageSource) => {
+    if (!imageSource) return '';
+    
+    if (imageSource instanceof File) {
+      // Если это File объект, создаем blob URL
+      const blobUrl = URL.createObjectURL(imageSource);
+      return blobUrl;
+    } else if (typeof imageSource === 'string') {
+      // Если это строка (URL), используем как есть
+      return imageSource;
+    }
+    
+    return '';
+  }, []);
+
   // Обновляем currentImageUrl когда image изменяется извне
   useEffect(() => {
-    if (image !== currentImageUrl) {
-      setCurrentImageUrl(image);
+    console.log('ImageWithButton: image prop changed', image);
+    
+    // Очищаем предыдущий blob URL если он был создан нами
+    if (currentBlobRef.current && currentBlobRef.current.startsWith('blob:')) {
+      URL.revokeObjectURL(currentBlobRef.current);
+      currentBlobRef.current = null;
     }
-  }, [image]);
 
-  // Очистка blob URL только при размонтировании компонента
+    const newUrl = getDisplayUrl(image);
+    
+    // Если новое изображение - это File, сохраняем ссылку на blob URL для последующей очистки
+    if (image instanceof File && newUrl.startsWith('blob:')) {
+      currentBlobRef.current = newUrl;
+    }
+    
+    setCurrentImageUrl(newUrl);
+  }, [image, getDisplayUrl]);
+
+  // Очистка blob URL при размонтировании компонента
   useEffect(() => {
     return () => {
       if (currentBlobRef.current && currentBlobRef.current.startsWith('blob:')) {
@@ -30,45 +59,44 @@ const ImageWithButton = ({
     };
   }, []);
 
+  const validateImageFile = useCallback(async (file) => {
+    // Проверяем MIME тип
+    if (!file.type.startsWith('image/')) {
+      throw new Error('Выбранный файл не является изображением');
+    }
+
+    // Дополнительная проверка через создание Image объекта
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const testUrl = URL.createObjectURL(file);
+      
+      img.onload = () => {
+        URL.revokeObjectURL(testUrl);
+        resolve(true);
+      };
+      
+      img.onerror = () => {
+        URL.revokeObjectURL(testUrl);
+        reject(new Error('Файл поврежден или не является корректным изображением'));
+      };
+      
+      img.src = testUrl;
+    });
+  }, []);
+
   const selectFile = useCallback(async (e) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
 
-    console.log(`Replacing with file: ${selectedFile.name}`);
+    console.log(`ImageWithButton: attempting to load file: ${selectedFile.name}, type: ${selectedFile.type}`);
     
     try {
-      if (!selectedFile.type.startsWith('image/')) {
-        throw new Error('Выбранный файл не является изображением');
-      }
+      // Валидируем файл
+      await validateImageFile(selectedFile);
 
-      // Проверяем, что файл может быть загружен как изображение
-      await new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = resolve;
-        img.onerror = reject;
-        const testUrl = URL.createObjectURL(selectedFile);
-        img.src = testUrl;
-        // Освобождаем тестовый URL после проверки
-        img.onload = () => {
-          URL.revokeObjectURL(testUrl);
-          resolve();
-        };
-        img.onerror = () => {
-          URL.revokeObjectURL(testUrl);
-          reject();
-        };
-      });
-
-      // Очищаем предыдущий blob URL если он есть
-      if (currentBlobRef.current && currentBlobRef.current.startsWith('blob:')) {
-        URL.revokeObjectURL(currentBlobRef.current);
-      }
-
-      // Создаем новый blob URL
-      const newBlobUrl = URL.createObjectURL(selectedFile);
-      currentBlobRef.current = newBlobUrl;
-      setCurrentImageUrl(newBlobUrl);
-
+      console.log('ImageWithButton: file validation passed, calling onImageChange');
+      
+      // Вызываем callback с File объектом
       if (onImageChange) {
         onImageChange(selectedFile);
       }
@@ -78,22 +106,21 @@ const ImageWithButton = ({
         fileInputRef.current.value = '';
       }
     } catch (error) {
-      console.error('Ошибка при загрузке изображения:', error);
-      alert('Не удалось загрузить изображение. Пожалуйста, попробуйте другой файл.');
+      console.error('ImageWithButton: validation error:', error);
+      alert(`Ошибка загрузки изображения: ${error.message}`);
+      
+      // Очищаем input при ошибке
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
-  }, [onImageChange]);
+  }, [onImageChange, validateImageFile]);
 
   const handleMouseOver = () => setShowButton(true);
   const handleMouseOut = () => setShowButton(false);
 
   const handleTrashClick = useCallback(() => {
-    // Очищаем blob URL перед удалением
-    if (currentBlobRef.current && currentBlobRef.current.startsWith('blob:')) {
-      URL.revokeObjectURL(currentBlobRef.current);
-      currentBlobRef.current = null;
-    }
-    
-    setCurrentImageUrl(null);
+    console.log('ImageWithButton: removing image');
     
     if (onImageChange) {
       onImageChange(null);
@@ -101,15 +128,7 @@ const ImageWithButton = ({
   }, [onImageChange]);
 
   const handleImageError = useCallback((e) => {
-    console.error('Ошибка загрузки изображения:', e);
-    
-    // Очищаем проблемный blob URL
-    if (currentBlobRef.current && currentBlobRef.current.startsWith('blob:')) {
-      URL.revokeObjectURL(currentBlobRef.current);
-      currentBlobRef.current = null;
-    }
-    
-    setCurrentImageUrl(null);
+    console.error('ImageWithButton: image load error:', e);
     
     if (onImageChange) {
       onImageChange(null);
@@ -134,6 +153,14 @@ const ImageWithButton = ({
             >
               <FaPen />
             </button>
+            {currentImageUrl && (
+              <button
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded z-20"
+                onClick={handleTrashClick}
+              >
+                <IoTrashBin />
+              </button>
+            )}
             <input 
               ref={fileInputRef}
               type="file"
@@ -181,7 +208,7 @@ const ImageWithButton = ({
           </button>
           {currentImageUrl && (
             <button
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded"
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
               onClick={handleTrashClick}
             >
               <IoTrashBin />

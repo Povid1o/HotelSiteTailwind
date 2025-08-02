@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Card from '../cards/Card';
 import ExtCard from '../cards/ExtCard';
 import ExtGaleryCard from '../cards/ExtGalerycard';
 import BlueSwiper from '../sliders/BlueSwiper';
 import PhotoSelector from '../text_inputs/PhotoSelector';
 import ImageWithButton from '../text_inputs/ImageEdit';
-import BackgroundImage from '../../images/Wine_Background2_AI.png';
+import BackgroundContentEdit from '../text_inputs/BackgroundContentEdit';
 import TextEditor from '../text_inputs/TextEditor';
 import VideoWithUpload from '../text_inputs/VideoWithUpload';
 import BoxEditable from '../text_inputs/BoxEditable';
@@ -16,44 +16,27 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import '../styles/hover.css'
 
-const Box = ({ className, imgAlt, imgSrc, children }) => {
-    const boxClass = `
-    ${className}
-    items-start
-    flex flex-row
-    rounded-lg
-    shadow-xl
-    my-2
-    p-4`;
-
-    const imgClasses = `
-    w-20 h-20
-    rounded-full`;
-
-    return(
-        <div className={boxClass}>
-            {imgSrc && (
-                <img
-                    className={imgClasses}
-                    src={imgSrc}
-                    alt={imgAlt}
-                />
-            )}
-            {children}
-        </div>
-    )
-}
-
 
 const HomeEdit = ({ pageData, onContentChange }) => {
     const [bacgroundState, changeBackground] = useState(false)
     const [fsliderState, changeFslider] = useState(false)
     const [ssliderState, changeSslider] = useState(false)
+    
 
     const handleMainBackgroundTitleChange = useCallback((newTitle) => {
         onContentChange('mainBackground', { 
             ...pageData.mainBackground,
             title: newTitle 
+        });
+    }, [onContentChange, pageData.mainBackground]);
+
+
+    const handleMainBackgroundImageChange = useCallback((newMedia: File | string | null) => {
+        console.log('HomeEdit: handleMainBackgroundImageChange called with:', newMedia);
+        
+        onContentChange('mainBackground', { 
+            ...pageData.mainBackground,
+            image: newMedia 
         });
     }, [onContentChange, pageData.mainBackground]);
 
@@ -177,52 +160,24 @@ const HomeEdit = ({ pageData, onContentChange }) => {
         return null;
     };
 
-    const handleMouseOver = (target = "mainBackground" || "firstSlider" || "secondSlider" ) => {
-        switch (target) {
-            case "mainBackground":
-                changeBackground(true)
-                break;
-            case "firstSlider":
-                changeFslider(true)
-                break;
-            case "secondSlider":
-                changeSslider(true)
-                break;
-            default:
-                break;
-        }
-    };
-    
-    const handleMouseOut = ( target = "mainBackground" || "firstSlider" || "secondSlider" ) => {
-        switch (target) {
-            case "mainBackground":
-                changeBackground(false)
-                break;
-            case "firstSlider":
-                changeFslider(false)
-                break;
-            case "secondSlider":
-                changeSslider(false)
-                break;
-            default:
-                break;
-        }
-    };
-
     return ( 
-        <tbody name='home' className="w-full h-max bg-white">
-            <ImageWithButton image={pageData.mainBackground.image} isBackground={true}>
-                <div className="max-w-[700px] mx-auto px-16 flex flex-col justify-center content-center text-center">
-                    <div className="flex max-w-screen-lg flex-wrap items-end gap-4 px-4 py-3">
-                        <TextEditor 
-                            text={pageData.mainBackground.title} 
-                            format="header" 
-                            isShort={true} 
-                            onSave={handleMainBackgroundTitleChange} 
-                        />
-                    </div>
+        <div name='home' className="w-full h-max bg-white">
+            <BackgroundContentEdit 
+            backgroundMedia={pageData.mainBackground.image}
+            onMediaChange={handleMainBackgroundImageChange}
+            acceptedTypes="image/*,video/*" // Если нужны только изображения, или "image/*,video/*" для изображений и видео
+        >
+            <div className="max-w-[700px] mx-auto px-16 flex flex-col justify-center content-center text-center">
+                <div className="flex max-w-screen-lg flex-wrap items-end gap-4 px-4 py-3">
+                    <TextEditor 
+                        text={pageData.mainBackground.title} 
+                        format="header" 
+                        isShort={true} 
+                        onSave={handleMainBackgroundTitleChange} 
+                    />
                 </div>
-            </ImageWithButton>
+            </div>
+        </BackgroundContentEdit>
 
             <section className='mt-14 mx-auto justify-center flex flex-row xl:container'>
                 <div className='mx-auto bg-white rounded-xl drop-shadow-2xl max-sm:w-5/6 xl:mx-2'>
@@ -291,30 +246,30 @@ const HomeEdit = ({ pageData, onContentChange }) => {
             </div>
 
             <div className='mt-14 mx-8 mx-auto justify-center font-body max-sm:w-5/6 md:w-3/4 xl:container'>
-    <TextEditor 
-        text={pageData.servicesSection.title} 
-        format="custom"
-        style="text-4xl text-gray-700 font-bold pt-4 lg:text-5xl xl:text-6xl pt-8"
-        isShort={true} 
-        onSave={handleServicesSectionTitleChange} 
-    />
-    <ul className='flex flex-wrap flex-row'>
-        {pageData.servicesSection.services.map((service, index) => (
-            <li key={`service-${index}-${service.name}`}>
-                <BoxEditable
-                    name={service.name}
-                    imgSrc={getDisplayImageSrc(service.image)}
-                    onDataChange={(newData) => handleServicesSectionServicesChange(index, newData)}
-                >
-                    <p className='mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold'>
-                        {service.name}
-                    </p>
-                </BoxEditable>
-            </li>
-        ))}
-    </ul>
-</div>
-        </tbody>
+                <TextEditor 
+                    text={pageData.servicesSection.title} 
+                    format="custom"
+                    style="text-4xl text-gray-700 font-bold pt-4 lg:text-5xl xl:text-6xl pt-8"
+                    isShort={true} 
+                    onSave={handleServicesSectionTitleChange} 
+                />
+                <ul className='flex flex-wrap flex-row'>
+                    {pageData.servicesSection.services.map((service, index) => (
+                        <li key={`service-${index}-${service.name}`}>
+                            <BoxEditable
+                                name={service.name}
+                                imgSrc={getDisplayImageSrc(service.image)}
+                                onDataChange={(newData) => handleServicesSectionServicesChange(index, newData)}
+                            >
+                                <p className='mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold'>
+                                    {service.name}
+                                </p>
+                            </BoxEditable>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
     );
 }
 
