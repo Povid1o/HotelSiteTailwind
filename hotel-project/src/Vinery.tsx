@@ -33,7 +33,8 @@ import GrapeLines from "./components/assets/GrapeLines.jpg"
 
 const Button = ({text}) => {
     return(
-        <button className="flex justify-start">
+        <Link to='/Каталог'>
+            <div className="flex justify-start">
             <div className='flex-col inline-block p-2'>
                                     
                 <div className='flex flex-row '>
@@ -43,7 +44,8 @@ const Button = ({text}) => {
                 <hr className="border-gray-400 w-full my-2" />
 
             </div>
-        </button>
+            </div>
+        </Link>
     )
 }
 
@@ -214,7 +216,7 @@ function Vinery() {
                             />
                         </div>
                         <div className='col-span-1 2xl:my-auto'>
-                            <Button text="Наша винотека"/>
+                            <Button text="Наша винотека" on/>
                             <p className='paragraph-content'>
                                 {texts[2].text[1]}
                             </p>

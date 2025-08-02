@@ -1,11 +1,10 @@
+// Нужно
 import React, { useState, useCallback } from 'react';
 import Navbar from './components/Navbar';
 import HomeEdit from './components/pages_editable/HomeEdit';
-import CreateClase from './components/modals/CreateClase';
-import CreateType from './components/modals/СreateType';
-import ModalsCard from './components/modals/ModalsCard';
+import VineryEdit from './components/pages_editable/VineryEdit';
 import Card from './components/cards/Card';
-import CreateProduct from './components/modals/CreateProduct';
+// import CreateProduct from './components/modals/CreateProduct';
 import NewRoomCard from './components/modals/NewRoomCard';
 import NewDishCard from './components/modals/NewDishCard';
 import NewWineCard from './components/modals/NewWineCard';
@@ -15,12 +14,14 @@ import Button from './components/text_inputs/Button';
 import { Tabs } from "flowbite-react";
 import { Table } from "flowbite-react";
 import "./AdminPage.css";
-
+// Нужно
+// (можно будет удалить, когда вставим бэк)
 import Bottle from './components/assets/wine-bottle.png';
 import Calendar from './components/assets/calendar.png';
 import Excursion from './components/assets/excursion.png';
 import Running from './components/assets/running.png';
-// начало фоток для страниц
+// (можно будет удалить, когда вставим бэк)
+// начало фоток для страниц(можно будет удалить, когда вставим бэк)
 import VectorImage from './components/assets/Vector1.png';
 import ThreeBottles from './components/assets/ThreeBottles.png';
 import WineCaps from './components/assets/WineCaps.png';
@@ -30,12 +31,10 @@ import WineReservour from './components/assets/WineReservour.png';
 import WineBarrel from './components/assets/WineBarrel.png';
 import Grape from './components/assets/Grape.png';
 import BottleProduce from './components/assets/BottleProduce.png';
-import GeografieMobile from './components/assets/GeografieMobile.svg';
-import GeografieTablet from './components/assets/GeografieTablet.svg';
-import GeografieComputer from './components/assets/GeografieComputer.svg';
 import GrapeLines from './components/assets/GrapeLines.jpg';
 import BackgroundImage from './images/Wine_Background2_AI.png';
-// конец фоток для страниц
+// конец фоток для страниц(можно будет удалить, когда вставим бэк)
+// Нужно
 import { HiAdjustments, HiClipboardList, HiUserCircle } from "react-icons/hi";
 import { FaTrashAlt } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
@@ -44,6 +43,7 @@ import { FaWineGlassAlt } from "react-icons/fa";
 import { FaHotel } from "react-icons/fa6";
 import { FaHome } from "react-icons/fa";
 import { MdOutlineRestaurant, MdModeEdit } from "react-icons/md";
+// Нужно
 
 // Начальные изображения для комнат
 const initialImages = [
@@ -280,7 +280,6 @@ function AdminPage() {
         },
         historySection: {
           title: "НАША ИСТОРИЯ",
-          backgroundImage: WineCaps,
           leftDates: [
             { year: '1960', description: 'Основание винодельни' },
             { year: '1966', description: 'Первый урожай' },
@@ -295,8 +294,6 @@ function AdminPage() {
         wineSection: {
           firstText: "У нас вы сможете попробовать как классические, так и эксклюзивные вина, созданные по уникальным рецептурам. Наши опытные сомелье помогут вам выбрать вино, которое идеально подойдёт именно для вашего случая.",
           secondText: "Наш каталог включает более 100 наименований вин, среди которых вы обязательно найдете напиток по своему вкусу. Мы гордимся тем, что наши вина получают высокие оценки от экспертов и ценителей со всего мира.",
-          bottleImage: BottleTransparent,
-          bottleImageHorizontal: BottleTransparentHorizontal,
           buttonText: "Наша винотека",
           buttonLink: "/Каталог"
         },
@@ -315,9 +312,6 @@ function AdminPage() {
           title: "ВИННЫЙ РЕГИОН",
           firstText: "Краснодарский край — главный винодельческий регион России с разнообразными сортами винограда и высококачественными винами. Здесь выращивают Каберне Совиньон, Мерло, Шардоне и Ркацители.",
           secondText: "Регион сочетает культуру, красоту природы и винодельческое искусство.",
-          mapImageMobile: GeografieMobile,
-          mapImageTablet: GeografieTablet,
-          mapImageComputer: GeografieComputer,
           backgroundImage: GrapeLines
         }
       }
@@ -326,7 +320,7 @@ function AdminPage() {
       name: "Ресторан", 
       path: "/Ресторан", 
       isActive: true,
-      content: "Контент, содержащийся на этой странице редактируется в другом разделе"
+      content: "Контент, содержащийся на этой странице редактируется в разделе %'Меню Ресторана'"
     },
     {
       name: "Мероприятия", 
@@ -849,12 +843,58 @@ function AdminPage() {
   }, []);
 
   
+  const pageContentHandlers = {
+    "Главная": (page) => (
+      <ExtCard
+        Card={() => (
+          <a href="#" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
+            Править
+          </a>
+        )}
+        ExtContent={() => (
+          <HomeEdit
+            pageData={page.content}
+            onContentChange={(sectionName, updatedData) =>
+              updatePageContent(page.name, sectionName, updatedData)
+            }
+          />
+        )}
+      />
+    ),
+    "Винодельня": (page) => (
+      <ExtCard
+        Card={() => (
+          <a href="#" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
+            Править
+          </a>
+        )}
+        ExtContent={() => (
+          <VineryEdit
+            pageData={page.content}
+            onContentChange={(sectionName, updatedData) =>
+              updatePageContent(page.name, sectionName, updatedData)
+            }
+          />
+        )}
+      />
+    ),
+    "Ресторан": () => (
+      <span className="text-gray-500">
+        Контент редактируется в разделе "Меню Ресторана"
+      </span>
+    ),
+    "Мероприятия": () => (
+      <span className="text-gray-500">
+        Контент редактируется в разделе "Мероприятия"
+      </span>
+    ),
+  };
 
   return (
     <div className="h-screen flex flex-col bg-no-repeat bg-cover">
       <Navbar />
       <div className="container m-auto p-4 mt-auto md:p-6 lg:p-12">
-        <h1 className="text-3xl text-white font-bold mb-4 text-center">Административная панель</h1>
+        <h1 className="text-3xl text-gray-500 font-bold mb-4 text-center">Административная панель</h1>
         
 
         <Tabs aria-label="Tabs with underline" className="tabsContainer" variant="underline">
@@ -864,6 +904,7 @@ function AdminPage() {
                 <Table.Head>
                   <Table.HeadCell>Название страницы</Table.HeadCell>
                   <Table.HeadCell>Статус</Table.HeadCell>
+                  <Table.HeadCell>Действия</Table.HeadCell>
                 </Table.Head>
                 <Table.Body className="divide-y">
                   {pagesContent.map((page) => (
@@ -873,25 +914,11 @@ function AdminPage() {
                       </Table.Cell>
                       <Table.Cell>{page.isActive ? "Сохранено" : "Есть изменения"}</Table.Cell>
                       <Table.Cell>
-                        <ExtCard
-                          Card={() => (
-                            <a href="#" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
-                              Править
-                            </a>
-                          )}
-                          ExtContent={() => (
-                            page.name === "Главная" ? (
-                              <HomeEdit 
-                                pageData={page.content}
-                                onContentChange={(sectionName, updatedData) => 
-                                  updatePageContent(page.name, sectionName, updatedData)
-                                }
-                              />
-                            ) : (
-                              <div>Редактирование этой страницы пока не реализовано</div>
-                            )
-                          )}
-                        />
+                        {pageContentHandlers[page.name] ? pageContentHandlers[page.name](page) : (
+                          <span className="text-gray-500">
+                            {page.content}
+                          </span>
+                        )}
                       </Table.Cell>
                     </Table.Row>
                   ))}
@@ -1044,9 +1071,8 @@ function AdminPage() {
           </Tabs.Item>
 
           <Tabs.Item title="Мероприятия" icon={IoTicket}>
-            This is <span className="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</span>.
-            Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to
-            control the content visibility and styling.
+            Ждём встройки <span className="font-medium text-gray-800 dark:text-white">МОДУЛЯ БРОНИРОВАНИЯ</span>.
+            А пока вкладка будет пустовать...Пупууууу
           </Tabs.Item>
 
           <Tabs.Item title="Ассортимент винодельни" icon={FaWineGlassAlt}>

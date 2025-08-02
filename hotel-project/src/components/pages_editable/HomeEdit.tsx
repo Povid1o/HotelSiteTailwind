@@ -1,15 +1,9 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
-import Card from '../cards/Card';
-import ExtCard from '../cards/ExtCard';
-import ExtGaleryCard from '../cards/ExtGalerycard';
-import BlueSwiper from '../sliders/BlueSwiper';
+import { useState, useCallback} from 'react';
 import PhotoSelector from '../text_inputs/PhotoSelector';
-import ImageWithButton from '../text_inputs/ImageEdit';
 import BackgroundContentEdit from '../text_inputs/BackgroundContentEdit';
 import TextEditor from '../text_inputs/TextEditor';
 import VideoWithUpload from '../text_inputs/VideoWithUpload';
 import BoxEditable from '../text_inputs/BoxEditable';
-import ThSlider from '../sliders/ThumbSlider';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
