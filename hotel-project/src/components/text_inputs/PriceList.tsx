@@ -48,10 +48,12 @@ function PriceList({ globalPrices, onSave = () => {} }) {
 
   const handleAddField = () => {
     setPrices((prevPrices) => [...prevPrices, { title: '', price: '' }]);
+    setDirty(true); // Добавляем флаг изменений при добавлении поля
   };
 
   const handleRemoveField = (index) => {
     setPrices((prevPrices) => prevPrices.filter((_, i) => i !== index));
+    setDirty(true); // ИСПРАВЛЕНИЕ: Устанавливаем флаг изменений при удалении поля
   };
 
   const handleResetDirty = () => {
