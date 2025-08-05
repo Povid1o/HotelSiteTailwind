@@ -5,17 +5,32 @@ import './index.css';
 import App from './App';
 import UserStorage from './storage/UserStorage';
 import ProductStorage from './storage/ProductStorage';
+// Импорты новых хранилищ
+import DishStorage from './storage/DishStorage';
+import HotelStorage from './storage/HotelStorage';
+import PageContentStorage from './storage/PageContentStorage';
+import WineStorage from './storage/WineStorage';
 import { ThemeProvider } from "@material-tailwind/react";
 
 interface AppContext {
   user: UserStorage;
-  product: ProductStorage;
+  product: ProductStorage; // Сохраняем для обратной совместимости
+  // Новые хранилища
+  dish: DishStorage;
+  hotel: HotelStorage;
+  pageContent: PageContentStorage;
+  wine: WineStorage;
 }
 
 export const Context = createContext<AppContext | null>(null);
 
 const userStorage = new UserStorage();
 const productStorage = new ProductStorage();
+// Создание экземпляров новых хранилищ
+const dishStorage = new DishStorage();
+const hotelStorage = new HotelStorage();
+const pageContentStorage = new PageContentStorage();
+const wineStorage = new WineStorage();
 
 const rootElement = document.getElementById('root');
 
@@ -25,7 +40,11 @@ if (rootElement) {
     <Context.Provider
       value={{
         user: userStorage,
-        product: productStorage,
+        product: productStorage, // Оставляем для совместимости
+        dish: dishStorage,
+        hotel: hotelStorage,
+        pageContent: pageContentStorage,
+        wine: wineStorage,
       }}
     >
       <React.StrictMode>

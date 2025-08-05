@@ -45,7 +45,7 @@ const publicrouter = createBrowserRouter([
         element: <Vinery />,
       },
       {
-        path: "/login",
+        path: "/registration",
         element: <Auth/>
       },
       {
