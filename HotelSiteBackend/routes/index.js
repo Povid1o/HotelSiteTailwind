@@ -1,15 +1,18 @@
-const Router = require('express')
-const router = new Router()
-const userRouter = require('./userRouter')
-const typeRouter = require('./typeRouter')
-const productRouter = require('./productRouter')
-const claseRouter = require('./claseRouter')
+const Router = require('express');
+const router = new Router();
 
+// Auth / Users
+router.use('/user', require('./userRouter'));        // registration/login/check
 
+// Legacy каталог
+router.use('/type', require('./typeRouter'));
+router.use('/clase', require('./claseRouter'));
+router.use('/product', require('./productRouter'));
 
-router.use('/user', userRouter)
-router.use('/type', typeRouter)
-router.use('/clase', claseRouter)
-router.use('/product', productRouter)
+// Новые по ТЗ
+router.use('/dishes', require('./dishRouter'));
+router.use('/rooms', require('./roomRouter'));
+router.use('/wines', require('./wineRouter'));
+router.use('/pages', require('./pageRouter'));
 
-module.exports = router
+module.exports = router;
