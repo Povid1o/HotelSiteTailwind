@@ -1,0 +1,17 @@
+.modal-window{
+    @apply bg-white px-8 py-10 lg:pt-20 md:pt-16 text-center relative flex flex-col lg:gap-20 md:gap-16 gap-5 lg:w-[600px] md:w-[400px] w-[300px] ;
+}
+.modal-window-text{
+    font-family: Bitter, serif;
+    color: #80143c;
+    @apply lg:text-[48px]
+    md:text-[30px]
+    text-[25px]
+    md:leading-tight
+    sm:leading-tight
+    leading-tight;
+}
+.button-modal-window {
+    font-family: Bitter, serif;
+    @apply px-4 lg:py-3 py-2 rounded-3xl w-full lg:text-[30px] text-[20px]  font-medium;
+}
