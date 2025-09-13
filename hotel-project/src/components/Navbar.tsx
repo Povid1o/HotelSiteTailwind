@@ -59,6 +59,9 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
           <li className='underlineDesktop text-lg'>
             <Link to='/Мероприятия'>Мероприятия</Link>
           </li>
+            <li className='underlineDesktop text-lg'>
+                <Link to='/ЦентрПроизводства'>Центр производства</Link>
+            </li>
           <li className='underlineDesktop text-lg'>
             <Link to='/admin-pusttusinadjusi'>Панель Админа</Link>
           </li>
@@ -83,6 +86,9 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
           <li className='underlineDesktop text-lg'>
             <Link to='/Мероприятия'>Мероприятия</Link>
           </li>
+            <li className='underlineDesktop text-lg'>
+                <Link to='/ЦентрПроизводства'>Центр производства</Link>
+            </li>
         </ul>
       )}
 
@@ -114,6 +120,9 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
         <li className='py-6 text-4xl underlineMobile'>
           <Link to='/Мероприятия'>Мероприятия</Link>
         </li>
+          <li className='py-6 text-4xl underlineMobile'>
+              <Link to='/ЦентрПроизводства'>Центр Производства</Link>
+          </li>
       </ul>
     </nav>
   );

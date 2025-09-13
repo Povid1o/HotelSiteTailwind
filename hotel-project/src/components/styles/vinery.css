@@ -91,3 +91,8 @@
 .timeline-column:has(.timeline-item:nth-child(4)) {
     @apply justify-evenly;
 }
+
+/*Для ProductionCenter*/
+.slogan{
+    letter-spacing: 26px;
+}

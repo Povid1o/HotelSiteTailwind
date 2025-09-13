@@ -15,6 +15,7 @@ const Auth = lazy(() => import("./Auth.tsx"));
 const AdminPage = lazy(() => import("./AdminPage.tsx"));
 const WinePage = lazy(() => import("./components/cards/WinePage.tsx"));
 const ModalWindow = lazy(() => import('./components/modals/ModalWindow.tsx'))
+const ProductionCenter = lazy(() => import( "./ProductionCenter.tsx"))
 
 
 
@@ -56,7 +57,11 @@ const publicrouter = createBrowserRouter([
       {
         path: "/Каталог/:productId",
         element: <WinePage />,
-      }
+      },
+      {
+        path: "/ЦентрПроизводства",
+        element: <ProductionCenter />,
+      },
     ],
   }
 ]);
@@ -94,6 +99,10 @@ const hiderouter = createBrowserRouter([
       {
         path: "/Каталог/:productId",
         element: <WinePage />,
+      },
+      {
+        path: "/ЦентрПроизводства",
+        element: <ProductionCenter />,
       },
       {
         path: "/login",
