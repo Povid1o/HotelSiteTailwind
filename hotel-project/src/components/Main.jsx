@@ -1,8 +1,10 @@
 import './styles/main.css'
 import {useState} from "react";
+import {useNavigate} from "react-router";
 
 export default function Main(){
     const [hover, setHover] = useState(null)
+    const navigate = useNavigate()
     return(
         <>
             <div className="main-container">
@@ -11,6 +13,7 @@ export default function Main(){
                     ${hover === 'left' ? 'active': hover === 'right' ? 'inactive' : ''}`}
                     onMouseLeave={() => setHover(null)}
                     onMouseEnter={() => setHover('left')}
+                    onClick={() => navigate('/Отель')}
                 >
                     <div className="main-content">
                         <img alt='img'/>
@@ -22,6 +25,7 @@ export default function Main(){
                     ${hover === 'right' ? 'active' : hover === 'left' ? 'inactive' : ''}`}
                     onMouseLeave={() => setHover(null)}
                     onMouseEnter={() => setHover('right')}
+                    onClick={() => navigate('/Винодельня')}
                 >
                     <div className="main-content">
                         <img alt='img'/>
