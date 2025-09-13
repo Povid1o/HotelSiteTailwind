@@ -45,10 +45,10 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
       {user?.isAuth ? (
         <ul className='hidden md:flex '>
           <li className='underlineDesktop text-lg '>
-            <Link to='/'>О нас</Link>
+            <Link to='/О нас'>О нас</Link>
           </li>
           <li className='underlineDesktop text-lg'>
-            <Link to='/'>Отель</Link>
+            <Link to='/Отель'>Отель</Link>
           </li>
           <li className='underlineDesktop text-lg'>
             <Link to='/Винодельня'>Винодельня</Link>
@@ -72,10 +72,10 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
       ) : (
         <ul className='hidden md:flex '>
           <li className='underlineDesktop text-lg '>
-            <Link to='/'>О нас</Link>
+            <Link to='/О нас'>О нас</Link>
           </li>
           <li className='underlineDesktop text-lg'>
-            <Link to='/'>Отель</Link>
+            <Link to='/Отель'>Отель</Link>
           </li>
           <li className='underlineDesktop text-lg'>
             <Link to='/Винодельня'>Винодельня</Link>
@@ -106,10 +106,10 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
         }
       >
         <li className='py-6 text-4xl underlineMobile'>
-          <Link to='/'>О нас</Link>
+          <Link to='/О нас'>О нас</Link>
         </li>
         <li className='py-6 text-4xl underlineMobile'>
-          <Link to='/'>Отель</Link>
+          <Link to='/Отель'>Отель</Link>
         </li>
         <li className='py-6 text-4xl underlineMobile'>
           <Link to='/Винодельня'>Винодельня</Link>

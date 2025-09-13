@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a96bd9dc-7bd3-4ae9-9d4e-36669ea7e2bd" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/hotel-project/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/hotel-project/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hotel-project/src/components/Main.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hotel-project/src/components/styles/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hotel-project/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hotel-project/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hotel-project/src/components/Navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hotel-project/src/components/Navbar.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,8 +20,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript File" />
-        <option value="CSS File" />
         <option value="TypeScript JSX File" />
+        <option value="JSX File" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
