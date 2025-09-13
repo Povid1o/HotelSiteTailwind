@@ -28,7 +28,12 @@ export default function Main(){
                         <h1>Гравитационная винодельня</h1>
                     </div>
                 </div>
-                <div className="main-logo"></div>
+                <div
+                    className={`main-logo 
+                    ${hover === 'left' ? 'logoRight' : 
+                    hover === 'right' ? 'logoLeft' : ''}`}>
+                    <img alt="logo"/>
+                </div>
             </div>
         </>
     )

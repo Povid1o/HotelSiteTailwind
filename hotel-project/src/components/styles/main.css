@@ -1,4 +1,3 @@
-
 .main-container {
     position: relative;
     display: flex;
@@ -6,6 +5,7 @@
     height: 100vh;
     overflow: hidden;
 }
+
 .main-side {
     position: relative;
     flex: 1;
@@ -15,6 +15,7 @@
     justify-content: center;
     overflow: hidden;
 }
+
 .main-side img,
 .main-side {
     width: 100%;
@@ -38,6 +39,7 @@
 .left {
     background: #111;
 }
+
 .right {
     background: #333;
 }
@@ -45,6 +47,7 @@
 .main-side.active {
     flex: 1.5;
 }
+
 .main-side.inactive {
     flex: 0.5;
     filter: brightness(0.6);
@@ -60,12 +63,12 @@
     width: 120px;
     height: 120px;
 }
+
 .main-logo img {
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
-
 
 .logoLeft {
     transform: translate(-350%, -50%);
@@ -73,4 +76,30 @@
 
 .logoRight {
     transform: translate(250%, -50%);
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .main-side {
+        flex: unset;
+        width: 100%;
+        height: 50vh;
+        transition: none;
+    }
+
+    .main-side h1 {
+        font-size: 2rem;
+        transition: none;
+    }
+
+    .main-logo,
+    .logoLeft,
+    .logoRight {
+        transform: translate(-50%, -50%) !important;
+        transition: none;
+    }
 }
