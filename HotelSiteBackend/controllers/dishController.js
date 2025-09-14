@@ -15,6 +15,16 @@ const dishSchema = Joi.object({
   images: Joi.array().items(Joi.object({ url: Joi.string().required(), alt_text: Joi.string().allow('', null), order: Joi.number().integer() })).default([])
 });
 
+const normalizeNutrients = (n) => {
+  if (n === null || n === undefined || n === '') return null;
+  if (typeof n === 'object') return n;
+  if (typeof n === 'string') {
+    const s = n.trim();
+    try { return JSON.parse(s); } catch { return { text: s }; }
+  }
+  return null;
+};
+
 exports.list = asyncHandler(async (req, res) => {
   const categories = await DishCategory.findAll({
     include: [{ model: Dish, as: 'products', include: [{ model: DishImage, as: 'images' }] }],
@@ -28,7 +38,8 @@ exports.list = asyncHandler(async (req, res) => {
 
 exports.create = asyncHandler(async (req, res) => {
   const value = await dishSchema.validateAsync(req.body);
-  const dish = await Dish.create(value, { include: [{ model: DishImage, as: 'images' }] });
+  const payload = { ...value, nutrients: normalizeNutrients(value.nutrients) };
+  const dish = await Dish.create(payload, { include: [{ model: DishImage, as: 'images' }] });
   res.status(201).json(dish);
 });
 
@@ -42,7 +53,8 @@ exports.update = asyncHandler(async (req, res) => {
   const value = await dishSchema.validateAsync(req.body);
   const dish = await Dish.findByPk(req.params.id);
   if (!dish) return res.sendStatus(404);
-  await dish.update(value);
+  const payload = { ...value, nutrients: normalizeNutrients(value.nutrients) };
+  await dish.update(payload);
   await DishImage.destroy({ where: { dish_id: dish.id } });
   if (value.images?.length) {
     await DishImage.bulkCreate(value.images.map(i => ({ ...i, dish_id: dish.id })));

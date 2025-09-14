@@ -9,16 +9,27 @@ const pageSchema = Joi.object({
   content_json: Joi.object().default({})
 });
 
+const toJsonObject = (x) => {
+  if (x && typeof x === 'string') {
+    try { return JSON.parse(x); } catch { return {}; }
+  }
+  return x || {};
+};
+
 exports.list = asyncHandler(async (req, res) => {
   const pages = await Page.findAll();
   res.json(pages);
 });
 
 exports.create = asyncHandler(async (req, res) => {
-  const v = await pageSchema.validateAsync(req.body);
+  const v = await pageSchema.validateAsync({
+    ...req.body,
+    content_json: toJsonObject(req.body.content_json)
+  });
   const p = await Page.create(v);
   res.status(201).json(p);
 });
+
 
 exports.get = asyncHandler(async (req, res) => {
   const p = await Page.findByPk(req.params.id);
@@ -27,12 +38,16 @@ exports.get = asyncHandler(async (req, res) => {
 });
 
 exports.update = asyncHandler(async (req, res) => {
-  const v = await pageSchema.validateAsync(req.body);
+  const v = await pageSchema.validateAsync({
+    ...req.body,
+    content_json: toJsonObject(req.body.content_json)
+  });
   const p = await Page.findByPk(req.params.id);
   if (!p) return res.sendStatus(404);
   await p.update(v);
   res.json(p);
 });
+
 
 exports.remove = asyncHandler(async (req, res) => {
   const p = await Page.findByPk(req.params.id);

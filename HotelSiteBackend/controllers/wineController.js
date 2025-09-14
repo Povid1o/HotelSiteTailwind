@@ -35,28 +35,58 @@ exports.tree = asyncHandler(async (req, res) => {
 });
 
 exports.create = asyncHandler(async (req, res) => {
-  const v = await wineSchema.validateAsync(req.body);
+  const v = await wineSchema.validateAsync({
+    ...req.body,
+    type_id: Number(req.body.type_id),
+    sweetness_id: Number(req.body.sweetness_id)
+  });
+
+  const [type, sweet] = await Promise.all([
+    WineType.findByPk(v.type_id),
+    WineSweetness.findByPk(v.sweetness_id)
+  ]);
+  if (!type || !sweet) return res.status(400).json({ message: 'Invalid type_id or sweetness_id' });
+
   const wine = await Wine.create({ ...v });
-  if (v.description?.length) await WineDescription.bulkCreate(v.description.map((text, idx) => ({ wine_id: wine.id, description_text: text, order: idx + 1 })));
-  if (v.images?.length) await WineImage.bulkCreate(v.images.map(i => ({ ...i, wine_id: wine.id })));
+  if (v.description?.length)
+    await WineDescription.bulkCreate(v.description.map((text, idx) => ({ wine_id: wine.id, description_text: text, order: idx + 1 })));
+  if (v.images?.length)
+    await WineImage.bulkCreate(v.images.map(i => ({ ...i, wine_id: wine.id })));
+
   const withIncludes = await Wine.findByPk(wine.id, { include: ['description','images','type','sweetness'] });
   res.status(201).json(withIncludes);
 });
 
 exports.update = asyncHandler(async (req, res) => {
-  const v = await wineSchema.validateAsync(req.body);
+  const v = await wineSchema.validateAsync({
+    ...req.body,
+    type_id: Number(req.body.type_id),
+    sweetness_id: Number(req.body.sweetness_id)
+  });
+
   const wine = await Wine.findByPk(req.params.id);
   if (!wine) return res.sendStatus(404);
+
+  const [type, sweet] = await Promise.all([
+    WineType.findByPk(v.type_id),
+    WineSweetness.findByPk(v.sweetness_id)
+  ]);
+  if (!type || !sweet) return res.status(400).json({ message: 'Invalid type_id or sweetness_id' });
+
   await wine.update(v);
   await Promise.all([
     WineDescription.destroy({ where: { wine_id: wine.id } }),
     WineImage.destroy({ where: { wine_id: wine.id } }),
   ]);
-  if (v.description?.length) await WineDescription.bulkCreate(v.description.map((text, idx) => ({ wine_id: wine.id, description_text: text, order: idx + 1 })));
-  if (v.images?.length) await WineImage.bulkCreate(v.images.map(i => ({ ...i, wine_id: wine.id })));
+  if (v.description?.length)
+    await WineDescription.bulkCreate(v.description.map((text, idx) => ({ wine_id: wine.id, description_text: text, order: idx + 1 })));
+  if (v.images?.length)
+    await WineImage.bulkCreate(v.images.map(i => ({ ...i, wine_id: wine.id })));
+
   const withIncludes = await Wine.findByPk(wine.id, { include: ['description','images','type','sweetness'] });
   res.json(withIncludes);
 });
+
 
 exports.remove = asyncHandler(async (req, res) => {
   const wine = await Wine.findByPk(req.params.id);

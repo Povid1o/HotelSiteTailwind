@@ -9,4 +9,4 @@ router.get('/:id', productController.getOne)
 router.delete('/:id', checkRole('ADMIN'), productController.delete)
 router.put('/:id', checkRole('ADMIN'), productController.update)
 
-module.exports = router
+module.exports = router;
