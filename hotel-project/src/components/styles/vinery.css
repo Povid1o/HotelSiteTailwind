@@ -94,5 +94,7 @@
 
 /*Для ProductionCenter*/
 .slogan{
-    letter-spacing: 26px;
+    display: block;
+    max-width: 1300px;
+    letter-spacing: 20px;
 }

@@ -5,9 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a96bd9dc-7bd3-4ae9-9d4e-36669ea7e2bd" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/hotel-project/src/components/cards/ProductionCard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hotel-project/src/components/cards/ProductionDesc.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hotel-project/src/components/styles/productionCenter.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel-project/src/components/Main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/hotel-project/src/components/Main.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel-project/src/components/styles/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/hotel-project/src/components/styles/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hotel-project/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/hotel-project/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hotel-project/src/ProductionCenter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hotel-project/src/ProductionCenter.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hotel-project/src/components/EventsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hotel-project/src/components/EventsList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hotel-project/src/components/styles/vinery.css" beforeDir="false" afterPath="$PROJECT_DIR$/hotel-project/src/components/styles/vinery.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,9 +23,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript File" />
-        <option value="TypeScript JSX File" />
         <option value="JSX File" />
         <option value="CSS File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -88,6 +93,8 @@
       <workItem from="1757664943980" duration="935000" />
       <workItem from="1757718390559" duration="3965000" />
       <workItem from="1757781438013" duration="3118000" />
+      <workItem from="1757857984956" duration="2547000" />
+      <workItem from="1757870136216" duration="10137000" />
     </task>
     <servers />
   </component>

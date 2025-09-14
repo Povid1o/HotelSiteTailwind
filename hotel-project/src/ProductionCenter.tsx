@@ -1,13 +1,24 @@
 import "./components/styles/hover.css"
 import './components/styles/vinery.css'
+import './components/styles/productionCenter.css'
 
 import Navbar from "./components/Navbar.tsx";
 import Footer from "./components/Footer.tsx";
 import VectorImage from "./components/assets/Vector1.png";
-// import VectorBranch from "./components/assets/vector-branch.svg";
+import VectorBranch from "./components/assets/VectorBranch.svg"
+import VinogradTransparentBg from "./components/assets/VinogradTransparentBg.png"
+import GrapePlant from './components/assets/GrapePlant.png'
 import React from "react";
+import ProductionCard from "./components/cards/ProductionCard.tsx";
+import ProductionDesc from "./components/cards/ProductionDesc.tsx";
 
-export default function ProductionCenter() {
+interface ProductionCenterProps {
+    title?: string,
+    description?:string,
+    position?: string,
+}
+
+export default function ProductionCenter({title}: ProductionCenterProps) {
     return (
         <>
             <Navbar></Navbar>
@@ -18,7 +29,7 @@ export default function ProductionCenter() {
                     <div className="relative bg-[url('./components/assets/VineryBackground.png')] header-background">
                         <div className='header-page'>
                             <h3 className='text-[47px] font-medium'>Центр производства локальных продуктов</h3>
-                            <h1 className="text-[48px] leading-[58px] md:text-[88px] lg:text-[152px] md:leading-[105px] lg:leading-[183px]">
+                            <h1 className="section-title font-bold">
                                 БОЛЬШИЕ ХУТОРА
                             </h1>
                         </div>
@@ -28,65 +39,114 @@ export default function ProductionCenter() {
                             src={VectorImage}
                             alt="Разделительный вектор"
                             className="absolute z-[1] bottom-0 w-screen left-1/2 transform"
-                            style={{ transform: 'translateX(-50%) translateY(45%)' }}
+                            style={{transform: 'translateX(-50%) translateY(45%)'}}
                         />
                     </div>
-
 
 
                 </header>
 
                 {/*Опционально лозунг*/}
                 <section className='flex justify-center'>
+
                     <div className='flex flex-col items-center'>
-                        <div><h1 className='text-[60px] my-32 font-medium text-main_theme text-center slogan'>Мы пишем красивые слоганы</h1></div>
-                        {/*<img src={VectorBranch}*/}
-                        {/*     alt="Декоративный вектор"*/}
-                        {/*/>*/}
+                        <div><h1 className='text-[60px] my-32 font-medium text-main_theme text-center slogan'>Мы пишем
+                            красивые слоганы</h1></div>
+                        <img src={VectorBranch}
+                             alt="Декоративный вектор"
+                        />
                     </div>
                 </section>
 
                 {/*О проекте*/}
-                <section className='flex flex-col justify-center items-center text-gray-700 gap-10 p-20'>
-                    <h1 className="text-[48px] font-semibold leading-[58px] md:text-[80px] lg:text-[96px] md:leading-[105px] lg:leading-[183px]">
+                <section className='w-full flex flex-col justify-center items-center text-[#3E4756] gap-10 p-20'>
+                    <h1 className="section-title">
                         О ПРОЕКТЕ
                     </h1>
-                    <div className=' mx-auto flex flex-row bg-white rounded-xl drop-shadow-2xl'>
-                        <div className="'w-2/3 h-full bg-[url('./components/assets/VineryBackground.png')] bg-no-repeat bg-cover bg-blend-multiply w-full h-screen'">
-                        </div>
 
-                        <div className="w-full p-10 font-body">
-                            <h1 className="header-section pr-16 text-3xl font-bold ">О ЧЕМ ЦЕНТР ПРОИЗВОДСТВА</h1>
-                            <p className="max-w-screen-lg font-light text-left  bg-white text-xs md:text-base lg:text-lg xl:text-2xl pt-8">
-                                Отель-винодельня "Винные Террассы" - это уникальное место, сочетающее в себе шарм и гостеприимство с изысканными винами, произведенным нашими виноделами по собственному рецепту. Мы предлагаем гостям возможность насладиться роскошью и комфортом, а также окунуться в удивительный мир виноделия, попробовать уникальные сорта вин и узнать историю их создания.
-                            </p>
-                        </div>
-
-                    </div>
-                    <div className='max-w-[700px] mx-auto bg-white rounded-xl drop-shadow-2xl max-sm:w-5/6 md:w-3/4 lg:max-w-[900px] xl:mx-8'>
-
-                        <div className="w-full p-10 py-5 font-body">
-                            <h1 className="header-section pr-16 text-3xl font-bold text-gray-700">О ЧЕМ ЦЕНТР ПРОИЗВОДСТВА</h1>
-                            <p className="max-w-screen-lg font-light text-left text-gray-700 bg-white text-xs md:text-base lg:text-lg xl:text-2xl pt-8">
-                                Отель-винодельня "Винные Террассы" - это уникальное место, сочетающее в себе шарм и гостеприимство с изысканными винами, произведенным нашими виноделами по собственному рецепту. Мы предлагаем гостям возможность насладиться роскошью и комфортом, а также окунуться в удивительный мир виноделия, попробовать уникальные сорта вин и узнать историю их создания.
-                            </p>
-                        </div>
-
-                    </div>
+                    <ProductionCard title={"О ЧЕМ ЦЕНТР ПРОИЗВОДСТВА"} description={'Не очень много текста. Может 2-3 предложения. С этим размером шрифта всё понятнее'}/>
+                    <ProductionCard title={"НАША ФИЛОСОФИЯ"} description={'Не очень много текста. Может 2-3 предложения. С этим размером шрифта всё понятнее'}/>
 
                 </section>
 
                 {/*Производство (видосы)*/}
-                <section></section>
+                <section className='relative z-[0]'>
+                    <img
+                            src={VectorImage}
+                            alt="Разделительный вектор"
+                            className="absolute z-[1] top-[-280px] w-screen left-1/2 transform"
+                            style={{transform: 'translateX(-50%) translateY(45%)'}}
+                        />
+
+                    <div className='bg-main_theme flex flex-col w-full gap-20 py-40 px-20'>
+                        <img
+                            src={GrapePlant}
+                            alt='ветка винограда'
+                            className='z-[2] absolute top-[-100px] right-0 w-5/6'
+                        />
+                        <ProductionDesc position={''} title={'Преимущества свежих местных продуктов'} description={'Описание. 2-3 предложения'}></ProductionDesc>
+                        <ProductionDesc position={'justify-end'} title={'Связь с основной деятельностью винодельни'} description={'Описание. 2-3 предложения'}></ProductionDesc>
+
+                    </div>
+                    <div className='flex flex-col gap-10 py-40 px-10 bg-[url("./components/assets/ProductionBg.png")] text-gray-700'>
+                        <ProductionCard title={'Название видео'} description={'Описание видео. 2-3 предложения'}></ProductionCard>
+                        <ProductionCard title={'Название видео'} description={'Описание видео. 2-3 предложения'}></ProductionCard>
+                    </div>
+                    <img src={VinogradTransparentBg}
+                         alt="гроздь винограда"
+                         className='z-[2] absolute bottom-1/3 size-2/5'
+                    />
+                    <img
+                            src={VectorImage}
+                            alt="Разделительный вектор"
+                            className="absolute z-[1] bottom-0 w-screen left-1/2 transform"
+                            style={{transform: 'translateX(-50%) translateY(45%)'}}
+                        />
+                </section>
 
                 {/*Продукты*/}
-                <section></section>
+                <section className='w-full flex flex-col justify-center items-center text-[#3E4756] gap-10 p-20'>
+                    <h1 className="section-title text-[#3E4756]">
+                        Продукты
+                    </h1>
+                </section>
 
                 {/*Где купить*/}
-                <section></section>
+                <section className='bg-main_theme text-white w-full flex flex-col justify-center items-center gap-10 p-20'>
+                    <img src={VectorBranch}
+                         alt="Декоративный вектор"
+                         className='absolute'
+                    />
+                    <h1 className="section-title">
+                        где купить
+                    </h1>
+                    <div className='w-full'>
+                        <ul className='text-3xl font-light'>
+                            <li><span className='font-bold'>Основной магазин на территории винодельни: </span>Адрес</li>
+                            <li><span className='font-bold'>Партнерские точки продаж: </span>Адрес</li>
+                            <li><span className='font-bold'>Возможность заказа/доставки: </span>Адрес</li>
+                            <li><span className='font-bold'>Контактная информация для оптовых покупателей: </span>Адрес</li>
+                        </ul>
+                    </div>
+                </section>
 
                 {/*Дополнительные услуги*/}
-                <section></section>
+                <section className='text-[#3E4756] text-center w-full flex flex-col justify-center items-center gap-10 p-20'>
+                    <h1 className="text-[48px]  leading-[58px] md:text-[88px] lg:text-[140px] md:leading-[105px] lg:leading-[183px] font-semibold uppercase">
+                        дополнительные услуги
+                    </h1>
+                    <div>
+
+                    </div>
+                    <img src={VectorBranch}
+                         alt="Декоративный вектор"
+                         className='absolute'
+                    />
+                    <img src={VectorBranch}
+                         alt="Декоративный вектор"
+                         className='absolute'
+                    />
+                </section>
             </main>
             <Footer></Footer>
         </>

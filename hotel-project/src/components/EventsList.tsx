@@ -27,11 +27,6 @@ function EventsList() {
     //     {categorie : "Спорт", news: [{header : "", description : "", imgSrc : ``}, {header : "", description : "", imgSrc : ``}]}, 
     //     {categorie : "Open-air", news: [{header : "", description : "", imgSrc : ``}, {header : "", description : "", imgSrc : ``}]},]
 
-
-
-
-
-
     const events = [{
         categorie: "Дегустации",
         news: [{
