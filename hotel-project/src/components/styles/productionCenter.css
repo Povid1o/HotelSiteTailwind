@@ -2,5 +2,5 @@
     @apply text-[48px] leading-[58px] md:text-[88px] lg:text-[152px] md:leading-[105px] lg:leading-[183px] font-semibold uppercase;
 }
 .card-title{
-    @apply text-[64px] pr-16 font-bold;
+    @apply text-[18px] sm:text-[25px] md:text-[30px] lg:text-[35px] font-bold;
 }

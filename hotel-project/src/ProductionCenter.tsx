@@ -1,16 +1,47 @@
+import React, {useCallback, useState} from "react";
+
 import "./components/styles/hover.css"
 import './components/styles/vinery.css'
 import './components/styles/productionCenter.css'
 
 import Navbar from "./components/Navbar.tsx";
 import Footer from "./components/Footer.tsx";
+import ProductionCard from "./components/cards/ProductionCard.tsx";
+import ProductionDesc from "./components/cards/ProductionDesc.tsx";
+
 import VectorImage from "./components/assets/Vector1.png";
 import VectorBranch from "./components/assets/VectorBranch.svg"
 import VinogradTransparentBg from "./components/assets/VinogradTransparentBg.png"
 import GrapePlant from './components/assets/GrapePlant.png'
-import React from "react";
-import ProductionCard from "./components/cards/ProductionCard.tsx";
-import ProductionDesc from "./components/cards/ProductionDesc.tsx";
+import Search from "./components/Search.tsx";
+import WineCard from "./components/cards/WineCard.tsx";
+
+interface Store {
+    id?: number,
+    name?: string,
+    description?: string,
+    image?: string,
+}
+const store: Store[] = [
+    {
+        id: 1,
+        name: 'Название продукта',
+        description: 'Описание продукта',
+        image: '',
+    },
+    {
+        id: 2,
+        name: 'Название продукта',
+        description: 'Описание продукта',
+        image: '',
+    },
+    {
+        id: 3,
+        name: 'Название продукта',
+        description: 'Описание продукта',
+        image: '',
+    }
+]
 
 interface ProductionCenterProps {
     title?: string,
@@ -19,6 +50,14 @@ interface ProductionCenterProps {
 }
 
 export default function ProductionCenter({title}: ProductionCenterProps) {
+    const [searchQuery, setSearchQuery] = useState('');
+    // Состояние для текущей страницы пагинации
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const handleSearch = useCallback((query: string) => {
+        setSearchQuery(query);
+        setCurrentPage(1); // Сбрасываем на первую страницу при изменении поиска
+    }, []);
     return (
         <>
             <Navbar></Navbar>
@@ -28,7 +67,7 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
 
                     <div className="relative bg-[url('./components/assets/VineryBackground.png')] header-background">
                         <div className='header-page'>
-                            <h3 className='text-[47px] font-medium'>Центр производства локальных продуктов</h3>
+                            <h3 className='text-[25px] md:text-[35px] lg:text-[47px] font-medium'>Центр производства локальных продуктов</h3>
                             <h1 className="section-title font-bold">
                                 БОЛЬШИЕ ХУТОРА
                             </h1>
@@ -50,7 +89,7 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                 <section className='flex justify-center'>
 
                     <div className='flex flex-col items-center'>
-                        <div><h1 className='text-[60px] my-32 font-medium text-main_theme text-center slogan'>Мы пишем
+                        <div><h1 className='text-[20px] md:text-[40px] lg:text-[60px] my-32 sm:my-10 font-medium text-main_theme text-center slogan'>Мы пишем
                             красивые слоганы</h1></div>
                         <img src={VectorBranch}
                              alt="Декоративный вектор"
@@ -59,19 +98,20 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                 </section>
 
                 {/*О проекте*/}
-                <section className='w-full flex flex-col justify-center items-center text-[#3E4756] gap-10 p-20 pb-52'>
-                    <h1 className="section-title my-24">
+                <section className='w-full flex flex-col justify-center items-center text-[#3E4756] gap-10 sm:p-5 p-20 pb-52 sm:pb-20'>
+                    <h1 className="section-title my-24 sm:my-10">
                         О ПРОЕКТЕ
                     </h1>
 
                     <ProductionCard
                         imageStyle='w-[700px]'
-                        spesialDesc={'text-xs md:text-xl lg:text-2xl xl:text-3xl'}
+                        spesialTitle={'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold'}
                         title={"О ЧЕМ ЦЕНТР ПРОИЗВОДСТВА"}
                         description={'Не очень много текста. Может 2-3 предложения. С этим размером шрифта всё понятнее'}/>
                     <ProductionCard
                         imageStyle='w-[700px]'
-                        spesialDesc={'text-xs md:text-xl lg:text-2xl xl:text-3xl'}
+                        spesialTitle={'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold'}
+                        spesialDesc={''}
                         title={"НАША ФИЛОСОФИЯ"}
                         description={'Не очень много текста. Может 2-3 предложения. С этим размером шрифта всё понятнее'}/>
 
@@ -97,12 +137,16 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
 
                     </div>
                     <div className='flex flex-col gap-10 py-40 px-10 bg-[url("./components/assets/ProductionBg.png")] text-gray-700'>
-                        <ProductionCard title={'Название видео'} description={'Описание видео. 2-3 предложения'}></ProductionCard>
-                        <ProductionCard title={'Название видео'} description={'Описание видео. 2-3 предложения'}></ProductionCard>
+                        <ProductionCard
+                            spesialTitle={'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold'}
+                            title={'Название видео'} description={'Описание видео. 2-3 предложения'}></ProductionCard>
+                        <ProductionCard
+                            spesialTitle={'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold'}
+                            title={'Название видео'} description={'Описание видео. 2-3 предложения'}></ProductionCard>
                     </div>
                     <img src={VinogradTransparentBg}
                          alt="гроздь винограда"
-                         className='z-[2] absolute bottom-1/3 size-2/5'
+                         className='z-[2] absolute bottom-1/3 w-2/5'
                     />
                     <img
                             src={VectorImage}
@@ -117,45 +161,67 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                     <h1 className="section-title text-[#3E4756]">
                         Продукты
                     </h1>
+                    <Search
+                        isMobile={false}
+                        onSearch={handleSearch}
+                        suggestionsList={store.map(p => p.name)}
+                    />
+                    <div className="flex justify-between w-full items-center mt-4">
+                        {store.map((value) => (
+                            <WineCard
+                                key={value.id}
+                                header={value.name}
+                                imgSrc={value.image}
+                                to={`/Каталог/${value.id}`}
+                                state={{value}}
+                            ></WineCard>
+                        ))}
+                    </div>
                 </section>
 
                 {/*Где купить*/}
-                <section className='bg-main_theme text-white w-full flex flex-col justify-center items-center gap-10 p-20 relative'>
+                <section className='bg-main_theme text-white w-full flex flex-col justify-center items-center gap-40 p-40 pb-60 relative'>
                     <h1 className="section-title z-[2]">
                         где купить
                     </h1>
                     <img src={VectorBranch}
                          alt="Декоративный вектор"
-                         className='absolute z-[1] right-[-200px] rotate-[45deg]'
+                         className='absolute z-[1] right-[-200px] top-[150px] rotate-[45deg]'
                     />
                     <div className='w-full'>
                         <ul className='text-3xl font-light'>
-                            <li><span className='font-bold'>Основной магазин на территории винодельни: </span>Адрес</li>
-                            <li><span className='font-bold'>Партнерские точки продаж: </span>Адрес</li>
-                            <li><span className='font-bold'>Возможность заказа/доставки: </span>Адрес</li>
-                            <li><span className='font-bold'>Контактная информация для оптовых покупателей: </span>Адрес</li>
+                            <li className=' mb-10'><span className='font-bold'>Основной магазин на территории винодельни: </span>Адрес</li>
+                            <li className=' mb-10'><span className='font-bold'>Партнерские точки продаж: </span>Адрес</li>
+                            <li className=' mb-10'><span className='font-bold'>Возможность заказа/доставки: </span>Адрес</li>
+                            <li className=' mb-10'><span className='font-bold'>Контактная информация для оптовых покупателей: </span>Адрес</li>
                         </ul>
                     </div>
+                    <img
+                        src={VectorImage}
+                        alt="Разделительный вектор"
+                        className="absolute z-[1] bottom-0 w-screen left-1/2 transform"
+                        style={{transform: 'translateX(-50%) translateY(45%)'}}
+                    />
                 </section>
 
                 {/*Дополнительные услуги*/}
-                <section className='text-[#3E4756] text-center w-full flex flex-col justify-center items-center gap-10 p-20'>
-                    <h1 className="text-[48px]  leading-[58px] md:text-[88px] lg:text-[140px] md:leading-[105px] lg:leading-[183px] font-semibold uppercase">
+                <section className='relative text-[#3E4756] text-center w-full flex flex-col justify-center items-center gap-10 p-20'>
+                    <h1 className="text-[48px] z-[2] leading-[58px] md:text-[88px] lg:text-[140px] md:leading-[105px] lg:leading-[183px] font-semibold uppercase">
                         дополнительные услуги
                     </h1>
-                    <div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
+                    <div className="w-full flex justify-between ">
+                        <div className="w-80 h-80 bg-black flex items-end justify-start p-5 z-[2] rounded-xl"><div className="text-2xl text-white">Название</div></div>
+                        <div className="w-80 h-80 bg-black flex items-end justify-start p-5 z-[2] rounded-xl"><div className="text-2xl text-white">Название</div></div>
+                        <div className="w-80 h-80 bg-black flex items-end justify-start p-5 z-[2] rounded-xl"><div className="text-2xl text-white">Название</div></div>
+                        <div className="w-80 h-80 bg-black flex items-end justify-start p-5 z-[2] rounded-xl"><div className="text-2xl text-white">Название</div></div>
                     </div>
                     <img src={VectorBranch}
                          alt="Декоративный вектор"
-                         className='absolute'
+                         className='absolute z-[1] top-1/3  left-0 rotate-[-160deg]'
                     />
                     <img src={VectorBranch}
                          alt="Декоративный вектор"
-                         className='absolute'
+                         className='absolute z-[1] bottom-0 right-0 rotate-[30deg]'
                     />
                 </section>
             </main>
