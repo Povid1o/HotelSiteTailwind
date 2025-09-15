@@ -59,13 +59,21 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                 </section>
 
                 {/*О проекте*/}
-                <section className='w-full flex flex-col justify-center items-center text-[#3E4756] gap-10 p-20'>
-                    <h1 className="section-title">
+                <section className='w-full flex flex-col justify-center items-center text-[#3E4756] gap-10 p-20 pb-52'>
+                    <h1 className="section-title my-24">
                         О ПРОЕКТЕ
                     </h1>
 
-                    <ProductionCard title={"О ЧЕМ ЦЕНТР ПРОИЗВОДСТВА"} description={'Не очень много текста. Может 2-3 предложения. С этим размером шрифта всё понятнее'}/>
-                    <ProductionCard title={"НАША ФИЛОСОФИЯ"} description={'Не очень много текста. Может 2-3 предложения. С этим размером шрифта всё понятнее'}/>
+                    <ProductionCard
+                        imageStyle='w-[700px]'
+                        spesialDesc={'text-xs md:text-xl lg:text-2xl xl:text-3xl'}
+                        title={"О ЧЕМ ЦЕНТР ПРОИЗВОДСТВА"}
+                        description={'Не очень много текста. Может 2-3 предложения. С этим размером шрифта всё понятнее'}/>
+                    <ProductionCard
+                        imageStyle='w-[700px]'
+                        spesialDesc={'text-xs md:text-xl lg:text-2xl xl:text-3xl'}
+                        title={"НАША ФИЛОСОФИЯ"}
+                        description={'Не очень много текста. Может 2-3 предложения. С этим размером шрифта всё понятнее'}/>
 
                 </section>
 
@@ -112,14 +120,14 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                 </section>
 
                 {/*Где купить*/}
-                <section className='bg-main_theme text-white w-full flex flex-col justify-center items-center gap-10 p-20'>
-                    <img src={VectorBranch}
-                         alt="Декоративный вектор"
-                         className='absolute'
-                    />
-                    <h1 className="section-title">
+                <section className='bg-main_theme text-white w-full flex flex-col justify-center items-center gap-10 p-20 relative'>
+                    <h1 className="section-title z-[2]">
                         где купить
                     </h1>
+                    <img src={VectorBranch}
+                         alt="Декоративный вектор"
+                         className='absolute z-[1] right-[-200px] rotate-[45deg]'
+                    />
                     <div className='w-full'>
                         <ul className='text-3xl font-light'>
                             <li><span className='font-bold'>Основной магазин на территории винодельни: </span>Адрес</li>
@@ -136,7 +144,10 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                         дополнительные услуги
                     </h1>
                     <div>
-
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
                     </div>
                     <img src={VectorBranch}
                          alt="Декоративный вектор"
