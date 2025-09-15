@@ -310,47 +310,47 @@ function EventContent() {
 
             <div>
 
-                <div className=" font-body mx-auto my-16 max-sm:w-5/6 sm:w-3/4">
 
-                    <div className="w-3/4">
-                        <h1 className="mt-4 font-bold max-sm:text-2xl sm:text-3xl">Предстоящие</h1>
-                        <p className="font-extrabold max-sm:text-4xl sm:text-6xl">Мероприятия</p>
+            </div>
+            </div>
+
+            <div className=" font-body mx-auto my-16 max-sm:w-5/6 sm:w-3/4">
+
+                <div className="w-3/4">
+                    <h1 className="mt-4 font-bold max-sm:text-2xl sm:text-3xl">Предстоящие</h1>
+                    <p className="font-extrabold max-sm:text-4xl sm:text-6xl">Мероприятия</p>
+                </div>
+
+                <ul className="mx-auto my-8 flex flex-wrap flex-row justify-evenly">
+                    {categories.map(({header, image}) => (
+                        <Link key={header} to={`/Мероприятия/${header}`} className="flex flex-col w-[150px]">
+                            <img src={image} className="w-[100px] h-[100px] mx-auto bg-[#f0f0f0] p-2 rounded-xl" />
+                            <p className="mx-auto my-2 font-bold text-lg">{header}</p>
+                        </Link>
+                    ))}
+                </ul>
+
+                <div className="relative max-sm:h-[90px] sm:h-[120px]">
+                    <div className="absolute top-0 right-0">
+                        <h1 className="mt-4 font-bold max-sm:text-2xl sm:text-3xl">Откройте для себя</h1>
+                        <p className="font-extrabold max-sm:text-4xl sm:text-6xl">Винодельню</p>
                     </div>
-
-                    <ul className="mx-auto my-8 flex flex-wrap flex-row justify-evenly">
-                        {categories.map(({header, image}) => (
-                            <Link key={header} to={`/Мероприятия/${header}`} className="flex flex-col w-[150px]">
-                                <img src={image} className="w-[100px] h-[100px] mx-auto bg-[#f0f0f0] p-2 rounded-xl" />
-                                <p className="mx-auto my-2 font-bold text-lg">{header}</p>
-                            </Link>
-                        ))}
-                    </ul>
-
-                    <div className="relative max-sm:h-[90px] sm:h-[120px]">
-                        <div className="absolute top-0 right-0">
-                            <h1 className="mt-4 font-bold max-sm:text-2xl sm:text-3xl">Откройте для себя</h1>
-                            <p className="font-extrabold max-sm:text-4xl sm:text-6xl">Винодельню</p>
-                        </div>
-                    </div>
-                    <ul className="grid gap-4 grid-cols-2 mx-auto ">
-                        <ExtCard
+                </div>
+                <ul className="grid gap-4 grid-cols-2 mx-auto ">
+                    <ExtCard
                         Card={EventCard1}
                         ExtContent={ExtStandart}/>
 
-                        <ExtCard
+                    <ExtCard
                         Card={EventCard2}
                         ExtContent={ExtStandart}/>
 
-                        <ExtCard
+                    <ExtCard
                         Card={EventCard3}
                         ExtContent={ExtStandart}/>
-                    </ul>
-
-                </div>
+                </ul>
 
             </div>
-            </div>
-
         </div>
         
     );
