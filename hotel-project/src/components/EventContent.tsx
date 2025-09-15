@@ -11,6 +11,7 @@ import RunningIcon from "./assets/running.png";
 import OpenAirIcon from "./assets/open-air.png";
 import { Link } from "react-router-dom";
 import ProductionCard from "./cards/ProductionCard.tsx";
+import './styles/ExitButton.css'
 
 
 const EventCard1 = () => {
@@ -111,11 +112,13 @@ function EventContent() {
                 max-w-[1200px] text-[#3E4756] p-10
                 ${isOpen ? "translate-x-0" : "translate-x-full"}`}
             >
-                <button onClick={() => setIsOpen(false)} className="absolute top-4 right-4 z-20 p-2 rounded hover:bg-gray-100">
-                    <div>x</div>
+                <button onClick={() => setIsOpen(false)} className="absolute top-4 right-4 z-20 p-2  cl-btn-6">
+                    <div className="cl-btn-6-in">
+                        <label className="cl-btn-6-txt text-gray-600">Close</label>
+                    </div>
                 </button>
 
-                <div className="flex flex-col gap-10">
+                <div className="flex flex-col gap-10 font-body">
                     <div>
                         <h2 className="text-[35px] font-bold">Специальные дегустации в рамках этногастрономического фестиваля “Черноморская винная неделя” 29.09-05.10.2025 года</h2>
                         <div className='h-[3px] w-full bg-[#3E4756]'></div>
