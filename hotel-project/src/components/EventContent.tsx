@@ -249,11 +249,14 @@ function EventContent() {
                 transform transition-transform duration-300 ease-in-out overflow-y-auto w-full sm:w-2/3 
                 max-w-[1200px] text-[#3E4756] p-3 md:p-10 lg:p-10
                 ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
-                <button onClick={() => setIsOpen(false)} className="absolute top-4 right-4 z-20 p-2  cl-btn-6">
-                    <div className="cl-btn-6-in">
-                        <label className="cl-btn-6-txt mr-3 text-gray-600">Close</label>
-                    </div>
-                </button>
+                <div className="relative mb-2">
+                    <button onClick={() => setIsOpen(false)} className="absolute left-[99%] z-20 cl-btn-6">
+                        <div className="cl-btn-6-in">
+                            <label className="cl-btn-6-txt text-gray-600">Close</label>
+                        </div>
+                    </button>
+                </div>
+
 
 
                 <div className="flex flex-col gap-10 font-body">
@@ -262,9 +265,8 @@ function EventContent() {
                         <h2 className="text-[20px] md:text-[30px] lg:text-[35px] font-bold">Специальные дегустации в рамках этногастрономического фестиваля “Черноморская винная неделя” 29.09-05.10.2025 года</h2>
                         <div className='h-[3px] w-full bg-[#3E4756]'></div>
                     </div>
-                    {/*{renderProductionCards()}*/}
                     <ProductionCard
-                        imageStyle='w-[100px]'
+                        imageStyle={`w-[100px]')]`}
                         spesialTitle=''
                         spesialDesc={'text-xs md:text-1 lg:text-xl xl:text-2xl'}
                         title={"Экскурсия по винодельне и дегустационный сет  “КРЫМ И МАТЕРИК в одних руках”"}
