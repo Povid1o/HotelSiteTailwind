@@ -1,6 +1,6 @@
 .section-title{
-    @apply text-[48px] leading-[58px] md:text-[88px] lg:text-[152px] md:leading-[105px] lg:leading-[183px] font-semibold uppercase;
+    @apply text-[30px] sm:text-[48px] leading-[58px] text-center md:text-[88px] lg:text-[152px] md:leading-[105px] lg:leading-[183px] font-semibold uppercase;
 }
 .card-title{
-    @apply text-[18px] sm:text-[25px] md:text-[30px] lg:text-[35px] font-bold;
+    @apply text-[18px] md:text-[30px] lg:text-[35px] font-bold;
 }

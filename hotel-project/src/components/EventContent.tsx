@@ -10,8 +10,10 @@ import SeasonIcon from "./assets/calendar.png";
 import RunningIcon from "./assets/running.png";
 import OpenAirIcon from "./assets/open-air.png";
 import { Link } from "react-router-dom";
-import ProductionCard from "./cards/ProductionCard.tsx";
+// @ts-ignore
+import ProductionCard from './cards/ProductionCard.tsx';
 import './styles/ExitButton.css'
+// @ts-ignore
 import {description1, description2, description3, description4, description5, description6} from './modals/CreateDesc.tsx'
 // import {TsConfigJson} from "type-fest";
 // import JSX = TsConfigJson.CompilerOptions.JSX;
@@ -172,10 +174,9 @@ import {description1, description2, description3, description4, description5, de
 const EventCard1 = () => {
     return(
         <EventCard
-        imgSrc="https://cdn.amwine.ru/upload/blog/07-02-2019/2.jpg"
-        title="Дегустация весенних новинок"
-        description="Расслабьтесь и насладитесь сезоном"
-        />
+            imgSrc="https://cdn.amwine.ru/upload/blog/07-02-2019/2.jpg"
+            title="Дегустация весенних новинок"
+            description="Расслабьтесь и насладитесь сезоном" children={undefined}        />
     )
 }
 
@@ -184,7 +185,7 @@ const EventCard2 = () => {
         <EventCard
         imgSrc="https://i.pinimg.com/736x/72/79/bc/7279bc3fb8f11d45856513e716181442.jpg"
         title="Дегустация на пляже"
-        description="Расслабьтесь и насладитесь сезоном"
+        description="Расслабьтесь и насладитесь сезоном" children={undefined}
         />
     )
 }
@@ -195,6 +196,7 @@ const EventCard3 = () => {
         imgSrc="https://static.tildacdn.one/tild6132-3637-4466-b866-326238653261/_______________21-5-.jpg"
         title="Винный ужин от шеф-повара"
         description="Расслабьтесь и насладитесь сезоном"
+        children={undefined}
         />
     )
 }
@@ -250,7 +252,7 @@ function EventContent() {
                 max-w-[1200px] text-[#3E4756] p-3 md:p-10 lg:p-10
                 ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
                 <div className="relative mb-2">
-                    <button onClick={() => setIsOpen(false)} className="absolute left-[99%] z-20 cl-btn-6">
+                    <button onClick={() => setIsOpen(false)} className="absolute top-4 right-4 z-20 cl-btn-6">
                         <div className="cl-btn-6-in">
                             <label className="cl-btn-6-txt text-gray-600">Close</label>
                         </div>
@@ -310,10 +312,7 @@ function EventContent() {
 
                 </div>
 
-            <div>
 
-
-            </div>
             </div>
 
             <div className=" font-body mx-auto my-16 max-sm:w-5/6 sm:w-3/4">
