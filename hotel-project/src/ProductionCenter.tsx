@@ -1,4 +1,5 @@
 import React, {useCallback, useState} from "react";
+import { Link } from 'react-router-dom';
 
 import "./components/styles/hover.css"
 import './components/styles/vinery.css'
@@ -32,23 +33,24 @@ interface Store {
 const store: Store[] = [
     {
         id: 1,
-        name: 'Название продукта',
+        name: 'Название продукта1',
         description: 'Описание продукта',
-        image: '',
+        image: '/images/Wine_Background.png',
     },
     {
         id: 2,
-        name: 'Название продукта',
+        name: 'Название продукта2',
         description: 'Описание продукта',
-        image: '',
+        image: '/images/Wine_Background.png',
     },
     {
         id: 3,
-        name: 'Название продукта',
+        name: 'Название продукта3',
         description: 'Описание продукта',
-        image: '',
+        image: '/images/Wine_Background.png',
     }
 ]
+
 
 interface ProductionCenterProps {
     title?: string,
@@ -206,21 +208,21 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                 </section>
 
                 {/*Где купить*/}
-                <section className='bg-main_theme text-white w-full flex flex-col justify-center items-center gap-10 md:gap-20 lg:gap-40 p-5 md:p-20 lg:p-40 pb-60 relative'>
+                <section className='bg-main_theme text-white w-full flex flex-col justify-center items-center gap-10 md:gap-20 lg:gap-40 p-5 md:p-20 lg:p-40 md:pb-60 lg:pb-60 relative'>
                     <h1 className="section-title z-[2]">
                         где купить
                     </h1>
 
                     <img src={VectorBranch}
                          alt="Декоративный вектор"
-                         className='absolute z-[1] right-[-200px] top-[150px] rotate-[45deg]'
+                         className='absolute z-[1] invisible md:visible lg:visible md:right-[-300px] md:top-[180px] lg:right-[-200px] lg:top-[150px] rotate-[45deg]'
                     />
                     <div className='w-full'>
-                        <ul className='text-xl md:text-2xl lg:text-3xl font-light'>
-                            <li className=' mb-10'><span className='font-bold'>Основной магазин на территории винодельни: </span>Адрес</li>
-                            <li className=' mb-10'><span className='font-bold'>Партнерские точки продаж: </span>Адрес</li>
-                            <li className=' mb-10'><span className='font-bold'>Возможность заказа/доставки: </span>Адрес</li>
-                            <li className=' mb-10'><span className='font-bold'>Контактная информация для оптовых покупателей: </span>Адрес</li>
+                        <ul className='text-xl md:text-2xl lg:text-3xl font-light '>
+                            <li className='z-[2] mb-10'><span className='font-bold '>Основной магазин на территории винодельни: </span>Адрес</li>
+                            <li className='z-[2] mb-10'><span className='font-bold '>Партнерские точки продаж: </span>Адрес</li>
+                            <li className='z-[2] mb-10'><span className='font-bold '>Возможность заказа/доставки: </span>Адрес</li>
+                            <li className='z-[2] mb-10'><span className='font-bold '>Контактная информация для оптовых покупателей: </span>Адрес</li>
                         </ul>
                     </div>
                     <img
@@ -237,10 +239,18 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                         дополнительные услуги
                     </h1>
                     <div className="w-full flex justify-center gap-6 flex-wrap">
-                        <div className="w-80 h-80 bg-black flex items-end justify-start p-5 z-[2] rounded-xl"><div className="text-2xl text-white">Название</div></div>
-                        <div className="w-80 h-80 bg-black flex items-end justify-start p-5 z-[2] rounded-xl"><div className="text-2xl text-white">Название</div></div>
-                        <div className="w-80 h-80 bg-black flex items-end justify-start p-5 z-[2] rounded-xl"><div className="text-2xl text-white">Название</div></div>
-                        <div className="w-80 h-80 bg-black flex items-end justify-start p-5 z-[2] rounded-xl"><div className="text-2xl text-white">Название</div></div>
+                        {store.map((value) => {
+                            return(
+                                <div className='z-[2]'>
+                                    <Link to='/Мероприятия'>
+                                        <div className={` cursor-pointer w-80 h-80 bg-[url('./components/assets/ProductionBg.png')] flex items-end justify-start p-5  rounded-xl`}>
+                                            <div className="text-2xl text-bold text-white">{value.name}</div>
+                                        </div>
+                                    </Link>
+                                </div>
+
+                            )
+                        })}
                     </div>
                     <img src={VectorBranch}
                          alt="Декоративный вектор"
