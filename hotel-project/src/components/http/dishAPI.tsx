@@ -40,19 +40,19 @@ export const fetchDishes = async () => {
 };
 
 export const createCategory = async (categoryName: string) => {
-  const { data } = await $authHost.post('api/dishes/categories', { 
+  const { data } = await $authHost.post('api/dish-categories', { 
     category: categoryName 
   });
   return data;
 };
 
 export const deleteCategory = async (categoryName: string) => {
-  const { data } = await $authHost.delete(`api/dishes/categories/${encodeURIComponent(categoryName)}`);
+  const { data } = await $authHost.delete(`api/dish-categories/${encodeURIComponent(categoryName)}`);
   return data;
 };
 
 export const updateCategory = async (oldName: string, newName: string) => {
-  const { data } = await $authHost.put(`api/dishes/categories/${encodeURIComponent(oldName)}`, {
+  const { data } = await $authHost.put(`api/dish-categories/${encodeURIComponent(oldName)}`, {
     category: newName
   });
   return data;
