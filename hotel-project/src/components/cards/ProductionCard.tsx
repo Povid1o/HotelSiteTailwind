@@ -2,15 +2,30 @@ import React from "react";
 import './../styles/productionCenter.css'
 import {Link} from "react-router-dom";
 import {FaLongArrowAltRight} from "react-icons/fa";
+import Media from './../Media'
 
-export default function ProductionCard({title, description, spesialTitle, spesialDesc, imageStyle, bgImg, flexReverse, specialStyle, extraBlock}){
+export default function ProductionCard({
+                                           title,
+                                           description,
+                                           spesialTitle,
+                                           spesialDesc,
+                                           imageStyle,
+                                           bgImg,
+                                           flexReverse,
+                                           specialStyle,
+                                           extraBlock, extraImage
+                                       }){
 
 
     return(
         <div className ={`${specialStyle} w-full flex ${flexReverse ? 'flex-row lg:flex-row-reverse' : 'flex-row'} justify-between bg-white rounded-xl drop-shadow-2xl z-[2]`}>
 
-            <div className={`${imageStyle} bg-main_theme bg-no-repeat bg-cover bg-center rounded-l-xl ${flexReverse ? 'lg:rounded-l-none lg:rounded-r-xl' :''} `}
-            style={{backgroundImage: `url('${bgImg}')`}}></div>
+            <div className={`${imageStyle} relative bg-main_theme bg-no-repeat bg-cover bg-center rounded-l-xl ${flexReverse ? 'lg:rounded-l-none lg:rounded-r-xl' :''} `}
+            style={{backgroundImage: `url('${bgImg}')`}}>
+                {extraImage && (
+                    <Media src={extraImage} className="absolute inset-0 w-full h-full object-cover rounded-xl"></Media>
+                )}
+            </div>
 
             <div className='flex flex-col justify-between p-10'>
                 <div className=" font-body">

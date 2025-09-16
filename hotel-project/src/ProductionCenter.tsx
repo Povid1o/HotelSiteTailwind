@@ -71,7 +71,7 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
             <main className="w-full h-max overflow-hidden bg-white font-body 3xl:max-w-screen-3xl 3xl:mx-auto">
                 {/*Заголовок */}
                 <header className="flex flex-col relative w-screen h-screen mb-20">
-                    <div className="relative bg-[url('./components/assets/VineryBackground.png')] header-background">
+                    <div className="relative bg-[url('./components/assets/Wine_Bg_ProductionCenter.png')] header-background">
                         <div className='header-page'>
                             <h3 className='text-[25px] md:text-[35px] lg:text-[47px] font-medium'>Центр производства локальных продуктов</h3>
                             <h1 className="section-title font-bold">
@@ -110,14 +110,14 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                     </h1>
 
                     <ProductionCard
-                        imageStyle='sm:w-[50px] md:w-[100px] lg:w-[700px]'
+                        imageStyle='sm:w-[50px] md:w-[100px] lg:w-[1000px]'
                         specialStyle={'lg:h-[500px]'}
                         bgImg={'/images/VineryBackground.png'}
                         spesialTitle={'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold'}
                         title={"О ЧЕМ ЦЕНТР ПРОИЗВОДСТВА"}
                         description={'Не очень много текста. Может 2-3 предложения. С этим размером шрифта всё понятнее'}/>
                     <ProductionCard
-                        imageStyle='sm:w-[50px] md:w-[100px] lg:w-[700px]'
+                        imageStyle='sm:w-[50px] md:w-[100px] lg:w-[1000px]'
                         specialStyle={'lg:h-[500px]'}
                         bgImg={'/images/VineryBackground.png'}
                         flexReverse={true}
@@ -162,6 +162,7 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                             specialStyle={'flex-wrap justify-center p-5'}
                             title={'Название видео'}
                             extraBlock={true}
+                            extraImage={'/images/Video-test.mp4'}
                             description={'Описание видео. 2-3 предложения'}
                         ></ProductionCard>
                         <ProductionCard
@@ -170,7 +171,9 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                             specialStyle={'flex-wrap justify-center p-5'}
                             title={'Название видео'}
                             description={'Описание видео. 2-3 предложения'}
-                            extraBlock={true}></ProductionCard>
+                            extraBlock={true}
+                            extraImage={'/images/Video-test.mp4'}
+                        ></ProductionCard>
                     </div>
 
                     <img
