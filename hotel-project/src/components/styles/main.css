@@ -67,8 +67,8 @@
     transform: translate(-50%, -50%);
     transition: transform 0.6s ease;
     z-index: 10;
-    width: 255px;
-    height: 255px;
+    width: clamp(120px, 12vw, 225px);
+    height: clamp(120px, 12vw, 225px);
 
 }
 
@@ -85,7 +85,11 @@
 .logoRight {
     transform: translate(100%, -50%);
 }
-
+@media screen and (max-width: 1156px){
+    .main-side h1{
+        font-size: 2rem;
+    }
+}
 @media (max-width: 768px) {
     .main-container {
         flex-direction: column;
@@ -103,11 +107,20 @@
         font-size: 2rem;
         transition: none;
     }
+    .main-logo{
+        width: 150px;
+        height: 150px;
+    }
 
     .main-logo,
     .logoLeft,
     .logoRight {
         transform: translate(-50%, -50%) !important;
         transition: none;
+    }
+}
+@media screen and (max-width: 316px) {
+    .main-side h1{
+        font-size: 1.5rem;
     }
 }

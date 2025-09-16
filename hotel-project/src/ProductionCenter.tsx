@@ -87,8 +87,6 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                             style={{transform: 'translateX(-50%) translateY(45%)'}}
                         />
                     </div>
-
-
                 </header>
 
                 {/*Опционально лозунг*/}
