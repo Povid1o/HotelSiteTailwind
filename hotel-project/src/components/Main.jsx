@@ -37,7 +37,7 @@ export default function Main(){
                     className={`main-logo 
                     ${hover === 'left' ? 'logoRight' : 
                     hover === 'right' ? 'logoLeft' : ''}`}>
-                    <img alt="logo"/>
+                    <img src='/images/VineTerracesLogo.png' alt='logo' className='w-32 h-32'></img>
                 </div>
             </div>
         </>
