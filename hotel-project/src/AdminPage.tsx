@@ -1086,8 +1086,20 @@ const AdminPage = observer(() =>  {
   if (dish.error || hotel.error || pageContent.error || wine.error) {
     return (
       <div className="h-screen flex justify-center items-center">
-        <div className="text-red-500">
+        {/* <div className="text-red-500">
           Ошибка загрузки: {dish.error || hotel.error || pageContent.error || wine.error}
+        </div> */}
+        <div className="text-red-500">
+          Ошибка загрузки: {dish.error }
+        </div>
+        <div className="text-red-500">
+          Ошибка загрузки: {hotel.error}
+        </div>
+        <div className="text-red-500">
+          Ошибка загрузки: {pageContent.error}
+        </div>
+        <div className="text-red-500">
+          Ошибка загрузки: {wine.error}
         </div>
       </div>
     );

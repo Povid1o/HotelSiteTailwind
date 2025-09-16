@@ -170,7 +170,7 @@ const App= observer(() => {
                   }}
           >
             {!user.isAuth && <RouterProvider router={publicrouter}/>}
-            {/* {user.isAuth && <RouterProvider router={hiderouter}/>} */}
+            {user.isAuth && <RouterProvider router={hiderouter}/>}
             {/* <WineHotel/> */}
           </section>
         </div>
