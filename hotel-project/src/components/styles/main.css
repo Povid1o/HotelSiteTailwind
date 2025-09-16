@@ -4,6 +4,10 @@
     width: 100%;
     height: 100vh;
     overflow: hidden;
+    font-weight: bold;
+}
+.main-content{
+    @apply h-[50%] lg:h-[100vh]
 }
 
 .main-side {

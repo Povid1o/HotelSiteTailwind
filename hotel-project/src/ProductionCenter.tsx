@@ -159,7 +159,7 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                         <ProductionCard
                             spesialTitle={'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold'}
                             imageStyle={'w-[280px] h-[180px] sm:w-[450px] sm:h-[250px] md:w-[500px] md:h-[300px] lg:w-[650px] lg:h-[450px] rounded-xl '}
-                            specialStyle={'flex-wrap items-center justify-center p-5'}
+                            specialStyle={'flex-wrap justify-center p-5'}
                             title={'Название видео'}
                             extraBlock={true}
                             description={'Описание видео. 2-3 предложения'}

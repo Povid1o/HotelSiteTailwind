@@ -1,6 +1,7 @@
 import './styles/main.css'
 import {useState} from "react";
 import {useNavigate} from "react-router";
+import Media from './Media'
 
 export default function Main(){
     const [hover, setHover] = useState(null)
@@ -15,8 +16,8 @@ export default function Main(){
                     onMouseEnter={() => setHover('left')}
                     onClick={() => navigate('/Отель')}
                 >
-                    <div className="main-content">
-                        <img alt='img'/>
+                    <div className="main-content ">
+                        <Media src="/images/Wine_Background.png" alt="right-content" />
                         <h1>Туристический комплекс</h1>
                     </div>
                 </div>
@@ -28,7 +29,7 @@ export default function Main(){
                     onClick={() => navigate('/Винодельня')}
                 >
                     <div className="main-content">
-                        <img alt='img'/>
+                        <Media src="/images/VineryBackground.png" alt="right-content" className='h-full'/>
                         <h1>Гравитационная винодельня</h1>
                     </div>
                 </div>
