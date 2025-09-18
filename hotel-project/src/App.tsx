@@ -14,9 +14,7 @@ const EventsList = lazy(() => import("./components/EventsList.tsx"));
 const Auth = lazy(() => import("./Auth.tsx"));
 const AdminPage = lazy(() => import("./AdminPage.tsx"));
 const WinePage = lazy(() => import("./components/cards/WinePage.tsx"));
-const ModalWindow = lazy(() => import('./components/modals/ModalWindow.tsx'))
-const ProductionCenter = lazy(() => import( "./ProductionCenter.tsx"))
-const Main = lazy(() => import('./components/Main'))
+
 
 
 
@@ -28,10 +26,6 @@ const publicrouter = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Main />,
-      },
-      {
-        path: "/Отель",
         element: <WineHotel />,
       },
       {
@@ -61,11 +55,7 @@ const publicrouter = createBrowserRouter([
       {
         path: "/Каталог/:productId",
         element: <WinePage />,
-      },
-      {
-        path: "/ЦентрПроизводства",
-        element: <ProductionCenter />,
-      },
+      }
     ],
   }
 ]);
@@ -77,10 +67,6 @@ const hiderouter = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Main />,
-      },
-      {
-        path: "/Отель",
         element: <WineHotel />,
       },
       {
@@ -107,10 +93,6 @@ const hiderouter = createBrowserRouter([
       {
         path: "/Каталог/:productId",
         element: <WinePage />,
-      },
-      {
-        path: "/ЦентрПроизводства",
-        element: <ProductionCenter />,
       },
       {
         path: "/login",
@@ -142,35 +124,28 @@ function Layout() {
 const App= observer(() => {
   const { user} = useContext(Context);
   const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timeoutId);
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+    
+    // Очистка при размонтировании компонента
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, []);
-
-  useEffect(() => {
-    const hasVisited = localStorage.getItem("hasVisited");
-    if (hasVisited !== "true") {
-      setShowModal(true);
-    }
-  }, []);
-
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    localStorage.setItem("hasVisited", "true");
-  }
+  
 
 
   return (
     <>
-    {/*{!user.isAuth ? */}
-    {/*  (*/}
-    {/*  <RouterProvider router={hiderouter}/>*/}
-    {/*  ) */}
-    {/*  : */}
-    {/*  (*/}
+    {!user.isAuth ? 
+      (
+      <RouterProvider router={hiderouter}/>
+      ) 
+      : 
+      (
         <div  style={{ position: 'relative', minHeight: '100vh' }}>
           <section
             style={{
@@ -195,13 +170,12 @@ const App= observer(() => {
                   }}
           >
             {!user.isAuth && <RouterProvider router={publicrouter}/>}
-             {user.isAuth && <RouterProvider router={hiderouter}/>}
-
+            {user.isAuth && <RouterProvider router={hiderouter}/>}
+            {/* <WineHotel/> */}
           </section>
-          {showModal && <ModalWindow onClose={handleCloseModal}></ModalWindow>}
         </div>
-    {/*  )*/}
-    {/*}*/}
+      )
+    }
     </>
   );
 })

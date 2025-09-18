@@ -33,7 +33,7 @@ const createFormDataWithFiles = (data: any) => {
   };
 
 export const fetchWines = async () => {
-  const { data } = await $host.get('api/wines');
+  const { data } = await $host.get('api/wines/tree');
   return data;
 };
 
@@ -44,7 +44,7 @@ export const createWine = async (wineType: string, sweetness: string, wineData: 
     ...wineData
   });
 
-  const { data } = await $authHost.post('api/wines', formData, {
+  const { data } = await $authHost.post('api/wines/tree', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },

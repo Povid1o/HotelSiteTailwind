@@ -1,0 +1,11 @@
+const Router = require('express');
+const router = new Router();
+const c = require('../controllers/dishController');
+
+router.get('/', c.list);
+router.post('/', c.create);
+router.get('/:id', c.get);
+router.put('/:id', c.update);
+router.delete('/:id', c.remove);
+
+module.exports = router;
