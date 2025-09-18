@@ -1,0 +1,918 @@
+openapi: 3.0.3
+info:
+  title: Hotel API
+  version: 1.0.1
+servers:
+  - url: /api
+tags:
+  - name: Auth
+  - name: Dishes
+  - name: Rooms
+  - name: Wines
+  - name: Pages
+  - name: Types
+  - name: Clases
+  - name: Products
+  - name: DishCategories     # <— добавить
+  - name: WineTypes          # <— добавить
+  - name: WineSweetness      # <— добавить
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # ---------- AUTH ----------
+    AuthRegisterRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, example: "admin@example.com" }
+        password: { type: string, example: "secret123" }
+        role: { type: string, example: "ADMIN" }
+    AuthLoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, example: "admin@example.com" }
+        password: { type: string, example: "secret123" }
+    AuthToken:
+      type: object
+      properties:
+        token: { type: string, example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }
+
+    # ---------- DISHES ----------
+    DishImage:
+      type: object
+      required: [url]
+      properties:
+        url: { type: string, example: "https://cdn/site/dishes/1.jpg" }
+        alt_text: { type: string, example: "Паста карбонара" }
+        order: { type: integer, example: 1 }
+
+    DishBase:
+      type: object
+      required: [category_id, name, price]
+      properties:
+        category_id: { type: integer, example: 2 }
+        name: { type: string, example: "Паста карбонара" }
+        header: { type: string, example: "Рекомендуем" }
+        description_short: { type: string, example: "Классическая итальянская паста" }
+        description_full: { type: string, example: "Гуанчале, яйцо, пармезан..." }
+        weight: { type: string, example: "250 г" }
+        price: { type: number, format: float, example: 550.0 }
+        nutrients: { type: object, example: { kcal: 430, proteins: 18 } }
+        is_active: { type: boolean, example: true }
+
+    DishCreate:
+      allOf:
+        - $ref: '#/components/schemas/DishBase'
+        - type: object
+          properties:
+            images:
+              type: array
+              items: { $ref: '#/components/schemas/DishImage' }
+
+    Dish:
+      allOf:
+        - $ref: '#/components/schemas/DishBase'
+        - type: object
+          properties:
+            id: { type: integer, example: 10 }
+            images:
+              type: array
+              items: { $ref: '#/components/schemas/DishImage' }
+            category:
+              type: object
+              properties:
+                id: { type: integer }
+                name: { type: string }
+    DishCategory:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        name: { type: string, example: "Паста" }
+
+    DishCategoryWithProducts:
+      type: object
+      properties:
+        id: { type: integer, example: 2 }
+        name: { type: string, example: "Паста" }
+        products:
+          type: array
+          items: { $ref: '#/components/schemas/Dish' }
+
+    # ---------- ROOMS ----------
+    RoomImage:
+      type: object
+      required: [url]
+      properties:
+        url: { type: string, example: "https://cdn/site/rooms/101.jpg" }
+        alt_text: { type: string, example: "Номер 101" }
+        order: { type: integer, example: 1 }
+
+    RoomPriceItem:
+      type: object
+      required: [title, price]
+      properties:
+        title: { type: string, example: "Будни" }
+        price: { type: number, format: float, example: 3200.0 }
+
+    RoomBase:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string, example: "Стандарт 2-местный" }
+        description: { type: string, example: "Светлый уютный номер" }
+        check_in_time: { type: string, example: "14:00" }
+        check_out_time: { type: string, example: "12:00" }
+        is_active: { type: boolean, example: true }
+
+    RoomCreate:
+      allOf:
+        - $ref: '#/components/schemas/RoomBase'
+        - type: object
+          properties:
+            images:
+              type: array
+              items: { $ref: '#/components/schemas/RoomImage' }
+            properties:
+              type: array
+              items: { type: string }
+              example: ["Площадь 18 м²", "Кровать Queen"]
+            conveniences:
+              type: array
+              items: { type: string }
+              example: ["Wi-Fi", "Кондиционер"]
+            prices:
+              type: array
+              items: { $ref: '#/components/schemas/RoomPriceItem' }
+            notes:
+              type: array
+              items: { type: string }
+              example: ["Завтрак включён"]
+
+    Room:
+      allOf:
+        - $ref: '#/components/schemas/RoomCreate'
+        - type: object
+          properties:
+            id: { type: integer, example: 1 }
+
+    # ---------- WINES ----------
+    WineBase:
+      type: object
+      required: [type_id, sweetness_id, name, price]
+      properties:
+        type_id: { type: integer, example: 1 }
+        sweetness_id: { type: integer, example: 3 }
+        name: { type: string, example: "Chardonnay" }
+        year: { type: integer, example: 2021 }
+        alcohol: { type: string, example: "13%" }
+        sugar: { type: string, example: "4 г/л" }
+        temperature: { type: string, example: "+8…+10°C" }
+        price: { type: number, format: float, example: 1900.0 }
+        is_active: { type: boolean, example: true }
+
+    WineCreate:
+      allOf:
+        - $ref: '#/components/schemas/WineBase'
+        - type: object
+          properties:
+            description:
+              type: array
+              items: { type: string }
+              example: ["Яркий цитрус", "Минеральность"]
+            images:
+              type: array
+              items: { $ref: '#/components/schemas/DishImage' }
+
+    Wine:
+      allOf:
+        - $ref: '#/components/schemas/WineCreate'
+        - type: object
+          properties:
+            id: { type: integer, example: 5 }
+            type:
+              type: object
+              properties:
+                id: { type: integer }
+                name: { type: string }
+            sweetness:
+              type: object
+              properties:
+                id: { type: integer }
+                name: { type: string }
+    WineType:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        name: { type: string, example: "Белое" }
+
+    WineSweetness:
+        type: object
+        properties:
+          id: { type: integer, example: 1 }
+          name: { type: string, example: "Сухое" }
+
+    WineSweetnessBucket:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        wines:
+          type: array
+          items: { $ref: '#/components/schemas/Wine' }
+
+    WineTypeTree:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        assortment:
+          type: array
+          items: { $ref: '#/components/schemas/WineSweetnessBucket' }
+
+    # ---------- PAGES ----------
+    Page:
+      type: object
+      required: [name, path]
+      properties:
+        id: { type: integer, example: 1 }
+        name: { type: string, example: "Главная" }
+        path: { type: string, example: "/" }
+        is_active: { type: boolean, example: true }
+        content_json: { type: object, example: { blocks: [] } }
+
+    # ---------- LEGACY: TYPE/CLASE/PRODUCT ----------
+    Type:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        name: { type: string, example: "Горячие блюда" }
+
+    Clase:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        name: { type: string, example: "Паста" }
+
+    ProductInfo:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        title: { type: string, example: "Состав" }
+        description: { type: string, example: "Мука, яйцо, сыр..." }
+
+    Product:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        name: { type: string, example: "Паста болоньезе" }
+        price: { type: number, format: float, example: 490.0 }
+        typeId: { type: integer, example: 2 }
+        claseId: { type: integer, example: 3 }
+        description: { type: string, example: "Описание блюда" }
+        weight: { type: string, example: "300 г" }
+        nutrients: { type: string, example: "ккал: 420" }
+        img: { type: string, example: "7f2f1b5a-...png" }
+        info:
+          type: array
+          items: { $ref: '#/components/schemas/ProductInfo' }
+
+paths:
+  # ---------- AUTH ----------
+  /user/registration:
+    post:
+      tags: [Auth]
+      summary: Регистрация пользователя (создаёт Basket)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AuthRegisterRequest' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthToken' }
+        '400': { description: Bad Request }
+        '409': { description: Conflict }
+
+  /user/login:
+    post:
+      tags: [Auth]
+      summary: Логин
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AuthLoginRequest' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthToken' }
+        '401': { description: Unauthorized }
+
+  /user/auth:
+    get:
+      tags: [Auth]
+      summary: Обновить токен / проверить авторизацию
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthToken' }
+        '401': { description: Unauthorized }
+
+  # ---------- DISHES ----------
+  /dishes:
+    get:
+      tags: [Dishes]
+      summary: Список блюд по категориям
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/DishCategoryWithProducts' }
+    post:
+      tags: [Dishes]
+      summary: Создать блюдо
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DishCreate' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Dish' }
+
+  /dish-categories:
+    get:
+      tags: [ DishCategories ]
+      summary: Список категорий блюд
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/DishCategory' }
+    post:
+      tags: [ DishCategories ]
+      summary: Создать категорию блюд (ADMIN)
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ name ]
+              properties:
+                name: { type: string, example: "Паста" }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DishCategory' }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+
+  /dish-categories/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer }
+    delete:
+      tags: [ DishCategories ]
+      summary: Удалить категорию (ADMIN)
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200': { description: OK }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+        '404': { description: Not Found }
+
+  /dishes/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer }
+    get:
+      tags: [Dishes]
+      summary: Получить блюдо
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Dish' }
+        '404': { description: Not Found }
+    put:
+      tags: [Dishes]
+      summary: Обновить блюдо
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DishCreate' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Dish' }
+    delete:
+      tags: [Dishes]
+      summary: Удалить блюдо
+      responses:
+        '200': { description: OK }
+
+  # ---------- ROOMS ----------
+  /rooms:
+    get:
+      tags: [Rooms]
+      summary: Список комнат с вложенными сущностями
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Room' }
+    post:
+      tags: [Rooms]
+      summary: Создать комнату
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RoomCreate' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Room' }
+
+  /rooms/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer }
+    get:
+      tags: [Rooms]
+      summary: Получить комнату
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Room' }
+        '404': { description: Not Found }
+    put:
+      tags: [Rooms]
+      summary: Обновить комнату
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RoomCreate' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Room' }
+    delete:
+      tags: [Rooms]
+      summary: Удалить комнату
+      responses:
+        '200': { description: OK }
+
+  # ---------- WINES ----------
+  /wines:
+    post:
+      tags: [Wines]
+      summary: Создать вино
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/WineCreate' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Wine' }
+
+  /wines/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer }
+    put:
+      tags: [Wines]
+      summary: Обновить вино
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/WineCreate' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Wine' }
+    delete:
+      tags: [Wines]
+      summary: Удалить вино
+      responses:
+        '200': { description: OK }
+
+  /wine-types:
+      get:
+        tags: [ WineTypes ]
+        summary: Список типов вин
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items: { $ref: '#/components/schemas/WineType' }
+      post:
+        tags: [ WineTypes ]
+        summary: Создать тип вина (ADMIN)
+        security:
+          - bearerAuth: [ ]
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ name ]
+                properties:
+                  name: { type: string, example: "Красное" }
+        responses:
+          '201':
+            description: Created
+            content:
+              application/json:
+                schema: { $ref: '#/components/schemas/WineType' }
+          '401': { description: Unauthorized }
+          '403': { description: Forbidden }
+
+  /wine-types/{id}:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      delete:
+        tags: [ WineTypes ]
+        summary: Удалить тип вина (ADMIN)
+        security:
+          - bearerAuth: [ ]
+        responses:
+          '200': { description: OK }
+          '401': { description: Unauthorized }
+          '403': { description: Forbidden }
+          '404': { description: Not Found }
+
+  /wine-sweetness:
+      get:
+        tags: [ WineSweetness ]
+        summary: Список уровней сладости вина
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items: { $ref: '#/components/schemas/WineSweetness' }
+      post:
+        tags: [ WineSweetness ]
+        summary: Создать уровень сладости (ADMIN)
+        security:
+          - bearerAuth: [ ]
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ name ]
+                properties:
+                  name: { type: string, example: "Полусухое" }
+        responses:
+          '201':
+            description: Created
+            content:
+              application/json:
+                schema: { $ref: '#/components/schemas/WineSweetness' }
+          '401': { description: Unauthorized }
+          '403': { description: Forbidden }
+
+  /wine-sweetness/{id}:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      delete:
+        tags: [ WineSweetness ]
+        summary: Удалить уровень сладости (ADMIN)
+        security:
+          - bearerAuth: [ ]
+        responses:
+          '200': { description: OK }
+          '401': { description: Unauthorized }
+          '403': { description: Forbidden }
+          '404': { description: Not Found }
+
+  /wines/tree:
+    get:
+      tags: [Wines]
+      summary: Дерево: тип → сладость → вина
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/WineTypeTree' }
+
+  # ---------- PAGES ----------
+  /pages:
+    get:
+      tags: [Pages]
+      summary: Список страниц
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Page' }
+    post:
+      tags: [Pages]
+      summary: Создать страницу
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Page' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Page' }
+
+  /pages/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer }
+    get:
+      tags: [Pages]
+      summary: Получить страницу
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Page' }
+        '404': { description: Not Found }
+    put:
+      tags: [Pages]
+      summary: Обновить страницу
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Page' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Page' }
+    delete:
+      tags: [Pages]
+      summary: Удалить страницу
+      responses:
+        '200': { description: OK }
+
+  # ---------- LEGACY: TYPES ----------
+  /type:
+    get:
+      tags: [Types]
+      summary: Получить все типы
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Type' }
+    post:
+      tags: [Types]
+      summary: Создать тип (ADMIN)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, example: "Салаты" }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Type' }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+
+  # ---------- LEGACY: CLASES ----------
+  /clase:
+    get:
+      tags: [Clases]
+      summary: Получить все классы
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Clase' }
+    post:
+      tags: [Clases]
+      summary: Создать класс (ADMIN)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, example: "Паста" }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Clase' }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+
+  # ---------- LEGACY: PRODUCTS ----------
+  /product:
+    get:
+      tags: [Products]
+      summary: Получить список продуктов (count + rows)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count: { type: integer, example: 12 }
+                  rows:
+                    type: array
+                    items: { $ref: '#/components/schemas/Product' }
+    post:
+      tags: [Products]
+      summary: Создать продукт (ADMIN, multipart/form-data с картинкой)
+      description: Папка для загрузок — /static. Поле файла — img.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [name, price, img]
+              properties:
+                name: { type: string, example: "Паста болоньезе" }
+                price: { type: number, format: float, example: 490 }
+                typeId: { type: integer, example: 2 }
+                claseId: { type: integer, example: 3 }
+                description: { type: string, example: "Описание" }
+                weight: { type: string, example: "300 г" }
+                nutrients: { type: string, example: "ккал: 420" }
+                img:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Product' }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+
+  /product/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer }
+    get:
+      tags: [Products]
+      summary: Получить один продукт (с info[])
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Product' }
+        '404': { description: Not Found }
+    put:
+      tags: [Products]
+      summary: Обновить продукт (ADMIN, multipart/form-data; можно передать новый img)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name: { type: string, example: "Паста болоньезе (обновл.)" }
+                price: { type: number, format: float, example: 520 }
+                typeId: { type: integer, example: 2 }
+                claseId: { type: integer, example: 3 }
+                description: { type: string, example: "Новое описание" }
+                weight: { type: string, example: "320 г" }
+                nutrients: { type: string, example: "ккал: 430" }
+                img:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Product' }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+    delete:
+      tags: [Products]
+      summary: Удалить продукт (ADMIN)
+      security:
+        - bearerAuth: []
+      responses:
+        '200': { description: OK }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+
+

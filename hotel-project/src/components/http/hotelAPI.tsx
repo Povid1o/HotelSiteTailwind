@@ -35,18 +35,18 @@ const createFormDataWithFiles = (data: any) => {
 
 // API для номеров (совместимость с существующими методами)
 export const fetchRoom = async () => {
-  const { data } = await $host.get('api/room');
+  const { data } = await $host.get('api/rooms');
   return data;
 };
 
 export const fetchOneRoom = async (id: number) => {
-  const { data } = await $host.get(`api/room/${id}`);
+  const { data } = await $host.get(`api/rooms/${id}`);
   return data;
 };
 
 export const createRoom = async (roomData: any) => {
   const formData = createFormDataWithFiles(roomData);
-  const { data } = await $authHost.post('api/room', formData, {
+  const { data } = await $authHost.post('api/rooms', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -56,7 +56,7 @@ export const createRoom = async (roomData: any) => {
 
 export const updateRoom = async (id: number, roomData: any) => {
   const formData = createFormDataWithFiles(roomData);
-  const { data } = await $authHost.put(`api/room/${id}`, formData, {
+  const { data } = await $authHost.put(`api/rooms/${id}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -65,12 +65,12 @@ export const updateRoom = async (id: number, roomData: any) => {
 };
 
 export const deleteRoom = async (id: number) => {
-  const { data } = await $authHost.delete(`api/room/${id}`);
+  const { data } = await $authHost.delete(`api/rooms/${id}`);
   return data;
 };
 
 // Новый метод для переключения активности
 export const toggleRoomActive = async (id: number) => {
-  const { data } = await $authHost.patch(`api/room/${id}/toggle-active`);
+  const { data } = await $authHost.patch(`api/rooms/${id}/toggle-active`);
   return data;
 };
