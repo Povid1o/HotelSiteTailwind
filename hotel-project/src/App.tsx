@@ -165,12 +165,12 @@ const App= observer(() => {
 
   return (
     <>
-    {/*{!user.isAuth ? */}
-    {/*  (*/}
-    {/*  <RouterProvider router={hiderouter}/>*/}
-    {/*  ) */}
-    {/*  : */}
-    {/*  (*/}
+    {!user.isAuth ? 
+      (
+      <RouterProvider router={hiderouter}/>
+      ) 
+      : 
+      (
         <div  style={{ position: 'relative', minHeight: '100vh' }}>
           <section
             style={{
@@ -200,10 +200,10 @@ const App= observer(() => {
           </section>
           {showModal && <ModalWindow onClose={handleCloseModal}></ModalWindow>}
         </div>
-    {/*  )*/}
-    {/*}*/}
-    </>
-  );
-})
+      )}
+      </>
+    );
+  }
+);
 
 export default App;
