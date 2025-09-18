@@ -35,15 +35,15 @@ const Button = ({text}) => {
     return(
         <Link to='/Каталог'>
             <div className="flex justify-start">
-            <div className='flex-col inline-block p-2'>
-                                    
-                <div className='flex flex-row '>
-                    <a href="#" className='underlineDesktop text-[#3E4756] text-[18px] leading-[22px] font-semibold mx-2 md:text-2xl'>{text}</a>
-                    <FaLongArrowAltRight className='w-[25px] h-[15px] left-[35px] my-auto'/>
-                </div>
-                <hr className="border-gray-400 w-full my-2" />
+                <div className='flex-col inline-block p-2'>
+                                        
+                    <div className='flex flex-row '>
+                        <a href="#" className='underlineDesktop text-[#3E4756] text-[18px] leading-[22px] font-semibold mx-2 md:text-2xl'>{text}</a>
+                        <FaLongArrowAltRight className='w-[25px] h-[15px] left-[35px] my-auto'/>
+                    </div>
+                    <hr className="border-gray-400 w-full my-2" />
 
-            </div>
+                </div>
             </div>
         </Link>
     )

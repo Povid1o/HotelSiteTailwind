@@ -1083,6 +1083,7 @@ const AdminPage = observer(() =>  {
   }
   
   // Добавьте обработку ошибок:
+<<<<<<< Updated upstream
   if (dish.error || hotel.error || pageContent.error || wine.error) {
     return (
       <div className="h-screen flex justify-center items-center">
@@ -1104,6 +1105,17 @@ const AdminPage = observer(() =>  {
       </div>
     );
   }
+=======
+  // if (dish.error || hotel.error || pageContent.error || wine.error) {
+  //   return (
+  //     <div className="h-screen flex justify-center items-center">
+  //       <div className="text-red-500">
+  //         Ошибка загрузки: {dish.error || hotel.error || pageContent.error || wine.error}
+  //       </div>
+  //     </div>
+  //   );
+  // }
+>>>>>>> Stashed changes
 
   return (
     <div className="h-screen flex flex-col bg-no-repeat bg-cover">
