@@ -1,5 +1,5 @@
 const { describe } = require('node:test')
-const sequelize = require('../db')
+const {sequelize} = require('../db')
 const {DataTypes} = require('sequelize')
 
 const User = sequelize.define('user',{
