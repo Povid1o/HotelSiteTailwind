@@ -42,7 +42,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ sourceUrl }) => {
         return () => player.destroy();
     }, [sourceUrl]);
 
-    return <video ref={playerRef} className="w-full h-auto" />;
+    return <video ref={playerRef} src={sourceUrl} className="w-full h-full object-cover rounded-xl" controls playsInline />;
 };
 
 export default VideoPlayer;

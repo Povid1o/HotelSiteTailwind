@@ -12,6 +12,7 @@ export const testServerConnection = async () => {
     const response = await axios.get(`${API_URL}/api/health`, { timeout: 5000 });
     console.log('✅ Сервер отвечает:', response.status, response.statusText);
   } catch (error) {
+    // @ts-ignore
     console.log('❌ Базовое подключение не удалось:', error.message);
   }
   

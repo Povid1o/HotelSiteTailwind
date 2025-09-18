@@ -94,6 +94,7 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
 
       {/* Hamburger */}
       <div onClick={handleClick} className="md:hidden z-[31]">
+          {/*@ts-ignore*/}
         {!nav ? <FaBars /> : <FaTimes />}
       </div>
 

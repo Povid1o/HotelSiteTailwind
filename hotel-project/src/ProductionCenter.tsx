@@ -51,6 +51,57 @@ const store: Store[] = [
     }
 ]
 
+interface ImagesVideos {
+    title?:string;
+    description?:string;
+    spesialTitle?:string;
+    spesialDesc?:string;
+    imageStyle?:string;
+    bgImg?:string;
+    flexReverse?:boolean;
+    specialStyle?:string;
+    extraBlock ?:boolean;
+    videoUrl?:string;
+}
+const videos : ImagesVideos[] = [
+    {
+        title:'Название видео',
+        description:'Описание видео. 2-3 предложения',
+        spesialTitle:'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold',
+        imageStyle:'w-[280px] h-[180px] sm:w-[450px] sm:h-[250px] md:w-[500px] md:h-[300px] lg:w-[650px] lg:h-[450px] rounded-xl ',
+        specialStyle:'flex-wrap justify-center p-5',
+        extraBlock:true,
+        videoUrl:"https://youtu.be/LQDrTgO1pCo?si=f0SbtiZCaEX_6h0z",
+    },
+    {
+        title:'Название видео',
+        description:'Описание видео. 2-3 предложения',
+        spesialTitle:'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold',
+        imageStyle:'w-[280px] h-[180px] sm:w-[450px] sm:h-[250px] md:w-[500px] md:h-[300px] lg:w-[650px] lg:h-[450px] rounded-xl ',
+        specialStyle:'flex-wrap justify-center p-5',
+        extraBlock:true,
+        videoUrl:"/images/Video-test.mp4",
+    }
+]
+const images : ImagesVideos[] = [
+    {
+        title:"О ЧЕМ ЦЕНТР ПРОИЗВОДСТВА",
+        description:'Не очень много текста. Может 2-3 предложения. С этим размером шрифта всё понятнее',
+        spesialTitle:'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold',
+        imageStyle:'sm:w-[50px] md:w-[100px] lg:w-[1000px]',
+        specialStyle:'lg:h-[500px]',
+        bgImg:'/images/VineryBackground.png',
+    },
+    {
+        title:"НАША ФИЛОСОФИЯ",
+        description:'Не очень много текста. Может 2-3 предложения. С этим размером шрифта всё понятнее',
+        spesialTitle:'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold',
+        imageStyle:'sm:w-[50px] md:w-[100px] lg:w-[1000px]',
+        specialStyle:'lg:h-[500px]',
+        bgImg:'/images/VineryBackground.png',
+        flexReverse: true,
+    }
+]
 
 interface ProductionCenterProps {
     title?: string,
@@ -109,22 +160,17 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                         О ПРОЕКТЕ
                     </h1>
 
-                    <ProductionCard
-                        imageStyle='sm:w-[50px] md:w-[100px] lg:w-[1000px]'
-                        specialStyle={'lg:h-[500px]'}
-                        bgImg={'/images/VineryBackground.png'}
-                        spesialTitle={'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold'}
-                        title={"О ЧЕМ ЦЕНТР ПРОИЗВОДСТВА"}
-                        description={'Не очень много текста. Может 2-3 предложения. С этим размером шрифта всё понятнее'}/>
-                    <ProductionCard
-                        imageStyle='sm:w-[50px] md:w-[100px] lg:w-[1000px]'
-                        specialStyle={'lg:h-[500px]'}
-                        bgImg={'/images/VineryBackground.png'}
-                        flexReverse={true}
-                        spesialTitle={'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold'}
-                        spesialDesc={''}
-                        title={"НАША ФИЛОСОФИЯ"}
-                        description={'Не очень много текста. Может 2-3 предложения. С этим размером шрифта всё понятнее'}/>
+                    {images.map((value) => (
+                        <ProductionCard
+                            imageStyle={value.imageStyle}
+                            specialStyle={value.specialStyle}
+                            bgImg={value.bgImg}
+                            spesialTitle={value.spesialTitle}
+                            title={value.title}
+                            description={value.description}
+                            flexReverse={value.flexReverse}
+                        />)
+                    )}
 
                 </section>
 
@@ -156,24 +202,17 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
 
                     </div>
                     <div className='flex flex-col gap-10 py-40 px-5 md:px-20 lg:px-20 bg-[url("./components/assets/ProductionBg.png")] text-gray-700'>
-                        <ProductionCard
-                            spesialTitle={'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold'}
-                            imageStyle={'w-[280px] h-[180px] sm:w-[450px] sm:h-[250px] md:w-[500px] md:h-[300px] lg:w-[650px] lg:h-[450px] rounded-xl '}
-                            specialStyle={'flex-wrap justify-center p-5'}
-                            title={'Название видео'}
-                            extraBlock={true}
-                            extraImage={'/images/Video-test.mp4'}
-                            description={'Описание видео. 2-3 предложения'}
-                        ></ProductionCard>
-                        <ProductionCard
-                            spesialTitle={'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold'}
-                            imageStyle={'w-[280px] h-[180px] sm:w-[450px] sm:h-[250px] md:w-[500px] md:h-[300px] lg:w-[650px] lg:h-[450px] rounded-xl '}
-                            specialStyle={'flex-wrap justify-center p-5'}
-                            title={'Название видео'}
-                            description={'Описание видео. 2-3 предложения'}
-                            extraBlock={true}
-                            extraImage={'/images/Video-test.mp4'}
-                        ></ProductionCard>
+                        {videos.map((value) => (
+                            <ProductionCard
+                                title={value.title}
+                                description={value.description}
+                                spesialTitle={value.spesialTitle}
+                                imageStyle={value.imageStyle}
+                                specialStyle={value.specialStyle}
+                                extraBlock={value.extraBlock}
+                                videoUrl={value.videoUrl}
+                            ></ProductionCard>
+                        ))}
                     </div>
 
                     <img

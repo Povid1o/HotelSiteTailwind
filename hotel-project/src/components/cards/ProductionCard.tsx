@@ -2,7 +2,8 @@ import React from "react";
 import './../styles/productionCenter.css'
 import {Link} from "react-router-dom";
 import {FaLongArrowAltRight} from "react-icons/fa";
-import Media from './../Media'
+// @ts-ignore
+import VideoPlayer from "../VideoPlayer.tsx";
 
 export default function ProductionCard({
                                            title,
@@ -13,18 +14,19 @@ export default function ProductionCard({
                                            bgImg,
                                            flexReverse,
                                            specialStyle,
-                                           extraBlock, extraImage
+                                           extraBlock, videoUrl
                                        }){
 
 
     return(
         <div className ={`${specialStyle} w-full flex ${flexReverse ? 'flex-row lg:flex-row-reverse' : 'flex-row'} justify-between bg-white rounded-xl drop-shadow-2xl z-[2]`}>
 
-            <div className={`${imageStyle} relative bg-main_theme bg-no-repeat bg-cover bg-center rounded-l-xl ${flexReverse ? 'lg:rounded-l-none lg:rounded-r-xl' :''} `}
-            style={{backgroundImage: `url('${bgImg}')`}}>
-                {extraImage && (
-                    <Media src={extraImage} className="absolute inset-0 w-full h-full object-cover rounded-xl"></Media>
-                )}
+            <div className={`${imageStyle} min-h-30 relative bg-main_theme bg-no-repeat bg-cover bg-center rounded-l-xl 
+            ${flexReverse ? 'lg:rounded-l-none lg:rounded-r-xl' :''} `}
+            style={videoUrl ? {} : {backgroundImage: `url('${bgImg}')`}}>
+                {videoUrl ? (
+                    <VideoPlayer sourceUrl={videoUrl}></VideoPlayer>
+                ): ('')}
             </div>
 
             <div className='flex flex-col justify-between p-10'>
@@ -44,6 +46,7 @@ export default function ProductionCard({
                                 <Link to='/Каталог'>
                                     <div className='flex flex-row'>
                                         <a className='text-[#3E4756] leading-[38px] mx-2 text-lg mobile:text-xl md:text-2xl xl:text-3xl 2xl:text-4xl font-semibold'>Перейти</a>
+                                        {/*@ts-ignore*/}
                                         <FaLongArrowAltRight className='w-[25px] h-[15px] xl:w-[30px] xl:h-[20px] 2xl:w-[35px] 2xl:h-[25px] left-[35px] my-auto'/>
                                     </div>
                                     <hr className="border-gray-400 w-full my-2" />
