@@ -95,3 +95,17 @@
 //   Type,
 //   TypeClase,
 // }
+
+module.exports = function (req, res, next) {
+    // Например, ключ хранится в .env
+    const adminKey = process.env.ADMIN_KEY || "secret123";
+
+    // Проверяем заголовок запроса
+    const key = req.headers['x-admin-key'];
+
+    if (key !== adminKey) {
+        return res.status(403).json({ message: "Нет доступа" });
+    }
+
+    next();
+};

@@ -109,90 +109,89 @@
 const { products, dishes, wines } = require('../db')
 const ApiError = require('../error/ApiError')
 
-class ProductController {
-  // CREATE
-  async create(req, res, next) {
-    try {
-      const { name, price, description } = req.body
 
-      if (!name || !price) {
-        return next(ApiError.badRequest("Name и price обязательны"))
-      }
+class DishesController {
+    // CREATE
+    async create(req, res, next) {
+        try {
+            const { name, price, description } = req.body
 
-      const newProduct = {
-        id: products.length ? products[products.length - 1].id + 1 : 1,
-        name,
-        price,
-        description: description || ""
-      }
+            if (!name || !price) {
+                return next(ApiError.badRequest("Name и price обязательны"))
+            }
 
-      products.push(newProduct)
-      return res.json(newProduct)
-    } catch (e) {
-      next(ApiError.badRequest(e.message))
-    }
-  }
+            const newDish = {
+                id: dishes.length ? dishes[dishes.length - 1].id + 1 : 1,
+                name,
+                price,
+                description: description || ""
+            }
 
-  // GET ALL
-  async getAll(req, res) {
-    return res.json(products)
-  }
-
-  // GET ONE
-  async getOne(req, res) {
-    const { id } = req.params
-    const product = products.find(p => p.id === parseInt(id))
-
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" })
+            dishes.push(newDish)
+            return res.json(newDish)
+        } catch (e) {
+            next(ApiError.badRequest(e.message))
+        }
     }
 
-    return res.json(product)
-  }
-
-  // UPDATE
-  async update(req, res, next) {
-    try {
-      const { id } = req.params
-      const { name, price, description } = req.body
-
-      const productIndex = products.findIndex(p => p.id === parseInt(id))
-      if (productIndex === -1) {
-        return res.status(404).json({ message: "Product not found" })
-      }
-
-      products[productIndex] = {
-        ...products[productIndex],
-        name: name || products[productIndex].name,
-        price: price || products[productIndex].price,
-        description: description || products[productIndex].description,
-      }
-
-      return res.json(products[productIndex])
-    } catch (e) {
-      next(ApiError.badRequest(e.message))
+    // GET ALL
+    async getAll(req, res) {
+        return res.json(dishes)
     }
-  }
 
-  // DELETE
-  async delete(req, res, next) {
-    try {
-      const { id } = req.params
-      const index = products.findIndex(p => p.id === parseInt(id))
+    // GET ONE
+    async getOne(req, res) {
+        const { id } = req.params
+        const product = dishes.find(p => p.id === parseInt(id))
 
-      if (index === -1) {
-        return res.status(404).json({ message: "Product not found" })
-      }
+        if (!product) {
+            return res.status(404).json({ message: "Dish not found" })
+        }
 
-      const deleted = products.splice(index, 1)
-      return res.json({ message: "Product deleted", product: deleted[0] })
-    } catch (e) {
-      next(ApiError.badRequest(e.message))
+        return res.json(product)
     }
-  }
+
+    // UPDATE
+    async update(req, res, next) {
+        try {
+            const { id } = req.params
+            const { name, price, description } = req.body
+
+            const productIndex = dishes.findIndex(p => p.id === parseInt(id))
+            if (productIndex === -1) {
+                return res.status(404).json({ message: "Product not found" })
+            }
+
+            dishes[productIndex] = {
+                ...dishes[productIndex],
+                name: name || dishes[productIndex].name,
+                price: price || dishes[productIndex].price,
+                description: description || dishes[productIndex].description,
+            }
+
+            return res.json(dishes[productIndex])
+        } catch (e) {
+            next(ApiError.badRequest(e.message))
+        }
+    }
+
+    // DELETE
+    async delete(req, res, next) {
+        try {
+            const { id } = req.params
+            const index = dishes.findIndex(p => p.id === parseInt(id))
+
+            if (index === -1) {
+                return res.status(404).json({ message: "Product not found" })
+            }
+
+            const deleted = dishes.splice(index, 1)
+            return res.json({ message: "Product deleted", product: deleted[0] })
+        } catch (e) {
+            next(ApiError.badRequest(e.message))
+        }
+    }
 }
 
-
-
-module.exports = new ProductController()
+module.exports = new DishesController()
 
