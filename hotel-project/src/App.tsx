@@ -66,6 +66,10 @@ const publicrouter = createBrowserRouter([
         path: "/ЦентрПроизводства",
         element: <ProductionCenter />,
       },
+      {
+        path: '/admin',
+        element: <AdminPage/>
+      },
     ],
   }
 ]);

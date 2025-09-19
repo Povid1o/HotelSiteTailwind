@@ -30,6 +30,7 @@ export const testServerConnection = async () => {
       const response = await axios.get(`${API_URL}${endpoint}`, { timeout: 5000 });
       console.log(`✅ ${endpoint} доступен:`, response.status);
     } catch (error) {
+      // @ts-ignore
       console.log(`❌ ${endpoint} недоступен:`, error.response?.status || error.message);
     }
   }

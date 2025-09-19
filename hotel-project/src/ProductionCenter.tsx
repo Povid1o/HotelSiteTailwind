@@ -1,4 +1,6 @@
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useState, useEffect} from "react";
+import { fetchProducts, Product } from './components/http/productAPI';
+import { fetchVideos, Video } from './components/http/videoAPI';
 import { Link } from 'react-router-dom';
 
 import "./components/styles/hover.css"
@@ -24,33 +26,35 @@ import VectorBranch from "./components/assets/VectorBranch.svg"
 import VinogradTransparentBg from "./components/assets/VinogradTransparentBg.png"
 import GrapePlant from './components/assets/GrapePlant.png'
 
-interface Store {
-    id?: number,
-    name?: string,
-    description?: string,
-    image?: string,
-}
-const store: Store[] = [
-    {
-        id: 1,
-        name: 'Название продукта1',
-        description: 'Описание продукта',
-        image: '/images/Wine_Background.png',
-    },
-    {
-        id: 2,
-        name: 'Название продукта2',
-        description: 'Описание продукта',
-        image: '/images/Wine_Background.png',
-    },
-    {
-        id: 3,
-        name: 'Название продукта3',
-        description: 'Описание продукта',
-        image: '/images/Wine_Background.png',
-    }
-]
+// Для удобной работы с продуктами и услугами
+// interface products {
+//     id?: number,
+//     name?: string,
+//     description?: string,
+//     image?: string,
+// }
+// const products: products[] = [
+//     {
+//         id: 1,
+//         name: 'Название продукта1',
+//         description: 'Описание продукта',
+//         image: '/images/Wine_Background.png',
+//     },
+//     {
+//         id: 2,
+//         name: 'Название продукта2',
+//         description: 'Описание продукта',
+//         image: '/images/Wine_Background.png',
+//     },
+//     {
+//         id: 3,
+//         name: 'Название продукта3',
+//         description: 'Описание продукта',
+//         image: '/images/Wine_Background.png',
+//     }
+// ]
 
+// Для более удобной работы с видео и картинками
 interface ImagesVideos {
     title?:string;
     description?:string;
@@ -63,26 +67,7 @@ interface ImagesVideos {
     extraBlock ?:boolean;
     videoUrl?:string;
 }
-const videos : ImagesVideos[] = [
-    {
-        title:'Название видео',
-        description:'Описание видео. 2-3 предложения',
-        spesialTitle:'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold',
-        imageStyle:'w-[280px] h-[180px] sm:w-[450px] sm:h-[250px] md:w-[500px] md:h-[300px] lg:w-[650px] lg:h-[450px] rounded-xl ',
-        specialStyle:'flex-wrap justify-center p-5',
-        extraBlock:true,
-        videoUrl:"https://youtu.be/LQDrTgO1pCo?si=f0SbtiZCaEX_6h0z",
-    },
-    {
-        title:'Название видео',
-        description:'Описание видео. 2-3 предложения',
-        spesialTitle:'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold',
-        imageStyle:'w-[280px] h-[180px] sm:w-[450px] sm:h-[250px] md:w-[500px] md:h-[300px] lg:w-[650px] lg:h-[450px] rounded-xl ',
-        specialStyle:'flex-wrap justify-center p-5',
-        extraBlock:true,
-        videoUrl:"/images/Video-test.mp4",
-    }
-]
+
 const images : ImagesVideos[] = [
     {
         title:"О ЧЕМ ЦЕНТР ПРОИЗВОДСТВА",
@@ -103,6 +88,7 @@ const images : ImagesVideos[] = [
     }
 ]
 
+// интерфейс для пропсов
 interface ProductionCenterProps {
     title?: string,
     description?:string,
@@ -114,6 +100,43 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
     // Состояние для текущей страницы пагинации
     const [currentPage, setCurrentPage] = useState(1);
 
+    //Состояния продуктов и видео
+    const [products, setProducts] = useState<Product[]>([]);
+    const [videos, setVideos] = useState<Video[]>([]);
+    const [loadingProducts, setLoadingProducts] = useState(false);
+    const [loadingVideos, setLoadingVideos] = useState(false);
+
+
+    useEffect(() => {
+        const loadProducts = async () => {
+            setLoadingProducts(true);
+            try {
+                const data = await fetchProducts();
+                setProducts(data);
+            } catch (e) {
+                console.error('Ошибка загрузки продуктов:', e);
+            } finally {
+                setLoadingProducts(false);
+            }
+        };
+
+        const loadVideos = async () => {
+            setLoadingVideos(true);
+            try {
+                const data = await fetchVideos();
+                setVideos(data);
+            } catch (e) {
+                console.error('Ошибка загрузки видео:', e);
+            } finally {
+                setLoadingVideos(false);
+            }
+        };
+
+        loadProducts();
+        loadVideos();
+    }, []);
+
+
     const handleSearch = useCallback((query: string) => {
         setSearchQuery(query);
         setCurrentPage(1); // Сбрасываем на первую страницу при изменении поиска
@@ -122,6 +145,7 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
         <>
             <Navbar></Navbar>
             <main className="w-full h-max overflow-hidden bg-white font-body 3xl:max-w-screen-3xl 3xl:mx-auto">
+
                 {/*Заголовок */}
                 <header className="flex flex-col relative w-screen h-screen mb-20">
                     <div className="relative bg-[url('./components/assets/Wine_Bg_ProductionCenter.png')] header-background">
@@ -231,10 +255,10 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                     <Search
                         isMobile={false}
                         onSearch={handleSearch}
-                        suggestionsList={store.map(p => p.name)}
+                        suggestionsList={products.map(p => p.name)}
                     />
                     <div className="flex justify-center gap-6 flex-wrap w-full items-center mt-4">
-                        {store.map((value) => (
+                        {products.map((value) => (
                             <WineCard
                                 key={value.id}
                                 header={value.name}
@@ -278,7 +302,7 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                         дополнительные услуги
                     </h1>
                     <div className="w-full flex justify-center gap-6 flex-wrap">
-                        {store.map((value) => {
+                        {products.map((value) => {
                             return(
                                 <div className='z-[2]'>
                                     <Link to='/Мероприятия'>
@@ -300,6 +324,7 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                          className='absolute z-[1] bottom-0 right-0 rotate-[30deg]'
                     />
                 </section>
+
             </main>
             <Footer></Footer>
         </>

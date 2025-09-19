@@ -1,5 +1,12 @@
 import {$authHost, $host} from "./index";
 
+export interface Product {
+    id?: number,
+    name?: string,
+    description?: string,
+    image?: string,
+}
+
 export const createType = async (type) => {
     const {data} = await $authHost.post('api/type', type)
     return data
@@ -20,10 +27,19 @@ export const fetchClase = async () => {
     return data
 }
 
-export const createProduct = async (product) => {
-    const {data} = await $authHost.post('api/product', product)
-    return data
-}
+// export const createProduct = async (product) => {
+//     const {data} = await $authHost.post('api/product', product)
+//     return data
+// }
+
+export const createProduct = async (productData: any) => {
+    const { data } = await $host.post("api/product", productData, {
+        headers: {
+            "x-admin-key": "secret123", // ключ для админа
+        },
+    });
+    return data;
+};
 
 export const fetchProducts = async (typeId, claseId) => {
     const {data} = await $host.get('api/product',)

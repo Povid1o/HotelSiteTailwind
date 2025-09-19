@@ -63,7 +63,7 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
                 <Link to='/ЦентрПроизводства'>Центр производства</Link>
             </li>
           <li className='underlineDesktop text-lg'>
-            <Link to='/admin-pusttusinadjusi'>Панель Админа</Link>
+            <Link to='/admin'>Панель Админа</Link>
           </li>
           <li className='underlineDesktop text-lg' onClick={handleLogout}>
             Выйти
@@ -88,6 +88,10 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
           </li>
             <li className='underlineDesktop text-lg'>
                 <Link to='/ЦентрПроизводства'>Центр производства</Link>
+            </li>
+            {/*Не забыть удалить*/}
+            <li className='underlineDesktop text-lg'>
+                <Link to='/admin'>Панель Админа</Link>
             </li>
         </ul>
       )}

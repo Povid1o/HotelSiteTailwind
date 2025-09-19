@@ -1,16 +1,15 @@
-import {makeAutoObservable} from "mobx"
+import { makeAutoObservable } from "mobx";
+import axios from "axios";
 
-// Определяем интерфейсы для данных
+// интерфейсы можно вынести в отдельный файл
 interface ProductType {
   id: number;
   name: string;
-  // другие свойства
 }
 
 interface ProductClass {
   id: number;
   name: string;
-  // другие свойства
 }
 
 interface Product {
@@ -19,7 +18,6 @@ interface Product {
   price: number;
   typeId: number;
   classId: number;
-  // другие свойства
 }
 
 export default class ProductStorage {
@@ -29,42 +27,97 @@ export default class ProductStorage {
   private _selectedType: ProductType | Record<string, never> = {};
   private _selectedClase: ProductClass | Record<string, never> = {};
 
+  private _isLoading = false;
+  private _error: string | null = null;
+
   constructor() {
-    makeAutoObservable(this)
+    makeAutoObservable(this);
   }
 
-  setTypes(types){
-    this._types = types
+  setTypes(types: ProductType[]) {
+    this._types = types;
   }
-  setClases(clases){
-    this._clases = clases
+  setClases(clases: ProductClass[]) {
+    this._clases = clases;
   }
-  setProducts(products) {
-    this._products = Array.isArray(products) ? products : []; // Ensure products is an array
-  }
-
-  setSelectedType(type) {
-    this._selectedType = type
+  setProducts(products: Product[]) {
+    this._products = Array.isArray(products) ? products : [];
   }
 
-  setSelectedClase(clase) {
-    this._selectedClase = clase
+  setSelectedType(type: ProductType) {
+    this._selectedType = type;
   }
 
-  get types(){
-    return this._types
+  setSelectedClase(clase: ProductClass) {
+    this._selectedClase = clase;
+  }
+
+  setLoading(loading: boolean) {
+    this._isLoading = loading;
+  }
+
+  setError(error: string | null) {
+    this._error = error;
+  }
+
+  async loadProducts() {
+    this.setLoading(true);
+    this.setError(null);
+    try {
+      const response = await axios.get<Product[]>(`${process.env.REACT_APP_API_URL}/api/product`);
+      this.setProducts(response.data);
+    } catch (e: any) {
+      console.error("Ошибка загрузки продуктов:", e);
+      this.setError(e.message ?? "Ошибка загрузки продуктов");
+    } finally {
+      this.setLoading(false);
+    }
+  }
+
+  async updateProduct(id: number, data: Partial<Product>) {
+    try {
+      const response = await axios.put<Product>(
+          `${process.env.REACT_APP_API_URL}/api/product/${id}`,
+          data
+      );
+      const updated = response.data;
+      this.setProducts(
+          this._products.map((p) => (p.id === id ? { ...p, ...updated } : p))
+      );
+    } catch (e) {
+      console.error("Ошибка обновления продукта:", e);
+    }
+  }
+
+  async deleteProduct(id: number) {
+    try {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/product/${id}`);
+      this.setProducts(this._products.filter((p) => p.id !== id));
+    } catch (e) {
+      console.error("Ошибка удаления продукта:", e);
+    }
+  }
+
+  // геттеры
+  get types() {
+    return this._types;
   }
   get clases() {
-    return this._clases
+    return this._clases;
   }
   get products() {
-    return this._products
+    return this._products;
   }
   get selectedType() {
-    return this._selectedType
+    return this._selectedType;
   }
   get selectedClase() {
-    return this._selectedClase
+    return this._selectedClase;
   }
-
+  get isLoading() {
+    return this._isLoading;
+  }
+  get error() {
+    return this._error;
+  }
 }

@@ -12,8 +12,12 @@ export default function Main(){
                 <div
                     className={`main-side left 
                     ${hover === 'left' ? 'active': hover === 'right' ? 'inactive' : ''}`}
-                    onMouseLeave={() => setHover(null)}
-                    onMouseEnter={() => setHover('left')}
+                    onMouseEnter={() => {
+                        if (window.innerWidth > 768) setHover('left'); // только для десктопа
+                    }}
+                    onMouseLeave={() => {
+                        if (window.innerWidth > 768) setHover(null);
+                    }}
                     onClick={() => navigate('/Отель')}
                 >
                     <div className="main-content ">
@@ -24,8 +28,12 @@ export default function Main(){
                 <div
                     className={`main-side right 
                     ${hover === 'right' ? 'active' : hover === 'left' ? 'inactive' : ''}`}
-                    onMouseLeave={() => setHover(null)}
-                    onMouseEnter={() => setHover('right')}
+                    onMouseEnter={() => {
+                        if (window.innerWidth > 768) setHover('right'); // только для десктопа
+                    }}
+                    onMouseLeave={() => {
+                        if (window.innerWidth > 768) setHover(null);
+                    }}
                     onClick={() => navigate('/Винодельня')}
                 >
                     <div className="main-content">

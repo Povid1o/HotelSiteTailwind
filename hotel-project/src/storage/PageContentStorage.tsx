@@ -112,29 +112,46 @@ export default class PageContentStorage {
     try {
       this.setLoading(true);
       this.setError(null);
-      const pages = await fetchPageContent();
+
+      const response = await fetchPageContent();
+
+      // Проверяем, что есть массив
+      const pages = response && Array.isArray(response.pages)
+          ? response.pages
+          : [];
+
       this.setPages(pages);
     } catch (error: any) {
       this.setError(error.message);
-      console.error('Error loading page content:', error);
+      console.error("Error loading page content:", error);
+      this.setPages([]); // чтобы точно был массив
     } finally {
       this.setLoading(false);
     }
   }
 
-  // Локальные методы
   updatePageContentLocal = (pageName: string, sectionName: string, updatedData: any) => {
     const page = this._pages.find(p => p.name === pageName);
-    if (page && typeof page.content === 'object') {
-      const oldData = { ...page.content[sectionName] };
+
+    if (page) {
+      // Если content не объект — заменяем на пустой объект
+      if (typeof page.content !== 'object' || page.content === null) {
+        page.content = {};
+      }
+
+      // Сохраняем старое значение для отката
+      const oldData = { ...(page.content[sectionName] || {}) };
+
+      // Обновляем или создаём секцию
       page.content = {
         ...page.content,
         [sectionName]: updatedData
       };
-      
+
+      // Отправляем на сервер
       updatePageContent(pageName, page.content).catch(error => {
         console.error('Error updating page content:', error);
-        // Откатываем изменения
+        // Откат изменений
         page.content = {
           ...page.content,
           [sectionName]: oldData
@@ -146,12 +163,17 @@ export default class PageContentStorage {
   togglePageActiveLocal = (pageName: string) => {
     const page = this._pages.find(p => p.name === pageName);
     if (page) {
+      // Если у страницы ещё нет isActive → создаём поле
+      if (typeof page.isActive !== "boolean") {
+        page.isActive = false;
+      }
+
       page.isActive = !page.isActive;
-      
+
       togglePageActive(pageName).catch(error => {
-        console.error('Error toggling page active:', error);
+        console.error("Error toggling page active:", error);
+        // откат
         page.isActive = !page.isActive;
       });
     }
-  };
-}
+  };}

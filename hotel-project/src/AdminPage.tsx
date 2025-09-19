@@ -1,10 +1,14 @@
 // Нужно
 import React, { useState, useCallback, useContext, useEffect } from 'react';
+import { fetchVideos, createVideo, updateVideo, deleteVideo, Video } from "../src/components/http/videoAPI.tsx";
+
 import Navbar from './components/Navbar';
 import HomeEdit from './components/pages_editable/HomeEdit';
 import VineryEdit from './components/pages_editable/VineryEdit';
 import Card from './components/cards/Card';
+import axios from "axios";
 
+// import ProductStore from "./storage/ProductStorage.tsx"
 
 import CreateProduct from './components/modals/CreateProduct';
 import CreateClase from './components/modals/CreateClase';
@@ -23,6 +27,10 @@ import Button from './components/text_inputs/Button';
 import { Tabs } from "flowbite-react";
 import { Table } from "flowbite-react";
 import "./AdminPage.css";
+
+
+import {fetchProducts, createProduct, updateProduct, deleteProduct, Product} from "./components/http/productAPI";
+
 // Нужно
 // (можно будет удалить, когда вставим бэк)
 import Bottle from './components/assets/wine-bottle.png';
@@ -103,11 +111,20 @@ const AddCategory = ({onClick}) => {
 };
 
 const AdminPage = observer(() =>  {
+  // let productStore = new ProductStore()
+  const [editingProduct, setEditingProduct] = useState<number | null>(null);
+  const [editingData, setEditingData] = useState<{ name: string; price: number }>({
+    name: "",
+    price: 0,
+  });
+  const [newProductData, setNewProductData] = useState<{ name: string; price: number }>({ name: '', price: 0 });
+
+
   const context = useContext(Context);
   if (!context) {
     throw new Error('AdminPage must be used within Context Provider');
   }
-  const { dish, hotel, pageContent, wine } = context;
+  const { dish, hotel, pageContent, wine, product } = context;
 
   useEffect(() => {
     console.log('=== НАЧАЛО ЗАГРУЗКИ ДАННЫХ ===');
@@ -120,15 +137,21 @@ const AdminPage = observer(() =>  {
         console.log('✅ Блюда загружены:', dish.dishes);
       } catch (error) {
         console.error('❌ Ошибка загрузки блюд:', error);
+
         console.error('Детали ошибки:', {
+          // @ts-ignore
           message: error.message,
+          // @ts-ignore
           stack: error.stack,
+          // @ts-ignore
           response: error.response?.data,
+          // @ts-ignore
           status: error.response?.status,
+          // @ts-ignore
           statusText: error.response?.statusText
         });
       }
-  
+
       try {
         console.log('Загружаем номера...');
         await hotel.loadRooms();
@@ -136,14 +159,19 @@ const AdminPage = observer(() =>  {
       } catch (error) {
         console.error('❌ Ошибка загрузки номеров:', error);
         console.error('Детали ошибки:', {
+          // @ts-ignore
           message: error.message,
+          // @ts-ignore
           stack: error.stack,
+          // @ts-ignore
           response: error.response?.data,
+          // @ts-ignore
           status: error.response?.status,
+          // @ts-ignore
           statusText: error.response?.statusText
         });
       }
-  
+
       try {
         console.log('Загружаем контент страниц...');
         await pageContent.loadPageContent();
@@ -158,7 +186,7 @@ const AdminPage = observer(() =>  {
           statusText: error.response?.statusText
         });
       }
-  
+
       try {
         console.log('Загружаем вина...');
         await wine.loadWines();
@@ -173,10 +201,25 @@ const AdminPage = observer(() =>  {
           statusText: error.response?.statusText
         });
       }
+
+      try {
+        console.log('Загружаем продукты...');
+        await product.loadProducts();
+        console.log('✅ Продукты загружены:', product.products);
+      } catch (error) {
+        console.error('❌ Ошибка загрузки продуктов:', error);
+        console.error('Детали ошибки:', {
+          message: error.message,
+          stack: error.stack,
+          response: error.response?.data,
+          status: error.response?.status,
+          statusText: error.response?.statusText
+        });
+      }
     };
-  
+
     loadData();
-  }, [dish, hotel, pageContent, wine]);
+  }, [dish, hotel, pageContent, wine, product]);
 
   useEffect(() => {
     // Загружаем данные при монтировании компонента
@@ -184,11 +227,56 @@ const AdminPage = observer(() =>  {
     hotel.loadRooms().catch(console.error);
     pageContent.loadPageContent().catch(console.error);
     wine.loadWines().catch(console.error);
-  }, [dish, hotel, pageContent, wine]);
+    product.loadProducts().catch(console.error)
+  }, [dish, hotel, pageContent, wine, product]);
 
+  const useVideos = () => {
+    const [videos, setVideos] = useState<Video[]>([]);
+    const [loading, setLoading] = useState(false);
 
+    const loadVideos = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchVideos();
+        setVideos(data);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    const addVideo = async (video: Omit<Video, "id">) => {
+      const newVideo = await createVideo(video);
+      setVideos(prev => [...prev, newVideo]);
+    };
 
+    const editVideo = async (id: number, video: Partial<Video>) => {
+      const updated = await updateVideo(id, video);
+      setVideos(prev => prev.map(v => (v.id === id ? updated : v)));
+    };
+
+    const removeVideo = async (id: number) => {
+      await deleteVideo(id);
+      setVideos(prev => prev.filter(v => v.id !== id));
+    };
+
+    useEffect(() => {
+      loadVideos();
+    }, []);
+
+    return { videos, loading, addVideo, editVideo, removeVideo };
+  };
+  const { videos, loading, addVideo, editVideo, removeVideo } = useVideos();
+  const [editingVideoId, setEditingVideoId] = useState<number | null>(null);
+  const [editingVideoData, setEditingVideoData] = useState<{ title: string; description: string; videoUrl: string }>({
+    title: '',
+    description: '',
+    videoUrl: '',
+  });
+  const [newVideoData, setNewVideoData] = useState<{ title: string; description: string; videoUrl: string }>({
+    title: '',
+    description: '',
+    videoUrl: '',
+  });
   // //Список блюд
   // const [dishes, setDishes] = useState([
   //   {
@@ -305,9 +393,9 @@ const AdminPage = observer(() =>  {
   // ];
   // // Список страниц
   // const [pagesContent, setPagesContent] = useState([
-  //   { 
-  //     name: "Главная", 
-  //     path: "/", 
+  //   {
+  //     name: "Главная",
+  //     path: "/",
   //     isActive: true,
   //     content: {
   //       mainBackground: {
@@ -338,7 +426,7 @@ const AdminPage = observer(() =>  {
   //             image: "https://kursk-kortezh.ru/admin/Data-Gallery/pictures/tuazev8six-uslugi-transfera-v-prage.jpg"
   //           },
   //           {
-  //             name: "Изысканная кухня", 
+  //             name: "Изысканная кухня",
   //             image: "https://media.istockphoto.com/id/500466008/ru/%D1%84%D0%BE%D1%82%D0%BE/%D0%B3%D0%BE%D0%B2%D1%8F%D0%B4%D0%B8%D0%BD%D1%8B-%D1%81%D1%82%D0%B5%D0%B9%D0%BA.jpg?s=612x612&w=0&k=20&c=RN33VmjFFu06kFNyM_8vRe_A5eDgKlV6u86t1FZnpSM="
   //           },
   //           {
@@ -412,14 +500,14 @@ const AdminPage = observer(() =>  {
   //     }
   //   },
   //   {
-  //     name: "Ресторан", 
-  //     path: "/Ресторан", 
+  //     name: "Ресторан",
+  //     path: "/Ресторан",
   //     isActive: true,
   //     content: "Контент, содержащийся на этой странице редактируется в разделе %'Меню Ресторана'"
   //   },
   //   {
-  //     name: "Мероприятия", 
-  //     path: "/Мероприятия", 
+  //     name: "Мероприятия",
+  //     path: "/Мероприятия",
   //     isActive: true,
   //     content: "Контент, содержащийся на этой странице редактируется в другом разделе"
   //   }
@@ -683,31 +771,31 @@ const AdminPage = observer(() =>  {
   //     ]
   //   }
   // ]);
-  
+
   // НАЧАЛО ФУНКЦИЙ ДЛЯ ПРОДУКТОВ
 
   // Состояние для отслеживания режима редактирования категорий
   const [editingCategory, setEditingCategory] = useState<string | null>(null);
 
   // const addCategory = (newCategory) => {
-  //   const existingCategories = dishes.filter(dish => 
+  //   const existingCategories = dishes.filter(dish =>
   //     dish.category === newCategory || dish.category.startsWith(`${newCategory} (`)
   //   );
-  
+
   //   if (existingCategories.length === 0) {
   //     setDishes([...dishes, { category: newCategory, products: [] }]);
   //     return;
   //   }
-  
+
   //   const existingNumbers = existingCategories.map(dish => {
   //     const match = dish.category.match(/\((\d+)\)$/);
   //     return match ? parseInt(match[1]) : 0; // 0 для базовой категории без номера
   //   });
-  
+
   //   const maxNumber = Math.max(...existingNumbers);
-    
+
   //   const finalCategory = `${newCategory} (${maxNumber + 1})`;
-    
+
   //   setDishes([...dishes, { category: finalCategory, products: [] }]);
   // };
 
@@ -805,6 +893,58 @@ const AdminPage = observer(() =>  {
   const deleteProduct = (categoryName: string, productId: number) => {
     dish.deleteProduct(categoryName, productId);
   };
+
+  const [products, setProducts] = useState<any[]>([]);
+  useEffect(() => {
+    // @ts-ignore
+    fetchProducts().then(setProducts).catch(console.error);
+  }, []);
+
+  // const handleAddProduct = async () => {
+  //   const newProduct = await createProduct({ name: "Новый продукт", price: 1000 });
+  //   setProducts([...products, newProduct]);
+  // };
+
+  const handleAddProduct = async () => {
+    try {
+      const newProduct = await createProduct({ name: "Новый продукт", price: 1000 });
+      setProducts([...products, newProduct]);
+    } catch (e) {
+      console.error("Ошибка создания продукта:", e);
+    }
+  };
+
+  // const handleUpdateProduct = async (id: number, updatedData: any) => {
+  //   const updated = await updateProduct(id, updatedData);
+  //   setProducts(products.map(p => (p.id === id ? updated : p)));
+  // };
+
+  // Обновление продукта
+  const handleUpdateProduct = async (id: number, updatedData: any) => {
+    try {
+      const updated = await updateProduct(id, updatedData);
+      setProducts(products.map(p => (p.id === id ? updated : p)));
+    } catch (e) {
+      console.error("Ошибка обновления продукта:", e);
+    }
+  };
+
+  // const handleDeleteProduct = async (id: number) => {
+  //   await deleteProduct(id);
+  //   setProducts(products.filter(p => p.id !== id));
+  // };
+
+  // Удаление продукта
+  const handleDeleteProduct = async (id: number) => {
+    try {
+      await deleteProduct(id);
+      setProducts(products.filter(p => p.id !== id));
+    } catch (e) {
+      console.error("Ошибка удаления продукта:", e);
+    }
+  };
+
+
 
   // Вместо updateDishData используйте:
   const updateDishData = useCallback((categoryName: string, productId: number, updatedDishData: any) => {
@@ -1014,7 +1154,7 @@ const AdminPage = observer(() =>  {
   //   });
   // }, []);
 
-  
+
   const pageContentHandlers = {
     "Главная": (page) => (
       <ExtCard
@@ -1081,7 +1221,7 @@ const AdminPage = observer(() =>  {
       </div>
     );
   }
-  
+
   // Добавьте обработку ошибок:
   if (dish.error || hotel.error || pageContent.error || wine.error) {
     return (
@@ -1104,20 +1244,21 @@ const AdminPage = observer(() =>  {
             <ModalsCard
                 Card={addType}
                 ExtContent={CreateType}
-            /> 
+            />
             <ModalsCard
                 Card={addClase}
                 ExtContent={CreateClase}
-            /> 
+            />
             <ModalsCard
                 Card={addProduct}
                 ExtContent={CreateProduct}
-            /> 
-                
+            />
+
           </div>
-        
+
 
         <Tabs aria-label="Tabs with underline" className="tabsContainer" variant="underline">
+
           <Tabs.Item active title="Контент на страницах" icon={FaHome}>
             <div className="overflow-x-auto">
               <Table hoverable>
@@ -1127,21 +1268,120 @@ const AdminPage = observer(() =>  {
                   <Table.HeadCell>Действия</Table.HeadCell>
                 </Table.Head>
                 <Table.Body className="divide-y">
-                  {pageContent.pages.map((page) => (
-                    <Table.Row key={page.name} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                        {page.name}
-                      </Table.Cell>
-                      <Table.Cell>{page.isActive ? "Сохранено" : "Есть изменения"}</Table.Cell>
-                      <Table.Cell>
-                        {pageContentHandlers[page.name] ? pageContentHandlers[page.name](page) : (
-                          <span className="text-gray-500">
-                            {page.content}
-                          </span>
-                        )}
-                      </Table.Cell>
-                    </Table.Row>
+                  {/* Существующие продукты */}
+                  {Array.isArray(products) && products.map(({ id, name, price }) => (
+                      <Table.Row key={id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                        <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                          {editingProduct === id ? (
+                              <input
+                                  type="text"
+                                  value={editingData.name}
+                                  onChange={(e) => setEditingData({ ...editingData, name: e.target.value })}
+                                  className="border rounded p-1 w-full"
+                              />
+                          ) : (
+                              name
+                          )}
+                        </Table.Cell>
+
+                        <Table.Cell>
+                          {editingProduct === id ? (
+                              <input
+                                  type="number"
+                                  value={editingData.price}
+                                  onChange={(e) => setEditingData({ ...editingData, price: +e.target.value })}
+                                  className="border rounded p-1 w-20"
+                              />
+                          ) : (
+                              price
+                          )}
+                        </Table.Cell>
+
+                        <Table.Cell>
+                          {editingProduct === id ? (
+                              <>
+                                <button
+                                    onClick={async () => {
+                                      await productStore.updateProduct(id, editingData);
+                                      setEditingProduct(null);
+                                    }}
+                                    className="bg-green-500 text-white px-2 py-1 rounded mr-2"
+                                >
+                                  Сохранить
+                                </button>
+                                <button
+                                    onClick={() => setEditingProduct(null)}
+                                    className="bg-gray-400 text-white px-2 py-1 rounded"
+                                >
+                                  Отмена
+                                </button>
+                              </>
+                          ) : (
+                              <button
+                                  onClick={() => {
+                                    setEditingProduct(id);
+                                    setEditingData({ name, price });
+                                  }}
+                                  className="font-medium text-main_theme hover:underline dark:text-cyan-500"
+                              >
+                                Редактировать
+                              </button>
+                          )}
+                        </Table.Cell>
+
+                        <Table.Cell>
+                          <button
+                              onClick={() => productStore.deleteProduct(id)}
+                              className="font-medium text-main_theme hover:underline dark:text-cyan-500"
+                          >
+                            Удалить
+                          </button>
+                        </Table.Cell>
+                      </Table.Row>
                   ))}
+
+                  {/* Нижний инпут для нового продукта */}
+                  <Table.Row className="bg-gray-100 dark:bg-gray-800">
+                    <Table.Cell>
+                      <input
+                          type="text"
+                          value={newProductData.name}
+                          onChange={(e) => setNewProductData({ ...newProductData, name: e.target.value })}
+                          placeholder="Название нового продукта"
+                          className="border rounded p-1 w-full"
+                      />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <input
+                          type="number"
+                          value={newProductData.price}
+                          onChange={(e) => setNewProductData({ ...newProductData, price: +e.target.value })}
+                          placeholder="Цена"
+                          className="border rounded p-1 w-20"
+                      />
+                    </Table.Cell>
+                    <Table.Cell colSpan={2}>
+                      <button
+                          onClick={async () => {
+                            const response = await axios.post<Product>(
+                                `${process.env.REACT_APP_API_URL}api/product`,
+                                newProductData
+                            );
+                            productStore.setProducts([...productStore.products, response.data]);
+                            setNewProductData({ name: '', price: 0 }); // Очистка инпута после добавления
+                          }}
+                          className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
+                      >
+                        Добавить
+                      </button>
+                      <button
+                          onClick={() => setNewProductData({ name: '', price: 0 })}
+                          className="bg-gray-400 text-white px-2 py-1 rounded"
+                      >
+                        Отмена
+                      </button>
+                    </Table.Cell>
+                  </Table.Row>
                 </Table.Body>
               </Table>
             </div>
@@ -1246,7 +1486,7 @@ const AdminPage = observer(() =>  {
                             />
                           )}
                         </div>
-                      {products.map(({ id, images, name, header, description, descriptionFull, weight, price}) => (
+                      {Array.isArray(products) ? products.map(({ id, images, name, header, description, descriptionFull, weight, price}) => (
                         <Table.Row key={name} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                             {name}
@@ -1282,7 +1522,7 @@ const AdminPage = observer(() =>  {
                             </a>
                           </Table.Cell>
                         </Table.Row>
-                      ))}
+                      )) : <div></div> }
                     </>
                   ))}
                 </Table.Body>
@@ -1304,7 +1544,7 @@ const AdminPage = observer(() =>  {
                   <Table.HeadCell>Действия</Table.HeadCell>
                 </Table.Head>
                 <Table.Body className="divide-y">
-                  {wine.wines.map(({ type, assortment }) => (
+                  {Array.isArray(wine) && wine.wines.map(({ type, assortment }) => (
                     <>
                       <div key={type} >
                         <div className="my-5 mx-auto flex justify-center items-center gap-4 w-full">
@@ -1372,6 +1612,186 @@ const AdminPage = observer(() =>  {
               </Table>
             </div>
           </Tabs.Item>
+
+          <Tabs.Item title="Продукты" icon={HiClipboardList}>
+            <div className="overflow-x-auto">
+              <Table hoverable>
+                <Table.Head>
+                  <Table.HeadCell>Название</Table.HeadCell>
+                  <Table.HeadCell>Цена</Table.HeadCell>
+                  <Table.HeadCell>Действия</Table.HeadCell>
+                </Table.Head>
+                <Table.Body className="divide-y">
+                  {products.map((product) => (
+                      <Table.Row key={product.id}>
+                        <Table.Cell>{product.name}</Table.Cell>
+                        <Table.Cell>{product.price}</Table.Cell>
+                        <Table.Cell>
+                          <button onClick={() =>{
+                            handleUpdateProduct(product.id, { name: product.name + " (обновлено)"})
+                            setEditingProduct(product.id);
+                            setEditingData({ name: product.name, price: product.price })
+                          }}>
+                            Редактировать
+                          </button>
+                          <button onClick={() => handleDeleteProduct(product.id)}>Удалить</button>
+                        </Table.Cell>
+                      </Table.Row>
+
+                  ))}
+
+                </Table.Body>
+              </Table>
+              <button onClick={handleAddProduct} className="mt-4 bg-main_theme text-white px-4 py-2 rounded-xl">
+                Добавить продукт
+              </button>
+            </div>
+          </Tabs.Item>
+
+          <Tabs.Item title="Видео" icon={FaHome}>
+            <div className="overflow-x-auto">
+              <Table hoverable>
+                <Table.Head>
+                  <Table.HeadCell>Название</Table.HeadCell>
+                  <Table.HeadCell>Описание</Table.HeadCell>
+                  <Table.HeadCell>Ссылка на видео</Table.HeadCell>
+                  <Table.HeadCell>Действия</Table.HeadCell>
+                </Table.Head>
+                <Table.Body className="divide-y">
+
+                  {/* Существующие видео */}
+                  {videos.map((video) => (
+                      <Table.Row key={video.id}>
+                        <Table.Cell>
+                          {editingVideoId === video.id ? (
+                              <input
+                                  type="text"
+                                  value={editingVideoData.title}
+                                  onChange={(e) => setEditingVideoData({ ...editingVideoData, title: e.target.value })}
+                                  className="border rounded p-1 w-full"
+                              />
+                          ) : (
+                              video.title
+                          )}
+                        </Table.Cell>
+                        <Table.Cell>
+                          {editingVideoId === video.id ? (
+                              <input
+                                  type="text"
+                                  value={editingVideoData.description}
+                                  onChange={(e) => setEditingVideoData({ ...editingVideoData, description: e.target.value })}
+                                  className="border rounded p-1 w-full"
+                              />
+                          ) : (
+                              video.description
+                          )}
+                        </Table.Cell>
+                        <Table.Cell>
+                          {editingVideoId === video.id ? (
+                              <input
+                                  type="text"
+                                  value={editingVideoData.videoUrl}
+                                  onChange={(e) => setEditingVideoData({ ...editingVideoData, videoUrl: e.target.value })}
+                                  className="border rounded p-1 w-full"
+                              />
+                          ) : (
+                              video.videoUrl
+                          )}
+                        </Table.Cell>
+                        <Table.Cell>
+                          {editingVideoId === video.id ? (
+                              <>
+                                <button
+                                    onClick={async () => {
+                                      await editVideo(video.id, editingVideoData);
+                                      setEditingVideoId(null);
+                                    }}
+                                    className="bg-green-500 text-white px-2 py-1 rounded mr-2"
+                                >
+                                  Сохранить
+                                </button>
+                                <button
+                                    onClick={() => setEditingVideoId(null)}
+                                    className="bg-gray-400 text-white px-2 py-1 rounded"
+                                >
+                                  Отмена
+                                </button>
+                              </>
+                          ) : (
+                              <>
+                                <button
+                                    onClick={() => {
+                                      setEditingVideoId(video.id);
+                                      setEditingVideoData({ title: video.title, description: video.description, videoUrl: video.videoUrl });
+                                    }}
+                                    className="font-medium text-main_theme hover:underline dark:text-cyan-500 mr-2"
+                                >
+                                  Редактировать
+                                </button>
+                                <button
+                                    onClick={() => removeVideo(video.id)}
+                                    className="font-medium text-red-500 hover:underline"
+                                >
+                                  Удалить
+                                </button>
+                              </>
+                          )}
+                        </Table.Cell>
+                      </Table.Row>
+                  ))}
+
+                  {/* Нижний инпут для нового видео */}
+                  <Table.Row className="bg-gray-100 dark:bg-gray-800">
+                    <Table.Cell>
+                      <input
+                          type="text"
+                          value={newVideoData.title}
+                          onChange={(e) => setNewVideoData({ ...newVideoData, title: e.target.value })}
+                          placeholder="Название видео"
+                          className="border rounded p-1 w-full"
+                      />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <input
+                          type="text"
+                          value={newVideoData.description}
+                          onChange={(e) => setNewVideoData({ ...newVideoData, description: e.target.value })}
+                          placeholder="Описание"
+                          className="border rounded p-1 w-full"
+                      />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <input
+                          type="text"
+                          value={newVideoData.videoUrl}
+                          onChange={(e) => setNewVideoData({ ...newVideoData, videoUrl: e.target.value })}
+                          placeholder="Ссылка на видео"
+                          className="border rounded p-1 w-full"
+                      />
+                    </Table.Cell>
+                    <Table.Cell>
+                      <button
+                          onClick={async () => {
+                            await addVideo(newVideoData);
+                            setNewVideoData({ title: '', description: '', videoUrl: '' }); // очистка
+                          }}
+                          className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
+                      >
+                        Добавить
+                      </button>
+                      <button
+                          onClick={() => setNewVideoData({ title: '', description: '', videoUrl: '' })}
+                          className="bg-gray-400 text-white px-2 py-1 rounded"
+                      >
+                        Отмена
+                      </button>
+                    </Table.Cell>
+                  </Table.Row>
+                </Table.Body>
+              </Table>
+            </div>
+          </Tabs.Item>
+
         </Tabs>
       </div>
     </div>
