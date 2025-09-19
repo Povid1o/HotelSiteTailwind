@@ -1,11 +1,15 @@
-FROM node
+FROM node:18-alpine
+WORKDIR /app
 
-WORKDIR /app/back
+# только зависимости
+COPY package*.json ./
+RUN npm install --omit=dev
 
+# исходники
 COPY . .
 
-RUN npm install nodemon
-
-RUN npm install
-
-ENTRYPOINT [ "npm", "run", "dev" ]
+# убедись, что твой app читает PORT и слушает его (process.env.PORT || 8000)
+ENV NODE_ENV=production
+ENV PORT=8000
+EXPOSE 8000
+CMD ["node", "index.js"]
