@@ -8,7 +8,7 @@ import VineryEdit from './components/pages_editable/VineryEdit';
 import Card from './components/cards/Card';
 import axios from "axios";
 
-// import ProductStore from "./storage/ProductStorage.tsx"
+// import product from "./storage/ProductStorage.tsx"
 
 import CreateProduct from './components/modals/CreateProduct';
 import CreateClase from './components/modals/CreateClase';
@@ -111,7 +111,7 @@ const AddCategory = ({onClick}) => {
 };
 
 const AdminPage = observer(() =>  {
-  // let productStore = new ProductStore()
+  // let product = new product()
   const [editingProduct, setEditingProduct] = useState<number | null>(null);
   const [editingData, setEditingData] = useState<{ name: string; price: number }>({
     name: "",
@@ -129,7 +129,7 @@ const AdminPage = observer(() =>  {
   useEffect(() => {
     console.log('=== НАЧАЛО ЗАГРУЗКИ ДАННЫХ ===');
     console.log('API_URL:', process.env.REACT_APP_API_URL);
-    
+
     const loadData = async () => {
       try {
         console.log('Загружаем блюда...');
@@ -1302,7 +1302,7 @@ const AdminPage = observer(() =>  {
                               <>
                                 <button
                                     onClick={async () => {
-                                      await productStore.updateProduct(id, editingData);
+                                      await product.updateProduct(id, editingData);
                                       setEditingProduct(null);
                                     }}
                                     className="bg-green-500 text-white px-2 py-1 rounded mr-2"
@@ -1331,7 +1331,7 @@ const AdminPage = observer(() =>  {
 
                         <Table.Cell>
                           <button
-                              onClick={() => productStore.deleteProduct(id)}
+                              onClick={() => product.deleteProduct(id)}
                               className="font-medium text-main_theme hover:underline dark:text-cyan-500"
                           >
                             Удалить
@@ -1363,17 +1363,25 @@ const AdminPage = observer(() =>  {
                     <Table.Cell colSpan={2}>
                       <button
                           onClick={async () => {
-                            const response = await axios.post<Product>(
-                                `${process.env.REACT_APP_API_URL}api/product`,
-                                newProductData
-                            );
-                            productStore.setProducts([...productStore.products, response.data]);
-                            setNewProductData({ name: '', price: 0 }); // Очистка инпута после добавления
+                            try {
+                              const response = await axios.post<Product>(
+                                  `${process.env.REACT_APP_API_URL}api/product`,
+                                  newProductData,
+                                  {
+                                    headers: { "x-admin-key": "secret123" }
+                                  }
+                              );
+                              product.setProducts([...product.products, response.data]);
+                              setNewProductData({ name: '', price: 0 }); // Очистка инпута после добавления
+                            } catch (e) {
+                              console.error("Ошибка создания продукта:", e);
+                            }
                           }}
                           className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
                       >
                         Добавить
                       </button>
+
                       <button
                           onClick={() => setNewProductData({ name: '', price: 0 })}
                           className="bg-gray-400 text-white px-2 py-1 rounded"
