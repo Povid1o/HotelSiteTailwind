@@ -1,6 +1,7 @@
 import { $authHost, $host } from "./index";
 
 export interface Video {
+    id?: number;
     title?:string;
     description?:string;
     spesialTitle?:string;

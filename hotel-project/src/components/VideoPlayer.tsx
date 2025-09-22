@@ -1,48 +1,50 @@
-import React, { useRef, useEffect } from "react";
-import "plyr/dist/plyr.css";
-import Plyr from "plyr";
+import React from "react";
+import Plyr from "plyr-react";
+import "../../node_modules/plyr/dist/plyr.css";
+import './styles/Vp.css'
 
-interface VideoPlayerProps {
-    sourceUrl: string;
-}
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ sourceUrl }) => {
-    const playerRef = useRef<HTMLVideoElement>(null);
+const getYouTubeId = (url) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+};
 
-    useEffect(() => {
-        if (!playerRef.current) return;
+const VideoPlayer = ({ sourceUrl }) => {
+    const plyrSource = React.useMemo(() => {
+        if (!sourceUrl) return null;
 
-        const player = new Plyr(playerRef.current, {
-            controls: ["play", "progress", "mute", "volume", "fullscreen"],
-        });
+        const youtubeId = getYouTubeId(sourceUrl);
 
-        // Для YouTube можно использовать:
-        if (sourceUrl.includes("youtube.com") || sourceUrl.includes("youtu.be")) {
-            player.source = {
+
+        if (youtubeId) {
+            return {
                 type: "video",
                 sources: [
                     {
-                        src: sourceUrl.split("v=")[1], // достаем ID
+                        src: youtubeId,
                         provider: "youtube",
                     },
                 ],
             };
         } else {
-            player.source = {
+            return {
                 type: "video",
                 sources: [
                     {
                         src: sourceUrl,
-                        type: "video/mp4",
+                        type: `video/mp4`,
                     },
                 ],
             };
         }
-
-        return () => player.destroy();
     }, [sourceUrl]);
+    if (!plyrSource) {
+        return null;
+    }
 
-    return <video ref={playerRef} src={sourceUrl} className="w-full h-full object-cover rounded-xl" controls playsInline />;
+    return <Plyr source={plyrSource} />;
 };
 
 export default VideoPlayer;

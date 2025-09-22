@@ -19,7 +19,10 @@ export default function ProductionCard({
 
 
     return(
-        <div className ={`${specialStyle} w-full flex ${flexReverse ? 'flex-row lg:flex-row-reverse' : 'flex-row'} justify-between bg-white rounded-xl drop-shadow-2xl z-[2]`}>
+        <div className ={`
+        ${specialStyle} 
+        ${flexReverse ? 'flex-row lg:flex-row-reverse' : 'flex-row'} 
+        justify-center items-center bg-white rounded-xl drop-shadow-2xl z-[2]`}>
 
             <div className={`${imageStyle} min-h-30 relative bg-main_theme bg-no-repeat bg-cover bg-center rounded-l-xl 
             ${flexReverse ? 'lg:rounded-l-none lg:rounded-r-xl' :''} `}
