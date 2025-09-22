@@ -158,7 +158,7 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                     <div className='flex flex-col gap-10 py-40 px-5 md:px-20 lg:px-20 bg-[url("./components/assets/ProductionBg.png")] text-gray-700'>
                         <ProductionCard
                             spesialTitle={'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold'}
-                            imageStyle={'w-[280px] h-[180px] sm:w-[450px] sm:h-[250px] md:w-[500px] md:h-[300px] lg:w-[650px] lg:h-[450px] rounded-xl '}
+                            imageStyle={'w-[650px] rounded-xl flex items-center'}
                             specialStyle={'flex-wrap justify-center p-5'}
                             title={'Название видео'}
                             extraBlock={true}
@@ -167,12 +167,12 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                         ></ProductionCard>
                         <ProductionCard
                             spesialTitle={'text-[30px] sm:text-[45px] md:text-[50px] lg:text-[64px] font-bold'}
-                            imageStyle={'w-[280px] h-[180px] sm:w-[450px] sm:h-[250px] md:w-[500px] md:h-[300px] lg:w-[650px] lg:h-[450px] rounded-xl '}
+                            imageStyle={'w-[650px] rounded-xl flex items-center'}
                             specialStyle={'flex-wrap justify-center p-5'}
                             title={'Название видео'}
                             description={'Описание видео. 2-3 предложения'}
                             extraBlock={true}
-                            extraImage={'/images/Video-test.mp4'}
+                            extraImage={'https://youtu.be/55TQ-sCSHbc?si=zD3xELd4mig59wkN'}
                         ></ProductionCard>
                     </div>
 

@@ -3,6 +3,7 @@ import './../styles/productionCenter.css'
 import {Link} from "react-router-dom";
 import {FaLongArrowAltRight} from "react-icons/fa";
 import Media from './../Media'
+import VideoPlayer from "../VideoPlayer.tsx";
 
 export default function ProductionCard({
                                            title,
@@ -23,7 +24,7 @@ export default function ProductionCard({
             <div className={`${imageStyle} relative bg-main_theme bg-no-repeat bg-cover bg-center rounded-l-xl ${flexReverse ? 'lg:rounded-l-none lg:rounded-r-xl' :''} `}
             style={{backgroundImage: `url('${bgImg}')`}}>
                 {extraImage && (
-                    <Media src={extraImage} className="absolute inset-0 w-full h-full object-cover rounded-xl"></Media>
+                    <VideoPlayer sourceUrl={extraImage}></VideoPlayer>
                 )}
             </div>
 
