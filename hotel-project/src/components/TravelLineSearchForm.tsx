@@ -87,7 +87,7 @@ const TravelLineSearchForm = ({id}: {id: string}) => {
     <>
       <style>{styles}</style>
       <div id="block-search">
-        <div id="tl-search-form" className="tl-container">
+        <div id={searchFormUniqueId} className="tl-container">
           <a
             href="https://www.travelline.ru/products/tl-hotel/"
             rel="nofollow"
