@@ -209,20 +209,30 @@ const Home = ({nav}) => {
                     <h1 className='header-page'>Добро пожаловать на Винные Террасы</h1>
                 </div>
 
-                {width > 768 ? (
-                    <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 w-3/4 max-w-4xl">
+                <div className="absolute hidden bottom-10 left-1/2 transform -translate-x-1/2 w-3/4 max-w-4xl lg:flex">
+                  <TravelLineSearchForm id={'main'} />
+                </div>
+
+                {/* {width > 768 ? (
+                    <div className="absolute hidden bottom-10 left-1/2 transform -translate-x-1/2 w-3/4 max-w-4xl md:flex">
                         <TravelLineSearchForm id={'main'} />
                     </div>
-                ) : (
+                ) : 
+                (
                     <div className="mt-4 w-full px-4">  // Отдельная секция снизу
                         <TravelLineSearchForm id={'second'} />
                     </div>
-                )}
+                )
+                } */}
             </section>
             {/*  Intro */}
 
             {/* Brick */}
-            <TravelLineSearchForm id={'third'} />
+            {/* <TravelLineSearchForm id={'third'} /> */}
+
+            <section className='my-8 bg-white rounded-xl drop-shadow-2xl unShown max-sm:w-5/6 md:w-3/4 md:px-0 mx-auto justify-center lg:hidden'>
+              <TravelLineSearchForm id={'second'} />
+            </section>
 
 
 

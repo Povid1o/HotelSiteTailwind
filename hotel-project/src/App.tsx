@@ -18,6 +18,7 @@ const WinePage = lazy(() => import("./components/cards/WinePage.tsx"));
 const ModalWindow = lazy(() => import('./components/modals/ModalWindow.tsx'))
 const ProductionCenter = lazy(() => import( "./ProductionCenter.tsx"))
 const Main = lazy(() => import('./components/Main'))
+const NotFound = lazy(() => import('./components/NotFoundPage.tsx'))  // Добавлено
 
 
 
@@ -66,6 +67,10 @@ const publicrouter = createBrowserRouter([
       {
         path: "/ЦентрПроизводства",
         element: <ProductionCenter />,
+      },
+      {
+        path: "*",  // Добавлено
+        element: <NotFound />
       },
     ],
   }
@@ -124,6 +129,10 @@ const hiderouter = createBrowserRouter([
       {
         path: '/admin',
         element: <AdminPage/>
+      },
+      {
+        path: "*",  // Добавлено
+        element: <NotFound />
       },
     ]
   }

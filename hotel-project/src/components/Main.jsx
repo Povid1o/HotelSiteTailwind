@@ -30,7 +30,7 @@ export default function Main(){
                 >
                     <div className="main-content">
                         <Media src="/images/VineryBackground.png" alt="right-content" className='h-full'/>
-                        <h1>Гравитационная винодельня</h1>
+                        <h1>Винодельня</h1>
                     </div>
                 </div>
                 <div

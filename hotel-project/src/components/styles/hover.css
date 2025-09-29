@@ -63,3 +63,7 @@
 .underlineCard:hover::before {
   transform: scaleX(1);
 }
+
+.computerList {
+  @apply text-lg flex justify-center items-center
+}

@@ -44,19 +44,16 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
       {/* Menu */}
       {user?.isAuth ? (
         <ul className='hidden md:flex '>
-          <li className='underlineDesktop text-lg '>
-            <Link to='/О нас'>О нас</Link>
-          </li>
-          <li className='underlineDesktop text-lg'>
+          <li className='underlineDesktop computerList'>
             <Link to='/Отель'>Отель</Link>
           </li>
-          <li className='underlineDesktop text-lg'>
+          <li className='underlineDesktop computerList'>
             <Link to='/Винодельня'>Винодельня</Link>
           </li>
-          <li className='underlineDesktop text-lg'>
+          <li className='underlineDesktop computerList'>
             <Link to='/Ресторан'>Ресторан</Link>
           </li>
-          <li className='underlineDesktop text-lg'>
+          <li className='underlineDesktop computerList'>
             <Link to='/Мероприятия'>Мероприятия</Link>
           </li>
             <li className='underlineDesktop text-lg'>
@@ -65,25 +62,22 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
           <li className='underlineDesktop text-lg'>
             <Link to='/admin-pusttusinadjusi'>Панель Админа</Link>
           </li>
-          <li className='underlineDesktop text-lg' onClick={handleLogout}>
+          <li className='underlineDesktop computerList' onClick={handleLogout}>
             Выйти
           </li>
         </ul>
       ) : (
         <ul className='hidden md:flex '>
-          <li className='underlineDesktop text-lg '>
-            <Link to='/О нас'>О нас</Link>
-          </li>
-          <li className='underlineDesktop text-lg'>
+          <li className='underlineDesktop computerList'>
             <Link to='/Отель'>Отель</Link>
           </li>
-          <li className='underlineDesktop text-lg'>
+          <li className='underlineDesktop computerList'>
             <Link to='/Винодельня'>Винодельня</Link>
           </li>
-          <li className='underlineDesktop text-lg'>
+          <li className='underlineDesktop computerList'>
             <Link to='/Ресторан'>Ресторан</Link>
           </li>
-          <li className='underlineDesktop text-lg'>
+          <li className='underlineDesktop computerList'>
             <Link to='/Мероприятия'>Мероприятия</Link>
           </li>
             <li className='underlineDesktop text-lg'>
@@ -105,9 +99,6 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
             : 'transition-opacity duration-300 ease-out opacity-100 absolute top-0 left-0 w-full h-screen bg-main_theme flex flex-col justify-center items-center visible'
         }
       >
-        <li className='py-6 text-4xl underlineMobile'>
-          <Link to='/О нас'>О нас</Link>
-        </li>
         <li className='py-6 text-4xl underlineMobile'>
           <Link to='/Отель'>Отель</Link>
         </li>
