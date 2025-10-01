@@ -3,6 +3,7 @@ const router = new Router();
 const c = require('../controllers/wineController');
 
 router.get('/tree', c.tree);
+router.post('/tree', c.create);
 router.post('/', c.create);
 router.put('/:id', c.update);
 router.delete('/:id', c.remove);
