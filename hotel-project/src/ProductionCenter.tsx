@@ -62,6 +62,7 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
     const [searchQuery, setSearchQuery] = useState('');
     // Состояние для текущей страницы пагинации
     const [currentPage, setCurrentPage] = useState(1);
+    const [nav, setNav] = useState(false);
 
     const handleSearch = useCallback((query: string) => {
         setSearchQuery(query);
@@ -69,7 +70,7 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
     }, []);
     return (
         <>
-            <Navbar></Navbar>
+            <Navbar nav = {nav} setNav = {setNav}/>
             <main className="w-full h-max overflow-hidden bg-white font-body 3xl:max-w-screen-3xl 3xl:mx-auto">
                 {/*Заголовок */}
                 <header className="flex flex-col relative w-screen h-screen mb-20">
