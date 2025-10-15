@@ -2,7 +2,7 @@ name: Build & Deploy (GHCR -> VPS)
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: ["dev"]
   workflow_dispatch: {}
 
 permissions:
@@ -28,6 +28,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # ✅ ВКЛЮЧАЕМ BUILDX С НУЖНЫМ ДРАЙВЕРОМ (решает ошибку cache export)
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker-container
+          install: true
+          buildkitd-flags: --debug
+
       # BACKEND image
       - name: Build & Push backend
         uses: docker/build-push-action@v6
@@ -38,6 +46,8 @@ jobs:
           tags: |
             ${{ env.IMAGE_BACKEND }}:latest
             ${{ env.IMAGE_BACKEND }}:${{ github.sha }}
+            ${{ env.IMAGE_BACKEND }}:${{ github.ref_name }}
+          # ✅ теперь кэш GHA работает
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -51,6 +61,7 @@ jobs:
           tags: |
             ${{ env.IMAGE_FRONTEND }}:latest
             ${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
+            ${{ env.IMAGE_FRONTEND }}:${{ github.ref_name }}
           build-args: |
             REACT_APP_API_URL=/api
           cache-from: type=gha
@@ -59,6 +70,9 @@ jobs:
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
+    concurrency:
+      group: hotelsite-deploy
+      cancel-in-progress: true
     steps:
       - name: Deploy via SSH (compose pull + up)
         uses: appleboy/ssh-action@v1.2.0
@@ -70,6 +84,8 @@ jobs:
           script: |
             set -e
             cd HotelSiteTailwind
+            # Если образы приватные — логинимся в GHCR на сервере
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin || true
             docker compose pull
-            docker compose up -d
+            docker compose up -d --remove-orphans
             docker image prune -f
