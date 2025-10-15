@@ -2,7 +2,7 @@ name: Build & Deploy (GHCR -> VPS)
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: ["dev"]
   workflow_dispatch: {}
 
 permissions:
@@ -38,6 +38,7 @@ jobs:
           tags: |
             ${{ env.IMAGE_BACKEND }}:latest
             ${{ env.IMAGE_BACKEND }}:${{ github.sha }}
+            ${{ env.IMAGE_BACKEND }}:${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -51,6 +52,9 @@ jobs:
           tags: |
             ${{ env.IMAGE_FRONTEND }}:latest
             ${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
+            ${{ env.IMAGE_FRONTEND }}:${{ github.ref_name }}
+          # ВНИМАНИЕ: выбери один вариант baseURL
+          # Вариант 1: фронт шлёт '/rooms' (без 'api/') → baseURL=/api
           build-args: |
             REACT_APP_API_URL=/api
           cache-from: type=gha
@@ -59,6 +63,9 @@ jobs:
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
+    concurrency:
+      group: hotelsite-deploy
+      cancel-in-progress: true
     steps:
       - name: Deploy via SSH (compose pull + up)
         uses: appleboy/ssh-action@v1.2.0
@@ -70,6 +77,11 @@ jobs:
           script: |
             set -e
             cd HotelSiteTailwind
+
+            # login to GHCR if images are private
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin || true
+
             docker compose pull
-            docker compose up -d
+            docker compose up -d --remove-orphans
             docker image prune -f
+
