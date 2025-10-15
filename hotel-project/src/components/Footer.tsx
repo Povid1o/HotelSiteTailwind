@@ -14,11 +14,11 @@ const YandexMap = () => {
     <div className="w-full -z-50">
       <YMaps >
         <Map defaultState={{
-            center: [55.684758, 37.738521],
-            zoom: 15
+            center: [44.738755, 37.599938],
+            zoom: 10
             }}
             style={{ width: '${width}px', height: '240px' }}>
-          <Placemark geometry={[55.684758, 37.738521]} />
+          <Placemark geometry={[44.738755, 37.599938]} />
         </Map>
       </YMaps>
     </div>

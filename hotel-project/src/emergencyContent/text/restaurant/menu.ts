@@ -1,9 +1,11 @@
+import icon from './icon-restaurant.png'
+
 export const restaurantMenuEmergency = [
   {
     category: 'Антипасти',
     products: [
       {
-        img: 'https://i.imgur.com/GuUbM8Q.png',
+        img: icon,
         name: 'Брускетта',
         header: 'Брускетта',
         description: 'Очень вкусный ломтик хлеба с овощами',
@@ -12,7 +14,7 @@ export const restaurantMenuEmergency = [
         price: 8.99,
       },
       {
-        img: 'https://i.imgur.com/44wBlh1.png',
+        img: icon,
         name: 'Салат Капрезе',
         header: 'Салат Капрезе',
         description: 'Какой салат может быть более итальянским, чем Капрезе?',
@@ -26,7 +28,7 @@ export const restaurantMenuEmergency = [
     category: 'Первые блюда',
     products: [
       {
-        img: 'https://i.imgur.com/jJBWmPu.png',
+        img: icon,
         name: 'Спагетти Карбонара',
         header: 'Спагетти Карбонара',
         description: 'Ну, это теперь самая итальянская вещь здесь',
@@ -35,7 +37,7 @@ export const restaurantMenuEmergency = [
         price: 14.99,
       },
       {
-        img: 'https://i.imgur.com/NflqYmH.png',
+        img: icon,
         name: 'Ризотто с грибами',
         header: 'Ризотто с грибами',
         description: 'Вам, вероятно, это понравится',
@@ -49,7 +51,7 @@ export const restaurantMenuEmergency = [
     category: 'Супы',
     products: [
       {
-        img: 'https://i.imgur.com/4VIMe45.png',
+        img: icon,
         name: 'Борщ',
         header: 'Борщ',
         description: 'Для самых патриотичных людей',
@@ -58,7 +60,7 @@ export const restaurantMenuEmergency = [
         price: 9.99,
       },
       {
-        img: 'https://i.imgur.com/PraiyRI.png',
+        img: icon,
         name: 'Не знаю, что это',
         header: 'Не знаю, что это',
         description: 'Я имею в виду... я правда не знаю',

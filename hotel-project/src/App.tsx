@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useContext, useState, useEffect } from "react";
-import { createBrowserRouter, RouterProvider, ScrollRestoration, Outlet } from 'react-router-dom';
+import { createHashRouter, RouterProvider, ScrollRestoration, Outlet } from 'react-router-dom';
 import { observer } from "mobx-react-lite";
 import { Context } from "./index";
 import LoadingScreen from './components/LoadingScreen';
@@ -23,7 +23,7 @@ const NotFound = lazy(() => import('./components/NotFoundPage.tsx'))  // Доб�
 
 
 
-const publicrouter = createBrowserRouter([
+const publicrouter = createHashRouter([
   {
     path: "/",
     element: <Layout />,
@@ -76,7 +76,7 @@ const publicrouter = createBrowserRouter([
   }
 ]);
 
-const hiderouter = createBrowserRouter([
+const hiderouter = createHashRouter([
   {
     path: "/",
     element: <Layout />,
@@ -105,7 +105,6 @@ const hiderouter = createBrowserRouter([
         path:"/Винодельня",
         element: <Vinery />,
       },
-      ,
       {
         path: "/Каталог",
         element: <Shop/>
@@ -151,7 +150,8 @@ function Layout() {
 }
 
 const App= observer(() => {
-      const { user} = useContext(Context);
+      const appCtx = useContext(Context);
+      const user = appCtx ? appCtx.user : { isAuth: false } as any;
       const [loading, setLoading] = useState(true);
       const [showModal, setShowModal] = useState(false);
 

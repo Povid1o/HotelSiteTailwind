@@ -1,3 +1,4 @@
+// @ts-nocheck
 // TASK
 // 1)Заменить процесс производства с иконок, существующих сейчас на слайдер по ссылке https://www.reactbits.dev/components/rolling-gallery
 // 2)Доделать даты 
@@ -38,7 +39,7 @@ const Button = ({text}) => {
                 <div className='flex-col inline-block p-2'>
                                         
                     <div className='flex flex-row '>
-                        <a href="#" className='underlineDesktop text-[#3E4756] text-[18px] leading-[22px] font-semibold mx-2 md:text-2xl'>{text}</a>
+                        <span className='underlineDesktop text-[#3E4756] text-[18px] leading-[22px] font-semibold mx-2 md:text-2xl'>{text}</span>
                         <FaLongArrowAltRight className='w-[25px] h-[15px] left-[35px] my-auto'/>
                     </div>
                     <hr className="border-gray-400 w-full my-2" />
@@ -227,11 +228,9 @@ function Vinery() {
                         <p className='font-normal text-left text-[12px] leading-[24px] mb-2'>{texts[2].text[0]}</p>
                         <img src={BottleTransparentHorizontal} className='mx-auto mb-2'/>
                         <p className='font-normal text-right text-[12px] leading-[24px]'>{texts[2].text[1]}</p>
-                        <Link to='/Каталог'>
-                            <div className='w-fit mx-auto'>
-                                <Button text="Наша винотека"/>
-                            </div>
-                        </Link>
+                        <div className='w-fit mx-auto'>
+                            <Button text="Наша винотека"/>
+                        </div>
                         {/* <Button text="Наша винотека"/> */}
 
                     </div>

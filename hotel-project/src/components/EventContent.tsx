@@ -15,7 +15,7 @@ import ProductionCard from './cards/ProductionCard.tsx';
 import './styles/ExitButton.css'
 // @ts-ignore
 import {description1, description2, description3, description4, description5, description6} from './modals/CreateDesc.tsx'
-import { eventCardsEmergency, eventCategoriesEmergency } from '../emergencyContent/text';
+import { eventCardsEmergency, eventCategoriesEmergency, eventsEmergency } from '../emergencyContent/text';
 import { MdBuild } from 'react-icons/md';
 
 const ExpandedMaintenance = () => (
@@ -32,8 +32,18 @@ const ExpandedMaintenance = () => (
 
 const EventContent = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const categories = eventCategoriesEmergency;
+    // const categories = eventCategoriesEmergency;
+    const categories = [
+        { header: 'Дегустации', image: WineBottlePng },
+        { header: 'Ресторан', image: RestaurantIcon },
+        { header: 'Экскурсии', image: ExcursionIcon },
+        { header: 'Сезонные', image: SeasonIcon },
+        { header: 'Спорт', image: RunningIcon },
+        { header: 'Open-air', image: OpenAirIcon },
+      ];
+      
     const cards = eventCardsEmergency;
+    const events = eventsEmergency;
 
     return (
         <div>
@@ -203,16 +213,18 @@ const EventContent = () => {
                     </div>
                 </div>
                 <ul className="grid gap-4 grid-cols-2 mx-auto ">
-                    {cards.map((c) => (
-                    <ExtCard
-                            key={c.title}
-                            Card={() => (
-                                <EventCard
-                                  imgSrc={c.imgSrc}
-                                  title={c.title}
-                                  description={c.description} children={undefined}        />
-                            )}
-                            ExtContent={ExpandedMaintenance}/>
+                    {events.map((event) => (
+                        event.news.map((newsItem) => (
+                            <ExtCard
+                                key={newsItem.header}
+                                Card={() => (
+                                    <EventCard
+                                      imgSrc={newsItem.imgSrc}
+                                      title={newsItem.header}
+                                      description={newsItem.description} children={undefined}        />
+                                )}
+                                ExtContent={ExpandedMaintenance}/>
+                        ))
                     ))}
                 </ul>
 

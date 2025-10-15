@@ -4,10 +4,10 @@ export interface EventCategoryEmergency {
 }
 
 export const eventCategoriesEmergency: EventCategoryEmergency[] = [
-  { header: 'Дегустации', image: '/images/wine-bottle.png' },
-  { header: 'Ресторан', image: '/images/tray.png' },
-  { header: 'Экскурсии', image: '/images/excursion.png' },
-  { header: 'Сезонные', image: '/images/calendar.png' },
-  { header: 'Спорт', image: '/images/running.png' },
-  { header: 'Open-air', image: '/images/open-air.png' },
+  { header: 'Дегустации', image: '../../photos/EventPhotos/wine-bottle.png' },
+  { header: 'Ресторан', image: '../../../assets/images/tray.png' },
+  { header: 'Экскурсии', image: '../../../assets/excursion.png' },
+  { header: 'Сезонные', image: '../../../assets/calendar.png' },
+  { header: 'Спорт', image: '../../../assets/running.png' },
+  { header: 'Open-air', image: '../../../assets/open-air.png' },
 ];
