@@ -15,198 +15,25 @@ import ProductionCard from './cards/ProductionCard.tsx';
 import './styles/ExitButton.css'
 // @ts-ignore
 import {description1, description2, description3, description4, description5, description6} from './modals/CreateDesc.tsx'
-// import {TsConfigJson} from "type-fest";
-// import JSX = TsConfigJson.CompilerOptions.JSX;
-//
-// export interface ProductionCardData {
-//     description: string | (() => JSX.Element);
-//     id: number;
-//     imageStyle?: string;
-//     spesialDesc?: string;
-//     spesialTitle?: string;
-//     title: string;
-// }
-//
-// export interface ProductionCategory {
-//     category: string;
-//     components: ProductionCardData[];
-// }
-//
-// const productionCardsData: ProductionCategory[] = [
-//     {
-//         category:
-//             "СПЕЦИАЛЬНЫЕ ДЕГУСТАЦИИ В РАМКАХ ЭНОГАСТРОНОМИЧЕСКОГО ФЕСТИВАЛЯ «ЧЕРНОМОРСКАЯ ВИННАЯ НЕДЕЛЯ» 29.09-05.10.2025 года",
-//         components: [
-//             {
-//                 id: 1,
-//                 imageStyle: "w-[100px]",
-//                 spesialDesc: "text-xs md:text-1 lg:text-xl xl:text-2xl",
-//                 title:
-//                     "Экскурсия по винодельне и дегустационный сет «КРЫМ И МАТЕРИК в одних руках»",
-//                 description: () => (
-//
-//                         <>
-//                             <p>Вина Валерия Логинова КРЫМ 2022-2023 годы и КРАСНОДАРСКИЙ КРАЙ 2024 год. 5 образцов.</p><br />
-//                             <p>Длительность 1,5 часа</p><br />
-//                             <p>В стоимость входят закуски и продукты Центра локальных продуктов БОЛЬШИЕ ХУТОРА</p><br/>
-//                             <p>Группа до 12 гостей</p><br/>
-//                             <p>Стоимость дегустации:</p><br/>
-//                             <div className='flex justify-between'><div>11.00-12.30</div> <div>бесплатно</div></div>
-//                             <div className='flex justify-between'><div>14.00-15.30</div> <div>500 руб/чел</div></div>
-//                             <div className='flex justify-between'><div>16.00-17.30</div> <div>500 руб/чел</div></div>
-//
-//                         </>
-//                     )
-//
-//             },
-//
-//         ]
-//     },
-//     {
-//         category: "ДЕГУСТАЦИИ ВНЕ РАМОК ЭНОГАСТРОНОМИЧЕСКОГО ФЕСТИВАЛЯ",
-//         components: [
-//             {
-//                 id: 1,
-//                 imageStyle: "w-[100px]",
-//                 spesialDesc: "text-xs md:text-1 lg:text-xl xl:text-2xl",
-//                 title:
-//                     "Сет «КРЫМ И МАТЕРИК в одних руках».",
-//                 description: () => (
-//
-//                     <>
-//                         <p>Вина Валерия Логинова КРЫМ 2022-2023 годы и МАТЕРИК 2024 год. 5 образцов.</p><br />
-//                         <p>Длительность 1,5 часа</p><br />
-//                         <p>В стоимость входят закуски и продукты Центра локальных продуктов БОЛЬШИЕ ХУТОРА</p><br/>
-//                         <p>Группа до 12 гостей</p><br/>
-//                         <p>Стоимость дегустации на одного гостя 2.000 руб</p><br/>
-//
-//                     </>
-//                 )
-//
-//             },
-//             {
-//                 id: 2,
-//                 imageStyle: "w-[100px]",
-//                 spesialDesc: "text-xs md:text-1 lg:text-xl xl:text-2xl",
-//                 title:
-//                     "Сет «ВСЕ ОТТЕНКИ КАБЕРНЕ»",
-//                 description: () => (
-//
-//                     <>
-//                         <p>Вина сорта КАБЕРНЕ-СОВИНЬОН 2024 года, произведенные из винограда с одного поля с периодичным сбором в течении 4-х недель. 5 образцов.</p><br />
-//                         <p>Длительность 1,5 часа</p><br />
-//                         <p>В стоимость входят закуски и продукты Центра локальных продуктов БОЛЬШИЕ ХУТОРА</p><br/>
-//                         <p>Группа до 12 гостей</p><br/>
-//                         <p>Стоимость дегустации на одного гостя 3.000 руб</p><br/>
-//
-//
-//                     </>
-//                 )
-//
-//
-//             },
-//             {
-//                 id: 3,
-//                 imageStyle: "w-[100px]",
-//                 spesialDesc: "text-xs md:text-1 lg:text-xl xl:text-2xl",
-//                 title:
-//                     "Сет «ОТ ПРОСТОГО К СЛОЖНОМУ»",
-//                 description: () => (
-//
-//                     <>
-//                         <p>Вина красные разных годов, произведенные на винодельнях в Крыму и на МАТЕРИКЕ. 5 образцов. Все вина вы можете забрать с собой.</p><br />
-//                         <p>Длительность 1,5 часа</p><br />
-//                         <p>В стоимость входят закуски и продукты Центра локальных продуктов БОЛЬШИЕ ХУТОРА</p><br/>
-//                         <p>Группа до 6 гостей, но не менее 4 гостей.</p><br/>
-//                         <p>Стоимость дегустации на одного гостя 4.500 руб</p><br/>
-//
-//
-//                     </>
-//                 )
-//             },
-//             {
-//                 id: 4,
-//                 imageStyle: "w-[100px]",
-//                 spesialDesc: "text-xs md:text-1 lg:text-xl xl:text-2xl",
-//                 title:
-//                     "ИНДИВИДУАЛЬНАЯ ДЕГУСТАЦИЯ",
-//                 description: () => (
-//
-//                     <>
-//                         <p>	Вина Валерия Логинова в сопровождении продуктов, произведенных в Центре локальных продуктов БОЛЬШИЕ ХУТОРА. 5 образцов. Все вина и продукты вы можете забрать с собой.</p><br />
-//                         <p>Длительность 1,5 часа</p><br />
-//                         <p>В сет входят паштеты, конфитюры, варенье на СТЕВИИ, томаты вяленые</p><br/>
-//                         <p>Группа до 6 гостей, но не менее 4 гостей.</p><br/>
-//                         <p>Стоимость дегустации для группы 24.000 руб</p><br/>
-//                         <p>Стоимость дегустации с трансфером из/до Новороссийска 25.000 руб</p><br/>
-//
-//                     </>
-//                 )
-//
-//             },
-//             {
-//                 id: 5,
-//                 imageStyle: "w-[100px]",
-//                 spesialDesc: "text-xs md:text-1 lg:text-xl xl:text-2xl",
-//                 title:
-//                     "УЖИН С ВИНОДЕЛОМ",
-//                 description: () => (
-//
-//                     <>
-//                         <p>Винодел Валерий Логинов готовит для гостей ужин в сопровождении своих вин и продуктов Центра локальных продуктов БОЛЬШИЕ ХУТОРА. Комментарии и интересные рассказы из жизни винодела о вине и людях.</p><br />
-//                         <p>Предварительная запись за 2 недели.</p><br />
-//                         <p>Длительность неограничена</p><br/>
-//                         <p>В меню ужина включены одно холодное и одно горячее блюдо, вина и продукты Центра локальных продуктов БОЛЬШИЕ ХУТОРА</p><br/>
-//                         <p>Группа от 2 до 4 человек</p><br/>
-//                         <p>Стоимость ужина от 12.000 руб на гостя и рассчитывается индивидуально исходя из выбранных блюд, вин и количества гостей.</p><br/>
-//                         <p>Возможен трансфер из/до Новороссийска</p><br/>
-//                         <p>Возможно размещение на ночь в нашем мини-отеле ВИННЫЕ ТЕРРАСЫ</p><br/>
-//
-//
-//                     </>
-//                 )
-//             },
-//
-//         ]
-//     }
-// ];
+import { eventCardsEmergency, eventCategoriesEmergency } from '../emergencyContent/text';
+import { MdBuild } from 'react-icons/md';
 
-const EventCard1 = () => {
-    return(
-        <EventCard
-            imgSrc="https://cdn.amwine.ru/upload/blog/07-02-2019/2.jpg"
-            title="Дегустация весенних новинок"
-            description="Расслабьтесь и насладитесь сезоном" children={undefined}        />
-    )
-}
+const ExpandedMaintenance = () => (
+  <div className="flex flex-col gap-4 p-4">
+    <div className='flex items-center gap-3 text-amber-600'>
+      <MdBuild className='w-6 h-6' />
+      <h2 className="font-bold text-base sm:text-2xl">Технические работы</h2>
+    </div>
+    <p className="text-gray-700 text-justify text-xs sm:text-base">
+      В настоящий момент ведётся разработка бронирования мероприятий онлайн, по вопросам записи на мероприятие обращайтесь к администратору.
+    </p>
+  </div>
+);
 
-const EventCard2 = () => {
-    return(
-        <EventCard
-        imgSrc="https://i.pinimg.com/736x/72/79/bc/7279bc3fb8f11d45856513e716181442.jpg"
-        title="Дегустация на пляже"
-        description="Расслабьтесь и насладитесь сезоном" children={undefined}
-        />
-    )
-}
-
-const EventCard3 = () => {
-    return(
-        <EventCard
-        imgSrc="https://static.tildacdn.one/tild6132-3637-4466-b866-326238653261/_______________21-5-.jpg"
-        title="Винный ужин от шеф-повара"
-        description="Расслабьтесь и насладитесь сезоном"
-        children={undefined}
-        />
-    )
-}
-
-
-function EventContent() {
+const EventContent = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const categories = [{header : "Дегустации", image : WineBottlePng}, {header : "Ресторан", image : RestaurantIcon}, {header : "Экскурсии", image : ExcursionIcon}, {header : "Сезонные", image : SeasonIcon}, {header : "Спорт", image : RunningIcon}, {header : "Open-air", image : OpenAirIcon}];
-
-
+    const categories = eventCategoriesEmergency;
+    const cards = eventCardsEmergency;
 
     return (
         <div>
@@ -268,12 +95,17 @@ function EventContent() {
                         <div className='h-[3px] w-full bg-[#3E4756]'></div>
                     </div>
                     <ProductionCard
-                        imageStyle={`w-[100px]')]`}
-                        spesialTitle=''
+                        imageStyle={`w-[100px]') ]`}
+                        spesialTitle={''}
                         spesialDesc={'text-xs md:text-1 lg:text-xl xl:text-2xl'}
                         title={"Экскурсия по винодельне и дегустационный сет  “КРЫМ И МАТЕРИК в одних руках”"}
-                        description={description1()}>
-                    </ProductionCard>
+                        description={description1()}
+                        bgImg={''}
+                        flexReverse={false}
+                        specialStyle={''}
+                        extraBlock={false}
+                        extraImage={''}
+                    ></ProductionCard>
                     <div>
                         <h2 className="text-[20px] md:text-[30px] lg:text-[35px] font-bold">ДЕГУСТАЦИИ ВНЕ РАМОК ЭНОГАСТРОНОМИЧЕСКОГО ФЕСТИВАЛЯ.
                         </h2>
@@ -283,32 +115,65 @@ function EventContent() {
                         imageStyle='w-[100px]'
                         spesialDesc={'text-xs md:text-1 lg:text-xl xl:text-2xl'}
                         title={"Сет «КРЫМ И МАТЕРИК в одних руках»"}
-                        description={description2()}>
-                    </ProductionCard>
+                        description={description2()}
+                        spesialTitle={''}
+                        bgImg={''}
+                        flexReverse={false}
+                        specialStyle={''}
+                        extraBlock={false}
+                        extraImage={''}
+                    ></ProductionCard>
                     <ProductionCard
                         imageStyle='w-[100px]'
                         spesialDesc={'text-xs md:text-1 lg:text-xl xl:text-2xl'}
                         title={"Сет «ВСЕ ОТТЕНКИ КАБЕРНЕ»"}
-                        description={description3()}>
-                    </ProductionCard>
+                        description={description3()}
+                        spesialTitle={''}
+                        bgImg={''}
+                        flexReverse={false}
+                        specialStyle={''}
+                        extraBlock={false}
+                        extraImage={''}
+                    ></ProductionCard>
                     <ProductionCard
                         imageStyle='w-[100px]'
                         spesialDesc={'text-xs md:text-1 lg:text-xl xl:text-2xl'}
                         title={"Сет «ОТ ПРОСТОГО К СЛОЖНОМУ»"}
-                        description={description4()}>
-                    </ProductionCard>
+                        description={description4()}
+                        spesialTitle={''}
+                        bgImg={''}
+                        flexReverse={false}
+                        specialStyle={''}
+                        extraBlock={false}
+                        extraImage={''}
+                    ></ProductionCard>
                     <ProductionCard
                         imageStyle='w-[100px]'
                         spesialDesc={'text-xs md:text-1 lg:text-xl xl:text-2xl'}
                         title={"ИНДИВИДУАЛЬНАЯ ДЕГЕГУСТАЦИЯ"}
-                        description={description5()}>
-                    </ProductionCard>
+                        description={description5()}
+                        spesialTitle={''}
+                        bgImg={''}
+                        flexReverse={false}
+                        specialStyle={''}
+                        extraBlock={false}
+                        extraImage={''}
+                    ></ProductionCard>
                     <ProductionCard
                         imageStyle='w-[100px]'
                         spesialDesc={'text-xs md:text-1 lg:text-xl xl:text-2xl'}
                         title={"УЖИН С ВИНОДЕЛОМ"}
-                        description={description6()}>
-                    </ProductionCard>
+                        description={description6()}
+                        spesialTitle={''}
+                        bgImg={''}
+                        flexReverse={false}
+                        specialStyle={''}
+                        extraBlock={false}
+                        extraImage={''}
+                    ></ProductionCard>
+
+                    {/* Предупреждение о бронировании для развёрнутого вида */}
+                    <ExpandedMaintenance />
 
                 </div>
 
@@ -338,17 +203,17 @@ function EventContent() {
                     </div>
                 </div>
                 <ul className="grid gap-4 grid-cols-2 mx-auto ">
+                    {cards.map((c) => (
                     <ExtCard
-                        Card={EventCard1}
-                        ExtContent={ExtStandart}/>
-
-                    <ExtCard
-                        Card={EventCard2}
-                        ExtContent={ExtStandart}/>
-
-                    <ExtCard
-                        Card={EventCard3}
-                        ExtContent={ExtStandart}/>
+                            key={c.title}
+                            Card={() => (
+                                <EventCard
+                                  imgSrc={c.imgSrc}
+                                  title={c.title}
+                                  description={c.description} children={undefined}        />
+                            )}
+                            ExtContent={ExpandedMaintenance}/>
+                    ))}
                 </ul>
 
             </div>

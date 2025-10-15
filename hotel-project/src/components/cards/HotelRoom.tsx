@@ -1,7 +1,8 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import BlueSwiper from '../sliders/BlSwiper';
 import Card from './Card';
 import '../styles/hover.css';
+import TravelLineSearchForm from '../TravelLineSearchForm';
 
 interface Price {
   night?: number;
@@ -43,6 +44,7 @@ const HotelRoom: React.MemoExoticComponent<(props: HotelRoomProps) => React.Reac
   data,
 }) => {
   const {
+    id,
     title,
     description,
     prices = {},
@@ -53,6 +55,8 @@ const HotelRoom: React.MemoExoticComponent<(props: HotelRoomProps) => React.Reac
     restrictions = [],
     images = [],
   } = data;
+
+  const [showBooking, setShowBooking] = useState(false);
 
   // Card view component - использует только первое изображение
   if (viewType === 'card') {
@@ -129,9 +133,12 @@ const HotelRoom: React.MemoExoticComponent<(props: HotelRoomProps) => React.Reac
             <span className="text-lg font-semibold">
               {period === 'night' ? 'Ночь' : 'Неделя'}
             </span>
-            <span className="text-lg font-semibold text-main_theme underlineCard">
+            <button
+              onClick={() => setShowBooking(true)}
+              className="text-lg font-semibold text-white bg-main_theme hover:bg-rose-950 px-4 py-2 rounded-lg"
+            >
               ₽ {price}
-            </span>
+            </button>
           </div>
         ))}
       </div>
@@ -166,6 +173,21 @@ const HotelRoom: React.MemoExoticComponent<(props: HotelRoomProps) => React.Reac
             </div>
           ))}
         </ul>
+      </div>
+
+      {/* Booking Button and Form */}
+      <div className="w-full max-w-md my-6">
+        <button
+          onClick={() => setShowBooking((s) => !s)}
+          className="w-full bg-main_theme hover:bg-rose-950 text-white font-semibold py-3 px-4 rounded-lg"
+        >
+          {showBooking ? 'Скрыть бронирование' : 'Забронировать номер'}
+        </button>
+        {showBooking && (
+          <div className="mt-4">
+            <TravelLineSearchForm id={`room-${id}-extended`} />
+          </div>
+        )}
       </div>
     </div>
   );

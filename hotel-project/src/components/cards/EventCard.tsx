@@ -49,13 +49,6 @@ const EventCard: React.FC<EventCardProps> = ({
           />
         )}
       </div>
-      {/* {imgSrc && (
-        <img
-          className={imgClasses}
-          src={imgSrc}
-          alt={imgAlt}
-        />
-      )} */}
       <div className='flex flex-col mx-2 min-w-28 sm:mx-4 md:mx-6 lg:mx-8'>
         <h2 className="font-bold mb-2 text-center text-base sm:text-2xl">{title}</h2>
         <p className="text-gray-700 mb-4 text-justify text-xs   sm:text-base">{description}</p>
