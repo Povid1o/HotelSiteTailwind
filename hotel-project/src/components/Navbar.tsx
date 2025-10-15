@@ -60,7 +60,7 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
                 <Link to='/ЦентрПроизводства'>Центр производства</Link>
             </li>
           <li className='underlineDesktop text-lg'>
-            <Link to='/admin-pusttusinadjusi'>Панель Админа</Link>
+            <Link to='/admin'>Панель Админа</Link>
           </li>
           <li className='underlineDesktop computerList' onClick={handleLogout}>
             Выйти
