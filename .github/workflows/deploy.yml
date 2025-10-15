@@ -28,6 +28,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # ✅ ВКЛЮЧАЕМ BUILDX С НУЖНЫМ ДРАЙВЕРОМ (решает ошибку cache export)
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker-container
+          install: true
+          buildkitd-flags: --debug
+
       # BACKEND image
       - name: Build & Push backend
         uses: docker/build-push-action@v6
@@ -39,6 +47,7 @@ jobs:
             ${{ env.IMAGE_BACKEND }}:latest
             ${{ env.IMAGE_BACKEND }}:${{ github.sha }}
             ${{ env.IMAGE_BACKEND }}:${{ github.ref_name }}
+          # ✅ теперь кэш GHA работает
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -53,8 +62,6 @@ jobs:
             ${{ env.IMAGE_FRONTEND }}:latest
             ${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
             ${{ env.IMAGE_FRONTEND }}:${{ github.ref_name }}
-          # ВНИМАНИЕ: выбери один вариант baseURL
-          # Вариант 1: фронт шлёт '/rooms' (без 'api/') → baseURL=/api
           build-args: |
             REACT_APP_API_URL=/api
           cache-from: type=gha
@@ -77,11 +84,8 @@ jobs:
           script: |
             set -e
             cd HotelSiteTailwind
-
-            # login to GHCR if images are private
+            # Если образы приватные — логинимся в GHCR на сервере
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin || true
-
             docker compose pull
             docker compose up -d --remove-orphans
             docker image prune -f
-
