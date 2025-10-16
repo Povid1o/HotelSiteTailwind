@@ -198,15 +198,18 @@ const PhotoSelectorButton = ({ header }) => {
 
 const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhotosChange }) => {
     const [currentPhotos, setCurrentPhotos] = useState(() => {
-        // Инициализируем состояние один раз
-        return photos.map(photo => {
+        // Безопасная инициализация: приводим вход к массиву
+        const inputPhotos = Array.isArray(photos) ? photos : [];
+        return inputPhotos.map(photo => {
             if (typeof photo === 'string') {
                 return { src: photo, alt: 'Image' };
             } else if (photo instanceof File) {
                 const url = URL.createObjectURL(photo);
                 return { src: url, alt: photo.name || 'Uploaded image', file: photo };
+            } else if (photo && typeof photo === 'object') {
+                return photo as any;
             } else {
-                return photo; // Если уже объект { src, alt, file? }
+                return { src: '', alt: 'Image' };
             }
         });
     });
@@ -214,14 +217,17 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhoto
     // Синхронизируем с пропсами только если они реально изменились
     useEffect(() => {
         console.log('PhotoSelector: photos prop changed', photos);
-        const normalizedPhotos = photos.map(photo => {
+        const inputPhotos = Array.isArray(photos) ? photos : [];
+        const normalizedPhotos = inputPhotos.map(photo => {
             if (typeof photo === 'string') {
                 return { src: photo, alt: 'Image' };
             } else if (photo instanceof File) {
                 const url = URL.createObjectURL(photo);
                 return { src: url, alt: photo.name || 'Uploaded image', file: photo };
+            } else if (photo && typeof photo === 'object') {
+                return photo as any;
             } else {
-                return photo;
+                return { src: '', alt: 'Image' } as any;
             }
         });
 
@@ -250,7 +256,9 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhoto
             return <ButtonCard />;
         }
         if (withSlider) {
-            const photoUrls = currentPhotos.map(photo => photo.src);
+            const photoUrls = (Array.isArray(currentPhotos) ? currentPhotos : [])
+                .map(photo => photo && photo.src)
+                .filter(Boolean) as string[];
             return <BlueSwiper images={photoUrls} />;
         }
         return <PhotoSelectorButton header={header} />;
