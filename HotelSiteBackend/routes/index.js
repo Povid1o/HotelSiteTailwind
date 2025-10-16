@@ -1,6 +1,11 @@
 const Router = require('express');
 const router = new Router();
 
+// Healthcheck для корня /api, чтобы не получать "Cannot GET /api"
+router.get('/', (req, res) => {
+  res.json({ status: 'ok', name: 'Hotel API', version: '1.0.1' });
+});
+
 // Auth / Users
 router.use('/user', require('./userRouter'));        // registration/login/check
 

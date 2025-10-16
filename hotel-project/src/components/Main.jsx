@@ -14,7 +14,7 @@ export default function Main(){
                     ${hover === 'left' ? 'active': hover === 'right' ? 'inactive' : ''}`}
                     onMouseLeave={() => setHover(null)}
                     onMouseEnter={() => setHover('left')}
-                    onClick={() => navigate('/Отель')}
+                    onClick={() => navigate('/Hotel')}
                 >
                     <div className="main-content ">
                         <Media src="/images/Wine_Background.png" alt="right-content" />
@@ -26,7 +26,7 @@ export default function Main(){
                     ${hover === 'right' ? 'active' : hover === 'left' ? 'inactive' : ''}`}
                     onMouseLeave={() => setHover(null)}
                     onMouseEnter={() => setHover('right')}
-                    onClick={() => navigate('/Винодельня')}
+                    onClick={() => navigate('/Vinery')}
                 >
                     <div className="main-content">
                         <Media src="/images/VineryBackground.png" alt="right-content" className='h-full'/>

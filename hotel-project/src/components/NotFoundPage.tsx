@@ -32,7 +32,7 @@ const NotFound: React.FC = () => {
           </button>
           <button 
             className="btn-secondary" 
-            onClick={() => navigate('/Каталог')}
+            onClick={() => navigate('/Shop')}
           >
             <span>🍷</span> В каталог вин
           </button>

@@ -45,19 +45,19 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
       {user?.isAuth ? (
         <ul className='hidden md:flex '>
           <li className='underlineDesktop computerList'>
-            <Link to='/Отель'>Отель</Link>
+            <Link to='/Hotel'>Отель</Link>
           </li>
           <li className='underlineDesktop computerList'>
-            <Link to='/Винодельня'>Винодельня</Link>
+            <Link to='/Vinery'>Винодельня</Link>
           </li>
           <li className='underlineDesktop computerList'>
-            <Link to='/Ресторан'>Ресторан</Link>
+            <Link to='/Restaurant'>Ресторан</Link>
           </li>
           <li className='underlineDesktop computerList'>
-            <Link to='/Мероприятия'>Мероприятия</Link>
+            <Link to='/Events'>Мероприятия</Link>
           </li>
             <li className='underlineDesktop text-lg'>
-                <Link to='/ЦентрПроизводства'>Центр производства</Link>
+                <Link to='/ProductionCenter'>Центр производства</Link>
             </li>
           <li className='underlineDesktop text-lg'>
             <Link to='/admin'>Панель Админа</Link>
@@ -69,19 +69,19 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
       ) : (
         <ul className='hidden md:flex '>
           <li className='underlineDesktop computerList'>
-            <Link to='/Отель'>Отель</Link>
+            <Link to='/Hotel'>Отель</Link>
           </li>
           <li className='underlineDesktop computerList'>
-            <Link to='/Винодельня'>Винодельня</Link>
+            <Link to='/Vinery'>Винодельня</Link>
           </li>
           <li className='underlineDesktop computerList'>
-            <Link to='/Ресторан'>Ресторан</Link>
+            <Link to='/Restaurant'>Ресторан</Link>
           </li>
           <li className='underlineDesktop computerList'>
-            <Link to='/Мероприятия'>Мероприятия</Link>
+            <Link to='/Events'>Мероприятия</Link>
           </li>
             <li className='underlineDesktop text-lg'>
-                <Link to='/ЦентрПроизводства'>Центр производства</Link>
+                <Link to='/ProductionCenter'>Центр производства</Link>
             </li>
         </ul>
       )}
@@ -100,19 +100,19 @@ const Navbar = observer(({ nav, setNav }: NavbarProps) => {
         }
       >
         <li className='py-6 text-4xl underlineMobile'>
-          <Link to='/Отель'>Отель</Link>
+          <Link to='/Hotel'>Отель</Link>
         </li>
         <li className='py-6 text-4xl underlineMobile'>
-          <Link to='/Винодельня'>Винодельня</Link>
+          <Link to='/Vinery'>Винодельня</Link>
         </li>
         <li className='py-6 text-4xl underlineMobile'>
-          <Link to='/Ресторан'>Ресторан</Link>
+          <Link to='/Restaurant'>Ресторан</Link>
         </li>
         <li className='py-6 text-4xl underlineMobile'>
-          <Link to='/Мероприятия'>Мероприятия</Link>
+          <Link to='/Events'>Мероприятия</Link>
         </li>
           <li className='py-6 text-4xl underlineMobile'>
-              <Link to='/ЦентрПроизводства'>Центр Производства</Link>
+              <Link to='/ProductionCenter'>Центр Производства</Link>
           </li>
       </ul>
     </nav>

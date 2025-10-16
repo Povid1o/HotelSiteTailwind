@@ -14,6 +14,7 @@ import 'swiper/css/pagination';
 import './styles/hover.css'
 import useWindowDimensions from './WindowResizeListener';
 import VPlayer from './VideoPlayer';
+import sampleVideo from '../emergencyContent/videos/HotelPageVideos/sample-5s.mp4';
 import './styles/appear.css';
 import './styles/base.css';
 // import { entries } from 'mobx';
@@ -269,7 +270,7 @@ const Home = ({nav}) => {
             <section className='unShown card'>
                 <div className='section-format'>
                     <h1 className='header-section'>{homeSectionsEmergency.videoHeader}</h1>
-                    <VPlayer sourceUrl={"https://youtu.be/LOHDnKI1U8A?si=42WUOqixTglw4kl1"}/>
+                    <VPlayer sourceUrl={sampleVideo}/>
                 </div>
             </section>
 

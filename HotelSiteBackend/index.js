@@ -23,6 +23,11 @@ const swaggerDocument = YAML.load('./swagger.yaml');
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// Редирект с корня на Swagger, чтобы было удобно заходить в документацию
+app.get('/', (req, res) => {
+  res.redirect('/docs');
+});
+
 //обработка ошибок, последний MiddleWare
 app.use(errorHandler)
 

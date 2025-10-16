@@ -33,23 +33,23 @@ const publicrouter = createHashRouter([
         element: <Main />,
       },
       {
-        path: "/Отель",
+        path: "/Hotel",
         element: <WineHotel />,
       },
       {
-        path:"/Мероприятия",
+        path:"/Events",
         element: <Ivents />,
       },
       {
-        path:"/Мероприятия/:categorie",
+        path:"/Events/:categorie",
         element: <EventsList />,
       },
       {
-        path:"/Ресторан",
+        path:"/Restaurant",
         element: <Restaurant />,
       },
       {
-        path:"/Винодельня",
+        path:"/Vinery",
         element: <Vinery />,
       },
       {
@@ -57,15 +57,15 @@ const publicrouter = createHashRouter([
         element: <Auth/>
       },
       {
-        path: "/Каталог",
+        path: "/Shop",
         element: <Shop/>
       },
       {
-        path: "/Каталог/:productId",
+        path: "/Shop/:productId",
         element: <WinePage />,
       },
       {
-        path: "/ЦентрПроизводства",
+        path: "/ProductionCenter",
         element: <ProductionCenter />,
       },
       {
@@ -86,35 +86,35 @@ const hiderouter = createHashRouter([
         element: <Main />,
       },
       {
-        path: "/Отель",
+        path: "/Hotel",
         element: <WineHotel />,
       },
       {
-        path:"/Мероприятия",
+        path:"/Events",
         element: <Ivents />,
       },
       {
-        path:"/Мероприятия/:categorie",
+        path:"/Events/:categorie",
         element: <EventsList />,
       },
       {
-        path:"/Ресторан",
+        path:"/Restaurant",
         element: <Restaurant />,
       },
       {
-        path:"/Винодельня",
+        path:"/Vinery",
         element: <Vinery />,
       },
       {
-        path: "/Каталог",
+        path: "/Shop",
         element: <Shop/>
       },
       {
-        path: "/Каталог/:productId",
+        path: "/Shop/:productId",
         element: <WinePage />,
       },
       {
-        path: "/ЦентрПроизводства",
+        path: "/ProductionCenter",
         element: <ProductionCenter />,
       },
       {

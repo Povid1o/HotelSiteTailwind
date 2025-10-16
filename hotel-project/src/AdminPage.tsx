@@ -253,9 +253,9 @@ const AdminPage = observer(() =>  {
     "Главная": (page) => (
       <ExtCard
         Card={() => (
-          <a href="#" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
+          <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
             Править
-          </a>
+          </button>
         )}
         ExtContent={() => (
           <HomeEdit
@@ -270,9 +270,9 @@ const AdminPage = observer(() =>  {
     "Винодельня": (page) => (
       <ExtCard
         Card={() => (
-          <a href="#" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
+          <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
             Править
-          </a>
+          </button>
         )}
         ExtContent={() => (
           <VineryEdit
@@ -412,9 +412,9 @@ const AdminPage = observer(() =>  {
                       <Table.Cell>
                         <ExtCard
                           Card={() => (
-                            <a href="#" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
+                            <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
                               Править
-                            </a>
+                            </button>
                           )}
                           ExtContent={() => (
                             <NewRoomCard
@@ -501,9 +501,9 @@ const AdminPage = observer(() =>  {
                           <Table.Cell>
                             <ExtCard
                               Card={() => (
-                                <a href="#" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
+                                <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
                                   Править
-                                </a>
+                                </button>
                               )}
                               ExtContent={() => (
                                 <NewDishCard
@@ -580,9 +580,9 @@ const AdminPage = observer(() =>  {
                             <Table.Cell>
                               <ExtCard
                                 Card={() => (
-                                  <a href="#" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
+                                  <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
                                     Править
-                                  </a>
+                                  </button>
                                 )}
                                 ExtContent={() => (
                                   <NewWineCard

@@ -183,7 +183,7 @@ export default class DishStorage {
         const oldData = { ...product };
         Object.assign(product, updatedData);
         
-        updateDish(productId, updatedData).catch(error => {
+        updateDish(categoryName, productId, updatedData).catch(error => {
           console.error('Error updating dish:', error);
           // Откатываем изменения в случае ошибки
           Object.assign(product, oldData);
