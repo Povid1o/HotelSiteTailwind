@@ -31,6 +31,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Backend image
       - name: Build & Push backend
         uses: docker/build-push-action@v6
         with:
@@ -41,6 +42,7 @@ jobs:
             ${{ env.IMAGE_BACKEND }}:latest
             ${{ env.IMAGE_BACKEND }}:${{ github.sha }}
 
+      # Frontend image (dev-сервер внутри контейнера)
       - name: Build & Push frontend
         uses: docker/build-push-action@v6
         with:
@@ -67,20 +69,16 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Deploy to VPS
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_PORT: ${{ secrets.SSH_PORT }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          GHCR_USER: povilas1565
-          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+      - name: Deploy to VPS (native ssh)
         run: |
           set -e
-          ssh -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" 'bash -s' <<'EOF'
-          set -e
-          echo "${GHCR_TOKEN}" | docker login ghcr.io -u "povilas1565" --password-stdin
-          cd /root/HotelSiteTailwind || cd ~/HotelSiteTailwind
-          docker compose pull
-          docker compose up -d
-          docker image prune -f
+          ssh -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "
+            set -e
+            echo '${{ secrets.GHCR_TOKEN }}' | docker login ghcr.io -u 'povilas1565' --password-stdin
+            cd /root/HotelSiteTailwind || cd ~/HotelSiteTailwind
+            docker compose pull
+            docker compose up -d
+            docker image prune -f
+          "
+
 
