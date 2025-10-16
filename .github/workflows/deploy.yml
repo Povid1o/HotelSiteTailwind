@@ -21,6 +21,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Login to GHCR
         uses: docker/login-action@v3
         with:
@@ -28,15 +31,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # ✅ ВКЛЮЧАЕМ BUILDX С НУЖНЫМ ДРАЙВЕРОМ (решает ошибку cache export)
-      - name: Set up Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          driver: docker-container
-          install: true
-          buildkitd-flags: --debug
-
-      # BACKEND image
+      # BACKEND образ
       - name: Build & Push backend
         uses: docker/build-push-action@v6
         with:
@@ -46,12 +41,10 @@ jobs:
           tags: |
             ${{ env.IMAGE_BACKEND }}:latest
             ${{ env.IMAGE_BACKEND }}:${{ github.sha }}
-            ${{ env.IMAGE_BACKEND }}:${{ github.ref_name }}
-          # ✅ теперь кэш GHA работает
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # FRONTEND image
+      # FRONTEND образ (без prod-сборки, как мы договорились — dev-сервер внутри)
       - name: Build & Push frontend
         uses: docker/build-push-action@v6
         with:
@@ -61,31 +54,33 @@ jobs:
           tags: |
             ${{ env.IMAGE_FRONTEND }}:latest
             ${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
-            ${{ env.IMAGE_FRONTEND }}:${{ github.ref_name }}
-          build-args: |
-            REACT_APP_API_URL=/api
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            REACT_APP_API_URL=/api
 
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
-    concurrency:
-      group: hotelsite-deploy
-      cancel-in-progress: true
     steps:
-      - name: Deploy via SSH (compose pull + up)
+      - name: Deploy via SSH (login GHCR + compose pull/up)
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}        # например: root или deploy
+          key: ${{ secrets.SSH_KEY }}              # приватный ed25519 ключ (-----BEGIN OPENSSH PRIVATE KEY-----)
+          port: ${{ secrets.SSH_PORT }}            # 22 если не менял
           script: |
             set -e
-            cd HotelSiteTailwind
-            # Если образы приватные — логинимся в GHCR на сервере
-            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin || true
+            # логин в GHCR, чтобы сервер мог тянуть приватные образы
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USER }}" --password-stdin
+
+            cd /root/HotelSiteTailwind || cd ~/HotelSiteTailwind
+
+            # тянем новые теги и поднимаем
             docker compose pull
-            docker compose up -d --remove-orphans
+            docker compose up -d
+
+            # чистим висящие слои
             docker image prune -f
+
