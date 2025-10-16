@@ -31,7 +31,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # BACKEND
+      # BACKEND образ
       - name: Build & Push backend
         uses: docker/build-push-action@v6
         with:
@@ -44,7 +44,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # FRONTEND (без прод-сборки — внутри образа CRA dev-сервер на 80 порту)
+      # FRONTEND образ (без prod-сборки, как мы договорились — dev-сервер внутри)
       - name: Build & Push frontend
         uses: docker/build-push-action@v6
         with:
@@ -56,21 +56,31 @@ jobs:
             ${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            REACT_APP_API_URL=/api
 
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy via SSH (compose pull + up)
+      - name: Deploy via SSH (login GHCR + compose pull/up)
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}        # например: root или deploy
+          key: ${{ secrets.SSH_KEY }}              # приватный ed25519 ключ (-----BEGIN OPENSSH PRIVATE KEY-----)
+          port: ${{ secrets.SSH_PORT }}            # 22 если не менял
           script: |
             set -e
-            cd HotelSiteTailwind
+            # логин в GHCR, чтобы сервер мог тянуть приватные образы
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USER }}" --password-stdin
+
+            cd /root/HotelSiteTailwind || cd ~/HotelSiteTailwind
+
+            # тянем новые теги и поднимаем
             docker compose pull
             docker compose up -d
+
+            # чистим висящие слои
             docker image prune -f
+
