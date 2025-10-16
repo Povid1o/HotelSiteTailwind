@@ -80,6 +80,9 @@ const Timeline = ({ leftDates = [], rightDates = [] }) => {
 };
 
 const VineryEdit = ({ pageData, onContentChange }) => {
+    // Состояния для батч-сохранения изменений
+    const [pendingStageChanges, setPendingStageChanges] = useState({});
+    const [hasUnsavedStageChanges, setHasUnsavedStageChanges] = useState(false);
 
     // Handlers for main background
     const handleMainBackgroundTitleChange = useCallback((newTitle) => {
@@ -200,22 +203,41 @@ const VineryEdit = ({ pageData, onContentChange }) => {
     }, [onContentChange, pageData.productionSection]);
 
     const handleProductionStageChange = useCallback((stageIndex, newData) => {
-        const updatedStages = pageData.productionSection.stages.map((stage, index) => {
-            if (index === stageIndex) {
-                return {
-                    ...stage,
-                    name: newData.name || stage.name,
-                    image: newData.image !== undefined ? newData.image : stage.image
-                };
-            }
-            return stage;
+        // Накапливаем изменения вместо немедленной отправки
+        setPendingStageChanges(prev => {
+            const currentStage = pageData.productionSection.stages[stageIndex];
+            return {
+                ...prev,
+                [stageIndex]: {
+                    ...currentStage,
+                    ...prev[stageIndex],
+                    ...newData
+                }
+            };
         });
-
+        setHasUnsavedStageChanges(true);
+    }, [pageData.productionSection.stages]);
+    
+    // Функция для сохранения всех накопленных изменений
+    const handleSaveProductionChanges = useCallback(() => {
+        const updatedStages = pageData.productionSection.stages.map((stage, index) => {
+            return pendingStageChanges[index] || stage;
+        });
+        
         onContentChange('productionSection', {
             ...pageData.productionSection,
             stages: updatedStages
         });
-    }, [onContentChange, pageData.productionSection]);
+        
+        setPendingStageChanges({});
+        setHasUnsavedStageChanges(false);
+    }, [pendingStageChanges, pageData.productionSection, onContentChange]);
+    
+    // Функция для отмены изменений
+    const handleCancelProductionChanges = useCallback(() => {
+        setPendingStageChanges({});
+        setHasUnsavedStageChanges(false);
+    }, []);
 
     const handleProductionStageRemove = useCallback((stageIndex) => {
         const updatedStages = pageData.productionSection.stages.filter((_, index) => index !== stageIndex);
@@ -581,18 +603,43 @@ const VineryEdit = ({ pageData, onContentChange }) => {
                                         <FaTrashAlt className="w-3 h-3" />
                                     </button>
                                 </div>
-                                <BoxEditable
-                                    name={stage.name}
-                                    imgSrc={getDisplayImageSrc(stage.image) || ''}
-                                    onDataChange={(newData) => handleProductionStageChange(index, newData)}
-                                >
+                                <div className={pendingStageChanges[index] ? 'ring-2 ring-orange-400 rounded-lg' : ''}>
+                                    <BoxEditable
+                                        name={pendingStageChanges[index]?.name || stage.name}
+                                        imgSrc={getDisplayImageSrc(pendingStageChanges[index]?.image || stage.image) || ''}
+                                        onDataChange={(newData) => handleProductionStageChange(index, newData)}
+                                    >
                                     <p className='mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold'>
                                         {stage.name}
                                     </p>
                                 </BoxEditable>
+                                </div>
                             </div>
                         ))}
                     </div>
+                    
+                    {/* Кнопки сохранения/отмены изменений */}
+                    {hasUnsavedStageChanges && (
+                        <div className="flex gap-4 justify-center mt-6 p-4 bg-yellow-50 rounded-lg">
+                            <button
+                                className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl flex items-center gap-2"
+                                onClick={handleSaveProductionChanges}
+                            >
+                                <span>Сохранить изменения</span>
+                                {Object.keys(pendingStageChanges).length > 0 && (
+                                    <span className="bg-white text-green-600 px-2 py-1 rounded-full text-sm font-bold">
+                                        {Object.keys(pendingStageChanges).length}
+                                    </span>
+                                )}
+                            </button>
+                            <button
+                                className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-xl"
+                                onClick={handleCancelProductionChanges}
+                            >
+                                Отменить изменения
+                            </button>
+                        </div>
+                    )}
                 </div>
             </section>
 

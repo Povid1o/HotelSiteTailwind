@@ -17,6 +17,10 @@ const HomeEdit = ({ pageData, onContentChange }) => {
     const [fsliderState, changeFslider] = useState(false)
     const [ssliderState, changeSslider] = useState(false)
     
+    // Состояния для батч-сохранения изменений сервисов
+    const [pendingServiceChanges, setPendingServiceChanges] = useState({});
+    const [hasUnsavedServiceChanges, setHasUnsavedServiceChanges] = useState(false);
+    
 
     const handleMainBackgroundTitleChange = useCallback((newTitle) => {
         onContentChange('mainBackground', { 
@@ -117,26 +121,41 @@ const HomeEdit = ({ pageData, onContentChange }) => {
     const handleServicesSectionServicesChange = useCallback((serviceIndex, newData) => {
         console.log('Updating service at index:', serviceIndex, 'with data:', newData);
         
-        // Создаем новый массив сервисов с обновленным элементом
-        const updatedServices = pageData.servicesSection.services.map((service, index) => {
-            if (index === serviceIndex) {
-                const updatedService = {
-                    ...service,
-                    name: newData.name || service.name,
-                    image: newData.image !== undefined ? newData.image : service.image
-                };
-                console.log('Updated service:', updatedService);
-                return updatedService;
-            }
-            return service;
+        // Накапливаем изменения вместо немедленной отправки
+        setPendingServiceChanges(prev => {
+            const currentService = pageData.servicesSection.services[serviceIndex];
+            return {
+                ...prev,
+                [serviceIndex]: {
+                    ...currentService,
+                    ...prev[serviceIndex],
+                    ...newData
+                }
+            };
         });
+        setHasUnsavedServiceChanges(true);
+    }, [pageData.servicesSection.services]);
     
-        // Обновляем всю секцию с новым массивом сервисов
+    // Функция для сохранения всех накопленных изменений сервисов
+    const handleSaveServiceChanges = useCallback(() => {
+        const updatedServices = pageData.servicesSection.services.map((service, index) => {
+            return pendingServiceChanges[index] || service;
+        });
+        
         onContentChange('servicesSection', { 
             ...pageData.servicesSection,
             services: updatedServices
         });
-    }, [onContentChange, pageData.servicesSection]);
+        
+        setPendingServiceChanges({});
+        setHasUnsavedServiceChanges(false);
+    }, [pendingServiceChanges, pageData.servicesSection, onContentChange]);
+    
+    // Функция для отмены изменений сервисов
+    const handleCancelServiceChanges = useCallback(() => {
+        setPendingServiceChanges({});
+        setHasUnsavedServiceChanges(false);
+    }, []);
     
     // Функция для создания стабильного URL для отображения
     const getDisplayImageSrc = (imageSrc) => {
@@ -250,19 +269,42 @@ const HomeEdit = ({ pageData, onContentChange }) => {
                 />
                 <ul className='flex flex-wrap flex-row'>
                     {pageData.servicesSection.services.map((service, index) => (
-                        <li key={`service-${index}-${service.name}`}>
+                        <li key={`service-${index}-${service.name}`} className={pendingServiceChanges[index] ? 'ring-2 ring-orange-400 rounded-lg' : ''}>
                             <BoxEditable
-                                name={service.name}
-                                imgSrc={getDisplayImageSrc(service.image)}
+                                name={pendingServiceChanges[index]?.name || service.name}
+                                imgSrc={getDisplayImageSrc(pendingServiceChanges[index]?.image || service.image)}
                                 onDataChange={(newData) => handleServicesSectionServicesChange(index, newData)}
                             >
                                 <p className='mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold'>
-                                    {service.name}
+                                    {pendingServiceChanges[index]?.name || service.name}
                                 </p>
                             </BoxEditable>
                         </li>
                     ))}
                 </ul>
+                
+                {/* Кнопки сохранения/отмены изменений */}
+                {hasUnsavedServiceChanges && (
+                    <div className="flex gap-4 justify-center mt-6 p-4 bg-yellow-50 rounded-lg">
+                        <button
+                            className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl flex items-center gap-2"
+                            onClick={handleSaveServiceChanges}
+                        >
+                            <span>Сохранить изменения</span>
+                            {Object.keys(pendingServiceChanges).length > 0 && (
+                                <span className="bg-white text-green-600 px-2 py-1 rounded-full text-sm font-bold">
+                                    {Object.keys(pendingServiceChanges).length}
+                                </span>
+                            )}
+                        </button>
+                        <button
+                            className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-xl"
+                            onClick={handleCancelServiceChanges}
+                        >
+                            Отменить изменения
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

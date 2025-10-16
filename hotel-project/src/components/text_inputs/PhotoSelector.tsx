@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import ExtCard from '../cards/ExtCard';
 import ImageWithButton from './ImageWithButton';
-import BlueSwiperUniversal from '../sliders/BlSwiper';
+import BlueSwiper from '../sliders/BlSwiper';
 import { MdOutlinePhotoCamera } from "react-icons/md";
 import Bottle from '../assets/wine-bottle.png';
 
@@ -251,7 +251,7 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhoto
         }
         if (withSlider) {
             const photoUrls = currentPhotos.map(photo => photo.src);
-            return <BlueSwiperUniversal images={photoUrls} />;
+            return <BlueSwiper images={photoUrls} />;
         }
         return <PhotoSelectorButton header={header} />;
     }, [ButtonCard, withSlider, currentPhotos, header]);
