@@ -343,7 +343,21 @@ const AdminPage = observer(() =>  {
     <div className="h-screen flex flex-col bg-no-repeat bg-cover">
       <Navbar />
       <div className="container m-auto p-4 mt-auto md:p-6 lg:p-12">
-        <h1 className="text-3xl text-gray-500 font-bold mb-4 text-center">Административная панель</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-3xl text-gray-500 font-bold">Административная панель</h1>
+          <button 
+            onClick={() => {
+              console.log('Принудительное обновление данных...');
+              dish.loadDishes();
+              hotel.loadRooms();
+              pageContent.loadPageContent();
+              wine.loadWines();
+            }}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+          >
+            Обновить данные
+          </button>
+        </div>
 
         <div className="flex flex-col space-y-4 pt-4">
 
@@ -519,13 +533,13 @@ const AdminPage = observer(() =>  {
                             />
                           </Table.Cell>
                           <Table.Cell>
-                            <a
-                              href="#"
-                              onClick={() => deleteProduct(category, name)}
+                            <button
+                              type="button"
+                              onClick={() => deleteProduct(category, id)}
                               className="font-medium text-main_theme hover:underline dark:text-cyan-500"
                             >
                               Удалить
-                            </a>
+                            </button>
                           </Table.Cell>
                         </Table.Row>
                       ))}

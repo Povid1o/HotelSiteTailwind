@@ -33,13 +33,38 @@ const createFormDataWithFiles = (data: any) => {
   return formData;
 };
 
+// Загрузка файла на сервер
+export const uploadFile = async (file: File, mediaType: string = 'dishes'): Promise<string> => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('type', mediaType);
+    
+    console.log(`Uploading file: ${file.name} (${file.size} bytes) to ${mediaType}`);
+    
+    const { data } = await $authHost.post('api/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
+    console.log(`File uploaded successfully: ${data.url}`);
+    return data.url;
+  } catch (error: any) {
+    console.error('File upload error:', error);
+    throw new Error(`Failed to upload file: ${error.response?.data?.message || error.message}`);
+  }
+};
+
 // API для блюд
 export const fetchDishes = async () => {
   const { data } = await $host.get('api/dishes');
+  console.log('Raw API response:', data);
+  
   // Приводим ответ бэкенда к форме, ожидаемой фронтом
   // Бэк: { id, name, products: [{ id, name, header, description_short, description_full, weight, price, images:[{url,...}]}] }
   // Фронт ждёт: { category, products: [{ id, name, header, description, descriptionFull, weight, price, images: string[] }] }
-  return (Array.isArray(data) ? data : []).map((cat: any) => ({
+  const processedData = (Array.isArray(data) ? data : []).map((cat: any) => ({
     category: cat.name,
     products: (Array.isArray(cat.products) ? cat.products : []).map((p: any) => ({
       id: p.id,
@@ -49,9 +74,25 @@ export const fetchDishes = async () => {
       descriptionFull: p.description_full ?? '',
       weight: p.weight ?? '',
       price: typeof p.price === 'string' ? Number(p.price) : (p.price ?? 0),
-      images: (Array.isArray(p.images) ? p.images : []).map((img: any) => img.url).filter(Boolean),
+      images: (Array.isArray(p.images) ? p.images : [])
+        .map((img: any) => {
+          // Преобразуем относительные URL в полные
+          if (img.url && img.url.startsWith('/static/')) {
+            const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+            // Убираем лишний слеш, если он есть
+            const cleanUrl = img.url.startsWith('/') ? img.url : `/${img.url}`;
+            const fullUrl = `${baseUrl}${cleanUrl}`;
+            console.log(`Converting image URL: ${img.url} -> ${fullUrl}`);
+            return fullUrl;
+          }
+          return img.url;
+        })
+        .filter(Boolean),
     })),
   }));
+  
+  console.log('Processed data:', processedData);
+  return processedData;
 };
 
 // Получить список категорий блюд (id, name)
@@ -108,40 +149,69 @@ export const createDish = async (categoryName: string, dishData: any) => {
 };
 
 export const updateDish = async (categoryName: string, dishId: number, dishData: any) => {
-  // Гарантируем category_id
-  let categoryId = dishData.category_id;
-  if (!categoryId && categoryName) {
-    const categories = await fetchDishCategories();
-    const found = categories.find(c => c.name === categoryName);
-    if (!found) throw new Error(`Категория не найдена: ${categoryName}`);
-    categoryId = found.id;
+  try {
+    // Гарантируем category_id
+    let categoryId = dishData.category_id;
+    if (!categoryId && categoryName) {
+      const categories = await fetchDishCategories();
+      const found = categories.find(c => c.name === categoryName);
+      if (!found) throw new Error(`Категория не найдена: ${categoryName}`);
+      categoryId = found.id;
+    }
+
+    // Обрабатываем изображения: загружаем файлы и получаем URL
+    let images: Array<{url: string, order: number}> = [];
+    if (Array.isArray(dishData.images)) {
+      console.log(`Processing ${dishData.images.length} images for dish ${dishId}`);
+      
+      for (const img of dishData.images) {
+        if (img instanceof File) {
+          try {
+            // Загружаем файл на сервер с типом 'dishes'
+            const url = await uploadFile(img, 'dishes');
+            images.push({ url, order: images.length });
+            console.log(`Image uploaded: ${url}`);
+          } catch (error) {
+            console.error(`Failed to upload image ${img.name}:`, error);
+            throw error; // Прерываем процесс при ошибке загрузки
+          }
+        } else if (typeof img === 'string' && img) {
+          // Уже загруженный URL
+          images.push({ url: img, order: images.length });
+          console.log(`Using existing image: ${img}`);
+        }
+      }
+    }
+
+    const payload: any = {
+      category_id: categoryId,
+      name: dishData.name,
+      header: dishData.header ?? '',
+      description_short: dishData.description ?? '',
+      description_full: dishData.descriptionFull ?? '',
+      weight: dishData.weight ?? '',
+      price: dishData.price ?? 0,
+      nutrients: dishData.nutrients ?? null,
+      is_active: dishData.is_active ?? true,
+      images
+    };
+
+    console.log(`Updating dish ${dishId} with payload:`, payload);
+    const { data } = await $authHost.put(`api/dishes/${dishId}`, payload);
+    console.log(`Dish ${dishId} updated successfully`);
+    return data;
+  } catch (error: any) {
+    console.error(`Error updating dish ${dishId}:`, error);
+    throw error;
   }
-
-  // Сериализуем изображения только как URL-ы
-  const images = Array.isArray(dishData.images)
-    ? dishData.images
-        .filter((i: any) => typeof i === 'string' && i)
-        .map((url: string, index: number) => ({ url, order: index }))
-    : [];
-
-  const payload: any = {
-    category_id: categoryId,
-    name: dishData.name,
-    header: dishData.header ?? '',
-    description_short: dishData.description ?? '',
-    description_full: dishData.descriptionFull ?? '',
-    weight: dishData.weight ?? '',
-    price: dishData.price ?? 0,
-    nutrients: dishData.nutrients ?? null,
-    is_active: dishData.is_active ?? true,
-    images
-  };
-
-  const { data } = await $authHost.put(`api/dishes/${dishId}`, payload);
-  return data;
 };
 
 export const deleteDish = async (dishId: number) => {
   const { data } = await $authHost.delete(`api/dishes/${dishId}`);
   return data;
+};
+
+// Универсальная функция загрузки файлов для разных типов медиа
+export const uploadMediaFile = async (file: File, mediaType: 'dishes' | 'wines' | 'rooms' | 'pages' | 'videos'): Promise<string> => {
+  return uploadFile(file, mediaType);
 };

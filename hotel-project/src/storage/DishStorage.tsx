@@ -65,11 +65,14 @@ export default class DishStorage {
     try {
       this.setLoading(true);
       this.setError(null);
+      console.log('DishStorage: Загружаем блюда...');
       const dishes = await fetchDishes();
+      console.log('DishStorage: Получены блюда:', dishes);
       this.setDishes(dishes);
+      console.log('DishStorage: Блюда установлены в store');
     } catch (error: any) {
       this.setError(error.message);
-      console.error('Error loading dishes:', error);
+      console.error('DishStorage: Ошибка загрузки блюд:', error);
     } finally {
       this.setLoading(false);
     }
