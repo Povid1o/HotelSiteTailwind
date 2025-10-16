@@ -67,7 +67,7 @@ jobs:
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}        # например: root или deploy
+          username: root       # например: root или deploy
           key: ${{ secrets.SSH_KEY }}              # приватный ed25519 ключ (-----BEGIN OPENSSH PRIVATE KEY-----)
           port: ${{ secrets.SSH_PORT }}            # 22 если не менял
           script: |
