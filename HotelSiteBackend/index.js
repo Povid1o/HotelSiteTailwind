@@ -13,6 +13,15 @@ const PORT = process.env.PORT || 5001
 const app = express()
 app.use(cors())
 app.use(express.json())
+// Normalize duplicate slashes to avoid //static/... 404s
+app.use((req, _res, next) => {
+  if (typeof req.url === 'string' && req.url.includes('//')) {
+    req.url = req.url.replace(/\/+/, '/').replace(/\/+/, '/');
+    // Collapse any remaining multiple slashes
+    while (req.url.includes('//')) req.url = req.url.replace(/\/+/, '/');
+  }
+  next()
+})
 app.use(express.static(path.resolve(__dirname, 'static')))
 // Дополнительная настройка для обслуживания файлов из подпапок
 app.use('/static', express.static(path.resolve(__dirname, 'static')))

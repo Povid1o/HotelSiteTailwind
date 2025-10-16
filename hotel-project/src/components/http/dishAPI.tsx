@@ -1,4 +1,4 @@
-import { $authHost, $host } from "./index";
+import { $authHost, $host, API_BASE } from "./index";
 
 // Утилита для создания FormData с файлами
 const createFormDataWithFiles = (data: any) => {
@@ -76,16 +76,17 @@ export const fetchDishes = async () => {
       price: typeof p.price === 'string' ? Number(p.price) : (p.price ?? 0),
       images: (Array.isArray(p.images) ? p.images : [])
         .map((img: any) => {
-          // Преобразуем относительные URL в полные
-          if (img.url && img.url.startsWith('/static/')) {
-            const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5001';
-            // Убираем лишний слеш, если он есть
-            const cleanUrl = img.url.startsWith('/') ? img.url : `/${img.url}`;
-            const fullUrl = `${baseUrl}${cleanUrl}`;
-            console.log(`Converting image URL: ${img.url} -> ${fullUrl}`);
-            return fullUrl;
+          // Преобразуем относительные URL в полные, избегая двойных слешей
+          const src = img?.url || ''
+          if (!src) return null
+          if (src.startsWith('/static/')) {
+            const cleanPath = src.startsWith('/') ? src : `/${src}`
+            const fullUrl = `${API_BASE}${cleanPath}`
+            console.log(`Converting image URL: ${src} -> ${fullUrl}`)
+            return fullUrl
           }
-          return img.url;
+          // already absolute
+          return src
         })
         .filter(Boolean),
     })),

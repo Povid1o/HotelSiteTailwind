@@ -1,4 +1,5 @@
 import React from 'react';
+import { API_BASE } from '../http';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -47,7 +48,9 @@ const BlueSwiper: React.FC<BlueSwiperProps> = ({ images }) => {
               alt={imageAlt || 'Slide image'}
               onError={(e) => {
                 console.error('Error loading image:', imageSrc);
-                (e.target as HTMLImageElement).src = '/img/fallback.jpg'; // Укажите путь к вашему запасному изображению
+                const img = e.target as HTMLImageElement;
+                img.onerror = null; // prevent loop
+                img.src = `${API_BASE}/static/fallbacks/no-image.png`;
               }}
             />
           </SwiperSlide>

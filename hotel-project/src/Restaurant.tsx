@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import { observer } from 'mobx-react-lite';
 import { Context } from './index';
 import { fetchClase, fetchProducts } from "./components/http/productAPI";
+import { API_BASE } from './components/http';
 import { restaurantMenuEmergency } from './emergencyContent/text';
 
 const Restaurant = observer(() => {
@@ -52,14 +53,14 @@ const Restaurant = observer(() => {
                     Card={() => 
                       <FoodCard
                         key={filteredProduct.id}
-                        imgSrc={`${process.env.REACT_APP_API_URL || ''}${filteredProduct.img}`}
+                        imgSrc={`${API_BASE}${filteredProduct.img?.startsWith('/') ? '' : '/'}${filteredProduct.img || ''}`}
                         header={filteredProduct.name}
                         description={""}
                       />
                     }
                     ExtContent={() => 
                       <ExtDishcard
-                        imgSrc={`${process.env.REACT_APP_API_URL || ''}${filteredProduct.img}`}
+                        imgSrc={`${API_BASE}${filteredProduct.img?.startsWith('/') ? '' : '/'}${filteredProduct.img || ''}`}
                         header={filteredProduct.name}
                         description={""}
                         price={`${filteredProduct.price} ₽`}
