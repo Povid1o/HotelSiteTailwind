@@ -67,25 +67,9 @@ exports.update = asyncHandler(async (req, res) => {
 });
 
 exports.remove = asyncHandler(async (req, res) => {
-  await sequelize.transaction(async (t) => {
-    const dish = await Dish.findByPk(req.params.id, { include: ['images'], transaction: t, lock: t.LOCK.UPDATE });
-    if (!dish) return res.sendStatus(404);
-
-    const staticRoot = path.resolve(__dirname, '..', 'static');
-    const images = Array.isArray(dish.images) ? dish.images : [];
-    for (const img of images) {
-      const url = img?.url || '';
-      if (typeof url === 'string' && url.startsWith('/static/')) {
-        const rel = url.replace(/^\/static\//, '');
-        const filePath = path.resolve(staticRoot, rel);
-        if (filePath.startsWith(staticRoot) && fs.existsSync(filePath)) {
-          try { fs.unlinkSync(filePath); } catch (_) { /* noop */ }
-        }
-      }
-    }
-
-    await DishImage.destroy({ where: { dish_id: dish.id }, transaction: t });
-    await dish.destroy({ transaction: t });
-  });
+  const dish = await Dish.findByPk(req.params.id);
+  if (!dish) return res.sendStatus(404);
+  
+  await dish.destroy();
   res.json({ ok: true });
 });
