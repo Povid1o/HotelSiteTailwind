@@ -1,4 +1,4 @@
-name: Build & Deploy (GHCR -> VPS)
+name: Build & Deploy (GHCR -> VPS native SSH)
 
 on:
   push:
@@ -24,14 +24,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to GHCR
+      - name: Login to GHCR (push)
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # BACKEND образ
+      # Backend image
       - name: Build & Push backend
         uses: docker/build-push-action@v6
         with:
@@ -41,10 +41,8 @@ jobs:
           tags: |
             ${{ env.IMAGE_BACKEND }}:latest
             ${{ env.IMAGE_BACKEND }}:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
-      # FRONTEND образ (без prod-сборки, как мы договорились — dev-сервер внутри)
+      # Frontend image (dev-сервер внутри контейнера)
       - name: Build & Push frontend
         uses: docker/build-push-action@v6
         with:
@@ -54,8 +52,6 @@ jobs:
           tags: |
             ${{ env.IMAGE_FRONTEND }}:latest
             ${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
           build-args: |
             REACT_APP_API_URL=/api
 
@@ -63,24 +59,26 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy via SSH (login GHCR + compose pull/up)
-        uses: appleboy/ssh-action@v1.2.0
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}        # например: root или deploy
-          key: ${{ secrets.SSH_KEY }}              # приватный ed25519 ключ (-----BEGIN OPENSSH PRIVATE KEY-----)
-          port: ${{ secrets.SSH_PORT }}            # 22 если не менял
-          script: |
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Add host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy to VPS (native ssh)
+        run: |
+          set -e
+          ssh -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "
             set -e
-            # логин в GHCR, чтобы сервер мог тянуть приватные образы
-            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USER }}" --password-stdin
-
+            echo '${{ secrets.GHCR_TOKEN }}' | docker login ghcr.io -u 'povilas1565' --password-stdin
             cd /root/HotelSiteTailwind || cd ~/HotelSiteTailwind
-
-            # тянем новые теги и поднимаем
             docker compose pull
             docker compose up -d
-
-            # чистим висящие слои
             docker image prune -f
+          "
+
 
