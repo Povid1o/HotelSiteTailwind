@@ -83,4 +83,3 @@ jobs:
 
             # чистим висящие слои
             docker image prune -f
-
