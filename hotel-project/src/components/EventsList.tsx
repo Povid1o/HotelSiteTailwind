@@ -33,7 +33,7 @@ function EventsList() {
 
 
     
-    const categorie = params.categorie;
+    const categorie = decodeURIComponent(params.categorie || '');
     const categorieDescription = categories.filter(element => element.header === categorie)
     console.log(categorieDescription)
     
@@ -51,7 +51,7 @@ function EventsList() {
 
             <div className="w-5/6 mx-auto mb-5 pt-[7rem]">
                 <p className="font-extrabold max-sm:text-4xl sm:text-6xl">{categorie}</p>
-                <h1 className="mt-4 font-bold max-sm:text-xl sm:text-2xl">{categorieDescription[0].description}</h1>
+                <h1 className="mt-4 font-bold max-sm:text-xl sm:text-2xl">{categorieDescription[0]?.description || ''}</h1>
             </div>
 
             <div className='w-5/6 mx-auto flex justify-between'>
@@ -60,7 +60,7 @@ function EventsList() {
                     {categories.map(({header}) => (
                         <DropdownItem 
                             key={header}
-                            onClick={() => navigate(`/Мероприятия/${header}`)}
+                            onClick={() => navigate(`/Events/${encodeURIComponent(header)}`)}
                         >
                             {header}
                         </DropdownItem>

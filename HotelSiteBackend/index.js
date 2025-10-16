@@ -96,6 +96,57 @@ const start = async() => {
   try{
     await sequelize.authenticate()
     await sequelize.sync()
+
+    // Seed default wine types, sweetness and pages
+    const { WineType, WineSweetness, Page } = models
+    // wine types
+    for (const name of ['красное','белое','розовое']) {
+      await WineType.findOrCreate({ where: { name } })
+    }
+    // sweetness
+    for (const name of ['сухое','полусухое','полусладкое','сладкое']) {
+      await WineSweetness.findOrCreate({ where: { name } })
+    }
+    // pages
+    const pagesSeed = [
+      {
+        name: 'Главная',
+        path: '/',
+        is_active: true,
+        content_json: {
+          mainBackground: {
+            image: 'https://images.unsplash.com/photo-1508258470050-ef421c36e6de?q=80&w=1600&auto=format&fit=crop',
+            title: 'Добро пожаловать на Винные Террасы'
+          },
+          aboutSection: {
+            title: 'Кто мы?',
+            description: 'Отель-винодельня "Винные Террасы" — это уникальное место, сочетающее шарм и гостеприимство с изысканными винами.'
+          },
+          firstGallery: { title: 'Номерной Фонд', images: [] },
+          secondGallery: { title: 'Отель расположен в самой живописной локации Абрау', images: [] },
+          videoSection: { title: 'Посмотрите видео-презентацию', videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' },
+          servicesSection: { title: 'Ваш отдых — наша ответственность', services: [] }
+        }
+      },
+      {
+        name: 'Винодельня',
+        path: '/Винодельня',
+        is_active: true,
+        content_json: {
+          mainBackground: { image: 'https://images.unsplash.com/photo-1468777675496-5782faaea55b?q=80&w=1600&auto=format&fit=crop', title: 'Винодельня' },
+          introSection: { title: 'Винодельня', description: 'Откройте для себя мир превосходных вин в нашей винодельне!', image: '', buttonText: 'Ассортимент вин', buttonLink: '/Каталог' },
+          historySection: { title: 'НАША ИСТОРИЯ', leftDates: [], rightDates: [] },
+          wineSection: { firstText: '', secondText: '', buttonText: 'Наша винотека', buttonLink: '/Каталог' },
+          productionSection: { title: 'ЭТАПЫ НАШЕГО ПРОИЗВОДСТВА', stages: [] },
+          regionSection: { title: 'ВИННЫЙ РЕГИОН', firstText: '', secondText: '', backgroundImage: '' }
+        }
+      }
+    ]
+    for (const p of pagesSeed) {
+      const exists = await Page.findOne({ where: { name: p.name } })
+      if (!exists) await Page.create(p)
+    }
+
     app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
   } catch(e) {
       console.log(e)

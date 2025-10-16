@@ -1,5 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const Joi = require('joi');
+const path = require('path');
+const fs = require('fs');
+const sequelize = require('../db');
 const { DishCategory, Dish, DishImage } = require('../models/models');
 
 const dishSchema = Joi.object({
@@ -64,8 +67,25 @@ exports.update = asyncHandler(async (req, res) => {
 });
 
 exports.remove = asyncHandler(async (req, res) => {
-  const dish = await Dish.findByPk(req.params.id);
-  if (!dish) return res.sendStatus(404);
-  await dish.destroy();
+  await sequelize.transaction(async (t) => {
+    const dish = await Dish.findByPk(req.params.id, { include: ['images'], transaction: t, lock: t.LOCK.UPDATE });
+    if (!dish) return res.sendStatus(404);
+
+    const staticRoot = path.resolve(__dirname, '..', 'static');
+    const images = Array.isArray(dish.images) ? dish.images : [];
+    for (const img of images) {
+      const url = img?.url || '';
+      if (typeof url === 'string' && url.startsWith('/static/')) {
+        const rel = url.replace(/^\/static\//, '');
+        const filePath = path.resolve(staticRoot, rel);
+        if (filePath.startsWith(staticRoot) && fs.existsSync(filePath)) {
+          try { fs.unlinkSync(filePath); } catch (_) { /* noop */ }
+        }
+      }
+    }
+
+    await DishImage.destroy({ where: { dish_id: dish.id }, transaction: t });
+    await dish.destroy({ transaction: t });
+  });
   res.json({ ok: true });
 });

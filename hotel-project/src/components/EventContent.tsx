@@ -199,7 +199,7 @@ const EventContent = () => {
 
                 <ul className="mx-auto my-8 flex flex-wrap flex-row justify-evenly">
                     {categories.map(({header, image}) => (
-                        <Link key={header} to={`/Мероприятия/${header}`} className="flex flex-col w-[150px]">
+                        <Link key={header} to={`/Events/${encodeURIComponent(header)}`} className="flex flex-col w-[150px]">
                             <img src={image} className="w-[100px] h-[100px] mx-auto bg-[#f0f0f0] p-2 rounded-xl" />
                             <p className="mx-auto my-2 font-bold text-lg">{header}</p>
                         </Link>

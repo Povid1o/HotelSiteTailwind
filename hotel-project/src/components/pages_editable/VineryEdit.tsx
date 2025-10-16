@@ -28,7 +28,7 @@ import GeografieComputer from "../assets/GeografieComputer.svg"
 
 const Button = ({text, linkTo}) => {
     return(
-        <Link to={linkTo || '/Каталог'}>
+        <Link to={linkTo || '/Shop'}>
             <div className="flex justify-start">
                 <div className='flex-col inline-block p-2'>
                     <div className='flex flex-row '>

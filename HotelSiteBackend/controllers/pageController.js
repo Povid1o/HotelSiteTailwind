@@ -38,13 +38,36 @@ exports.get = asyncHandler(async (req, res) => {
 });
 
 exports.update = asyncHandler(async (req, res) => {
-  const v = await pageSchema.validateAsync({
-    ...req.body,
-    content_json: toJsonObject(req.body.content_json)
-  });
-  const p = await Page.findByPk(req.params.id);
+  let p = null;
+  // allow update by id or name
+  if (!Number.isNaN(Number(req.params.id))) {
+    p = await Page.findByPk(req.params.id);
+  } else {
+    p = await Page.findOne({ where: { name: req.params.id } });
+  }
   if (!p) return res.sendStatus(404);
+  // keep existing fields if missing
+  const payload = {
+    name: req.body.name ?? p.name,
+    path: req.body.path ?? p.path,
+    is_active: typeof req.body.is_active === 'boolean' ? req.body.is_active : p.is_active,
+    content_json: toJsonObject(req.body.content_json || req.body.content || p.content_json)
+  }
+  const v = await pageSchema.validateAsync(payload);
   await p.update(v);
+  res.json(p);
+});
+
+exports.toggleActive = asyncHandler(async (req, res) => {
+  let p = null;
+  if (!Number.isNaN(Number(req.params.id))) {
+    p = await Page.findByPk(req.params.id);
+  } else {
+    p = await Page.findOne({ where: { name: req.params.id } });
+  }
+  if (!p) return res.sendStatus(404);
+  p.is_active = !p.is_active;
+  await p.save();
   res.json(p);
 });
 

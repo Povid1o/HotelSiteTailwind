@@ -132,17 +132,31 @@ export const createDish = async (categoryName: string, dishData: any) => {
   }
 
   // Сформировать JSON под схему бэкенда
+  // Обрабатываем изображения: загружаем файлы и получаем URL
+  let images: Array<{url: string, order: number}> = [];
+  if (Array.isArray(dishData.images)) {
+    for (const img of dishData.images) {
+      if (img instanceof File) {
+        const url = await uploadFile(img, 'dishes');
+        images.push({ url, order: images.length });
+      } else if (typeof img === 'string' && img) {
+        images.push({ url: img, order: images.length });
+      }
+    }
+  }
+
+  const priceNum = Number(dishData.price);
   const payload: any = {
     category_id: found.id,
-    name: dishData.name,
+    name: dishData.name || 'Новое блюдо',
     header: dishData.header ?? '',
     description_short: dishData.description ?? '',
     description_full: dishData.descriptionFull ?? '',
     weight: dishData.weight ?? '',
-    price: dishData.price ?? 0,
+    price: Number.isFinite(priceNum) ? priceNum : 0,
     nutrients: null,
     is_active: true,
-    images: Array.isArray(dishData.images) ? [] : [] // пока без загрузки файлов
+    images
   };
 
   const { data } = await $authHost.post('api/dishes', payload);
@@ -184,14 +198,15 @@ export const updateDish = async (categoryName: string, dishId: number, dishData:
       }
     }
 
+    const priceNum = Number(dishData.price);
     const payload: any = {
       category_id: categoryId,
-      name: dishData.name,
+      name: dishData.name || 'Новое блюдо',
       header: dishData.header ?? '',
       description_short: dishData.description ?? '',
       description_full: dishData.descriptionFull ?? '',
       weight: dishData.weight ?? '',
-      price: dishData.price ?? 0,
+      price: Number.isFinite(priceNum) ? priceNum : 0,
       nutrients: dishData.nutrients ?? null,
       is_active: dishData.is_active ?? true,
       images
@@ -207,9 +222,23 @@ export const updateDish = async (categoryName: string, dishId: number, dishData:
   }
 };
 
-export const deleteDish = async (dishId: number) => {
-  const { data } = await $authHost.delete(`api/dishes/${dishId}`);
-  return data;
+export const deleteDish = async (dishId: number, retries = 2) => {
+  try {
+    const { data } = await $authHost.delete(`api/dishes/${dishId}`);
+    return data;
+  } catch (error: any) {
+    // Retry on 500 or 409 errors with exponential backoff
+    if (retries > 0 && error.response && [500, 409].includes(error.response.status)) {
+      console.warn(`Delete dish ${dishId} failed with ${error.response.status}, retrying... (${retries} attempts left)`);
+      await new Promise(resolve => setTimeout(resolve, 300 * (3 - retries)));
+      return deleteDish(dishId, retries - 1);
+    }
+    
+    // Map error message for better UX
+    const message = error.response?.data?.message || error.message || 'Failed to delete dish';
+    console.error(`Error deleting dish ${dishId}:`, message);
+    throw new Error(message);
+  }
 };
 
 // Универсальная функция загрузки файлов для разных типов медиа

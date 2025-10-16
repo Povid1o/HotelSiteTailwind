@@ -46,7 +46,7 @@ const initialImages = [
   { src: Bottle, alt: 'Bottle' },
 ];
 
-const addType = () => {
+const AddTypeButton = () => {
   return (
     <Card>
       <button className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48">
@@ -56,7 +56,7 @@ const addType = () => {
   );
 };
 
-const addClase = () => {
+const AddClaseButton = () => {
   return (
     <Card>
       <button className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48">
@@ -66,7 +66,7 @@ const addClase = () => {
   );
 };
 
-const addProduct = () => {
+const AddProductButton = () => {
   return (
     <Card>
       <button className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48">
@@ -76,10 +76,14 @@ const addProduct = () => {
   );
 };
 
-const AddCategory = ({onClick}) => {
+const AddCategory = ({onClick, disabled = false}) => {
   return (
     <Card>
-      <button className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48" onClick={onClick}>
+      <button 
+        className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48 disabled:opacity-50 disabled:cursor-not-allowed" 
+        onClick={onClick}
+        disabled={disabled}
+      >
         Добавить Категорию
       </button>
     </Card>
@@ -93,6 +97,11 @@ const AdminPage = observer(() =>  {
   }
   const { dish, hotel, pageContent, wine } = context;
 
+  // Состояния для защиты от повторных кликов
+  const [isAddingDish, setIsAddingDish] = useState(false);
+  const [isAddingWine, setIsAddingWine] = useState(false);
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
+
   useEffect(() => {
     console.log('=== НАЧАЛО ЗАГРУЗКИ ДАННЫХ ===');
     console.log('API_URL:', process.env.REACT_APP_API_URL);
@@ -102,7 +111,7 @@ const AdminPage = observer(() =>  {
         console.log('Загружаем блюда...');
         await dish.loadDishes();
         console.log('✅ Блюда загружены:', dish.dishes);
-      } catch (error) {
+      } catch (error: any) {
         console.error('❌ Ошибка загрузки блюд:', error);
         console.error('Детали ошибки:', {
           message: error.message,
@@ -117,7 +126,7 @@ const AdminPage = observer(() =>  {
         console.log('Загружаем номера...');
         await hotel.loadRooms();
         console.log('✅ Номера загружены:', hotel.rooms);
-      } catch (error) {
+      } catch (error: any) {
         console.error('❌ Ошибка загрузки номеров:', error);
         console.error('Детали ошибки:', {
           message: error.message,
@@ -132,7 +141,7 @@ const AdminPage = observer(() =>  {
         console.log('Загружаем контент страниц...');
         await pageContent.loadPageContent();
         console.log('✅ Контент страниц загружен:', pageContent.pages);
-      } catch (error) {
+      } catch (error: any) {
         console.error('❌ Ошибка загрузки контента страниц:', error);
         console.error('Детали ошибки:', {
           message: error.message,
@@ -147,7 +156,7 @@ const AdminPage = observer(() =>  {
         console.log('Загружаем вина...');
         await wine.loadWines();
         console.log('✅ Вина загружены:', wine.wines);
-      } catch (error) {
+      } catch (error: any) {
         console.error('❌ Ошибка загрузки вин:', error);
         console.error('Детали ошибки:', {
           message: error.message,
@@ -177,8 +186,15 @@ const AdminPage = observer(() =>  {
 
 
   // Вместо addCategory используйте:
-  const addCategory = (newCategory: string) => {
-    dish.addCategory(newCategory);
+  const addCategory = async (newCategory: string) => {
+    if (isAddingCategory) return; // Защита от повторных кликов
+    
+    setIsAddingCategory(true);
+    await dish.addCategory(newCategory);
+    
+    setTimeout(() => {
+      setIsAddingCategory(false);
+    }, 500); // Задержка 500ms
   };
 
   // Вместо deleteCategory используйте:
@@ -187,8 +203,15 @@ const AdminPage = observer(() =>  {
   };
 
   // Вместо addProduct используйте:
-  const addProduct = (categoryName: string) => {
-    dish.addProduct(categoryName);
+  const addProduct = async (categoryName: string) => {
+    if (isAddingDish) return; // Защита от повторных кликов
+    
+    setIsAddingDish(true);
+    await dish.addProduct(categoryName);
+    
+    setTimeout(() => {
+      setIsAddingDish(false);
+    }, 500); // Задержка 500ms
   };
 
   // Вместо deleteProduct используйте:
@@ -234,8 +257,15 @@ const AdminPage = observer(() =>  {
   // ЗАМЕНИТЕ функции для вин:
 
   // Вместо addWine используйте:
-  const addWine = (wineType: string, sweetness: string) => {
-    wine.addWine(wineType, sweetness);
+  const addWine = async (wineType: string, sweetness: string) => {
+    if (isAddingWine) return; // Защита от повторных кликов
+    
+    setIsAddingWine(true);
+    await wine.addWine(wineType, sweetness);
+    
+    setTimeout(() => {
+      setIsAddingWine(false);
+    }, 500); // Задержка 500ms
   };
 
   // Вместо deleteWine используйте:
@@ -259,7 +289,14 @@ const AdminPage = observer(() =>  {
         )}
         ExtContent={() => (
           <HomeEdit
-            pageData={page.content}
+            pageData={{
+              mainBackground: { image: '', title: '', ...(typeof page.content === 'object' ? page.content.mainBackground : {}) },
+              aboutSection: { title: '', description: '', ...(typeof page.content === 'object' ? page.content.aboutSection : {}) },
+              firstGallery: { title: '', images: [], ...(typeof page.content === 'object' ? page.content.firstGallery : {}) },
+              secondGallery: { title: '', images: [], ...(typeof page.content === 'object' ? page.content.secondGallery : {}) },
+              videoSection: { title: '', videoUrl: '', ...(typeof page.content === 'object' ? page.content.videoSection : {}) },
+              servicesSection: { title: '', services: [], ...(typeof page.content === 'object' ? page.content.servicesSection : {}) }
+            }}
             onContentChange={(sectionName, updatedData) =>
               updatePageContent(page.name, sectionName, updatedData)
             }
@@ -276,7 +313,14 @@ const AdminPage = observer(() =>  {
         )}
         ExtContent={() => (
           <VineryEdit
-            pageData={page.content}
+            pageData={{
+              mainBackground: { image: '', title: '', ...(typeof page.content === 'object' ? page.content.mainBackground : {}) },
+              introSection: { title: '', description: '', image: '', buttonText: '', buttonLink: '', ...(typeof page.content === 'object' ? page.content.introSection : {}) },
+              historySection: { title: '', leftDates: [], rightDates: [], ...(typeof page.content === 'object' ? page.content.historySection : {}) },
+              wineSection: { firstText: '', secondText: '', buttonText: '', buttonLink: '', ...(typeof page.content === 'object' ? page.content.wineSection : {}) },
+              productionSection: { title: '', stages: [], ...(typeof page.content === 'object' ? page.content.productionSection : {}) },
+              regionSection: { title: '', firstText: '', secondText: '', backgroundImage: '', ...(typeof page.content === 'object' ? page.content.regionSection : {}) },
+            }}
             onContentChange={(sectionName, updatedData) =>
               updatePageContent(page.name, sectionName, updatedData)
             }
@@ -362,15 +406,15 @@ const AdminPage = observer(() =>  {
         <div className="flex flex-col space-y-4 pt-4">
 
             <ModalsCard
-                Card={addType}
+                Card={AddTypeButton}
                 ExtContent={CreateType}
             /> 
             <ModalsCard
-                Card={addClase}
+                Card={AddClaseButton}
                 ExtContent={CreateClase}
             /> 
             <ModalsCard
-                Card={addProduct}
+                Card={AddProductButton}
                 ExtContent={CreateProduct}
             /> 
                 
@@ -396,7 +440,7 @@ const AdminPage = observer(() =>  {
                       <Table.Cell>
                         {pageContentHandlers[page.name] ? pageContentHandlers[page.name](page) : (
                           <span className="text-gray-500">
-                            {page.content}
+                            {String(page.content)}
                           </span>
                         )}
                       </Table.Cell>
@@ -424,7 +468,7 @@ const AdminPage = observer(() =>  {
                       <Table.Cell>{room.price[0]?.price || 'N/A'}</Table.Cell>
                       <Table.Cell>{room.isActive ? "Активно" : "В архиве"}</Table.Cell>
                       <Table.Cell>
-                        <ExtCard
+                          <ExtCard
                           Card={() => (
                             <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
                               Править
@@ -470,44 +514,49 @@ const AdminPage = observer(() =>  {
                   <Table.HeadCell>Цена</Table.HeadCell>
                   <Table.HeadCell>Действия</Table.HeadCell>
                   <Table.HeadCell>
-                    <AddCategory onClick={() => addCategory("Новая категория")} />
+                    <AddCategory onClick={() => { addCategory("Новая категория"); }} disabled={isAddingCategory} />
                   </Table.HeadCell>
                 </Table.Head>
                 <Table.Body className="divide-y">
                   {dish.dishes.map(({ category, products }) => (
-                    <>
-                        <div className="my-5 mx-auto flex justify-center items-center gap-4 w-full" key={category}>
-                          {editingCategory !== category ? (
-                            <>
-                              <h3 className="font-bold text-main_theme text-lg font-body">
-                                {category}
-                              </h3>
-                              <Button
-                                icon={<MdModeEdit className='h-[20px] w-[20px]' />}
-                                func={() => setEditingCategory(category)}
+                    <React.Fragment key={category}>
+                      <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                        <Table.Cell colSpan={4}>
+                          <div className="my-5 mx-auto flex justify-center items-center gap-4 w-full">
+                            {editingCategory !== category ? (
+                              <>
+                                <h3 className="font-bold text-main_theme text-lg font-body">
+                                  {category}
+                                </h3>
+                                <Button
+                                  icon={<MdModeEdit className='h-[20px] w-[20px]' />}
+                                  func={() => setEditingCategory(category)}
+                                />
+                                <Button
+                                  icon={<FaTrashAlt className='h-[20px] w-[20px]' />}
+                                  func={() => deleteCategory(category)}
+                                  customBackground={"bg-[#ff6b6b]"}
+                                />
+                                <Button
+                                  icon={<IoMdAdd className='h-[20px] w-[20px]' />}
+                                  func={() => { addProduct(category); }}
+                                  customBackground={isAddingDish ? "bg-gray-400" : "bg-[#2ecc71]"}
+                                  disabled={isAddingDish}
+                                />
+                              </>
+                            ) : (
+                              <DescriptionInput
+                                inputField={true}
+                                horizontal={true}
+                                text={category}
+                                onSave={(newName) => handleCategorySave(category, newName)}
                               />
-                              <Button
-                                icon={<FaTrashAlt className='h-[20px] w-[20px]' />}
-                                func={() => deleteCategory(category)}
-                                customBackground={"bg-[#ff6b6b]"}
-                              />
-                              <Button
-                                icon={<IoMdAdd className='h-[20px] w-[20px]' />}
-                                func={() => addProduct(category, "Новый продукт")}
-                                customBackground={"bg-[#2ecc71]"}
-                              />
-                            </>
-                          ) : (
-                            <DescriptionInput
-                              inputField={true}
-                              horizontal={true}
-                              text={category}
-                              onSave={(newName) => handleCategorySave(category, newName)}
-                            />
-                          )}
-                        </div>
+                            )}
+                          </div>
+                        </Table.Cell>
+                      </Table.Row>
                       {products.map(({ id, images, name, header, description, descriptionFull, weight, price}) => (
-                        <Table.Row key={name} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                        <Table.Row key={id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                             {name}
                           </Table.Cell>
@@ -543,7 +592,7 @@ const AdminPage = observer(() =>  {
                           </Table.Cell>
                         </Table.Row>
                       ))}
-                    </>
+                    </React.Fragment>
                   ))}
                 </Table.Body>
               </Table>
@@ -565,68 +614,75 @@ const AdminPage = observer(() =>  {
                 </Table.Head>
                 <Table.Body className="divide-y">
                   {wine.wines.map(({ type, assortment }) => (
-                    <>
-                      <div key={type} >
-                        <div className="my-5 mx-auto flex justify-center items-center gap-4 w-full">
-                          <h3 className="font-bold text-main_theme text-2xl font-body">
-                            {type}
-                          </h3>
-                        </div>
-                      </div>
+                    <React.Fragment key={type}>
+                      <Table.Row>
+                        <Table.Cell colSpan={4}>
+                          <div className="my-5 mx-auto flex justify-center items-center gap-4 w-full">
+                            <h3 className="font-bold text-main_theme text-2xl font-body">
+                              {type}
+                            </h3>
+                          </div>
+                        </Table.Cell>
+                      </Table.Row>
                       {assortment.map(({ sweetness, wines }) => (
-                        <>
-                        <div className="flex items-center gap-4 w-full" key={sweetness}>
-                          <h4 className="font-bold text-main_theme text-base font-body">
-                            {sweetness}
-                          </h4>
-                          <Button
-                            icon={<IoMdAdd className='h-[20px] w-[20px]' />}
-                            func={() => addWine(type, sweetness)}
-                            customBackground={"bg-[#2ecc71]"}
-                          />
-                        </div>
-                        {wines.map(({ id, name, images, year, alcohol, sugar, temperature, price, description }) => (
-                          <Table.Row key={id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                              {name}
-                            </Table.Cell>
-                            <Table.Cell>{price}</Table.Cell>
-                            <Table.Cell>
-                              <ExtCard
-                                Card={() => (
-                                  <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
-                                    Править
-                                  </button>
-                                )}
-                                ExtContent={() => (
-                                  <NewWineCard
-                                    dishName={name}
-                                    photos={images}
-                                    price={price}
-                                    description={description}
-                                    year={year}
-                                    alcohol={alcohol}
-                                    sugar={sugar}
-                                    temperature={temperature}
-                                    onDataChange={(updatedData) => updateWineData(type, sweetness, id, updatedData)}
-                                  />
-                                )}
-                              />
-                            </Table.Cell>
-                            <Table.Cell>
-                              <a
-                                href="#"
-                                onClick={() => deleteWine(type, sweetness, id)}
-                                className="font-medium text-main_theme hover:underline dark:text-cyan-500"
-                              >
-                                Удалить
-                              </a>
+                        <React.Fragment key={`${type}-${sweetness}`}>
+                          <Table.Row>
+                            <Table.Cell colSpan={4}>
+                              <div className="flex items-center gap-4 w-full">
+                                <h4 className="font-bold text-main_theme text-base font-body">
+                                  {sweetness}
+                                </h4>
+                                <Button
+                                  icon={<IoMdAdd className='h-[20px] w-[20px]' />}
+                                  func={() => { addWine(type, sweetness); }}
+                                  customBackground={isAddingWine ? "bg-gray-400" : "bg-[#2ecc71]"}
+                                  disabled={isAddingWine}
+                                />
+                              </div>
                             </Table.Cell>
                           </Table.Row>
-                        ))}
-                      </>
+                          {wines.map(({ id, name, images, year, alcohol, sugar, temperature, price, description }) => (
+                            <Table.Row key={id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                {name}
+                              </Table.Cell>
+                              <Table.Cell>{price}</Table.Cell>
+                              <Table.Cell>
+                                <ExtCard
+                                  Card={() => (
+                                    <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
+                                      Править
+                                    </button>
+                                  )}
+                                  ExtContent={() => (
+                                    <NewWineCard
+                                      dishName={name}
+                                      photos={images}
+                                      price={price}
+                                      description={description}
+                                      year={year}
+                                      alcohol={alcohol}
+                                      sugar={sugar}
+                                      temperature={temperature}
+                                      onDataChange={(updatedData) => updateWineData(type, sweetness, id, updatedData)}
+                                    />
+                                  )}
+                                />
+                              </Table.Cell>
+                              <Table.Cell>
+                                <button
+                                  type="button"
+                                  onClick={() => deleteWine(type, sweetness, id)}
+                                  className="font-medium text-main_theme hover:underline dark:text-cyan-500"
+                                >
+                                  Удалить
+                                </button>
+                              </Table.Cell>
+                            </Table.Row>
+                          ))}
+                        </React.Fragment>
                       ))}
-                    </>
+                    </React.Fragment>
                   ))}
                 </Table.Body>
               </Table>

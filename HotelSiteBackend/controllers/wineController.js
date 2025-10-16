@@ -1,5 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const Joi = require('joi');
+const path = require('path');
+const fs = require('fs');
+const sequelize = require('../db');
 const { WineType, WineSweetness, Wine, WineDescription, WineImage } = require('../models/models');
 
 const wineSchema = Joi.object({
@@ -17,17 +20,17 @@ const wineSchema = Joi.object({
 });
 
 exports.tree = asyncHandler(async (req, res) => {
-  const types = await WineType.findAll();
-  const sweetnesses = await WineSweetness.findAll();
-  const wines = await Wine.findAll({ include: [{ model: WineDescription, as: 'description' }, { model: WineImage, as: 'images' }] });
+  const [types, sweetnesses, wines] = await Promise.all([
+    WineType.findAll(),
+    WineSweetness.findAll(),
+    Wine.findAll({ include: [{ model: WineDescription, as: 'description' }, { model: WineImage, as: 'images' }] })
+  ]);
 
   const byType = types.map(t => ({ id: t.id, name: t.name, assortment: [] }));
   byType.forEach(bt => {
     sweetnesses.forEach(sw => {
       const grouped = wines.filter(w => w.type_id === bt.id && w.sweetness_id === sw.id);
-      if (grouped.length) {
-        bt.assortment.push({ id: sw.id, name: sw.name, wines: grouped });
-      }
+      bt.assortment.push({ id: sw.id, name: sw.name, wines: grouped });
     });
   });
 
@@ -89,8 +92,31 @@ exports.update = asyncHandler(async (req, res) => {
 
 
 exports.remove = asyncHandler(async (req, res) => {
-  const wine = await Wine.findByPk(req.params.id);
-  if (!wine) return res.sendStatus(404);
-  await wine.destroy();
+  // Use a transaction and explicit child deletion to avoid intermittent FK errors
+  await sequelize.transaction(async (t) => {
+    const wine = await Wine.findByPk(req.params.id, { include: ['images', 'description'], transaction: t, lock: t.LOCK.UPDATE });
+    if (!wine) return res.sendStatus(404);
+
+    // Try unlinking files that live under our static directory; ignore errors
+    const staticRoot = path.resolve(__dirname, '..', 'static');
+    const images = Array.isArray(wine.images) ? wine.images : [];
+    for (const img of images) {
+      const url = img?.url || '';
+      if (typeof url === 'string' && url.startsWith('/static/')) {
+        const rel = url.replace(/^\/static\//, '');
+        const filePath = path.resolve(staticRoot, rel);
+        if (filePath.startsWith(staticRoot) && fs.existsSync(filePath)) {
+          try { fs.unlinkSync(filePath); } catch (_) { /* noop */ }
+        }
+      }
+    }
+
+    await Promise.all([
+      WineDescription.destroy({ where: { wine_id: wine.id }, transaction: t }),
+      WineImage.destroy({ where: { wine_id: wine.id }, transaction: t }),
+    ]);
+
+    await wine.destroy({ transaction: t });
+  });
   res.json({ ok: true });
 });

@@ -42,7 +42,7 @@ export default function ProductionCard({
                     <>
                         <button className="flex justify-start items-end">
                             <div className='flex-col inline-block py-8 pr-8 bottom-3'>
-                                <Link to='/Каталог'>
+                                <Link to='/Shop'>
                                     <div className='flex flex-row'>
                                         <a className='text-[#3E4756] leading-[38px] mx-2 text-lg mobile:text-xl md:text-2xl xl:text-3xl 2xl:text-4xl font-semibold'>Перейти</a>
                                         <FaLongArrowAltRight className='w-[25px] h-[15px] xl:w-[30px] xl:h-[20px] 2xl:w-[35px] 2xl:h-[25px] left-[35px] my-auto'/>

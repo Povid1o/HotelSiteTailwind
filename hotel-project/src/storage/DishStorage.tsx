@@ -25,10 +25,13 @@ interface DishCategory {
   products: DishProduct[];
 }
 
+
+
 export default class DishStorage {
   private _dishes: DishCategory[] = [];
   private _isLoading = false;
   private _error: string | null = null;
+  private _pendingCreates: Map<number, Promise<number>> = new Map();
 
   constructor() {
     makeAutoObservable(this);
@@ -134,8 +137,11 @@ export default class DishStorage {
   };
 
   addProduct = (categoryName: string) => {
+    // Генерируем уникальный временный ID (отрицательное число, чтобы отличить от реальных ID)
+    const tempId = -(Date.now() + Math.random() * 1000);
+    
     const newProduct: DishProduct = {
-      id: Date.now(), // Временный ID
+      id: tempId,
       name: "Новый продукт",
       images: [],
       header: "Новый продукт",
@@ -149,14 +155,22 @@ export default class DishStorage {
     if (category) {
       category.products.push(newProduct);
       
-      createDish(categoryName, newProduct).then(response => {
-        // Обновляем ID продукта на серверный
-        newProduct.id = response.id;
+      const createPromise = createDish(categoryName, newProduct).then(response => {
+        // Заменяем временный ID на реальный
+        const product = category.products.find(p => p.id === tempId);
+        if (product) {
+          product.id = response.id;
+        }
+        this._pendingCreates.delete(tempId);
+        return response.id;
       }).catch(error => {
         console.error('Error creating dish:', error);
         // Убираем продукт в случае ошибки
-        category.products = category.products.filter(p => p.id !== newProduct.id);
+        category.products = category.products.filter(p => p.id !== tempId);
+        this._pendingCreates.delete(tempId);
+        throw error;
       });
+      this._pendingCreates.set(tempId, createPromise);
     }
   };
 
@@ -169,6 +183,15 @@ export default class DishStorage {
       if (product) {
         category.products.splice(productIndex, 1);
         
+        // Если это временный ID (отрицательный), просто отменяем создание
+        if (productId < 0) {
+          if (this._pendingCreates.has(productId)) {
+            this._pendingCreates.delete(productId);
+          }
+          return; // Не вызываем API для временных ID
+        }
+        
+        // Для реальных ID вызываем API удаления
         deleteDish(productId).catch(error => {
           console.error('Error deleting dish:', error);
           // Возвращаем продукт обратно в случае ошибки
@@ -178,19 +201,31 @@ export default class DishStorage {
     }
   };
 
-  updateProduct = (categoryName: string, productId: number, updatedData: Partial<DishProduct>) => {
+  updateProduct = async (categoryName: string, productId: number, updatedData: Partial<DishProduct>) => {
     const category = this._dishes.find(cat => cat.category === categoryName);
     if (category) {
       const product = category.products.find(p => p.id === productId);
       if (product) {
         const oldData = { ...product };
         Object.assign(product, updatedData);
-        
-        updateDish(categoryName, productId, updatedData).catch(error => {
+        try {
+          // Если id временный (отрицательный) и создание ещё не завершено — дождаться
+          if (productId < 0 && this._pendingCreates.has(productId)) {
+            const realId = await this._pendingCreates.get(productId)!;
+            await updateDish(categoryName, realId, updatedData);
+            product.id = realId;
+          } else if (productId < 0) {
+            // Если почему-то промиса нет для временного ID, просто откатить и перезагрузить
+            console.warn('Pending create not found for temp id, reloading dishes');
+            await this.loadDishes();
+          } else {
+            // Для реальных ID просто обновляем
+            await updateDish(categoryName, productId, updatedData);
+          }
+        } catch (error) {
           console.error('Error updating dish:', error);
-          // Откатываем изменения в случае ошибки
           Object.assign(product, oldData);
-        });
+        }
       }
     }
   };

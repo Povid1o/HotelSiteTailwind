@@ -269,7 +269,7 @@ function Shop() {
                 key={wine.id}
                 header={wine.name}
                 imgSrc={wine.image}
-                to={`/Каталог/${wine.id}`}
+                to={`/Shop/${wine.id}`}
                 state={{wine}}
               />
             ))
@@ -335,7 +335,7 @@ function Shop() {
                   <WineCard 
                     header={wine.name}
                     imgSrc={wine.image}
-                    to={`/Каталог/${wine.id}`}
+                    to={`/Shop/${wine.id}`}
                     state={{wine}}
                   />
                 </div>

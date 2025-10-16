@@ -75,8 +75,11 @@ export default class WineStorage {
 
   // Локальные методы
   addWine = (wineType: string, sweetness: string) => {
+    // Генерируем уникальный временный ID (отрицательное число)
+    const tempId = -(Date.now() + Math.random() * 1000);
+    
     const newWine: Wine = {
-      id: Date.now(), // Временный ID
+      id: tempId,
       name: "Новая бутылка",
       images: [],
       year: new Date().getFullYear(),
@@ -100,10 +103,14 @@ export default class WineStorage {
         assortmentItem.wines.push(newWine);
         
         createWine(wineType, sweetness, newWine).then(response => {
-          newWine.id = response.id;
+          // Заменяем временный ID на реальный
+          const wine = assortmentItem.wines.find(w => w.id === tempId);
+          if (wine) {
+            wine.id = response.id;
+          }
         }).catch(error => {
           console.error('Error creating wine:', error);
-          assortmentItem.wines = assortmentItem.wines.filter(w => w.id !== newWine.id);
+          assortmentItem.wines = assortmentItem.wines.filter(w => w.id !== tempId);
         });
       }
     }
@@ -120,6 +127,12 @@ export default class WineStorage {
         if (wine) {
           assortmentItem.wines.splice(wineIndex, 1);
           
+          // Если это временный ID (отрицательный), не вызываем API
+          if (wineId < 0) {
+            return; // Просто удаляем локально
+          }
+          
+          // Для реальных ID вызываем API удаления
           deleteWine(wineId).catch(error => {
             console.error('Error deleting wine:', error);
             assortmentItem.wines.splice(wineIndex, 0, wine);
@@ -139,7 +152,7 @@ export default class WineStorage {
           const oldData = { ...wine };
           Object.assign(wine, updatedData);
           
-          updateWine(wineId, updatedData).catch(error => {
+          updateWine(wineId, updatedData, wineType, sweetness).catch(error => {
             console.error('Error updating wine:', error);
             Object.assign(wine, oldData);
           });

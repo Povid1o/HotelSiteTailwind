@@ -182,7 +182,7 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                                 key={value.id}
                                 header={value.name}
                                 imgSrc={value.image}
-                                to={`/Каталог/${value.id}`}
+                                to={`/Shop/${value.id}`}
                                 state={{value}}
                             ></WineCard>
                         ))}

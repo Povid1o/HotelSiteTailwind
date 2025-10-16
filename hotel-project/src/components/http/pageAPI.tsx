@@ -1,4 +1,4 @@
-import { $authHost, $host } from "./index";
+import { $authHost, $host, API_BASE } from "./index";
 
 const createFormDataWithFiles = (data: any) => {
     const formData = new FormData();
@@ -34,21 +34,53 @@ const createFormDataWithFiles = (data: any) => {
 
 export const fetchPageContent = async () => {
   const { data } = await $host.get('api/pages');
+  // Map any media urls to absolute
   return data;
 };
 
 export const updatePageContent = async (pageName: string, content: any) => {
-  const formData = createFormDataWithFiles({
-    name: pageName,
-    content: content
-  });
+  // Upload any File fields and replace with URLs
+  const uploadIfFile = async (val: any, type: string) => {
+    if (val instanceof File) {
+      const form = new FormData();
+      form.append('file', val);
+      form.append('type', type);
+      const { data } = await $authHost.post('api/upload', form, { headers: { 'Content-Type': 'multipart/form-data' } });
+      return data.url;
+    }
+    return val;
+  }
 
-  const { data } = await $authHost.put(`api/pages/${encodeURIComponent(pageName)}`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-  return data;
+  const deepProcess = async (obj: any, section: string): Promise<any> => {
+    if (obj === null || obj === undefined) return obj
+    if (Array.isArray(obj)) {
+      const res = [] as any[]
+      let idx = 0
+      for (const item of obj) {
+        res.push(await deepProcess(item, section))
+        idx++
+      }
+      return res
+    }
+    if (typeof obj === 'object') {
+      const out: any = {}
+      for (const k of Object.keys(obj)) {
+        const v = obj[k]
+        if (k.toLowerCase().includes('image') || k.toLowerCase().includes('video')) {
+          out[k] = await uploadIfFile(v, 'pages')
+        } else {
+          out[k] = await deepProcess(v, section)
+        }
+      }
+      return out
+    }
+    return obj
+  }
+
+  const processed = await deepProcess(content, pageName)
+  const payload = { content: processed }
+  const { data } = await $authHost.patch(`api/pages/${encodeURIComponent(pageName)}/content`, payload)
+  return data
 };
 
 export const togglePageActive = async (pageName: string) => {

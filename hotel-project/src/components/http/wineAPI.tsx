@@ -1,4 +1,4 @@
-import { $authHost, $host } from "./index";
+import { $authHost, $host, API_BASE } from "./index";
 
 const createFormDataWithFiles = (data: any) => {
     const formData = new FormData();
@@ -34,35 +34,144 @@ const createFormDataWithFiles = (data: any) => {
 
 export const fetchWines = async () => {
   const { data } = await $host.get('api/wines/tree');
-  return data;
+  // Map image urls to absolute
+  const mapped = (Array.isArray(data) ? data : []).map((t: any) => ({
+    type: t.name,
+    assortment: (t.assortment || []).map((s: any) => ({
+      sweetness: s.name,
+      wines: (s.wines || []).map((w: any) => ({
+        id: w.id,
+        name: w.name,
+        year: w.year,
+        alcohol: w.alcohol,
+        sugar: w.sugar,
+        temperature: w.temperature,
+        price: typeof w.price === 'string' ? Number(w.price) : (w.price ?? 0),
+        description: (w.description || []).map((d: any) => d.description_text || d),
+        images: (w.images || []).map((img: any) => {
+          const src = img?.url || ''
+          if (!src) return null
+          if (src.startsWith('/static/')) return `${API_BASE}${src}`
+          return src
+        }).filter(Boolean)
+      }))
+    }))
+  }))
+  return mapped
 };
 
 export const createWine = async (wineType: string, sweetness: string, wineData: any) => {
-  const formData = createFormDataWithFiles({
-    type: wineType,
-    sweetness: sweetness,
-    ...wineData
-  });
+  // Backend expects ids and arrays
+  // First fetch dictionaries
+  const [{ data: types }, { data: sweets }] = await Promise.all([
+    $host.get('api/wine-types'),
+    $host.get('api/wine-sweetness')
+  ])
+  const type = (types || []).find((t: any) => t.name.toLowerCase() === wineType.toLowerCase())
+  const sweet = (sweets || []).find((s: any) => s.name.toLowerCase() === sweetness.toLowerCase())
+  if (!type || !sweet) throw new Error('Unknown wine type or sweetness')
 
-  const { data } = await $authHost.post('api/wines/tree', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-  return data;
+  // Upload images first
+  const images: Array<{url: string, order: number}> = []
+  if (Array.isArray(wineData.images)) {
+    for (const img of wineData.images) {
+      if (img instanceof File) {
+        const form = new FormData()
+        form.append('file', img)
+        form.append('type', 'wines')
+        const { data: up } = await $authHost.post('api/upload', form, { headers: { 'Content-Type': 'multipart/form-data' } })
+        images.push({ url: up.url, order: images.length })
+      } else if (typeof img === 'string' && img) {
+        images.push({ url: img, order: images.length })
+      }
+    }
+  }
+
+  const payload = {
+    type_id: type.id,
+    sweetness_id: sweet.id,
+    name: wineData.name || 'Новое вино',
+    year: wineData.year ?? null,
+    alcohol: wineData.alcohol ?? '',
+    sugar: wineData.sugar ?? '',
+    temperature: wineData.temperature ?? '',
+    price: Number(wineData.price) || 0,
+    is_active: true,
+    description: Array.isArray(wineData.description) ? wineData.description : [],
+    images
+  }
+
+  const { data } = await $authHost.post('api/wines', payload)
+  return data
 };
 
-export const updateWine = async (wineId: number, wineData: any) => {
-  const formData = createFormDataWithFiles(wineData);
-  const { data } = await $authHost.put(`api/wines/${wineId}`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-  return data;
+export const updateWine = async (wineId: number, wineData: any, contextTypeName?: string, contextSweetnessName?: string) => {
+  // Reuse create logic to build payload
+  const payload = { ...wineData }
+  // If images contain files, upload first
+  const images: Array<{url: string, order: number}> = []
+  if (Array.isArray(wineData.images)) {
+    for (const img of wineData.images) {
+      if (img instanceof File) {
+        const form = new FormData()
+        form.append('file', img)
+        form.append('type', 'wines')
+        const { data: up } = await $authHost.post('api/upload', form, { headers: { 'Content-Type': 'multipart/form-data' } })
+        images.push({ url: up.url, order: images.length })
+      } else if (typeof img === 'string' && img) {
+        images.push({ url: img, order: images.length })
+      }
+    }
+  }
+
+  // Map type/sweetness names to ids (from payload or context)
+  const needMap = payload.type || payload.sweetness || contextTypeName || contextSweetnessName
+  if (needMap) {
+    const [{ data: types }, { data: sweets }] = await Promise.all([
+      $host.get('api/wine-types'),
+      $host.get('api/wine-sweetness')
+    ])
+    const typeName = (payload.type || contextTypeName || '').toString()
+    const sweetName = (payload.sweetness || contextSweetnessName || '').toString()
+    if (typeName) {
+      const t = (types || []).find((x: any) => x.name.toLowerCase() === typeName.toLowerCase())
+      if (t) payload.type_id = t.id
+    }
+    if (sweetName) {
+      const s = (sweets || []).find((x: any) => x.name.toLowerCase() === sweetName.toLowerCase())
+      if (s) payload.sweetness_id = s.id
+    }
+    delete payload.type
+    delete payload.sweetness
+  }
+
+  // Joi schema requires type_id and sweetness_id
+  if (!payload.type_id || !payload.sweetness_id) {
+    throw new Error('Missing wine type or sweetness for update')
+  }
+
+  payload.images = images
+  if (payload.price !== undefined) payload.price = Number(payload.price) || 0
+
+  const { data } = await $authHost.put(`api/wines/${wineId}`, payload)
+  return data
 };
 
-export const deleteWine = async (wineId: number) => {
-  const { data } = await $authHost.delete(`api/wines/${wineId}`);
-  return data;
+export const deleteWine = async (wineId: number, retries = 2) => {
+  try {
+    const { data } = await $authHost.delete(`api/wines/${wineId}`);
+    return data;
+  } catch (error: any) {
+    // Retry on 500 or 409 errors with exponential backoff
+    if (retries > 0 && error.response && [500, 409].includes(error.response.status)) {
+      console.warn(`Delete wine ${wineId} failed with ${error.response.status}, retrying... (${retries} attempts left)`);
+      await new Promise(resolve => setTimeout(resolve, 300 * (3 - retries)));
+      return deleteWine(wineId, retries - 1);
+    }
+    
+    // Map error message for better UX
+    const message = error.response?.data?.message || error.message || 'Failed to delete wine';
+    console.error(`Error deleting wine ${wineId}:`, message);
+    throw new Error(message);
+  }
 };
