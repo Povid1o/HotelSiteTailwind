@@ -4,6 +4,7 @@ import BackgroundContentEdit from '../text_inputs/BackgroundContentEdit';
 import TextEditor from '../text_inputs/TextEditor';
 import VideoWithUpload from '../text_inputs/VideoWithUpload';
 import BoxEditable from '../text_inputs/BoxEditable';
+import { FaTrashAlt, FaPlus } from "react-icons/fa";
 import { getMediaUrl } from '../../utils/contentHelpers';
 
 import 'swiper/css';
@@ -156,6 +157,27 @@ const HomeEdit = ({ pageData, onContentChange }) => {
         setPendingServiceChanges({});
         setHasUnsavedServiceChanges(false);
     }, []);
+
+    // Удаление сервиса (как в VineryEdit для стадий)
+    const handleServiceRemove = useCallback((serviceIndex) => {
+        const updatedServices = pageData.servicesSection.services.filter((_, index) => index !== serviceIndex);
+        onContentChange('servicesSection', {
+            ...pageData.servicesSection,
+            services: updatedServices
+        });
+    }, [onContentChange, pageData.servicesSection]);
+
+    // Добавление сервиса (аналогично кнопке в VineryEdit)
+    const handleServiceAdd = useCallback(() => {
+        const newService = {
+            name: "Новый элемент",
+            image: null
+        };
+        onContentChange('servicesSection', {
+            ...pageData.servicesSection,
+            services: [...pageData.servicesSection.services, newService]
+        });
+    }, [onContentChange, pageData.servicesSection]);
     
     // Функция для создания стабильного URL для отображения
     const getDisplayImageSrc = (imageSrc) => {
@@ -260,16 +282,35 @@ const HomeEdit = ({ pageData, onContentChange }) => {
             </div>
 
             <div className='mt-14 mx-8 mx-auto justify-center font-body max-sm:w-5/6 md:w-3/4 xl:container'>
-                <TextEditor 
-                    text={pageData.servicesSection.title} 
-                    format="custom"
-                    style="text-4xl text-gray-700 font-bold pt-4 lg:text-5xl xl:text-6xl pt-8"
-                    isShort={true} 
-                    onSave={handleServicesSectionTitleChange} 
-                />
+                <div className='flex items-center justify-between mb-4 sm:mb-8'>
+                    <TextEditor 
+                        text={pageData.servicesSection.title} 
+                        format="custom"
+                        style="text-4xl text-gray-700 font-bold pt-4 lg:text-5xl xl:text-6xl pt-8"
+                        isShort={true} 
+                        onSave={handleServicesSectionTitleChange} 
+                    />
+                    <button
+                        className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl flex items-center gap-2"
+                        onClick={handleServiceAdd}
+                    >
+                        <FaPlus className="w-4 h-4" />
+                        Добавить элемент
+                    </button>
+                </div>
                 <ul className='flex flex-wrap flex-row'>
                     {pageData.servicesSection.services.map((service, index) => (
-                        <li key={`service-${index}-${service.name}`} className={pendingServiceChanges[index] ? 'ring-2 ring-orange-400 rounded-lg' : ''}>
+                        <li key={`service-${index}-${service.name}`} className={(pendingServiceChanges[index] ? 'ring-2 ring-orange-400 ' : '') + 'rounded-lg p-1'}>
+                            <div className="flex justify-between items-center mb-2">
+                                <span className="text-sm font-medium text-gray-600">Сервис {index + 1}</span>
+                                <button
+                                    className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full"
+                                    onClick={() => handleServiceRemove(index)}
+                                    title="Удалить сервис"
+                                >
+                                    <FaTrashAlt className="w-3 h-3" />
+                                </button>
+                            </div>
                             <BoxEditable
                                 name={pendingServiceChanges[index]?.name || service.name}
                                 imgSrc={getDisplayImageSrc(pendingServiceChanges[index]?.image || service.image)}
