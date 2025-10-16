@@ -4,6 +4,7 @@ import BackgroundContentEdit from '../text_inputs/BackgroundContentEdit';
 import TextEditor from '../text_inputs/TextEditor';
 import VideoWithUpload from '../text_inputs/VideoWithUpload';
 import BoxEditable from '../text_inputs/BoxEditable';
+import { getMediaUrl } from '../../utils/contentHelpers';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -146,9 +147,9 @@ const HomeEdit = ({ pageData, onContentChange }) => {
             return URL.createObjectURL(imageSrc);
         }
         
-        // Если это строка, используем как есть
+        // Если это строка, преобразуем относительные пути в полные URL
         if (typeof imageSrc === 'string') {
-            return imageSrc;
+            return getMediaUrl(imageSrc);
         }
         
         return null;

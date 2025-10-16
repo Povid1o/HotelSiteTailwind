@@ -35,14 +35,30 @@ module.exports = {
       ]);
     }
 
-    // Image and video paths
-    const hotelImage = '/static/pages/hotel-main.png';
-    const hotelVideo = '/static/videos/hotel-presentation.mp4';
+    // Image and video paths (относительно static директории)
+    const backgroundImage = '/static/pages/Wine_Background2_AI.png';
+    const threeBottles = '/static/pages/ThreeBottles.png';
+    const grape = '/static/pages/Grape.png';
+    const vineryBackground = '/static/pages/VineryBackground.png';
+    const bottleProduce = '/static/pages/BottleProduce.png';
+    const wineBarrel = '/static/pages/WineBarrel.png';
+    const wineReservour = '/static/pages/WineReservour.png';
+    const grapePlant = '/static/pages/GrapePlant.png';
+    
+    // Gallery images from static folder
+    const galleryImages = [
+      { src: '/static/pages/gallery/StandartPlus1.jpeg', alt: 'Номер 1' },
+      { src: '/static/pages/gallery/StandartPlus2.jpeg', alt: 'Номер 2' },
+      { src: '/static/pages/gallery/StandartPlus3.jpeg', alt: 'Номер 3' }
+    ];
+    
+    const hotelVideo = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+    const hotelPlaceholder = '/static/pages/hotel-main.png';
 
     // Page 1: Главная
     const mainPageContent = {
       mainBackground: {
-        image: hotelImage,
+        image: backgroundImage,
         title: "Добро пожаловать на Винные Терассы"
       },
       aboutSection: {
@@ -51,11 +67,11 @@ module.exports = {
       },
       firstGallery: {
         title: "Номерной Фонд",
-        images: [hotelImage, hotelImage, hotelImage, hotelImage]
+        images: [...galleryImages]
       },
       secondGallery: {
         title: "Отель расположен в самой живописной локации Абрау",
-        images: [hotelImage, hotelImage, hotelImage, hotelImage]
+        images: [...galleryImages]
       },
       videoSection: {
         title: "Посмотрите видео-презентацию",
@@ -66,23 +82,23 @@ module.exports = {
         services: [
           {
             name: "Трансфер",
-            image: hotelImage
+            image: hotelPlaceholder
           },
           {
             name: "Изысканная кухня", 
-            image: hotelImage
+            image: hotelPlaceholder
           },
           {
             name: "Современный дизайн",
-            image: hotelImage
+            image: hotelPlaceholder
           },
           {
             name: "Сервис",
-            image: hotelImage
+            image: hotelPlaceholder
           },
           {
             name: "Качественное вино",
-            image: hotelImage
+            image: hotelPlaceholder
           }
         ]
       }
@@ -91,13 +107,13 @@ module.exports = {
     // Page 2: Винодельня
     const vineryPageContent = {
       mainBackground: {
-        image: hotelImage,
+        image: vineryBackground,
         title: "Винодельня"
       },
       introSection: {
         title: "Винодельня",
         description: "Откройте для себя мир превосходных вин в нашей винодельне! Мы предлагаем уникальные и высококачественные сорта вин, созданные с любовью и вниманием к каждой детали. Посетите нашу винодельню и убедитесь в качестве наших вин самостоятельно. Здесь вы сможете насладиться изысканными напитками, отдохнуть и провести время в уютной атмосфере.",
-        image: hotelImage,
+        image: threeBottles,
         buttonText: "Ассортимент вин",
         buttonLink: "/Каталог"
       },
@@ -123,19 +139,19 @@ module.exports = {
       productionSection: {
         title: "ЭТАПЫ НАШЕГО ПРОИЗВОДСТВА",
         stages: [
-          { name: "Сбор винограда", image: hotelImage },
-          { name: "Дробление Прессование", image: hotelImage },
-          { name: "Ферментация", image: hotelImage },
-          { name: "Выдержка", image: hotelImage },
-          { name: "Фильтрация", image: hotelImage },
-          { name: "Розлив Созревание", image: hotelImage }
+          { name: "Сбор винограда", image: grape },
+          { name: "Дробление Прессование", image: bottleProduce },
+          { name: "Ферментация", image: wineBarrel },
+          { name: "Выдержка", image: wineBarrel },
+          { name: "Фильтрация", image: wineBarrel },
+          { name: "Розлив Созревание", image: wineReservour }
         ]
       },
       regionSection: {
         title: "ВИННЫЙ РЕГИОН",
         firstText: "Краснодарский край — главный винодельческий регион России с разнообразными сортами винограда и высококачественными винами. Здесь выращивают Каберне Совиньон, Мерло, Шардоне и Ркацители.",
         secondText: "Регион сочетает культуру, красоту природы и винодельческое искусство.",
-        backgroundImage: hotelImage
+        backgroundImage: grapePlant
       }
     };
 

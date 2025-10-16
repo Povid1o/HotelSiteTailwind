@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { IoTrashBin } from "react-icons/io5";
 import { FaPen } from "react-icons/fa";
+import { getMediaUrl } from '../../utils/contentHelpers';
 
 const ImageWithButton = ({ 
   image, 
@@ -22,8 +23,8 @@ const ImageWithButton = ({
       const blobUrl = URL.createObjectURL(imageSource);
       return blobUrl;
     } else if (typeof imageSource === 'string') {
-      // Если это строка (URL), используем как есть
-      return imageSource;
+      // Если это строка (URL), преобразуем относительные пути в полные URL
+      return getMediaUrl(imageSource);
     }
     
     return '';
@@ -129,11 +130,9 @@ const ImageWithButton = ({
 
   const handleImageError = useCallback((e) => {
     console.error('ImageWithButton: image load error:', e);
-    
-    if (onImageChange) {
-      onImageChange(null);
-    }
-  }, [onImageChange]);
+    // Не удаляем изображение автоматически при ошибке загрузки
+    // Просто логируем ошибку, а компонент покажет placeholder
+  }, []);
 
   if (isBackground) {
     return (

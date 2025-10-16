@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { fetchPageContent, updatePageContent, togglePageActive } from '../components/http/pageAPI';
+import { fetchPageContent, updatePageContent, togglePageActive, createPage } from '../components/http/pageAPI';
 
 // Используем интерфейсы из ТЗ
 interface GalleryImage {
@@ -13,6 +13,7 @@ interface ServiceItem {
 }
 
 interface PageContent {
+  id: number; // Добавили id
   name: string;
   path: string;
   isActive: boolean;
@@ -132,7 +133,8 @@ export default class PageContentStorage {
         [sectionName]: updatedData
       };
       
-      updatePageContent(pageName, page.content).catch(error => {
+      // Используем page.id вместо pageName
+      updatePageContent(page.id, page.content).catch(error => {
         console.error('Error updating page content:', error);
         // Откатываем изменения
         page.content = {
@@ -146,12 +148,26 @@ export default class PageContentStorage {
   togglePageActiveLocal = (pageName: string) => {
     const page = this._pages.find(p => p.name === pageName);
     if (page) {
+      const oldValue = page.isActive;
       page.isActive = !page.isActive;
       
-      togglePageActive(pageName).catch(error => {
+      // Используем page.id вместо pageName
+      togglePageActive(page.id).catch(error => {
         console.error('Error toggling page active:', error);
-        page.isActive = !page.isActive;
+        page.isActive = oldValue; // Откатываем
       });
     }
   };
+
+  async createPage(pageData: Partial<PageContent>) {
+    try {
+      const newPage = await createPage(pageData);
+      this._pages.push(newPage);
+      return newPage;
+    } catch (error: any) {
+      this.setError(error.message);
+      console.error('Error creating page:', error);
+      throw error;
+    }
+  }
 }

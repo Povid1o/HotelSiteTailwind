@@ -10,6 +10,7 @@ import PriceList from '../text_inputs/PriceList';
 import MultiInputField from '../text_inputs/MultiInputField';
 import DescriptionInput from '../text_inputs/DescriptionInput';
 import { FaLongArrowAltRight, FaTrashAlt, FaPlus } from "react-icons/fa";
+import { getMediaUrl } from '../../utils/contentHelpers';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -275,9 +276,9 @@ const VineryEdit = ({ pageData, onContentChange }) => {
             return URL.createObjectURL(imageSrc);
         }
         
-        // Если это строка, используем как есть
+        // Если это строка, преобразуем относительные пути в полные URL
         if (typeof imageSrc === 'string') {
-            return imageSrc;
+            return getMediaUrl(imageSrc);
         }
         
         return null;

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { IoTrashBin } from "react-icons/io5";
 import { FaPen } from "react-icons/fa";
+import { getMediaUrl } from '../../utils/contentHelpers';
 
 interface BackgroundContentEditProps {
   backgroundMedia?: string | File | null;
@@ -53,7 +54,7 @@ const BackgroundContentEdit: React.FC<BackgroundContentEditProps> = ({
       const blobUrl = URL.createObjectURL(mediaSource);
       return blobUrl;
     } else if (typeof mediaSource === 'string') {
-      return mediaSource;
+      return getMediaUrl(mediaSource);
     }
     
     return '';
