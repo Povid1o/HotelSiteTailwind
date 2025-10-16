@@ -485,7 +485,7 @@ const AdminPage = observer(() =>  {
                               checkIn={room.checkStandart.checkIn}
                               checkOut={room.checkStandart.checkOut}
                               notes={room.notes}
-                              onDataChange={(updatedData) => updateRoomData(index, updatedData)}
+                              onDataChange={(updatedData) => updateRoomData(room.id, updatedData)}
                             />
                           )}
                         />
@@ -493,7 +493,7 @@ const AdminPage = observer(() =>  {
                       <Table.Cell>
                         <a
                           href="#"
-                          onClick={() => toggleIsActiveRoom(index)}
+                          onClick={() => toggleIsActiveRoom(room.id)}
                           className="font-medium text-main_theme hover:underline dark:text-cyan-500"
                         >
                           {room.isActive ? "В архив" : "Активировать"}

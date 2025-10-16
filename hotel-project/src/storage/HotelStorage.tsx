@@ -5,8 +5,10 @@ import {
   updateRoom, 
   deleteRoom, 
   toggleRoomActive,
-  fetchOneRoom 
+  fetchOneRoom,
+  uploadFile
 } from '../components/http/hotelAPI';
+import { API_BASE } from '../components/http/index';
 
 interface RoomPrice {
   title: string;
@@ -61,13 +63,105 @@ export default class HotelStorageNew {
     this._error = error;
   }
 
+  // Helper function to transform backend data to frontend format
+  private transformRoomFromBackend(backendRoom: any): HotelRoom {
+    // Helper to normalize image URLs
+    const normalizeImageUrl = (url: string): string => {
+      if (!url) return '';
+      // If URL is already absolute (starts with http:// or https://), return as is
+      if (url.startsWith('http://') || url.startsWith('https://')) {
+        return url;
+      }
+      // If URL is relative, prepend API_BASE
+      return `${API_BASE}${url.startsWith('/') ? '' : '/'}${url}`;
+    };
+
+    return {
+      id: backendRoom.id,
+      name: backendRoom.name,
+      images: backendRoom.images?.map((img: any) => normalizeImageUrl(img.url)) || [],
+      properties: backendRoom.properties?.map((prop: any) => prop.property_text) || [],
+      conviniences: backendRoom.conveniences?.map((conv: any) => conv.convenience_text) || [],
+      description: backendRoom.description || '',
+      price: backendRoom.prices?.map((p: any) => ({ title: p.title, price: String(p.price) })) || [],
+      checkStandart: {
+        checkIn: backendRoom.check_in_time || '14:00',
+        checkOut: backendRoom.check_out_time || '12:00'
+      },
+      notes: backendRoom.notes?.map((note: any) => note.note_text) || [],
+      isActive: backendRoom.is_active ?? true,
+    };
+  }
+
+  // Helper function to transform frontend data to backend format
+  private async transformRoomToBackend(frontendRoom: Partial<HotelRoom>): Promise<any> {
+    const backendData: any = {};
+    
+    if (frontendRoom.name !== undefined) backendData.name = frontendRoom.name;
+    if (frontendRoom.description !== undefined) backendData.description = frontendRoom.description;
+    if (frontendRoom.isActive !== undefined) backendData.is_active = frontendRoom.isActive;
+    
+    if (frontendRoom.checkStandart) {
+      backendData.check_in_time = frontendRoom.checkStandart.checkIn;
+      backendData.check_out_time = frontendRoom.checkStandart.checkOut;
+    }
+    
+    // Handle images - upload File objects, normalize URL strings
+    if (frontendRoom.images !== undefined) {
+      const imageUrls = await Promise.all(
+        frontendRoom.images.map(async (img) => {
+          if (img instanceof File) {
+            // Upload new file and return full URL
+            return await uploadFile(img, 'rooms');
+          }
+          
+          if (typeof img === 'string') {
+            // If URL is full (starts with http), keep as is - backend will handle it
+            // If URL is relative, keep as is
+            return img;
+          }
+          
+          return '';
+        })
+      );
+      
+      backendData.images = imageUrls.map((url, index) => ({
+        url,
+        alt_text: '',
+        order: index
+      }));
+    }
+    
+    if (frontendRoom.properties !== undefined) {
+      backendData.properties = frontendRoom.properties;
+    }
+    
+    if (frontendRoom.conviniences !== undefined) {
+      backendData.conveniences = frontendRoom.conviniences;
+    }
+    
+    if (frontendRoom.price !== undefined) {
+      backendData.prices = frontendRoom.price.map(p => ({
+        title: p.title,
+        price: parseFloat(p.price)
+      }));
+    }
+    
+    if (frontendRoom.notes !== undefined) {
+      backendData.notes = frontendRoom.notes;
+    }
+    
+    return backendData;
+  }
+
   // API методы
   async loadRooms() {
     try {
       this.setLoading(true);
       this.setError(null);
-      const rooms = await fetchRoom();
-      this.setRooms(rooms);
+      const backendRooms = await fetchRoom();
+      const transformedRooms = backendRooms.map((room: any) => this.transformRoomFromBackend(room));
+      this.setRooms(transformedRooms);
     } catch (error: any) {
       this.setError(error.message);
       console.error('Error loading rooms:', error);
@@ -78,8 +172,8 @@ export default class HotelStorageNew {
 
   async loadOneRoom(id: number) {
     try {
-      const room = await fetchOneRoom(id);
-      return room;
+      const backendRoom = await fetchOneRoom(id);
+      return this.transformRoomFromBackend(backendRoom);
     } catch (error: any) {
       this.setError(error.message);
       console.error('Error loading room:', error);
@@ -100,21 +194,27 @@ export default class HotelStorageNew {
     }
   };
 
-  updateRoomLocal = (roomId: number, updatedData: Partial<HotelRoom>) => {
+  updateRoomLocal = async (roomId: number, updatedData: Partial<HotelRoom>) => {
     const room = this._rooms.find(r => r.id === roomId);
     if (room) {
       const oldData = { ...room };
       Object.assign(room, updatedData);
       
-      updateRoom(roomId, updatedData).catch(error => {
+      try {
+        const backendData = await this.transformRoomToBackend(updatedData);
+        const response = await updateRoom(roomId, backendData);
+        // Update with fresh data from backend
+        const updatedRoom = this.transformRoomFromBackend(response);
+        Object.assign(room, updatedRoom);
+      } catch (error) {
         console.error('Error updating room:', error);
         // Откатываем изменения
         Object.assign(room, oldData);
-      });
+      }
     }
   };
 
-  addRoom = () => {
+  addRoom = async () => {
     const newRoom: HotelRoom = {
       id: Date.now(), // Временный ID
       name: "Новый номер",
@@ -130,12 +230,15 @@ export default class HotelStorageNew {
     
     this._rooms.push(newRoom);
     
-    createRoom(newRoom).then(response => {
-      newRoom.id = response.id;
-    }).catch(error => {
+    try {
+      const backendData = await this.transformRoomToBackend(newRoom);
+      const response = await createRoom(backendData);
+      const createdRoom = this.transformRoomFromBackend(response);
+      Object.assign(newRoom, createdRoom);
+    } catch (error) {
       console.error('Error creating room:', error);
       this._rooms = this._rooms.filter(r => r.id !== newRoom.id);
-    });
+    }
   };
 
   deleteRoomLocal = (roomId: number) => {

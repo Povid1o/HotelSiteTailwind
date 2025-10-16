@@ -61,8 +61,14 @@ app.post('/api/upload', (req, res) => {
       }
       
       console.log(`File uploaded successfully: ${mediaType}/${fileName}`);
+      
+      // Build full URL with protocol and host
+      const protocol = req.protocol || 'http';
+      const host = req.get('host') || `localhost:${PORT}`;
+      const fullUrl = `${protocol}://${host}/static/${mediaType}/${fileName}`;
+      
       res.json({ 
-        url: `/static/${mediaType}/${fileName}`, 
+        url: fullUrl,
         fileName,
         originalName: uploadedFile.name,
         size: uploadedFile.size,

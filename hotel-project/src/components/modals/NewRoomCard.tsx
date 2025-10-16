@@ -36,13 +36,15 @@ const NewRoomCard = ({
   const updateRoomData = useCallback((updatedData) => {
     const newData = {
       name: localName,
-      images: localPhotos, // Изменено с photos на images для соответствия структуре
+      images: localPhotos,
       properties: localProperties,
       conviniences: localConviniences,
       description: localDescription,
       price: localPrices,
-      checkIn: localCheckIn,
-      checkOut: localCheckOut,
+      checkStandart: {
+        checkIn: localCheckIn,
+        checkOut: localCheckOut
+      },
       notes: localNotes,
       ...updatedData
     };
@@ -84,13 +86,13 @@ const NewRoomCard = ({
 
   const handleCheckInChange = useCallback((newCheckIn) => {
     setLocalCheckIn(newCheckIn);
-    updateRoomData({ checkIn: newCheckIn });
-  }, [updateRoomData]);
+    updateRoomData({ checkStandart: { checkIn: newCheckIn, checkOut: localCheckOut } });
+  }, [updateRoomData, localCheckOut]);
 
   const handleCheckOutChange = useCallback((newCheckOut) => {
     setLocalCheckOut(newCheckOut);
-    updateRoomData({ checkOut: newCheckOut });
-  }, [updateRoomData]);
+    updateRoomData({ checkStandart: { checkIn: localCheckIn, checkOut: newCheckOut } });
+  }, [updateRoomData, localCheckIn]);
 
   const handleNotesChange = useCallback((newNotes) => {
     setLocalNotes(newNotes);
