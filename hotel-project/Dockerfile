@@ -1,38 +1,28 @@
-# ---------- build ----------
-FROM node:18-alpine AS build
+# Базовый контейнер для dev-режима CRA
+FROM node:18-alpine
+
 WORKDIR /app
 
-# Копируем манифесты (любые lock, если есть)
-COPY package.json ./
-COPY package-lock.json* ./
-
-# Установка зависимостей:
-# - если package-lock.json есть → npm ci
-# - если нет → создаём lock и затем npm ci (быстро и детерминированно)
+# 1) Ставим зависимости «условно», чтобы не падать, если lock-файла нет
+COPY package.json package-lock.json* ./
 RUN if [ -f package-lock.json ]; then \
       npm ci; \
     else \
       npm i --package-lock-only && npm ci; \
     fi
 
-# Копируем исходники и билдим
+# 2) Копируем исходники
 COPY . .
 
-# REACT_APP_* переменная попадёт в билд CRA
-ARG REACT_APP_API_URL
-ENV REACT_APP_API_URL=${REACT_APP_API_URL}
-RUN npm run build
-
-# ---------- serve ----------
-FROM nginx:alpine
-
-# SPA: любые 404 пробрасываем на index.html
-# (правим дефолтный конфиг nginx корректно и без обрезаний)
-RUN sed -i 's|try_files \$uri \$uri/ =404;|try_files \$uri \$uri/ /index.html;|' /etc/nginx/conf.d/default.conf
-
-# Кладём собранный фронт
-COPY --from=build /app/build /usr/share/nginx/html
+# 3) CRA dev-сервер на 0.0.0.0:80 (без прод-сборки)
+ENV HOST=0.0.0.0
+ENV PORT=80
+# CRA читает REACT_APP_* при старте dev-сервера → прокинем на этапе запуска в compose
+ENV CI=false
+ENV CHOKIDAR_USEPOLLING=true
+ENV WDS_SOCKET_PORT=0
 
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "start"]
+
 
