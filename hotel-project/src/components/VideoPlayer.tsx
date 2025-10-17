@@ -1,6 +1,5 @@
 import React from "react";
-import Plyr from "plyr-react";
-import "../../node_modules/plyr/dist/plyr.css";
+import ReactPlayer from "react-player";
 import './styles/Vp.css'
 
 interface VideoPlayerProps {
@@ -25,51 +24,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ sourceUrl }) => {
             console.log('VideoPlayer: Detected blob URL, using native video element');
         } else {
             setIsBlob(false);
-        }
-    }, [sourceUrl]);
-
-    const plyrSource = React.useMemo(() => {
-        if (!sourceUrl) {
-            console.warn('VideoPlayer: No source URL provided');
-            return null;
-        }
-
-        // Skip Plyr for blob URLs
-        if (sourceUrl.startsWith('blob:')) {
-            return null;
-        }
-
-        console.log('VideoPlayer: Processing source URL:', sourceUrl);
-        const youtubeId = getYouTubeId(sourceUrl);
-
-        if (youtubeId) {
-            console.log('VideoPlayer: Detected YouTube video, ID:', youtubeId);
-            return {
-                type: "video" as const,
-                sources: [
-                    {
-                        src: youtubeId,
-                        provider: "youtube" as const,
-                    },
-                ],
-            };
-        } else {
-            console.log('VideoPlayer: Using direct video URL:', sourceUrl);
-            // Determine video type from URL
-            const extension = sourceUrl.split('.').pop()?.split('?')[0]?.toLowerCase() || 'mp4';
-            const videoType = extension === 'webm' ? 'video/webm' : 
-                             extension === 'ogg' ? 'video/ogg' : 
-                             'video/mp4';
-            
-            return {
-                type: "video" as const,
-                sources: [
-                    {
-                        src: sourceUrl,
-                        type: videoType,
-                    },
-                ],
-            };
         }
     }, [sourceUrl]);
     
@@ -106,16 +60,32 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ sourceUrl }) => {
         );
     }
 
-    // For regular URLs, use Plyr
-    if (!plyrSource) {
-        return (
-            <div className="w-full h-64 flex items-center justify-center bg-gray-200 rounded-lg">
-                <p className="text-gray-500">Ошибка загрузки видео</p>
-            </div>
-        );
-    }
-
-    return <Plyr source={plyrSource} />;
+    // For regular URLs (YouTube, direct video files, etc.), use ReactPlayer
+    return (
+        <div className="video-player-wrapper w-full aspect-video bg-black rounded-lg overflow-hidden shadow-lg">
+            <ReactPlayer
+                url={sourceUrl}
+                controls
+                width="100%"
+                height="100%"
+                style={{
+                    maxHeight: '600px',
+                    margin: '0 auto',
+                }}
+                config={{
+                    youtube: {
+                        playerVars: { showinfo: 1 }
+                    },
+                    file: {
+                        attributes: {
+                            controlsList: 'nodownload',
+                            preload: 'metadata'
+                        }
+                    }
+                }}
+            />
+        </div>
+    );
 };
 
 export default VideoPlayer;

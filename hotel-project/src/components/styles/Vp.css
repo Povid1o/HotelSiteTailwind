@@ -1,4 +1,4 @@
-.plyr {
+.video-player-wrapper {
   z-index: 1;
   max-height: 600px;
   margin-left: auto;
@@ -6,4 +6,3 @@
   border-radius: 12px;
   width: 100%;
 }
-
