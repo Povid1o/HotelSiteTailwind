@@ -1,14 +1,13 @@
 import React, {useEffect, useState, memo, useContext} from 'react';
 import Card from './cards/Card';
 import ExtCard from './cards/ExtCard';
-import ExtGaleryCard from './cards/ExtGalerycard';
+import ThSlider from './sliders/ThumbSlider';
 import BlueSwiper from './sliders/BlueSwiper';
 import HotelRoom from './cards/HotelRoom';
 import TravelLineSearchForm from './TravelLineSearchForm';
 import TravelLineScript from "./TravelLineScript.tsx";
 import { Context } from '../index';
 import { observer } from 'mobx-react-lite';
-// import ThSlider from './sliders/ThumbSlider';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -369,7 +368,14 @@ const Home = observer(({nav}: HomeProps) => {
                     <div className='flex mx-auto justify-center items-center w-64 h-22 rounded-xl mt-4'>
                         <ExtCard
                             Card={GaleryCard}
-                            ExtContent={ExtGaleryCard}
+                            ExtContent={() => (
+                                <ThSlider 
+                                    images={secondGallery.images.map(img => ({
+                                        src: getImageUrl(img.src),
+                                        alt: img.alt || ''
+                                    }))}
+                                />
+                            )}
                         />
                     </div>
                 </div>

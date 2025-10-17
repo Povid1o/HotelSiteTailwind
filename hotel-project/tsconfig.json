@@ -30,7 +30,8 @@
     "noImplicitAny": false,
     "typeRoots": [
       "./node_modules/@types"
-    ]
+    ],
+    "types": ["react", "react-dom"]
   },
   "include": ["./**/*.ts", "./**/*.tsx", "./**/*.d.ts", "./**/*.js", "./**/*.jsx"],
   "exclude": ["node_modules", "build", "HotelSiteBackend"]
