@@ -1,5 +1,6 @@
 import { useState, useCallback} from 'react';
-import PhotoSelector from '../text_inputs/PhotoSelector';
+import { toJS } from 'mobx';
+import PagesPhotoSelector from '../text_inputs/PagesPhotoSelector';
 import BackgroundContentEdit from '../text_inputs/BackgroundContentEdit';
 import TextEditor from '../text_inputs/TextEditor';
 import VideoWithUpload from '../text_inputs/VideoWithUpload';
@@ -61,24 +62,30 @@ const HomeEdit = ({ pageData, onContentChange }) => {
         });
     }, [onContentChange, pageData.firstGallery]);
 
-    const handleFirstGalleryImagesChange = useCallback((newImages) => {
-        onContentChange('firstGallery', { 
-            ...pageData.firstGallery,
-            images: newImages 
+    // ✅ ПАТЧ: Универсальный обработчик для галерей
+    const handleGalleryImagesChange = useCallback((galleryKey: string, newImages: any) => {
+        console.log(`🔵 HomeEdit: ${galleryKey} received`, newImages);
+
+        const formatted = (Array.isArray(newImages) ? newImages : []).map((img: any, i: number) => {
+            if (img?.src instanceof File) return { src: img.src, alt: img.alt || `Image ${i + 1}` };
+            if (img instanceof File) return { src: img, alt: img.name || `Image ${i + 1}` };
+            if (typeof img === 'string') return { src: img, alt: `Image ${i + 1}` };
+            if (img && typeof img === 'object' && 'src' in img)
+                return { src: img.src || '', alt: img.alt || `Image ${i + 1}` };
+            return { src: '', alt: `Image ${i + 1}` };
         });
-    }, [onContentChange, pageData.firstGallery]);
+
+        console.log(`🔵 HomeEdit: ${galleryKey} formatted images:`, formatted);
+        onContentChange(galleryKey, {
+            ...pageData[galleryKey],
+            images: formatted,
+        });
+    }, [onContentChange, pageData]);
 
     const handleSecondGalleryTitleChange = useCallback((newTitle) => {
         onContentChange('secondGallery', { 
             ...pageData.secondGallery,
             title: newTitle 
-        });
-    }, [onContentChange, pageData.secondGallery]);
-
-    const handleSecondGalleryImagesChange = useCallback((newImages) => {
-        onContentChange('secondGallery', { 
-            ...pageData.secondGallery,
-            images: newImages 
         });
     }, [onContentChange, pageData.secondGallery]);
 
@@ -183,17 +190,40 @@ const HomeEdit = ({ pageData, onContentChange }) => {
     const getDisplayImageSrc = (imageSrc) => {
         if (!imageSrc) return null;
         
+        // Разворачиваем MobX Proxy если это он
+        const plainSrc = toJS(imageSrc);
+        
         // Если это File объект, создаем blob URL
-        if (imageSrc instanceof File) {
-            return URL.createObjectURL(imageSrc);
+        if (plainSrc instanceof File) {
+            return URL.createObjectURL(plainSrc);
         }
         
         // Если это строка, преобразуем относительные пути в полные URL
-        if (typeof imageSrc === 'string') {
-            return getMediaUrl(imageSrc);
+        if (typeof plainSrc === 'string') {
+            return getMediaUrl(plainSrc);
         }
         
         return null;
+    };
+
+    // Нормализация массива фото для корректной работы слайдера (делаем абсолютные URL)
+    const normalizePhotosForDisplay = (photosArr) => {
+        if (!Array.isArray(photosArr)) return [];
+        
+        // Разворачиваем MobX Proxy в обычные объекты
+        const plainPhotos = toJS(photosArr);
+        console.log('🔵 HomeEdit: normalizePhotosForDisplay - plain photos:', plainPhotos);
+        
+        return plainPhotos.map((p) => {
+            // File оставляем как есть, чтобы PhotoSelector мог загрузить его
+            if (p instanceof File) return p;
+            if (typeof p === 'string') return getMediaUrl(p);
+            if (p && typeof p === 'object' && p.src) {
+                const normalizedSrc = typeof p.src === 'string' ? getMediaUrl(p.src) : p.src;
+                return { ...p, src: normalizedSrc };
+            }
+            return p;
+        });
     };
 
     return ( 
@@ -235,10 +265,10 @@ const HomeEdit = ({ pageData, onContentChange }) => {
             </section>
 
             <div className="mx-auto max-sm:w-5/6">
-                <PhotoSelector 
-                    photos={pageData.firstGallery.images} 
+                <PagesPhotoSelector 
+                    photos={normalizePhotosForDisplay(pageData.firstGallery.images)} 
                     withSlider={true}
-                    onPhotosChange={handleFirstGalleryImagesChange}
+                    onPhotosChange={(newImgs) => handleGalleryImagesChange('firstGallery', newImgs)}
                 />
             </div>
             
@@ -260,10 +290,10 @@ const HomeEdit = ({ pageData, onContentChange }) => {
                     onSave={handleSecondGalleryTitleChange} 
                 />
                 <div className="mx-auto max-sm:w-5/6">
-                    <PhotoSelector 
-                        photos={pageData.secondGallery.images} 
+                    <PagesPhotoSelector 
+                        photos={normalizePhotosForDisplay(pageData.secondGallery.images)} 
                         withSlider={true}
-                        onPhotosChange={handleSecondGalleryImagesChange}
+                        onPhotosChange={(newImgs) => handleGalleryImagesChange('secondGallery', newImgs)}
                     />
                 </div>
             </div>

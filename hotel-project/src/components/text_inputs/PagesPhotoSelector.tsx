@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import ExtCard from '../cards/ExtCard';
 import ImageWithButton from './ImageWithButton';
 import BlueSwiper from '../sliders/BlSwiper';
-import { MdOutlinePhotoCamera } from "react-icons/md";
-import Bottle from '../assets/wine-bottle.png';
 
 const PhotosLayout = ({ content, onImageChange, onSave }) => {
     const [images, setImages] = useState(content);
@@ -13,7 +11,7 @@ const PhotosLayout = ({ content, onImageChange, onSave }) => {
 
     // Синхронизируем локальное состояние с пропсами при их изменении
     useEffect(() => {
-        console.log('PhotosLayout: content changed', content);
+        console.log('PagesPhotoSelector: content changed', content);
         setImages(content);
         setOriginalImages(content);
         setHasChanges(false);
@@ -50,13 +48,13 @@ const PhotosLayout = ({ content, onImageChange, onSave }) => {
             }
             newImages.splice(index, 1);
         }
-        console.log('PhotosLayout: updating images locally', newImages);
+        console.log('PagesPhotoSelector: updating images locally', newImages);
         setImages(newImages);
         setHasChanges(true);
     }, [images]);
 
     const handleAddImageClick = useCallback(() => {
-        console.log('PhotosLayout: opening file selector for new image');
+        console.log('PagesPhotoSelector: opening file selector for new image');
         addImageInputRef.current?.click();
     }, []);
 
@@ -64,7 +62,7 @@ const PhotosLayout = ({ content, onImageChange, onSave }) => {
         const selectedFile = e.target.files[0];
         if (!selectedFile) return;
 
-        console.log(`PhotosLayout: adding new file: ${selectedFile.name}`);
+        console.log(`PagesPhotoSelector: adding new file: ${selectedFile.name}`);
         
         try {
             if (!selectedFile.type.startsWith('image/')) {
@@ -95,7 +93,7 @@ const PhotosLayout = ({ content, onImageChange, onSave }) => {
             };
 
             const newImages = [...images, newImageObj];
-            console.log('PhotosLayout: adding new image locally', newImages);
+            console.log('PagesPhotoSelector: adding new image locally', newImages);
             setImages(newImages);
             setHasChanges(true);
 
@@ -110,14 +108,14 @@ const PhotosLayout = ({ content, onImageChange, onSave }) => {
     }, [images]);
 
     const handleSave = useCallback(() => {
-        console.log('PhotosLayout: saving changes', images);
+        console.log('PagesPhotoSelector: saving changes', images);
         onSave(images);
         setOriginalImages(images);
         setHasChanges(false);
     }, [images, onSave]);
 
     const handleCancel = useCallback(() => {
-        console.log('PhotosLayout: canceling changes');
+        console.log('PagesPhotoSelector: canceling changes');
         // Очищаем blob URLs для отмененных изменений
         images.forEach(image => {
             const src = image?.src;
@@ -206,7 +204,7 @@ const PhotoSelectorButton = ({ header }) => {
     );
 };
 
-const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhotosChange }) => {
+const PagesPhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhotosChange }) => {
     const [currentPhotos, setCurrentPhotos] = useState(() => {
         // Безопасная инициализация: приводим вход к массиву
         const inputPhotos = Array.isArray(photos) ? photos : [];
@@ -232,7 +230,7 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhoto
 
     // Синхронизируем с пропсами только если они реально изменились
     useEffect(() => {
-        console.log('PhotoSelector: photos prop changed', photos);
+        console.log('PagesPhotoSelector: photos prop changed', photos);
         const inputPhotos = Array.isArray(photos) ? photos : [];
         const normalizedPhotos = inputPhotos.map(photo => {
             if (typeof photo === 'string') {
@@ -257,25 +255,29 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhoto
                               JSON.stringify(normalizedPhotos.map(p => ({ src: p.src, alt: p.alt })));
 
         if (photosChanged) {
-            console.log('PhotoSelector: updating currentPhotos due to props change');
+            console.log('PagesPhotoSelector: updating currentPhotos due to props change');
             setCurrentPhotos(normalizedPhotos);
         }
     }, [photos]); // Убираем currentPhotos из зависимостей, чтобы избежать бесконечного цикла
 
+    // ✅ ПАТЧ: Нормализуем данные в единый формат { src: File|string, alt: string }
     const handlePhotosSave = useCallback((updatedPhotos) => {
-        console.log('PhotoSelector: photos saved', updatedPhotos);
+        console.log('PagesPhotoSelector: photos saved', updatedPhotos);
         setCurrentPhotos(updatedPhotos);
         if (onPhotosChange) {
-        const processedPhotos = updatedPhotos.map(photo => {
-            // Если фото несет File — отдаем File (backend его загрузит)
-            if (photo && photo.file instanceof File) return photo.file;
-            // Если строка (URL) — отдаем строку
-            if (typeof photo === 'string') return photo;
-            // Если объект — отдаем src как строку или пустую строку
-            return (photo && typeof photo.src === 'string') ? photo.src : '';
-        });
-            console.log('PhotoSelector: calling onPhotosChange with', processedPhotos);
-            onPhotosChange(processedPhotos);
+            const normalized = updatedPhotos.map((p, i) => {
+                if (p instanceof File) return { src: p, alt: p.name };
+                if (typeof p === 'string') return { src: p, alt: `Image ${i + 1}` };
+                if (p && typeof p === 'object' && 'src' in p) {
+                    // Если src - это File из photo.file, используем его
+                    const actualSrc = (p.file instanceof File) ? p.file : p.src;
+                    return { src: actualSrc, alt: p.alt || `Image ${i + 1}` };
+                }
+                return { src: '', alt: `Image ${i + 1}` };
+            });
+            
+            console.log('📸 PagesPhotoSelector: calling onPhotosChange with normalized =', normalized);
+            onPhotosChange(normalized);
         }
     }, [onPhotosChange]);
 
@@ -317,4 +319,5 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhoto
     );
 };
  
-export default PhotoSelector;
+export default PagesPhotoSelector;
+

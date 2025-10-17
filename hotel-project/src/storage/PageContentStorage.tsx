@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, toJS } from 'mobx';
 import { fetchPageContent, updatePageContent, togglePageActive, createPage } from '../components/http/pageAPI';
 
 // Используем интерфейсы из ТЗ
@@ -127,14 +127,50 @@ export default class PageContentStorage {
   updatePageContentLocal = (pageName: string, sectionName: string, updatedData: any) => {
     const page = this._pages.find(p => p.name === pageName);
     if (page && typeof page.content === 'object') {
+      console.log('🟡 PageContentStorage: updating', sectionName, 'with data:', updatedData);
       const oldData = { ...page.content[sectionName] };
       page.content = {
         ...page.content,
         [sectionName]: updatedData
       };
       
+      // Преобразуем MobX observable в обычный объект для отправки на сервер
+      // КРИТИЧНО: toJS превращает File в {}, поэтому заменяем File вручную
+      const preserveFiles = (mobxData: any, plainData: any) => {
+        if (!mobxData || !plainData) return;
+        
+        if (Array.isArray(mobxData) && Array.isArray(plainData)) {
+          mobxData.forEach((item: any, idx: number) => {
+            // Проверяем File напрямую в mobxData
+            if (item instanceof File) {
+              console.log(`🔧 PageContentStorage: Preserving File at index ${idx}:`, item.name);
+              plainData[idx] = item;
+            } else if (typeof item === 'object' && item !== null && !(item instanceof File)) {
+              // Рекурсивно обрабатываем объекты
+              preserveFiles(item, plainData[idx]);
+            }
+          });
+        } else if (typeof mobxData === 'object' && typeof plainData === 'object') {
+          Object.keys(mobxData).forEach(key => {
+            const mobxValue = mobxData[key];
+            // Проверяем File напрямую в mobxData
+            if (mobxValue instanceof File) {
+              console.log(`🔧 PageContentStorage: Preserving File in key "${key}":`, mobxValue.name);
+              plainData[key] = mobxValue;
+            } else if (typeof mobxValue === 'object' && mobxValue !== null && !(mobxValue instanceof File)) {
+              // Рекурсивно обрабатываем объекты и массивы
+              preserveFiles(mobxValue, plainData[key]);
+            }
+          });
+        }
+      };
+      
+      const plainContent = toJS(page.content);
+      preserveFiles(page.content, plainContent);
+      console.log('🟡 PageContentStorage: sending plain content:', plainContent);
+      
       // Используем page.id вместо pageName
-      updatePageContent(page.id, page.content).catch(error => {
+      updatePageContent(page.id, plainContent).catch(error => {
         console.error('Error updating page content:', error);
         // Откатываем изменения
         page.content = {

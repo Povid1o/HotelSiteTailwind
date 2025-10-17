@@ -48,11 +48,16 @@ export const fetchPageContent = async () => {
 export const updatePageContent = async (pageId: number, content: any) => {
   // Upload any File fields and replace with URLs
   const uploadIfFile = async (val: any, type: string) => {
-    if (val instanceof File) {
+    // Проверяем как обычный File, так и File обернутый в MobX Proxy
+    const isFile = val instanceof File || (val && val.constructor && val.constructor.name === 'File');
+    
+    if (isFile) {
+      console.log('📤 uploadIfFile: Uploading file:', val.name || 'unknown');
       const form = new FormData();
       form.append('file', val);
       form.append('type', type);
       const { data } = await $authHost.post('api/upload', form, { headers: { 'Content-Type': 'multipart/form-data' } });
+      console.log('✅ uploadIfFile: File uploaded successfully to:', data.url);
       return data.url;
     }
     return val;
@@ -60,27 +65,41 @@ export const updatePageContent = async (pageId: number, content: any) => {
 
   const deepProcess = async (obj: any, section: string): Promise<any> => {
     if (obj === null || obj === undefined) return obj
+    
+    // Проверяем, является ли это File объектом (может быть обернут в MobX Proxy)
+    if (obj instanceof File || (obj && obj.constructor && obj.constructor.name === 'File')) {
+      console.log('🟢 pageAPI.deepProcess: Found raw File object, uploading...');
+      const result = await uploadIfFile(obj, 'pages');
+      console.log('🟢 pageAPI.deepProcess: File uploaded to:', result);
+      return result;
+    }
+    
     if (Array.isArray(obj)) {
       const res = [] as any[]
-      let idx = 0
       for (const item of obj) {
         res.push(await deepProcess(item, section))
-        idx++
       }
       return res
     }
+    
     if (typeof obj === 'object') {
+      // ✅ ПАТЧ: если объект формата { src: File }, загружаем File и возвращаем { src: url }
+      if (obj.src && (obj.src instanceof File || (obj.src.constructor && obj.src.constructor.name === 'File'))) {
+        console.log('📤 pageAPI.deepProcess: Found { src: File } object, uploading File...');
+        const uploadedUrl = await uploadIfFile(obj.src, 'pages');
+        console.log('✅ pageAPI.deepProcess: { src: File } uploaded to:', uploadedUrl);
+        return { ...obj, src: uploadedUrl };
+      }
+      
+      // Рекурсивно обрабатываем все ключи объекта
       const out: any = {}
       for (const k of Object.keys(obj)) {
         const v = obj[k]
-        if (k.toLowerCase().includes('image') || k.toLowerCase().includes('video')) {
-          out[k] = await uploadIfFile(v, 'pages')
-        } else {
-          out[k] = await deepProcess(v, section)
-        }
+        out[k] = await deepProcess(v, section)
       }
       return out
     }
+    
     return obj
   }
 
