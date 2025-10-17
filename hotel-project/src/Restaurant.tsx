@@ -6,13 +6,15 @@ import ExtCard from './components/cards/ExtCard';
 import Footer from "./components/Footer";
 import { observer } from 'mobx-react-lite';
 import { Context } from './index';
-import { fetchClase, fetchProducts } from "./components/http/productAPI";
 import { API_BASE } from './components/http';
 import { restaurantMenuEmergency } from './emergencyContent/text';
 
 const Restaurant = observer(() => {
-  // @ts-ignore
-  const { product, dish } = useContext(Context);
+  const context = useContext(Context);
+  if (!context) {
+    throw new Error('Restaurant must be used within Context Provider');
+  }
+  const { dish } = context;
   const [nav, setNav] = useState(false);
 
   // Log data from stores
@@ -31,23 +33,25 @@ const Restaurant = observer(() => {
     );
   }
 
-  useEffect(() => {
-    fetchProducts(undefined, undefined).then(data => {
-      console.log('Fetched products:', data); // Отладочный лог
-      product.setProducts(data.rows); // Используем data.rows вместо data
-    }).catch(err => console.error('Error fetching products:', err));
+  // Helper to get image URL
+  const getImageUrl = (image: string | File) => {
+    if (typeof image === 'string') {
+      // Already absolute URL
+      if (image.startsWith('http://') || image.startsWith('https://')) {
+        return image;
+      }
+      // Local file in public folder (starts without /)
+      if (!image.startsWith('/')) {
+        return image;
+      }
+      // Relative path from backend (starts with /)
+      return `${API_BASE}${image}`;
+    }
+    return '';
+  };
 
-    fetchClase().then(data => {
-      console.log('Fetched clases:', data); // Отладочный лог
-      product.setClases(data);
-    }).catch(err => console.error('Error fetching clases:', err));
-  }, [product]);
-
-  if (!product || !Array.isArray(product.products) || !Array.isArray(product.clases)) {
-    return <div>Loading...</div>;
-  }
-
-  const shouldUseEmergency = product.clases.length === 0 || product.products.length === 0;
+  // Use dish.dishes if available, otherwise use emergency
+  const shouldUseEmergency = !dish.dishes || dish.dishes.length === 0;
 
   return (
     <>
@@ -56,37 +60,33 @@ const Restaurant = observer(() => {
       <div className="container mx-auto font-body sm:px-4">
         <h1 className="flex mx-auto justify-center items-center text-3xl font-bold pt-[7rem] mb-8">Меню</h1>
         {!shouldUseEmergency ? (
-          product.clases.map((clase) => (
-          <div key={clase.id}>
+          dish.dishes.map((dishCategory, categoryIndex) => (
+          <div key={`${dishCategory.category}-${categoryIndex}`}>
             <h2 className="font-bold pt-2 mb-3 text-lg sm:pt-6 sm:mb-4 sm:text-xl text-center">
-              {clase.name}
+              {dishCategory.category}
             </h2>
             <div className='grid gap-0 grid-cols-2 mx-auto max-w-[1000px]'>
-              {product.products
-                .filter((product) => product.claseId === clase.id)
-                .map((filteredProduct) => (
-                  <ExtCard
-                    Card={() => 
-                      <FoodCard
-                        key={filteredProduct.id}
-                        imgSrc={`${API_BASE}${filteredProduct.img?.startsWith('/') ? '' : '/'}${filteredProduct.img || ''}`}
-                        header={filteredProduct.name}
-                        description={""}
-                      />
-                    }
-                    ExtContent={() => 
-                      <ExtDishcard
-                        imgSrc={`${API_BASE}${filteredProduct.img?.startsWith('/') ? '' : '/'}${filteredProduct.img || ''}`}
-                        header={filteredProduct.name}
-                        description={""}
-                        price={`${filteredProduct.price} ₽`}
-                        weight={""}
-                      />
-                    }
-                  
-                  />
-                  
-                ))}
+              {dishCategory.products.map((product) => (
+                <ExtCard
+                  key={product.id}
+                  Card={() => 
+                    <FoodCard
+                      imgSrc={getImageUrl(product.images[0]) || ''}
+                      header={product.name}
+                      description={product.description || ''}
+                    />
+                  }
+                  ExtContent={() => 
+                    <ExtDishcard
+                      imgSrc={getImageUrl(product.images[0]) || ''}
+                      header={product.header || product.name}
+                      description={product.descriptionFull || product.description || ''}
+                      price={`${product.price} ₽`}
+                      weight={product.weight || ''}
+                    />
+                  }
+                />
+              ))}
             </div>
             <hr className="border-gray-400 my-8" />
           </div>

@@ -26,7 +26,7 @@ const ExtDishcard: React.FC<ExtDishcardProps> = ({
       </div>
 
       <h3 className="text-lg font-semibold font-sans text-center mb-2">{header}</h3>
-      <p className=" text-blue-600 text-md text-center pb-2 ">${price}</p>
+      <p className=" text-blue-600 text-md text-center pb-2 ">{price}</p>
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div className="p-4">
           <p className="text-gray-600 text-xs ">{description}</p>
