@@ -2,7 +2,8 @@
 
 import React, { useState, useMemo, useCallback, useEffect, useRef, useContext } from "react";
 import { Context } from './index';
-import { observer } from 'mobx-react-lite';
+import { observer, Observer } from 'mobx-react-lite';
+import { toJS } from 'mobx';
 
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer";
@@ -18,6 +19,7 @@ import CircularPagination from "./components/CircularPagination";
 import "./components/styles/shop.css"
 import { winesEmergency } from './emergencyContent/text';
 import { getArrayOrEmergency } from './utils/contentHelpers';
+import { API_BASE } from './components/http';
 
 interface Wine {
   id: number;
@@ -38,6 +40,21 @@ const Shop = observer(() => {
   const [activeCategory, setActiveCategory] = useState('Каталог');
   const [sortOption, setSortOption] = useState('По умолчанию');
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Настраиваемый параметр - количество элементов на странице
+  const itemsPerPage = 6;
+  
+  // Состояние для текущей страницы пагинации
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  // Фильтры - применяются только после нажатия кнопки "Применить фильтры"
+  // Активные фильтры (которые применяются к списку)
+  const [activeTypes, setActiveTypes] = useState<string[]>([]);
+  const [activeSweetness, setActiveSweetness] = useState<string[]>([]);
+  const [activeYearRange, setActiveYearRange] = useState<[number, number]>([1970, 2025]);
+  
+  // Флаг для отслеживания первой инициализации
+  const isInitialized = useRef(false);
 
   // Access Context stores
   const context = useContext(Context);
@@ -53,30 +70,90 @@ const Shop = observer(() => {
     console.log('Loading state:', { wine: wine.isLoading });
   }, [wine.wines]);
 
-  // Show loading if data is still being fetched
-  if (wine.isLoading) {
-    return (
-      <div className="h-screen flex justify-center items-center">
-        <div className="text-2xl text-gray-600">Загрузка...</div>
-      </div>
-    );
-  }
-  
-  // Настраиваемый параметр - количество элементов на странице
-  const itemsPerPage = 6;
-  
-  // Состояние для текущей страницы пагинации
-  const [currentPage, setCurrentPage] = useState(1);
-  
-  // Фильтры - применяются только после нажатия кнопки "Применить фильтры"
-  // Активные фильтры (которые применяются к списку)
-  const [activeTypes, setActiveTypes] = useState<string[]>([]);
-  const [activeSweetness, setActiveSweetness] = useState<string[]>([]);
-  const [activeYearRange, setActiveYearRange] = useState<[number, number]>([1970, 2025]);
-  
-  // Данные вин из API (пока null) + fallback на emergency
-  const apiWines: Wine[] | null = null;
-  const [wines] = useState<Wine[]>(getArrayOrEmergency(apiWines, winesEmergency as unknown as Wine[]));
+  // Helper to get image URL
+  const getImageUrl = (image: string | File) => {
+    if (typeof image === 'string') {
+      // Already absolute URL
+      if (image.startsWith('http://') || image.startsWith('https://')) {
+        return image;
+      }
+      // Local file in public folder (starts without /)
+      if (!image.startsWith('/')) {
+        return image;
+      }
+      // Relative path from backend (starts with /)
+      return `${API_BASE}${image}`;
+    }
+    return '';
+  };
+
+  // Helper to serialize wine for navigation
+  const serializeWine = (wine: Wine) => {
+    try {
+      // Convert MobX observable to plain JS object using toJS
+      const plainWine = toJS(wine);
+      // Then do a deep clone using JSON to ensure full serialization
+      return JSON.parse(JSON.stringify({
+        id: plainWine.id,
+        name: plainWine.name,
+        image: plainWine.image,
+        type: plainWine.type,
+        year: plainWine.year,
+        sweetness: plainWine.sweetness,
+        alcohol: plainWine.alcohol,
+        sugar: plainWine.sugar,
+        temperature: plainWine.temperature,
+        price: plainWine.price,
+        description: Array.isArray(plainWine.description) ? [...plainWine.description] : plainWine.description,
+      }));
+    } catch (e) {
+      console.error('Error serializing wine:', e);
+      return null;
+    }
+  };
+
+  // Transform WineStorage structure to flat Wine[] array
+  const wines: Wine[] = useMemo(() => {
+    if (wine.wines.length === 0) {
+      // Fallback to emergency data
+      return winesEmergency as unknown as Wine[];
+    }
+
+    const flatWines: Wine[] = [];
+    wine.wines.forEach((wineType) => {
+      wineType.assortment.forEach((assortment) => {
+        assortment.wines.forEach((w) => {
+          const normalizedType = typeof wineType.type === 'string' ? wineType.type.trim().toLowerCase() : wineType.type;
+          const normalizedSweetness = typeof assortment.sweetness === 'string' ? assortment.sweetness.trim().toLowerCase() : assortment.sweetness;
+          flatWines.push({
+            id: w.id,
+            name: w.name,
+            image: getImageUrl(w.images?.[0] || ''),
+            type: normalizedType,
+            year: w.year,
+            sweetness: normalizedSweetness,
+            alcohol: w.alcohol,
+            sugar: w.sugar,
+            temperature: w.temperature,
+            price: w.price,
+            description: w.description,
+          });
+        });
+      });
+    });
+    
+    // Debug: Log wine types and sweetness to verify data structure
+    console.log('=== SHOP: Wines data ===');
+    console.log('Total wines:', flatWines.length);
+    console.log('Unique types:', [...new Set(flatWines.map(w => w.type))]);
+    console.log('Unique sweetness:', [...new Set(flatWines.map(w => w.sweetness))]);
+    console.log('All wines with type and sweetness:');
+    flatWines.forEach((w, idx) => {
+      console.log(`  [${idx}] ${w.name}: type="${w.type}" (${typeof w.type}), sweetness="${w.sweetness}" (${typeof w.sweetness})`);
+    });
+    
+    return flatWines;
+  }, [wine.wines]);
 
   // Вычисляем минимальный и максимальный год для слайдера
   const { minYear, maxYear } = useMemo(() => {
@@ -97,9 +174,6 @@ const Shop = observer(() => {
     
     return { minYear: min, maxYear: max };
   }, [wines]);
-
-  // Флаг для отслеживания первой инициализации
-  const isInitialized = useRef(false);
   
   // Используем useEffect для установки начальных значений activeYearRange только один раз
   useEffect(() => {
@@ -162,6 +236,12 @@ const Shop = observer(() => {
 
   // Применяем фильтрацию и сортировку с помощью useMemo для оптимизации
   const filteredProducts = useMemo(() => {
+    console.log('=== SHOP: Filtering wines ===');
+    console.log('Active types:', activeTypes);
+    console.log('Active sweetness:', activeSweetness);
+    console.log('Active year range:', activeYearRange);
+    console.log('Sort option:', sortOption);
+    
     // Проверяем корректность activeYearRange
     if (!activeYearRange || activeYearRange.length !== 2 || isNaN(activeYearRange[0]) || isNaN(activeYearRange[1])) {
       return wines; // Возвращаем все вина при некорректном activeYearRange
@@ -171,16 +251,20 @@ const Shop = observer(() => {
     let filtered = wines;
     
     if (activeTypes.length > 0) {
+      const beforeFilter = filtered.length;
       filtered = filtered.filter(wine => 
         wine.type && activeTypes.includes(wine.type)
       );
+      console.log(`Type filter: ${beforeFilter} -> ${filtered.length} wines`);
     }
     
     // Шаг 2: Фильтрация по чекбоксам (сладость)
     if (activeSweetness.length > 0) {
+      const beforeFilter = filtered.length;
       filtered = filtered.filter(wine => 
         wine.sweetness && activeSweetness.includes(wine.sweetness)
       );
+      console.log(`Sweetness filter: ${beforeFilter} -> ${filtered.length} wines`);
     }
     
     // Шаг 3: Фильтрация по диапазону годов
@@ -201,6 +285,7 @@ const Shop = observer(() => {
     
     // Шаг 5: Сортировка
     const sorted = [...filtered];
+    console.log(`Sorting by: ${sortOption}`);
     switch(sortOption) {
       case 'По названию (А-Я)':
         sorted.sort((a, b) => a.name.localeCompare(b.name));
@@ -214,10 +299,19 @@ const Shop = observer(() => {
       case 'По году (старые)':
         sorted.sort((a, b) => (a.year || 0) - (b.year || 0));
         break;
+      case 'По цене (возрастание)':
+        sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
+        console.log('First 3 prices (asc):', sorted.slice(0, 3).map(w => ({ name: w.name, price: w.price })));
+        break;
+      case 'По цене (убывание)':
+        sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
+        console.log('First 3 prices (desc):', sorted.slice(0, 3).map(w => ({ name: w.name, price: w.price })));
+        break;
       default:
         sorted.sort((a, b) => a.id - b.id);
     }
     
+    console.log(`Final result: ${sorted.length} wines`);
     return sorted;
   }, [wines, activeTypes, activeSweetness, activeYearRange, searchQuery, sortOption]);
 
@@ -244,6 +338,15 @@ const Shop = observer(() => {
       showPagination: totalItems > itemsPerPage
     };
   }, [filteredProducts, currentPage, itemsPerPage]);
+
+  // Show loading if data is still being fetched
+  if (wine.isLoading) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <div className="text-2xl text-gray-600">Загрузка...</div>
+      </div>
+    );
+  }
 
   // Компонент для отображения пустого результата
   const EmptyResult = () => (
@@ -289,15 +392,18 @@ const Shop = observer(() => {
         
         <div className="flex flex-col items-center mt-4">
           {paginationData.currentItems.length > 0 ? (
-            paginationData.currentItems.map((wine) => (
-              <WineCard 
-                key={wine.id}
-                header={wine.name}
-                imgSrc={wine.image}
-                to={`/Shop/${wine.id}`}
-                state={{wine}}
-              />
-            ))
+            paginationData.currentItems.map((wine) => {
+              const serializedWine = serializeWine(wine);
+              return (
+                <WineCard 
+                  key={wine.id}
+                  header={wine.name}
+                  imgSrc={wine.image}
+                  to={`/Shop/${wine.id}`}
+                  state={serializedWine ? { wine: serializedWine } : undefined}
+                />
+              );
+            })
           ) : (
             <EmptyResult />
           )}
@@ -355,16 +461,19 @@ const Shop = observer(() => {
 
           {paginationData.currentItems.length > 0 ? (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-3 2xl:gap-12">
-              {paginationData.currentItems.map((wine) => (
-                <div key={wine.id} className="mx-auto">
-                  <WineCard 
-                    header={wine.name}
-                    imgSrc={wine.image}
-                    to={`/Shop/${wine.id}`}
-                    state={{wine}}
-                  />
-                </div>
-              ))}
+              {paginationData.currentItems.map((wine) => {
+                const serializedWine = serializeWine(wine);
+                return (
+                  <div key={wine.id} className="mx-auto">
+                    <WineCard 
+                      header={wine.name}
+                      imgSrc={wine.image}
+                      to={`/Shop/${wine.id}`}
+                      state={serializedWine ? { wine: serializedWine } : undefined}
+                    />
+                  </div>
+                );
+              })}
             </div>
           ) : (
             <EmptyResult />

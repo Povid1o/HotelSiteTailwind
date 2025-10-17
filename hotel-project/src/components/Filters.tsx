@@ -116,6 +116,12 @@ const Filters: React.FC<FiltersProps> = ({
 
   // Обработчик применения фильтров
   const handleApplyFilters = useCallback(() => {
+    // Debug: Log filter values being applied
+    console.log('=== FILTERS: Applying filters ===');
+    console.log('Types:', localTypes);
+    console.log('Sweetness:', localSweetness);
+    console.log('Year range:', localYearRange);
+    
     // Отправляем все изменения наверх
     onTypeChange(localTypes);
     onSweetnessChange(localSweetness);
@@ -136,18 +142,18 @@ const Filters: React.FC<FiltersProps> = ({
     setHasChanges(true);
   }, [minYear, maxYear]);
 
-  // Типы вин для фильтрации
+  // Типы вин для фильтрации (values должны совпадать с БД - в нижнем регистре)
   const wineTypes = [
-    { id: 'red', label: 'Красное', value: 'Красное' },
-    { id: 'white', label: 'Белое', value: 'Белое' },
+    { id: 'red', label: 'Красное', value: 'красное' },
+    { id: 'white', label: 'Белое', value: 'белое' },
   ];
 
-  // Сладость вин для фильтрации
+  // Сладость вин для фильтрации (values должны совпадать с БД - в нижнем регистре)
   const wineSweetness = [
-    { id: 'dry', label: 'Сухое', value: 'Сухое' },
-    { id: 'semi-dry', label: 'Полусухое', value: 'Полусухое' },
-    { id: 'semi-sweet', label: 'Полусладкое', value: 'Полусладкое' },
-    { id: 'sweet', label: 'Сладкое', value: 'Сладкое' },
+    { id: 'dry', label: 'Сухое', value: 'сухое' },
+    { id: 'semi-dry', label: 'Полусухое', value: 'полусухое' },
+    { id: 'semi-sweet', label: 'Полусладкое', value: 'полусладкое' },
+    { id: 'sweet', label: 'Сладкое', value: 'сладкое' },
   ];
 
   // Мобильная версия фильтров
