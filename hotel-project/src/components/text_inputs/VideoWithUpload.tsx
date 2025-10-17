@@ -13,12 +13,16 @@ const VideoWithUpload: React.FC<VideoWithUploadProps> = ({
   sourceUrl = '', 
   onVideoChange 
 }) => {
-  // Инициализируем состояние правильно - всегда строкой для VideoPlayer
+  // ✅ ПАТЧ: Поддерживаем как строки, так и File объекты
   const [currentVideoUrl, setCurrentVideoUrl] = useState<string>(() => {
     if (typeof sourceUrl === 'string') {
       return sourceUrl;
     }
-    return ''; // Если sourceUrl не строка, используем пустую строку
+    // Если sourceUrl - это File объект, создаем blob URL для отображения
+    if (sourceUrl instanceof File) {
+      return URL.createObjectURL(sourceUrl);
+    }
+    return ''; // Если sourceUrl не строка и не File, используем пустую строку
   });
   
   const [isEditMode, setIsEditMode] = useState(false);
@@ -31,10 +35,23 @@ const VideoWithUpload: React.FC<VideoWithUploadProps> = ({
   const currentBlobRef = useRef<string | null>(null);
   const savedBlobRef = useRef<string | null>(null); // Для сохранения blob URL основного видео
 
-  // Обновляем currentVideoUrl когда sourceUrl изменяется извне
+  // ✅ ПАТЧ: Обновляем currentVideoUrl когда sourceUrl изменяется извне
   useEffect(() => {
+    console.log('🎥 VideoWithUpload: sourceUrl changed', sourceUrl);
+    
     if (typeof sourceUrl === 'string' && sourceUrl !== currentVideoUrl) {
       setCurrentVideoUrl(sourceUrl);
+    } else if (sourceUrl instanceof File) {
+      // Если пришел File объект, создаем blob URL для отображения
+      const blobUrl = URL.createObjectURL(sourceUrl);
+      console.log('🎥 VideoWithUpload: Created blob URL for File:', blobUrl);
+      setCurrentVideoUrl(blobUrl);
+      
+      // Сохраняем ссылку для очистки
+      if (savedBlobRef.current) {
+        URL.revokeObjectURL(savedBlobRef.current);
+      }
+      savedBlobRef.current = blobUrl;
     }
   }, [sourceUrl, currentVideoUrl]);
 

@@ -46,35 +46,7 @@ const initialImages = [
   { src: Bottle, alt: 'Bottle' },
 ];
 
-const AddTypeButton = () => {
-  return (
-    <Card>
-      <button className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48">
-        Добавить тип
-      </button>
-    </Card>
-  );
-};
 
-const AddClaseButton = () => {
-  return (
-    <Card>
-      <button className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48">
-        Добавить Класс
-      </button>
-    </Card>
-  );
-};
-
-const AddProductButton = () => {
-  return (
-    <Card>
-      <button className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48">
-        Добавить Продукт
-      </button>
-    </Card>
-  );
-};
 
 const AddCategory = ({onClick, disabled = false}) => {
   return (
@@ -103,81 +75,21 @@ const AdminPage = observer(() =>  {
   const [isAddingCategory, setIsAddingCategory] = useState(false);
 
   useEffect(() => {
-    console.log('=== НАЧАЛО ЗАГРУЗКИ ДАННЫХ ===');
-    console.log('API_URL:', process.env.REACT_APP_API_URL);
-    
-    const loadData = async () => {
-      try {
-        console.log('Загружаем блюда...');
-        await dish.loadDishes();
-        console.log('✅ Блюда загружены:', dish.dishes);
-      } catch (error: any) {
-        console.error('❌ Ошибка загрузки блюд:', error);
-        console.error('Детали ошибки:', {
-          message: error.message,
-          stack: error.stack,
-          response: error.response?.data,
-          status: error.response?.status,
-          statusText: error.response?.statusText
-        });
-      }
-  
-      try {
-        console.log('Загружаем номера...');
-        await hotel.loadRooms();
-        console.log('✅ Номера загружены:', hotel.rooms);
-      } catch (error: any) {
-        console.error('❌ Ошибка загрузки номеров:', error);
-        console.error('Детали ошибки:', {
-          message: error.message,
-          stack: error.stack,
-          response: error.response?.data,
-          status: error.response?.status,
-          statusText: error.response?.statusText
-        });
-      }
-  
-      try {
-        console.log('Загружаем контент страниц...');
-        await pageContent.loadPageContent();
-        console.log('✅ Контент страниц загружен:', pageContent.pages);
-      } catch (error: any) {
-        console.error('❌ Ошибка загрузки контента страниц:', error);
-        console.error('Детали ошибки:', {
-          message: error.message,
-          stack: error.stack,
-          response: error.response?.data,
-          status: error.response?.status,
-          statusText: error.response?.statusText
-        });
-      }
-  
-      try {
-        console.log('Загружаем вина...');
-        await wine.loadWines();
-        console.log('✅ Вина загружены:', wine.wines);
-      } catch (error: any) {
-        console.error('❌ Ошибка загрузки вин:', error);
-        console.error('Детали ошибки:', {
-          message: error.message,
-          stack: error.stack,
-          response: error.response?.data,
-          status: error.response?.status,
-          statusText: error.response?.statusText
-        });
-      }
-    };
-  
-    loadData();
-  }, [dish, hotel, pageContent, wine]);
-
-  useEffect(() => {
-    // Загружаем данные при монтировании компонента
-    dish.loadDishes().catch(console.error);
-    hotel.loadRooms().catch(console.error);
-    pageContent.loadPageContent().catch(console.error);
-    wine.loadWines().catch(console.error);
-  }, [dish, hotel, pageContent, wine]);
+    console.log('=== AdminPage: Загрузка данных ===');
+    // Загружаем данные только если они еще не загружены
+    if (dish.dishes.length === 0) {
+      dish.loadDishes().catch(console.error);
+    }
+    if (hotel.rooms.length === 0) {
+      hotel.loadRooms().catch(console.error);
+    }
+    if (pageContent.pages.length === 0) {
+      pageContent.loadPageContent().catch(console.error);
+    }
+    if (wine.wines.length === 0) {
+      wine.loadWines().catch(console.error);
+    }
+  }, []); // Пустой массив зависимостей - загружаем только при монтировании
 
   // НАЧАЛО ФУНКЦИЙ ДЛЯ ПРОДУКТОВ
 
@@ -389,7 +301,7 @@ const AdminPage = observer(() =>  {
       <div className="container m-auto p-4 mt-auto md:p-6 lg:p-12">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-3xl text-gray-500 font-bold">Административная панель</h1>
-          <button 
+          {/* <button 
             onClick={() => {
               console.log('Принудительное обновление данных...');
               dish.loadDishes();
@@ -400,25 +312,9 @@ const AdminPage = observer(() =>  {
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
           >
             Обновить данные
-          </button>
+          </button> */}
         </div>
 
-        <div className="flex flex-col space-y-4 pt-4">
-
-            <ModalsCard
-                Card={AddTypeButton}
-                ExtContent={CreateType}
-            /> 
-            <ModalsCard
-                Card={AddClaseButton}
-                ExtContent={CreateClase}
-            /> 
-            <ModalsCard
-                Card={AddProductButton}
-                ExtContent={CreateProduct}
-            /> 
-                
-          </div>
         
 
         <Tabs aria-label="Tabs with underline" className="tabsContainer" variant="underline">

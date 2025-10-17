@@ -1,6 +1,8 @@
 /* eslint-disable */
 
-import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import React, { useState, useMemo, useCallback, useEffect, useRef, useContext } from "react";
+import { Context } from './index';
+import { observer } from 'mobx-react-lite';
 
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer";
@@ -31,11 +33,34 @@ interface Wine {
   description?: string[];
 }
 
-function Shop() {
+const Shop = observer(() => {
   const [nav, setNav] = useState(false);
   const [activeCategory, setActiveCategory] = useState('Каталог');
   const [sortOption, setSortOption] = useState('По умолчанию');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Access Context stores
+  const context = useContext(Context);
+  if (!context) {
+    throw new Error('Shop must be used within Context Provider');
+  }
+  const { wine } = context;
+
+  // Log data from stores
+  useEffect(() => {
+    console.log('=== SHOP PAGE DATA ===');
+    console.log('All wines:', wine.wines);
+    console.log('Loading state:', { wine: wine.isLoading });
+  }, [wine.wines]);
+
+  // Show loading if data is still being fetched
+  if (wine.isLoading) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <div className="text-2xl text-gray-600">Загрузка...</div>
+      </div>
+    );
+  }
   
   // Настраиваемый параметр - количество элементов на странице
   const itemsPerPage = 6;
@@ -373,6 +398,6 @@ function Shop() {
       <Footer />
     </>
   );
-}
+});
 
 export default Shop;

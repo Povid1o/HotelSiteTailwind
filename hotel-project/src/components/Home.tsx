@@ -1,4 +1,4 @@
-import React, {useEffect, useState, memo} from 'react';
+import React, {useEffect, useState, memo, useContext} from 'react';
 import Card from './cards/Card';
 import ExtCard from './cards/ExtCard';
 import ExtGaleryCard from './cards/ExtGalerycard';
@@ -6,6 +6,8 @@ import BlueSwiper from './sliders/BlueSwiper';
 import HotelRoom from './cards/HotelRoom';
 import TravelLineSearchForm from './TravelLineSearchForm';
 import TravelLineScript from "./TravelLineScript.tsx";
+import { Context } from '../index';
+import { observer } from 'mobx-react-lite';
 // import ThSlider from './sliders/ThumbSlider';
 
 import 'swiper/css';
@@ -21,11 +23,7 @@ import './styles/base.css';
 
 import { standardRoomEmergency, standardPlusRoomEmergency, homeSectionsEmergency, homeServicesEmergency, homeGalleryEmergency } from '../emergencyContent/text';
 import { getContentOrEmergency } from '../utils/contentHelpers';
-
-// Removed hardcoded standardRoomData and standardPlusRoomData; use emergency fallback instead
-const standardRoomData = getContentOrEmergency(null, standardRoomEmergency);
-const standardPlusRoomData = getContentOrEmergency(null, standardPlusRoomEmergency);
-const gallery = homeGalleryEmergency;
+import { API_BASE } from './http';
 
 const GaleryCard = () => {
     return(
@@ -67,9 +65,106 @@ const Box = memo(({ className, imgAlt, imgSrc, children }: BoxProps) => {
 
 
 
-const Home = ({nav}) => {
+interface HomeProps {
+    nav?: boolean;
+}
+
+const Home = observer(({nav}: HomeProps) => {
     // eslint-disable-next-line no-unused-vars
     const {height, width} = useWindowDimensions();
+
+    // Access Context stores
+    const context = useContext(Context);
+    if (!context) {
+        throw new Error('Home must be used within Context Provider');
+    }
+    const { pageContent, hotel } = context;
+
+    // Log data from stores
+    useEffect(() => {
+        const homePage = pageContent.pages.find(p => p.name === "Главная");
+        console.log('=== HOME PAGE DATA ===');
+        console.log('Главная page data:', homePage);
+        console.log('All rooms:', hotel.rooms);
+        console.log('Loading state:', { 
+            pageContent: pageContent.isLoading, 
+            hotel: hotel.isLoading 
+        });
+    }, [pageContent.pages, hotel.rooms]);
+
+    // Show loading if data is still being fetched
+    if (pageContent.isLoading || hotel.isLoading) {
+        return (
+            <div className="h-screen flex justify-center items-center">
+                <div className="text-2xl text-gray-600">Загрузка...</div>
+            </div>
+        );
+    }
+
+    // Extract page data with fallbacks
+    const homePage = pageContent.pages.find(p => p.name === "Главная");
+    const homePageContent = typeof homePage?.content === 'object' ? homePage.content : {};
+    
+    const mainBackground = homePageContent.mainBackground || { image: '', title: homeSectionsEmergency.introHeader };
+    const aboutSection = homePageContent.aboutSection || { title: homeSectionsEmergency.whoWeAreHeader, description: homeSectionsEmergency.whoWeAreText };
+    const firstGallery = homePageContent.firstGallery || { title: homeSectionsEmergency.fundHeader, images: [] };
+    const secondGallery = homePageContent.secondGallery || { title: homeSectionsEmergency.galleryHeader, images: homeGalleryEmergency };
+    const videoSection = homePageContent.videoSection || { title: homeSectionsEmergency.videoHeader, videoUrl: sampleVideo };
+    const servicesSection = homePageContent.servicesSection || { title: homeSectionsEmergency.responsibilityHeader, services: homeServicesEmergency };
+
+    // Helper to get image/video URL
+    const getImageUrl = (image: string | File) => {
+        if (typeof image === 'string') {
+            // Already absolute URL
+            if (image.startsWith('http://') || image.startsWith('https://')) {
+                return image;
+            }
+            // Local file in public folder (starts without /)
+            if (!image.startsWith('/')) {
+                return image;
+            }
+            // Relative path from backend (starts with /)
+            return `${API_BASE}${image}`;
+        }
+        return '';
+    };
+
+    // Helper to transform HotelRoom to HotelRoomData format
+    const transformRoomData = (room: any) => {
+        if (!room) return null;
+        
+        // If it's already in the correct format (emergency data), return as is
+        if (room.title && room.images && Array.isArray(room.images) && room.images[0]?.src) {
+            return room;
+        }
+
+        // Transform from HotelStorage format to HotelRoomData format
+        return {
+            id: room.id,
+            title: room.name,
+            description: room.description,
+            prices: room.price?.[0] ? { night: parseFloat(room.price[0].price) } : {},
+            features: room.properties || [],
+            amenities: room.conviniences || [],
+            rules: room.notes || [],
+            checkInOut: {
+                checkIn: room.checkStandart?.checkIn,
+                checkOut: room.checkStandart?.checkOut,
+            },
+            restrictions: [],
+            images: room.images?.map((img: string | File) => 
+                typeof img === 'string' ? { src: getImageUrl(img), alt: '' } : { src: '', alt: '' }
+            ) || [],
+        };
+    };
+
+    // Extract rooms data with fallbacks
+    const rooms = hotel.rooms.length > 0 ? hotel.rooms : [
+        getContentOrEmergency(null, standardRoomEmergency),
+        getContentOrEmergency(null, standardPlusRoomEmergency)
+    ];
+    const standardPlusRoomData = transformRoomData(rooms[0]) || getContentOrEmergency(null, standardPlusRoomEmergency);
+    const standardRoomData = transformRoomData(rooms[1]) || getContentOrEmergency(null, standardRoomEmergency);
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -110,10 +205,11 @@ const Home = ({nav}) => {
 
             {/*  Intro */}
             <section
-                className=" bg-[url('../public/images/Wine_Background2_AI.png')] mainBackground-page "
+                className="mainBackground-page"
+                style={{ backgroundImage: `url(${getImageUrl(mainBackground.image) || '../public/images/Wine_Background2_AI.png'})` }}
             >
                 <div className="max-w-[700px] h-screen mx-auto px-16 flex flex-col justify-center content-center text-center xl:max-w-[900px]">
-                    <h1 className='header-page'>{homeSectionsEmergency.introHeader}</h1>
+                    <h1 className='header-page'>{mainBackground.title}</h1>
                 </div>
 
                 <div className="absolute hidden bottom-10 left-1/2 transform -translate-x-1/2 w-3/4 max-w-4xl lg:flex">
@@ -151,28 +247,32 @@ const Home = ({nav}) => {
                     <div className='max-w-[700px] mx-auto bg-white rounded-xl drop-shadow-2xl max-sm:w-5/6 md:w-3/4 lg:max-w-[900px] xl:mx-8'>
 
                         <div className="w-full flex flex-col p-10 py-5 font-body md:flex-row">
-                            <h1 className="header-section pr-16">{homeSectionsEmergency.whoWeAreHeader}</h1>
+                            <h1 className="header-section pr-16">{aboutSection.title}</h1>
                             <p className="max-w-screen-lg font-light text-left text-gray-700 bg-white text-xs md:text-base lg:text-lg xl:text-2xl pt-8">
-                                {homeSectionsEmergency.whoWeAreText}
+                                {aboutSection.description}
                             </p>
                         </div>
 
                     </div>
                     {/* Text Block */}
 
-                    <img src="https://flowbite.com/docs/images/carousel/carousel-1.svg" alt="" className='hidden xl:flex max-h-[400px] rounded-xl'/>
+                    {firstGallery.images[0] && (
+                        <img src={getImageUrl(firstGallery.images[0].src)} alt={firstGallery.images[0].alt || ""} className='hidden xl:flex max-h-[400px] rounded-xl'/>
+                    )}
 
                 </section>
 
                 <section className='mt-8 mx-auto justify-center flex flex-row xl:container'>
 
                     <div className='hidden xl:flex max-w-[900px] mx-8 rounded-xl max-sm:w-5/6 md:w-3/4'>
-                        <img src="https://media.admagazine.ru/photos/61409580103eaf1470f8df16/16:9/w_2560%2Cc_limit/Room-9-St-Andrea-(1).jpg" alt="" className='object-cover rounded-xl'/>
-
+                        {firstGallery.images[1] && (
+                            <img src={getImageUrl(firstGallery.images[1].src)} alt={firstGallery.images[1].alt || ""} className='object-cover rounded-xl'/>
+                        )}
                     </div>
 
-                    <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/42/0e/53/sant-andrea-9.jpg?w=1200&h=-1&s=1" alt="" className='hidden xl:flex max-h-[600px] rounded-xl'/>
-
+                    {firstGallery.images[2] && (
+                        <img src={getImageUrl(firstGallery.images[2].src)} alt={firstGallery.images[2].alt || ""} className='hidden xl:flex max-h-[600px] rounded-xl'/>
+                    )}
 
                 </section>
             </section>
@@ -194,7 +294,7 @@ const Home = ({nav}) => {
             <section className='unShown card'>
                 <section className='section-format'>
                     {/* <p className='text-4xl text-gray-700 font-bold pt-4 text-nowrap lg:text-5xl xl:text-6xl pt-8'>Номерной Фонд</p> */}
-                    <h2 className='header-section'>{homeSectionsEmergency.fundHeader}</h2>
+                    <h2 className='header-section'>{firstGallery.title}</h2>
                     <div className='flex mobile:flex-col sm:flex-row xl:justify-center'>
                         <div className='mb-4 sm:mb-0'>
                             <ExtCard
@@ -221,40 +321,48 @@ const Home = ({nav}) => {
                 {/* <div className="mx-auto px-2 mt-14 max-sm:w-5/6 md:w-3/4 lg:mt-24 xl:container"> */}
                 <div className="section-format">
                     {/* <h2 className='text-4xl text-gray-700 font-bold pb-8 flex flex-wrap lg:text-5xl xl:text-6xl '>Отель расположен в самой живописной локации Абрау</h2> */}
-                    <h2 className='header-section'>{homeSectionsEmergency.galleryHeader}</h2>
+                    <h2 className='header-section'>{secondGallery.title}</h2>
                     <div className="-m-1 flex flex-wrap md:-m-2 ">
 
                         <div className="flex w-1/3 flex-wrap">
                             <div className="w-full h-full p-1 md:p-2 ">
-                                <img
-                                    alt=""
-                                    className="block  h-full w-full rounded-xl object-cover object-center max-h-[360px]  "
-                                    src={gallery[0]?.src} />
+                                {secondGallery.images[0] && (
+                                    <img
+                                        alt={secondGallery.images[0].alt || ""}
+                                        className="block  h-full w-full rounded-xl object-cover object-center max-h-[360px]  "
+                                        src={getImageUrl(secondGallery.images[0].src)} />
+                                )}
                             </div>
                         </div>
 
                         <div className="flex w-2/3  flex-wrap ">
                             <div className="w-full h-full p-1 md:p-2">
-                                <img
-                                    alt=""
-                                    className="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
-                                    src={gallery[1]?.src} />
+                                {secondGallery.images[1] && (
+                                    <img
+                                        alt={secondGallery.images[1].alt || ""}
+                                        className="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
+                                        src={getImageUrl(secondGallery.images[1].src)} />
+                                )}
                             </div>
                         </div>
 
                         <div className=" h-full w-2/3  p-1 md:p-2 ">
-                            <img
-                                alt=""
-                                className="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
-                                src={gallery[2]?.src} />
+                            {secondGallery.images[2] && (
+                                <img
+                                    alt={secondGallery.images[2].alt || ""}
+                                    className="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
+                                    src={getImageUrl(secondGallery.images[2].src)} />
+                            )}
                         </div>
 
                         <div className="flex w-1/3 flex-wrap">
                             <div className="w-full h-full p-1 md:p-2">
-                                <img
-                                    alt=""
-                                    className="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
-                                    src={gallery[3]?.src} />
+                                {secondGallery.images[3] && (
+                                    <img
+                                        alt={secondGallery.images[3].alt || ""}
+                                        className="block h-full w-full rounded-xl object-cover object-center max-h-[360px]"
+                                        src={getImageUrl(secondGallery.images[3].src)} />
+                                )}
                             </div>
                         </div>
                     </div>
@@ -269,8 +377,8 @@ const Home = ({nav}) => {
 
             <section className='unShown card'>
                 <div className='section-format'>
-                    <h1 className='header-section'>{homeSectionsEmergency.videoHeader}</h1>
-                    <VPlayer sourceUrl={sampleVideo}/>
+                    <h1 className='header-section'>{videoSection.title}</h1>
+                    <VPlayer sourceUrl={getImageUrl(videoSection.videoUrl) || sampleVideo}/>
                 </div>
             </section>
 
@@ -278,14 +386,14 @@ const Home = ({nav}) => {
             {/* Brick 3 */}
             <section className='unShown section-format'>
 
-                <p className='header-section'>{homeSectionsEmergency.responsibilityHeader}</p>
+                <p className='header-section'>{servicesSection.title}</p>
 
                 <ul className='horizontal-list'>
-                    {homeServicesEmergency.map((s) => (
-                        <li key={s.name}>
+                    {servicesSection.services.map((s, index) => (
+                        <li key={s.name || index}>
                             <Box
                                 imgAlt={s.name}
-                                imgSrc={s.image}
+                                imgSrc={getImageUrl(s.image)}
                             >
                                 <p className='horizontal-list-boxElement'>{s.name}</p>
                             </Box>
@@ -300,6 +408,6 @@ const Home = ({nav}) => {
 
         </div>
     );
-}
+});
 
 export default Home;

@@ -12,8 +12,24 @@ import { restaurantMenuEmergency } from './emergencyContent/text';
 
 const Restaurant = observer(() => {
   // @ts-ignore
-  const { product } = useContext(Context);
+  const { product, dish } = useContext(Context);
   const [nav, setNav] = useState(false);
+
+  // Log data from stores
+  useEffect(() => {
+    console.log('=== RESTAURANT PAGE DATA ===');
+    console.log('All dishes:', dish.dishes);
+    console.log('Loading state:', { dish: dish.isLoading });
+  }, [dish.dishes]);
+
+  // Show loading if data is still being fetched
+  if (dish.isLoading) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <div className="text-2xl text-gray-600">Загрузка...</div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     fetchProducts(undefined, undefined).then(data => {

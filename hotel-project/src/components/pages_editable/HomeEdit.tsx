@@ -97,21 +97,26 @@ const HomeEdit = ({ pageData, onContentChange }) => {
     }, [onContentChange, pageData.videoSection]);
 
     const handleVideoSectionVideoChange = useCallback((videoSource: string | File | null) => {
+        console.log('🎥 HomeEdit: handleVideoSectionVideoChange called with:', videoSource);
+        
         if (videoSource instanceof File) {
-          // Создаём blob URL из объекта File
-          const blobUrl = URL.createObjectURL(videoSource);
+          // ✅ ПАТЧ: Отправляем File объект, а НЕ blob URL!
+          // pageAPI.deepProcess загрузит File и заменит его на URL
+          console.log('🎥 HomeEdit: Sending File object to backend:', videoSource.name);
           onContentChange('videoSection', {
             ...pageData.videoSection,
-            videoUrl: blobUrl,
+            videoUrl: videoSource, // Отправляем File, не blob URL!
           });
         } else if (typeof videoSource === 'string') {
           // Если это строка (URL)
+          console.log('🎥 HomeEdit: Sending URL string:', videoSource);
           onContentChange('videoSection', {
             ...pageData.videoSection,
             videoUrl: videoSource,
           });
         } else {
           // Если видео удалено (null)
+          console.log('🎥 HomeEdit: Video removed');
           onContentChange('videoSection', {
             ...pageData.videoSection,
             videoUrl: '',
@@ -186,7 +191,7 @@ const HomeEdit = ({ pageData, onContentChange }) => {
         });
     }, [onContentChange, pageData.servicesSection]);
     
-    // Функция для создания стабильного URL для отображения
+    // Функция для создания стабильного URL для отображения (изображения и видео)
     const getDisplayImageSrc = (imageSrc) => {
         if (!imageSrc) return null;
         
@@ -204,6 +209,30 @@ const HomeEdit = ({ pageData, onContentChange }) => {
         }
         
         return null;
+    };
+
+    // Функция для нормализации видео URL для отображения
+    const getDisplayVideoUrl = (videoSrc) => {
+        if (!videoSrc) return '';
+        
+        // Разворачиваем MobX Proxy если это он
+        const plainSrc = toJS(videoSrc);
+        console.log('🎥 HomeEdit: getDisplayVideoUrl - plainSrc:', plainSrc);
+        
+        // Если это File объект, возвращаем его как есть (VideoWithUpload создаст blob URL)
+        if (plainSrc instanceof File) {
+            console.log('🎥 HomeEdit: Video is File object:', plainSrc.name);
+            return plainSrc;
+        }
+        
+        // Если это строка, преобразуем относительные пути в полные URL
+        if (typeof plainSrc === 'string') {
+            const fullUrl = getMediaUrl(plainSrc);
+            console.log('🎥 HomeEdit: Video is URL string:', fullUrl);
+            return fullUrl;
+        }
+        
+        return '';
     };
 
     // Нормализация массива фото для корректной работы слайдера (делаем абсолютные URL)
@@ -306,7 +335,7 @@ const HomeEdit = ({ pageData, onContentChange }) => {
                     onSave={handleVideoSectionTitleChange} 
                 />
                 <VideoWithUpload 
-                    sourceUrl={pageData.videoSection.videoUrl}
+                    sourceUrl={getDisplayVideoUrl(pageData.videoSection.videoUrl)}
                     onVideoChange={handleVideoSectionVideoChange}
                 />
             </div>

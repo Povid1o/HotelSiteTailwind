@@ -6,8 +6,10 @@
 // "npm i ogl" - команда, добавить в записи об установке
 
 
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom';
+import { Context } from './index';
+import { observer } from 'mobx-react-lite';
 
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer";
@@ -86,8 +88,33 @@ const Timeline = ({ leftDates = [], rightDates = [] }) => {
     );
 };
 
-function Vinery() {
+const Vinery = observer(() => {
     const [nav, setNav] = useState(false);
+
+    // Access Context stores
+    const context = useContext(Context);
+    if (!context) {
+        throw new Error('Vinery must be used within Context Provider');
+    }
+    const { pageContent } = context;
+
+    // Log data from stores
+    useEffect(() => {
+        const vineryPage = pageContent.pages.find(p => p.name === "Винодельня");
+        console.log('=== VINERY PAGE DATA ===');
+        console.log('Винодельня page data:', vineryPage);
+        console.log('Loading state:', { pageContent: pageContent.isLoading });
+    }, [pageContent.pages]);
+
+    // Show loading if data is still being fetched
+    if (pageContent.isLoading) {
+        return (
+            <div className="h-screen flex justify-center items-center">
+                <div className="text-2xl text-gray-600">Загрузка...</div>
+            </div>
+        );
+    }
+
     const texts = [
         {header : "Block 1", text : "Откройте для себя мир превосходных вин в нашей винодельне!  Мы предлагаем уникальные и высококачественные сорта вин, созданные с любовью и вниманием к каждой детали. Посетите нашу винодельню и убедитесь в качестве наших вин самостоятельно. Здесь вы сможете насладиться изысканными напитками, отдохнуть и провести время в уютной атмосфере."},
         {header : "Block 2", dates : [{1960 : "Основание винодельни"}, {1966 : "Первый урожай"}, {1970 : "Выпуск первого вина"}, {1980 : "Расширение производства"}, {1999 : "Международное признание"}, {2000 : "Модернизация производства"}]},
@@ -349,6 +376,6 @@ function Vinery() {
 
         </>
      );
-}
+});
  
 export default Vinery;
