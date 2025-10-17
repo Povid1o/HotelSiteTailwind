@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PhotoSelector from '../text_inputs/PhotoSelector';
 import ImageWithButton from '../text_inputs/ImageWithButton';
+import ImageWithButtonPersistent from '../text_inputs/ImageWithButtonPersistent';
 import BackgroundContentEdit from '../text_inputs/BackgroundContentEdit';
 import TextEditor from '../text_inputs/TextEditor';
 import VideoWithUpload from '../text_inputs/VideoWithUpload';
@@ -388,10 +389,9 @@ const VineryEdit = ({ pageData, onContentChange }) => {
                     </div>
                     
                     <div className='col-span-3 z-10 transform -translate-y-1/4 xl:size-[110%] 2xl:size-[100%] 2xl:max-w-[1000px] 2xl:object-contain'>
-                        <ImageWithButton 
+                        <ImageWithButtonPersistent 
                             image={getDisplayImageSrc(pageData.introSection?.image) || ''} 
-                            onImageChange={handleIntroSectionImageChange} 
-                            acceptedTypes="image/*"
+                            onImageChange={handleIntroSectionImageChange}
                         />
                     </div>
                 </section>
@@ -435,10 +435,9 @@ const VineryEdit = ({ pageData, onContentChange }) => {
                     </div>
                     
                     <div className='size-[60%] mx-auto col-span-3 transform translate-x-1/3' style={{ "--tw-translate-y": "-35%" }}>
-                        <ImageWithButton 
+                        <ImageWithButtonPersistent 
                             image={getDisplayImageSrc(pageData.introSection?.image) || ''} 
-                            onImageChange={handleIntroSectionImageChange} 
-                            acceptedTypes="image/*"
+                            onImageChange={handleIntroSectionImageChange}
                         />
                     </div>
                 </section>
@@ -645,35 +644,8 @@ const VineryEdit = ({ pageData, onContentChange }) => {
 
             {/* Brick 5 - Region Section */}
             <section className='w-[92%] mx-auto mt-8'>
-                {/* Mobile */}
-                <div className='sm:hidden'>
-                    <div className='section-header ml-auto text-right sm:mb-8'>
-                        <TextEditor 
-                            text={pageData.regionSection?.title} 
-                            format="modal" 
-                            isShort={true} 
-                            onSave={handleRegionSectionTitleChange} 
-                        />
-                    </div>
-                    <img src={GeografieMobile} className='overflow-hidden size-[115%] max-w-none' alt="" />
-                    <div className='paragraph-content'>
-                        <TextEditor 
-                            text={pageData.regionSection?.firstText} 
-                            format="paragraph" 
-                            onSave={handleRegionSectionFirstTextChange} 
-                        />
-                    </div>
-                    <div className='paragraph-content pt-4'>
-                        <TextEditor 
-                            text={pageData.regionSection?.secondText} 
-                            format="paragraph" 
-                            onSave={handleRegionSectionSecondTextChange} 
-                        />
-                    </div>
-                </div>
-
-                {/* Tablet */}
-                <div className='hidden sm:flex flex-row overflow-visible pb-5 lg:hidden relative'>
+                {/* Универсальная версия для админки (все разрешения) */}
+                <div className='flex flex-row overflow-visible pb-5 relative'>
                     <div className='flex flex-col relative' style={{ width: 'calc(100% - 286px)' }}>
                         <div className='w-full pr-5'>
                             <div className='paragraph-content'>
@@ -700,31 +672,31 @@ const VineryEdit = ({ pageData, onContentChange }) => {
                                     position: 'relative',
                                     zIndex: 1 
                                 }} 
-                                alt="" 
+                                alt="География винодельни" 
                             />
                         </div>
                     </div>
                     
                     <div 
-                        className="relative w-[286px] h-[354px] min-w-[286px] rounded-[8px] overflow-hidden"
+                        className="w-[286px] min-w-[286px]"
                         style={{ zIndex: 2 }}
                     >
-                        <div className="h-full">
-                            <ImageWithButton 
-                                image={getDisplayImageSrc(pageData.regionSection?.backgroundImage) || ''} 
-                                onImageChange={handleRegionSectionBackgroundImageChange} 
-                                acceptedTypes="image/*"
-                                className="w-full h-full object-cover rounded-[8px]"
-                            />
-                        </div>
-                        <div className="absolute inset-0 rounded-[8px] bg-gradient-to-t from-[#C4C4C4]/0 via-transparent to-black" />
-                        <div className='section-header text-white absolute inset-0 p-4'>
+                        {/* Заголовок над картинкой */}
+                        <div className='section-header mb-4'>
                             <TextEditor 
                                 text={pageData.regionSection?.title} 
                                 format="custom"
-                                style="text-white text-4xl font-bold lg:text-5xl xl:text-6xl"
+                                style="text-gray-700 text-4xl font-bold lg:text-5xl xl:text-6xl"
                                 isShort={true} 
                                 onSave={handleRegionSectionTitleChange} 
+                            />
+                        </div>
+                        
+                        {/* Картинка ниже */}
+                        <div className="relative w-full h-[354px] rounded-[8px] overflow-hidden">
+                            <ImageWithButtonPersistent 
+                                image={getDisplayImageSrc(pageData.regionSection?.backgroundImage) || ''} 
+                                onImageChange={handleRegionSectionBackgroundImageChange}
                             />
                         </div>
                     </div>
