@@ -83,16 +83,21 @@ app.post('/api/upload', (req, res) => {
 
 app.use('/api', router)
 
+// ---- Swagger ----
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
-const swaggerDocument = YAML.load('./swagger.yaml');
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const swaggerDocument = YAML.load(path.join(__dirname, 'swagger.yaml'));
 
-// Редирект с корня на Swagger, чтобы было удобно заходить в документацию
-app.get('/', (req, res) => {
-  res.redirect('/docs');
-});
+// отдать UI и сам yaml именно под /api/*
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.get('/api/swagger.yaml', (_req, res) =>
+  res.sendFile(path.join(__dirname, 'swagger.yaml'))
+);
+
+// (оставь редирект на удобство, но веди на /api/docs)
+app.get('/', (_req, res) => res.redirect('/api/docs'));
+
 
 //обработка ошибок, последний MiddleWare
 app.use(errorHandler)
