@@ -113,6 +113,9 @@ const Home = observer(({nav}: HomeProps) => {
 
     // Helper to get image/video URL
     const getImageUrl = (image: string | File) => {
+        if (image instanceof File) {
+            return URL.createObjectURL(image);
+        }
         if (typeof image === 'string') {
             // Already absolute URL
             if (image.startsWith('http://') || image.startsWith('https://')) {

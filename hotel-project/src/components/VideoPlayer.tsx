@@ -19,11 +19,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ sourceUrl }) => {
 
     // Check if URL is a blob URL
     React.useEffect(() => {
-        if (sourceUrl?.startsWith('blob:')) {
-            setIsBlob(true);
+        const isBlobUrl = sourceUrl?.startsWith('blob:') || false;
+        setIsBlob(isBlobUrl);
+        if (isBlobUrl) {
             console.log('VideoPlayer: Detected blob URL, using native video element');
-        } else {
-            setIsBlob(false);
         }
     }, [sourceUrl]);
     
@@ -74,12 +73,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ sourceUrl }) => {
                 }}
                 config={{
                     youtube: {
-                        playerVars: { showinfo: 1 }
+                        playerVars: { 
+                            showinfo: 1,
+                            playsinline: 1 
+                        }
                     },
                     file: {
                         attributes: {
                             controlsList: 'nodownload',
-                            preload: 'metadata'
+                            preload: 'metadata',
+                            playsInline: true
                         }
                     }
                 }}
