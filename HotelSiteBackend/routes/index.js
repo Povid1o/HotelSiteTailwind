@@ -19,6 +19,7 @@ router.use('/dishes', require('./dishRouter'));
 router.use('/rooms', require('./roomRouter'));
 router.use('/wines', require('./wineRouter'));
 router.use('/pages', require('./pageRouter'));
+router.use('/events', require('./eventsRouter'));
 
 // справочники для блюд/вин
 router.use('/dish-categories', require('./dishCategoryRouter'));

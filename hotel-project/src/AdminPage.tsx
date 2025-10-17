@@ -19,6 +19,7 @@ import NewWineCard from './components/modals/NewWineCard';
 import ExtCard from './components/cards/ExtCard';
 import DescriptionInput from './components/text_inputs/DescriptionInput';
 import Button from './components/text_inputs/Button';
+import PhotoSelector from './components/text_inputs/PhotoSelector';
 import { Tabs } from "flowbite-react";
 import { Table } from "flowbite-react";
 import "./AdminPage.css";
@@ -67,7 +68,7 @@ const AdminPage = observer(() =>  {
   if (!context) {
     throw new Error('AdminPage must be used within Context Provider');
   }
-  const { dish, hotel, pageContent, wine } = context;
+  const { dish, hotel, pageContent, wine, events } = context;
 
   // Состояния для защиты от повторных кликов
   const [isAddingDish, setIsAddingDish] = useState(false);
@@ -89,12 +90,19 @@ const AdminPage = observer(() =>  {
     if (wine.wines.length === 0) {
       wine.loadWines().catch(console.error);
     }
+    if (!events.categories.length || !events.events.length) {
+      events.refreshAll().catch(console.error);
+    }
   }, []); // Пустой массив зависимостей - загружаем только при монтировании
 
   // НАЧАЛО ФУНКЦИЙ ДЛЯ ПРОДУКТОВ
 
   // Состояние для отслеживания режима редактирования категорий
   const [editingCategory, setEditingCategory] = useState<string | null>(null);
+  
+  // Состояния для мероприятий
+  const [isAddingEvent, setIsAddingEvent] = useState(false);
+  const [editingEventCategory, setEditingEventCategory] = useState<number | null>(null);
 
 
   // Вместо addCategory используйте:
@@ -190,6 +198,34 @@ const AdminPage = observer(() =>  {
     wine.updateWineLocal(wineType, sweetness, wineId, updatedWineData);
   }, [wine]);
   // КОНЕЦ ФУНКЦИЙ ДЛЯ ВИН
+
+  // ФУНКЦИИ ДЛЯ МЕРОПРИЯТИЙ
+  const addEvent = async (categoryId: number) => {
+    if (isAddingEvent) return;
+    
+    setIsAddingEvent(true);
+    try {
+      await events.createEvent({ 
+        title: 'Новое мероприятие', 
+        categoryId, 
+        description: '', 
+        images: [] 
+      });
+    } catch (error) {
+      console.error('Error adding event:', error);
+      alert('Ошибка при создании мероприятия. Проверьте, что вы авторизованы.');
+    } finally {
+      setTimeout(() => {
+        setIsAddingEvent(false);
+      }, 500);
+    }
+  };
+
+  const handleEventCategoryDescriptionSave = useCallback((categoryId: number, newDescription: string) => {
+    events.updateCategory(categoryId, { description: newDescription });
+    setEditingEventCategory(null);
+  }, [events]);
+  // КОНЕЦ ФУНКЦИЙ ДЛЯ МЕРОПРИЯТИЙ
 
   const pageContentHandlers = {
     "Главная": (page) => (
@@ -496,8 +532,113 @@ const AdminPage = observer(() =>  {
           </Tabs.Item>
 
           <Tabs.Item title="Мероприятия" icon={IoTicket}>
-            Ждём встройки <span className="font-medium text-gray-800 dark:text-white">МОДУЛЯ БРОНИРОВАНИЯ</span>.
-            А пока вкладка будет пустовать...Пупууууу
+            <div className="overflow-x-auto">
+              <Table hoverable>
+                <Table.Head>
+                  <Table.HeadCell>Название мероприятия</Table.HeadCell>
+                  <Table.HeadCell>Действия</Table.HeadCell>
+                </Table.Head>
+                <Table.Body className="divide-y">
+                  {events.categories.map((cat) => (
+                    <React.Fragment key={cat.id}>
+                      <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                        <Table.Cell colSpan={2}>
+                          <div className="my-5 mx-auto flex justify-between items-center gap-4 w-full px-4">
+                            <div className="flex items-center gap-4 flex-1">
+                              <h3 className="font-bold text-main_theme text-lg font-body">
+                                {cat.header}
+                              </h3>
+                              {editingEventCategory === cat.id ? (
+                                <div className="flex-1">
+                                  <DescriptionInput
+                                    text={cat.description}
+                                    inputField={true}
+                                    horizontal={false}
+                                    onSave={(newDesc) => handleEventCategoryDescriptionSave(cat.id, newDesc)}
+                                  />
+                                </div>
+                              ) : (
+                                <span 
+                                  className="text-gray-600 text-sm cursor-pointer hover:text-gray-800 flex-1"
+                                  onClick={() => setEditingEventCategory(cat.id)}
+                                  title="Нажмите для редактирования"
+                                >
+                                  {cat.description}
+                                </span>
+                              )}
+                            </div>
+                            <Button
+                              text=""
+                              icon={<IoMdAdd className='h-[20px] w-[20px]' />}
+                              func={() => addEvent(cat.id)}
+                              customBackground={isAddingEvent ? "bg-gray-400" : "bg-[#2ecc71]"}
+                              disabled={isAddingEvent}
+                            />
+                          </div>
+                        </Table.Cell>
+                      </Table.Row>
+                      {(cat.events || []).map((ev) => (
+                        <Table.Row key={ev.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                            {ev.title}
+                          </Table.Cell>
+                          <Table.Cell>
+                            <ExtCard
+                              Card={() => (
+                                <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
+                                  Править
+                                </button>
+                              )}
+                              ExtContent={() => (
+                                <div className="p-4">
+                                  <div className="mb-4">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Название:</label>
+                                    <DescriptionInput
+                                      text={ev.title}
+                                      inputField={true}
+                                      horizontal={false}
+                                      onSave={(t) => events.updateEvent(ev.id, { title: t })}
+                                    />
+                                  </div>
+                                  <div className="mb-4">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Описание:</label>
+                                    <DescriptionInput
+                                      text={ev.description}
+                                      inputField={false}
+                                      horizontal={false}
+                                      onSave={(d) => events.updateEvent(ev.id, { description: d })}
+                                    />
+                                  </div>
+                                  <div className="mb-4">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Фотографии:</label>
+                                    <PhotoSelector
+                                      photos={ev.images?.map(img => img.url) || []}
+                                      header="Фотографии мероприятия"
+                                      ButtonCard={null}
+                                      withSlider={true}
+                                      onPhotosChange={(newPhotos) => events.updateEvent(ev.id, { images: newPhotos })}
+                                    />
+                                  </div>
+                                </div>
+                              )}
+                            />
+                          </Table.Cell>
+                          <Table.Cell>
+                            <button
+                              type="button"
+                              onClick={() => events.deleteEvent(ev.id)}
+                              className="font-medium text-main_theme hover:underline dark:text-cyan-500"
+                            >
+                              Удалить
+                            </button>
+                          </Table.Cell>
+                        </Table.Row>
+                      ))}
+                    </React.Fragment>
+                  ))}
+                </Table.Body>
+              </Table>
+            </div>
           </Tabs.Item>
 
           <Tabs.Item title="Ассортимент винодельни" icon={FaWineGlassAlt}>

@@ -204,9 +204,38 @@ const Page = sequelize.define('page', {
   content_json: { type: DataTypes.JSONB },
 }, { underscored: true, timestamps: true, tableName: 'pages' });
 
+// Events
+const EventCategory = sequelize.define('eventCategory', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  header: { type: DataTypes.STRING(255), allowNull: false, unique: true },
+  description: { type: DataTypes.TEXT }
+}, { underscored: true, timestamps: true, tableName: 'event_categories' });
+
+const Event = sequelize.define('event', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  category_id: { type: DataTypes.INTEGER, allowNull: false },
+  title: { type: DataTypes.STRING(255), allowNull: false },
+  description: { type: DataTypes.TEXT }
+}, { underscored: true, timestamps: true, tableName: 'events' });
+
+const EventImage = sequelize.define('eventImage', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  event_id: { type: DataTypes.INTEGER, allowNull: false },
+  url: { type: DataTypes.STRING(255), allowNull: false },
+  alt_text: { type: DataTypes.STRING(255) },
+  order: { type: DataTypes.INTEGER }
+}, { underscored: true, timestamps: true, tableName: 'event_images' });
+
+// relations events
+EventCategory.hasMany(Event, { foreignKey: 'category_id', as: 'events' });
+Event.belongsTo(EventCategory, { foreignKey: 'category_id', as: 'category' });
+Event.hasMany(EventImage, { foreignKey: 'event_id', as: 'images', onDelete: 'CASCADE' });
+EventImage.belongsTo(Event, { foreignKey: 'event_id' });
+
 module.exports = {
   DishCategory, Dish, DishImage,
   Room, RoomImage, RoomProperty, RoomConvenience, RoomPrice, RoomNote,
   WineType, WineSweetness, Wine, WineDescription, WineImage,
-  Page, User, Type, Clase, Product, ProductInfo, Basket
+  Page, User, Type, Clase, Product, ProductInfo, Basket,
+  EventCategory, Event, EventImage
 };

@@ -11,6 +11,7 @@ import HotelStorage from './storage/HotelStorage';
 import PageContentStorage from './storage/PageContentStorage';
 import WineStorage from './storage/WineStorage';
 import { ThemeProvider } from "@material-tailwind/react";
+import EventStorage from './storage/EventStorage';
 
 interface AppContext {
   user: UserStorage;
@@ -20,6 +21,7 @@ interface AppContext {
   hotel: HotelStorage;
   pageContent: PageContentStorage;
   wine: WineStorage;
+  events: EventStorage;
 }
 
 export const Context = createContext<AppContext | null>(null);
@@ -31,6 +33,7 @@ const dishStorage = new DishStorage();
 const hotelStorage = new HotelStorage();
 const pageContentStorage = new PageContentStorage();
 const wineStorage = new WineStorage();
+const eventStorage = new EventStorage();
 
 const rootElement = document.getElementById('root');
 
@@ -45,6 +48,7 @@ if (rootElement) {
         hotel: hotelStorage,
         pageContent: pageContentStorage,
         wine: wineStorage,
+        events: eventStorage,
       }}
     >
       <React.StrictMode>

@@ -153,6 +153,10 @@ const start = async() => {
       if (!exists) await Page.create(p)
     }
 
+    // Seed event categories
+    const seedEvents = require('./seed/seedEvents');
+    await seedEvents();
+
     app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
   } catch(e) {
       console.log(e)
