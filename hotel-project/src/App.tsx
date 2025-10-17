@@ -159,13 +159,14 @@ const App= observer(() => {
       useEffect(() => {
         console.log('=== App: Загрузка данных при старте приложения ===');
         if (appCtx) {
-          const { dish, hotel, pageContent, wine } = appCtx;
+          const { dish, hotel, pageContent, wine, events } = appCtx;
           
           Promise.all([
             dish.loadDishes().catch(err => console.error('Ошибка загрузки блюд:', err)),
             hotel.loadRooms().catch(err => console.error('Ошибка загрузки номеров:', err)),
             pageContent.loadPageContent().catch(err => console.error('Ошибка загрузки страниц:', err)),
-            wine.loadWines().catch(err => console.error('Ошибка загрузки вин:', err))
+            wine.loadWines().catch(err => console.error('Ошибка загрузки вин:', err)),
+            events.refreshAll().catch(err => console.error('Ошибка загрузки мероприятий:', err))
           ]).then(() => {
             console.log('✅ Все данные загружены');
           });

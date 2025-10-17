@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import React from 'react';
 import ExtStandart from "./cards/ExtStandart"
 import ExtCard from "./cards/ExtCard";
@@ -9,6 +9,7 @@ import ExcursionIcon from "./assets/excursion.png";
 import SeasonIcon from "./assets/calendar.png";
 import RunningIcon from "./assets/running.png";
 import OpenAirIcon from "./assets/open-air.png";
+import DiscountIcon from "./assets/discount-icon.png";
 import { Link } from "react-router-dom";
 // @ts-ignore
 import ProductionCard from './cards/ProductionCard.tsx';
@@ -17,6 +18,9 @@ import './styles/ExitButton.css'
 import {description1, description2, description3, description4, description5, description6} from './modals/CreateDesc.tsx'
 import { eventCardsEmergency, eventCategoriesEmergency, eventsEmergency } from '../emergencyContent/text';
 import { MdBuild } from 'react-icons/md';
+import { Context } from '../index';
+import { observer } from 'mobx-react-lite';
+import { API_BASE } from './http';
 
 const ExpandedMaintenance = () => (
   <div className="flex flex-col gap-4 p-4">
@@ -30,20 +34,72 @@ const ExpandedMaintenance = () => (
   </div>
 );
 
-const EventContent = () => {
+const EventContent = observer(() => {
     const [isOpen, setIsOpen] = useState(false)
-    // const categories = eventCategoriesEmergency;
-    const categories = [
-        { header: 'Дегустации', image: WineBottlePng },
-        { header: 'Ресторан', image: RestaurantIcon },
-        { header: 'Экскурсии', image: ExcursionIcon },
-        { header: 'Сезонные', image: SeasonIcon },
-        { header: 'Спорт', image: RunningIcon },
-        { header: 'Open-air', image: OpenAirIcon },
-      ];
-      
-    const cards = eventCardsEmergency;
-    const events = eventsEmergency;
+    
+    // Access Context stores
+    const context = useContext(Context);
+    if (!context) {
+        throw new Error('EventContent must be used within Context Provider');
+    }
+    const { events } = context;
+
+    // Load events data
+    useEffect(() => {
+        console.log('=== EVENTS PAGE DATA ===');
+        console.log('All categories:', events.categories);
+        console.log('All events:', events.events);
+        console.log('Loading state:', { events: events.isLoading });
+    }, [events.categories, events.events]);
+
+    // Icon mapping for categories
+    const iconMap: Record<string, string> = {
+        'Дегустации': WineBottlePng,
+        'Ресторан': RestaurantIcon,
+        'Экскурсии': ExcursionIcon,
+        'Сезонные': SeasonIcon,
+        'Спорт': RunningIcon,
+        'Open-air': OpenAirIcon,
+        'Акции': DiscountIcon,
+    };
+
+    // Helper to get image URL
+    const getImageUrl = (image: string | File) => {
+        if (typeof image === 'string') {
+            // Already absolute URL
+            if (image.startsWith('http://') || image.startsWith('https://')) {
+                return image;
+            }
+            // Local file in public folder (starts without /)
+            if (!image.startsWith('/')) {
+                return image;
+            }
+            // Relative path from backend (starts with /)
+            return `${API_BASE}${image}`;
+        }
+        return '';
+    };
+
+    // Show loading if data is still being fetched
+    if (events.isLoading) {
+        return (
+            <div className="h-screen flex justify-center items-center">
+                <div className="text-2xl text-gray-600">Загрузка...</div>
+            </div>
+        );
+    }
+
+    // Combine categories with icons
+    const categoriesWithIcons = events.categories.map(cat => ({
+        id: cat.id,
+        header: cat.header,
+        description: cat.description,
+        image: iconMap[cat.header] || WineBottlePng,
+        events: cat.events || []
+    }));
+
+    // Get all events for "Откройте для себя винодельню" section
+    const allEvents = events.events;
 
     return (
         <div>
@@ -198,8 +254,8 @@ const EventContent = () => {
                 </div>
 
                 <ul className="mx-auto my-8 flex flex-wrap flex-row justify-evenly">
-                    {categories.map(({header, image}) => (
-                        <Link key={header} to={`/Events/${encodeURIComponent(header)}`} className="flex flex-col w-[150px]">
+                    {categoriesWithIcons.map(({id, header, image}) => (
+                        <Link key={id} to={`/Events/${encodeURIComponent(header)}`} className="flex flex-col w-[150px]">
                             <img src={image} className="w-[100px] h-[100px] mx-auto bg-[#f0f0f0] p-2 rounded-xl" />
                             <p className="mx-auto my-2 font-bold text-lg">{header}</p>
                         </Link>
@@ -213,25 +269,30 @@ const EventContent = () => {
                     </div>
                 </div>
                 <ul className="grid gap-4 grid-cols-2 mx-auto ">
-                    {events.map((event) => (
-                        event.news.map((newsItem) => (
+                    {allEvents.length > 0 ? (
+                        allEvents.map((event) => (
                             <ExtCard
-                                key={newsItem.header}
+                                key={event.id}
                                 Card={() => (
                                     <EventCard
-                                      imgSrc={newsItem.imgSrc}
-                                      title={newsItem.header}
-                                      description={newsItem.description} children={undefined}        />
+                                        imgSrc={event.images?.[0]?.url ? getImageUrl(event.images[0].url) : ''}
+                                        title={event.title}
+                                        description={event.description}
+                                        children={undefined}
+                                    />
                                 )}
-                                ExtContent={ExpandedMaintenance}/>
+                                ExtContent={ExpandedMaintenance}
+                            />
                         ))
-                    ))}
+                    ) : (
+                        <p className="col-span-2 text-center text-gray-500">Мероприятия скоро появятся</p>
+                    )}
                 </ul>
 
             </div>
         </div>
         
     );
-}
+});
  
 export default EventContent;
