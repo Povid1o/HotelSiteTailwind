@@ -54,11 +54,6 @@ services:
   frontend:
     image: ghcr.io/povid1o/hotelsitetailwind-frontend:latest
     restart: unless-stopped
-    environment:
-      REACT_APP_API_URL: ""
-      CHOKIDAR_USEPOLLING: "true"
-      WDS_SOCKET_PORT: "0"
-      CI: "false"
     networks: [appnet]
     expose:
       - "80"
