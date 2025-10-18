@@ -26,3 +26,5 @@ RUN sed -i 's|try_files \$uri \$uri/ =404;|try_files \$uri \$uri/ /index.html;|'
 COPY --from=build /app/build/ /usr/share/nginx/html/
 
 EXPOSE 80
+
+CMD ["npm", "start"]
