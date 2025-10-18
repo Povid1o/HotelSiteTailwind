@@ -44,6 +44,7 @@ services:
       - DB_NAME=HotelSite
       - DB_USER=postgres
       - DB_PASSWORD=2005vino2024
+      - JWT_SECRET=your-super-secret-jwt-key-here-2024
 
     
   frontend:
