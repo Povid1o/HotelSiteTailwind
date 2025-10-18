@@ -1,3 +1,4 @@
+
 # ---------- build ----------
 FROM node:18-alpine AS build
 WORKDIR /app
@@ -10,7 +11,6 @@ RUN if [ -f package-lock.json ]; then npm ci; else npm i --package-lock-only && 
 COPY . .
 
 # URL API прилетает на этапе сборки
-# Оставляем пустым - пути в API уже содержат 'api/...'
 ARG REACT_APP_API_URL=
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 
@@ -20,8 +20,8 @@ RUN npm run build
 # ---------- serve ----------
 FROM nginx:alpine
 
-# Копируем кастомный nginx конфиг
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# SPA fallback: любые пути -> /index.html
+RUN sed -i 's|try_files \$uri \$uri/ =404;|try_files \$uri \$uri/ /index.html;|' /etc/nginx/conf.d/default.conf
 
 # собранные файлы
 COPY --from=build /app/build/ /usr/share/nginx/html/
