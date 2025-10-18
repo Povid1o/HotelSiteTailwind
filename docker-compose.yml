@@ -1,0 +1,79 @@
+version: "3.9"
+
+networks:
+  appnet:
+
+volumes:
+  pgdata:
+  uploads:
+  caddy_data:
+  caddy_config:
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: HotelSite
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 2005vino2024
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks: [appnet]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d HotelSite"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    image: ghcr.io/povid1o/hotelsitetailwind-backend:latest
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_NAME: HotelSite
+      DB_USER: postgres
+      DB_PASSWORD: 2005vino2024
+      NODE_ENV: "production"
+      PORT: "8000"
+      SECRET_KEY: hotel2025
+      # Если хочешь оставить sync в деве:
+      # DB_SYNC: "false"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - uploads:/app/static
+    networks: [appnet]
+    expose:
+      - "8000"
+    # Если у тебя миграции через sequelize-cli:
+    # command: sh -c "npm run migrate || true; node index.js"
+
+  frontend:
+    image: ghcr.io/povid1o/hotelsitetailwind-frontend:latest
+    restart: unless-stopped
+    environment:
+      REACT_APP_API_URL: ""
+      CHOKIDAR_USEPOLLING: "true"
+      WDS_SOCKET_PORT: "0"
+      CI: "false"
+    networks: [appnet]
+    expose:
+      - "80"
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+      - uploads:/var/www/static:ro
+    depends_on:
+      - frontend
+      - backend
+    networks: [appnet]
