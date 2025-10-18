@@ -1,0 +1,36 @@
+{
+    email tati8877@yandex.ru
+}
+
+www.xn--80adsuhsg7e.xn--p1ai {
+    redir https://xn--80adsuhsg7e.xn--p1ai{uri} permanent
+}
+
+xn--80adsuhsg7e.xn--p1ai {
+    encode zstd gzip
+
+    # API > backend:8000
+    @api path /api*
+    handle @api {
+        reverse_proxy backend:8000
+    }
+
+    # Загруженные файлы (если нужно отдавать напрямую из volume)
+    @static path /static*
+    handle @static {
+        root * /var/www/static
+        file_server
+    }
+
+    # Фронтенд > nginx внутри контейнера frontend:80
+    handle {
+        reverse_proxy frontend:80
+    }
+
+    # SPA fallback: 404 > index.html (роутинг на фронте)
+    handle_errors {
+        @notFound expression {http.error.status_code} == 404
+        rewrite @notFound /index.html
+        reverse_proxy frontend:80
+    }
+}
