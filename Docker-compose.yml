@@ -51,7 +51,7 @@ services:
       context: ./hotel-project
       dockerfile: Dockerfile
       args:
-        REACT_APP_API_URL: /api  # Frontend будет делать запросы к /api, nginx проксирует на backend
+        REACT_APP_API_URL: ""  # Frontend будет делать запросы к /api, nginx проксирует на backend
     ports:
       - "3000:80"  # Nginx слушает порт 80 внутри контейнера
     depends_on:

@@ -5,6 +5,10 @@ import axios from "axios"
 // Локально: REACT_APP_API_URL = undefined → baseURL = 'http://localhost:5001'
 export const API_BASE = (process.env.REACT_APP_API_URL !== undefined ? process.env.REACT_APP_API_URL : 'http://localhost:5001').replace(/\/+$/, '')
 
+// Debug: Log API_BASE value
+console.log('🔧 API_BASE:', API_BASE);
+console.log('🔧 process.env.REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
+
 const $host = axios.create({
   baseURL: API_BASE
 })
