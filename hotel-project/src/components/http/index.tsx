@@ -1,7 +1,9 @@
 import axios from "axios"
 
 // Sanitize API base to avoid trailing slashes
-export const API_BASE = (process.env.REACT_APP_API_URL || 'http://localhost:5001').replace(/\/+$/, '')
+// В Docker: REACT_APP_API_URL = '' (пустая строка) → baseURL = ''
+// Локально: REACT_APP_API_URL = undefined → baseURL = 'http://localhost:5001'
+export const API_BASE = (process.env.REACT_APP_API_URL !== undefined ? process.env.REACT_APP_API_URL : 'http://localhost:5001').replace(/\/+$/, '')
 
 const $host = axios.create({
   baseURL: API_BASE
