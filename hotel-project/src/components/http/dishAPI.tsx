@@ -140,6 +140,11 @@ export const createDish = async (categoryName: string, dishData: any) => {
         const url = await uploadFile(img, 'dishes');
         images.push({ url, order: images.length });
       } else if (typeof img === 'string' && img) {
+        // ✅ ФИЛЬТРУЕМ blob URLs! Они не работают на других устройствах
+        if (img.startsWith('blob:')) {
+          console.warn('⚠️ dishAPI: Skipping blob URL (not valid for other devices):', img);
+          continue; // Пропускаем blob URLs
+        }
         images.push({ url: img, order: images.length });
       }
     }
@@ -191,6 +196,11 @@ export const updateDish = async (categoryName: string, dishId: number, dishData:
             throw error; // Прерываем процесс при ошибке загрузки
           }
         } else if (typeof img === 'string' && img) {
+          // ✅ ФИЛЬТРУЕМ blob URLs! Они не работают на других устройствах
+          if (img.startsWith('blob:')) {
+            console.warn('⚠️ dishAPI: Skipping blob URL (not valid for other devices):', img);
+            continue; // Пропускаем blob URLs
+          }
           // Уже загруженный URL
           images.push({ url: img, order: images.length });
           console.log(`Using existing image: ${img}`);
@@ -208,9 +218,17 @@ export const updateDish = async (categoryName: string, dishId: number, dishData:
       weight: dishData.weight ?? '',
       price: Number.isFinite(priceNum) ? priceNum : 0,
       nutrients: dishData.nutrients ?? null,
-      is_active: dishData.is_active ?? true,
-      images
+      is_active: dishData.is_active ?? true
     };
+
+    // ⚠️ КРИТИЧНО: Отправляем images ТОЛЬКО если есть валидные изображения после фильтрации
+    if (dishData.images !== undefined) {
+      if (images.length > 0) {
+        payload.images = images;
+      } else {
+        console.warn('⚠️ All dish images were blob URLs and filtered out. NOT sending images field to preserve existing photos in DB.');
+      }
+    }
 
     console.log(`Updating dish ${dishId} with payload:`, payload);
     const { data } = await $authHost.put(`api/dishes/${dishId}`, payload);

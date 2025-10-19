@@ -35,15 +35,35 @@ const normalizeImages = async (images: CreateUpdateEventDto['images']): Promise<
       url = await uploadIfFile(item);
       alt_text = item.name;
     } else if (typeof item === 'string') {
+      // ✅ ФИЛЬТРУЕМ blob URLs! Они не работают на других устройствах
+      if (item.startsWith('blob:')) {
+        console.warn('⚠️ Skipping blob URL (not valid for other devices):', item);
+        continue; // Пропускаем blob URLs
+      }
       url = item;
     } else if (item && typeof item === 'object') {
-      if (item.url) url = item.url;
+      if (item.url) {
+        // ✅ ФИЛЬТРУЕМ blob URLs!
+        if (typeof item.url === 'string' && item.url.startsWith('blob:')) {
+          console.warn('⚠️ Skipping blob URL from object (not valid for other devices):', item.url);
+          continue;
+        }
+        url = item.url;
+      }
       if (!url && item.src instanceof File) url = await uploadIfFile(item.src);
-      if (!url && typeof item.src === 'string') url = item.src;
+      if (!url && typeof item.src === 'string') {
+        // ✅ ФИЛЬТРУЕМ blob URLs!
+        if (item.src.startsWith('blob:')) {
+          console.warn('⚠️ Skipping blob URL from object.src (not valid for other devices):', item.src);
+          continue;
+        }
+        url = item.src;
+      }
       alt_text = item.alt_text || item.alt;
     }
     if (url) out.push({ url, alt_text, order: typeof item?.order === 'number' ? item.order : i });
   }
+  console.log('📸 Events images to save:', out);
   return out;
 };
 
@@ -85,7 +105,15 @@ export const updateEvent = async (id: number, payload: CreateUpdateEventDto) => 
     description: payload.description,
     categoryId: payload.categoryId
   };
-  if (payload.images) body.images = await normalizeImages(payload.images);
+  // ⚠️ КРИТИЧНО: Отправляем images ТОЛЬКО если есть валидные изображения после фильтрации
+  if (payload.images) {
+    const normalized = await normalizeImages(payload.images);
+    if (normalized.length > 0) {
+      body.images = normalized;
+    } else {
+      console.warn('⚠️ All event images were blob URLs and filtered out. NOT sending images field to preserve existing photos in DB.');
+    }
+  }
   const { data } = await $authHost.put(`api/events/${id}`, body);
   return data;
 };

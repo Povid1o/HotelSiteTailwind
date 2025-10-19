@@ -111,26 +111,61 @@ export default class HotelStorageNew {
     if (frontendRoom.images !== undefined) {
       const imageUrls = await Promise.all(
         frontendRoom.images.map(async (img) => {
+          // Обработка File объектов
           if (img instanceof File) {
-            // Upload new file and return full URL
             return await uploadFile(img, 'rooms');
           }
           
+          // Обработка строковых URL
           if (typeof img === 'string') {
-            // If URL is full (starts with http), keep as is - backend will handle it
-            // If URL is relative, keep as is
-            return img;
+            // ✅ ФИЛЬТРУЕМ blob URLs! Они не работают на других устройствах
+            if (img.startsWith('blob:')) {
+              console.warn('⚠️ Skipping blob URL (not valid for other devices):', img);
+              return null; // Не сохраняем blob URLs
+            }
+            return img; // Сохраняем только реальные URL
           }
           
-          return '';
+          // Обработка объектов { src: File|string, alt: string, file?: File }
+          if (img && typeof img === 'object') {
+            const imgObj = img as any;
+            // Если есть file property и это File
+            if (imgObj.file instanceof File) {
+              return await uploadFile(imgObj.file, 'rooms');
+            }
+            // Если src это строка
+            if (typeof imgObj.src === 'string') {
+              // ✅ ФИЛЬТРУЕМ blob URLs!
+              if (imgObj.src.startsWith('blob:')) {
+                console.warn('⚠️ Skipping blob URL from object (not valid for other devices):', imgObj.src);
+                return null;
+              }
+              return imgObj.src;
+            }
+          }
+          
+          return null;
         })
       );
       
-      backendData.images = imageUrls.map((url, index) => ({
-        url,
-        alt_text: '',
-        order: index
-      }));
+      // ✅ Удаляем null значения (отфильтрованные blob URLs и пустые строки)
+      const validUrls = imageUrls.filter(url => url !== null && url !== '');
+      
+      console.log('📸 Images to save:', validUrls);
+      console.log('📸 Original images count:', frontendRoom.images.length, '| Valid after filtering:', validUrls.length);
+      
+      // ⚠️ КРИТИЧНО: Отправляем images ТОЛЬКО если есть валидные URL
+      // Если все URL были blob: и отфильтровались, НЕ отправляем images вообще,
+      // чтобы backend НЕ УДАЛИЛ существующие фото из БД
+      if (validUrls.length > 0) {
+        backendData.images = validUrls.map((url, index) => ({
+          url,
+          alt_text: '',
+          order: index
+        }));
+      } else {
+        console.warn('⚠️ All images were blob URLs and filtered out. NOT sending images field to preserve existing photos in DB.');
+      }
     }
     
     if (frontendRoom.properties !== undefined) {
@@ -199,18 +234,26 @@ export default class HotelStorageNew {
     const room = this._rooms.find(r => r.id === roomId);
     if (room) {
       const oldData = { ...room };
-      Object.assign(room, updatedData);
       
       try {
+        // Отправляем данные на backend
         const backendData = await this.transformRoomToBackend(updatedData);
         const response = await updateRoom(roomId, backendData);
-        // Update with fresh data from backend
+        
+        // ✅ КРИТИЧНО: Обновляем данные из backend (с реальными URL, без blob://)
         const updatedRoom = this.transformRoomFromBackend(response);
         Object.assign(room, updatedRoom);
+        
+        // ✅ Принудительно обновляем массив для реактивности MobX
+        // Это гарантирует, что все компоненты-наблюдатели увидят изменения
+        this._rooms = [...this._rooms];
+        
+        console.log('✅ Room updated successfully with real URLs:', updatedRoom);
       } catch (error) {
-        console.error('Error updating room:', error);
+        console.error('❌ Error updating room:', error);
         // Откатываем изменения
         Object.assign(room, oldData);
+        throw error; // Пробрасываем ошибку для обработки в UI
       }
     }
   };

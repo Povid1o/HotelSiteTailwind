@@ -265,18 +265,37 @@ const PagesPhotoSelector = ({ photos, header, ButtonCard, withSlider = false, on
         console.log('PagesPhotoSelector: photos saved', updatedPhotos);
         setCurrentPhotos(updatedPhotos);
         if (onPhotosChange) {
-            const normalized = updatedPhotos.map((p, i) => {
-                if (p instanceof File) return { src: p, alt: p.name };
-                if (typeof p === 'string') return { src: p, alt: `Image ${i + 1}` };
-                if (p && typeof p === 'object' && 'src' in p) {
-                    // Если src - это File из photo.file, используем его
-                    const actualSrc = (p.file instanceof File) ? p.file : p.src;
-                    return { src: actualSrc, alt: p.alt || `Image ${i + 1}` };
-                }
-                return { src: '', alt: `Image ${i + 1}` };
-            });
+            const normalized = updatedPhotos
+                .map((p, i) => {
+                    if (p instanceof File) {
+                        return { src: p, alt: p.name };
+                    }
+                    if (typeof p === 'string') {
+                        // Фильтруем blob URLs
+                        if (p.startsWith('blob:')) {
+                            console.warn('⚠️ PagesPhotoSelector: Skipping blob URL before sending:', p);
+                            return null;
+                        }
+                        return { src: p, alt: `Image ${i + 1}` };
+                    }
+                    if (p && typeof p === 'object' && 'src' in p) {
+                        // Если src - это File из photo.file, используем его
+                        const actualSrc = (p.file instanceof File) ? p.file : p.src;
+                        
+                        // Фильтруем blob URLs в строковом src
+                        if (typeof actualSrc === 'string' && actualSrc.startsWith('blob:')) {
+                            console.warn('⚠️ PagesPhotoSelector: Skipping blob URL in object.src before sending:', actualSrc);
+                            return null;
+                        }
+                        
+                        return { src: actualSrc, alt: p.alt || `Image ${i + 1}` };
+                    }
+                    return null; // Невалидные значения
+                })
+                .filter(item => item !== null && item.src !== ''); // Убираем null и пустые src
             
             console.log('📸 PagesPhotoSelector: calling onPhotosChange with normalized =', normalized);
+            console.log('📸 Photos count: before =', updatedPhotos.length, 'after filtering =', normalized.length);
             onPhotosChange(normalized);
         }
     }, [onPhotosChange]);

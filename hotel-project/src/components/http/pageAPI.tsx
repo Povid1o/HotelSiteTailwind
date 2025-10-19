@@ -77,7 +77,11 @@ export const updatePageContent = async (pageId: number, content: any) => {
     if (Array.isArray(obj)) {
       const res = [] as any[]
       for (const item of obj) {
-        res.push(await deepProcess(item, section))
+        const processed = await deepProcess(item, section);
+        // ✅ Фильтруем null значения (отфильтрованные blob URLs)
+        if (processed !== null && processed !== undefined) {
+          res.push(processed);
+        }
       }
       return res
     }
@@ -91,6 +95,12 @@ export const updatePageContent = async (pageId: number, content: any) => {
         return { ...obj, src: uploadedUrl };
       }
       
+      // ✅ ФИЛЬТРУЕМ blob URLs в объектах { src: "blob:..." }
+      if (obj.src && typeof obj.src === 'string' && obj.src.startsWith('blob:')) {
+        console.warn('⚠️ pageAPI: Skipping blob URL in object.src (not valid for other devices):', obj.src);
+        return null; // Пропускаем объекты с blob URLs
+      }
+      
       // Рекурсивно обрабатываем все ключи объекта
       const out: any = {}
       for (const k of Object.keys(obj)) {
@@ -98,6 +108,12 @@ export const updatePageContent = async (pageId: number, content: any) => {
         out[k] = await deepProcess(v, section)
       }
       return out
+    }
+    
+    // ✅ ФИЛЬТРУЕМ blob URLs! Они не работают на других устройствах
+    if (typeof obj === 'string' && obj.startsWith('blob:')) {
+      console.warn('⚠️ pageAPI: Skipping blob URL (not valid for other devices):', obj);
+      return null; // Пропускаем blob URLs
     }
     
     return obj

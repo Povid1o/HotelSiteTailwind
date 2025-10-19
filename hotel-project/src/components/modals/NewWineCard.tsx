@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import PhotoSelector from '../text_inputs/PhotoSelector';
 import PriceList from '../text_inputs/PriceList';
 import DescriptionInput from '../text_inputs/DescriptionInput';
@@ -28,20 +28,87 @@ const NewDishCard = ({
   const [localTemperature, setLocalTemperature] = useState(temperature);
   const [localYear, setLocalYear] = useState(year);
 
-  // Мемоизированная функция для поднятия обновленных данных
+  // ✅ КРИТИЧНО: Синхронизируем локальное состояние с props после обновлений из backend
+  useEffect(() => {
+    console.log('NewWineCard: syncing photos from props', photos);
+    setLocalPhotos(photos);
+  }, [photos]);
+
+  useEffect(() => {
+    setLocalName(dishName);
+  }, [dishName]);
+
+  useEffect(() => {
+    setLocalDescription(description);
+  }, [description]);
+
+  useEffect(() => {
+    setLocalSugar(sugar);
+  }, [sugar]);
+
+  useEffect(() => {
+    setLocalPrice(price);
+  }, [price]);
+
+  useEffect(() => {
+    setLocalAlcohol(alcohol);
+  }, [alcohol]);
+
+  useEffect(() => {
+    setLocalTemperature(temperature);
+  }, [temperature]);
+
+  useEffect(() => {
+    setLocalYear(year);
+  }, [year]);
+
+  // ✅ Debounce timer для батчинга изменений
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const pendingChangesRef = useRef<any>({});
+
+  // Очистка таймера при размонтировании
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
+
+  // ✅ Мемоизированная функция для батчинга изменений
   const updateDishData = useCallback((updatedData) => {
-    const newData = {
-      name: localName,
-      images: localPhotos,
-      description: localDescription,
-      sugar: localSugar,
-      price: localPrice,
-      alcohol: localAlcohol,
-      temperature: localTemperature,
-      year: localYear,
+    // Накапливаем изменения
+    pendingChangesRef.current = {
+      ...pendingChangesRef.current,
       ...updatedData
     };
-    onDataChange(newData);
+
+    // Очищаем предыдущий таймер
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Устанавливаем новый таймер (500ms debounce)
+    debounceTimerRef.current = setTimeout(() => {
+      const newData = {
+        name: localName,
+        images: localPhotos,
+        description: localDescription,
+        sugar: localSugar,
+        price: localPrice,
+        alcohol: localAlcohol,
+        temperature: localTemperature,
+        year: localYear,
+        ...pendingChangesRef.current // ✅ Применяем накопленные изменения
+      };
+      
+      console.log('🔄 NewWineCard: Sending batched changes:', Object.keys(pendingChangesRef.current));
+      onDataChange(newData);
+      
+      // Очищаем накопленные изменения
+      pendingChangesRef.current = {};
+      debounceTimerRef.current = null;
+    }, 500); // ✅ 500ms задержка для батчинга
   }, [localName, localPhotos, localDescription, localSugar, localPrice, localAlcohol, localTemperature, localYear, onDataChange]);
 
   // Мемоизированные обработчики для каждого поля

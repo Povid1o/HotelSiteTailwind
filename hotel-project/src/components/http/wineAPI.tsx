@@ -82,6 +82,11 @@ export const createWine = async (wineType: string, sweetness: string, wineData: 
         const { data: up } = await $authHost.post('api/upload', form, { headers: { 'Content-Type': 'multipart/form-data' } })
         images.push({ url: up.url, order: images.length })
       } else if (typeof img === 'string' && img) {
+        // ✅ ФИЛЬТРУЕМ blob URLs! Они не работают на других устройствах
+        if (img.startsWith('blob:')) {
+          console.warn('⚠️ wineAPI: Skipping blob URL (not valid for other devices):', img);
+          continue; // Пропускаем blob URLs
+        }
         images.push({ url: img, order: images.length })
       }
     }
@@ -119,6 +124,11 @@ export const updateWine = async (wineId: number, wineData: any, contextTypeName?
         const { data: up } = await $authHost.post('api/upload', form, { headers: { 'Content-Type': 'multipart/form-data' } })
         images.push({ url: up.url, order: images.length })
       } else if (typeof img === 'string' && img) {
+        // ✅ ФИЛЬТРУЕМ blob URLs! Они не работают на других устройствах
+        if (img.startsWith('blob:')) {
+          console.warn('⚠️ wineAPI: Skipping blob URL (not valid for other devices):', img);
+          continue; // Пропускаем blob URLs
+        }
         images.push({ url: img, order: images.length })
       }
     }
@@ -150,7 +160,15 @@ export const updateWine = async (wineId: number, wineData: any, contextTypeName?
     throw new Error('Missing wine type or sweetness for update')
   }
 
-  payload.images = images
+  // ⚠️ КРИТИЧНО: Отправляем images ТОЛЬКО если есть валидные изображения после фильтрации
+  if (wineData.images !== undefined) {
+    if (images.length > 0) {
+      payload.images = images;
+    } else {
+      console.warn('⚠️ All wine images were blob URLs and filtered out. NOT sending images field to preserve existing photos in DB.');
+    }
+  }
+  
   if (payload.price !== undefined) payload.price = Number(payload.price) || 0
 
   const { data } = await $authHost.put(`api/wines/${wineId}`, payload)

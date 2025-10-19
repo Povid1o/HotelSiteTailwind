@@ -266,15 +266,40 @@ const PhotoSelector = ({ photos, header, ButtonCard, withSlider = false, onPhoto
         console.log('PhotoSelector: photos saved', updatedPhotos);
         setCurrentPhotos(updatedPhotos);
         if (onPhotosChange) {
-        const processedPhotos = updatedPhotos.map(photo => {
-            // Если фото несет File — отдаем File (backend его загрузит)
-            if (photo && photo.file instanceof File) return photo.file;
-            // Если строка (URL) — отдаем строку
-            if (typeof photo === 'string') return photo;
-            // Если объект — отдаем src как строку или пустую строку
-            return (photo && typeof photo.src === 'string') ? photo.src : '';
-        });
+            const processedPhotos = updatedPhotos
+                .map(photo => {
+                    // Если фото несет File — отдаем File (backend его загрузит)
+                    if (photo && photo.file instanceof File) {
+                        return photo.file;
+                    }
+                    // Если строка (URL) — проверяем, что это не blob
+                    if (typeof photo === 'string') {
+                        if (photo.startsWith('blob:')) {
+                            console.warn('⚠️ PhotoSelector: Skipping blob URL before sending:', photo);
+                            return null; // Фильтруем blob URLs
+                        }
+                        return photo;
+                    }
+                    // Если объект — обрабатываем src
+                    if (photo && typeof photo === 'object') {
+                        // Приоритет: file > src
+                        if (photo.file instanceof File) {
+                            return photo.file;
+                        }
+                        if (typeof photo.src === 'string') {
+                            if (photo.src.startsWith('blob:')) {
+                                console.warn('⚠️ PhotoSelector: Skipping blob URL in object.src before sending:', photo.src);
+                                return null; // Фильтруем blob URLs
+                            }
+                            return photo.src;
+                        }
+                    }
+                    return null; // Пропускаем невалидные значения
+                })
+                .filter(photo => photo !== null && photo !== ''); // Убираем null и пустые строки
+            
             console.log('PhotoSelector: calling onPhotosChange with', processedPhotos);
+            console.log('📸 Photos count: before =', updatedPhotos.length, 'after filtering =', processedPhotos.length);
             onPhotosChange(processedPhotos);
         }
     }, [onPhotosChange]);

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import PhotoSelector from '../text_inputs/PhotoSelector';
 import PriceList from '../text_inputs/PriceList';
 import DescriptionInput from '../text_inputs/DescriptionInput';
@@ -32,23 +32,94 @@ const NewRoomCard = ({
   const [localCheckOut, setLocalCheckOut] = useState(checkOut);
   const [localNotes, setLocalNotes] = useState(notes);
 
-  // Мемоизированная функция для поднятия обновленных данных
+  // ✅ КРИТИЧНО: Синхронизируем локальное состояние с props после обновлений из backend
+  useEffect(() => {
+    console.log('NewRoomCard: syncing photos from props', photos);
+    setLocalPhotos(photos);
+  }, [photos]);
+
+  useEffect(() => {
+    setLocalName(roomName);
+  }, [roomName]);
+
+  useEffect(() => {
+    setLocalProperties(properties);
+  }, [properties]);
+
+  useEffect(() => {
+    setLocalConviniences(conviniences);
+  }, [conviniences]);
+
+  useEffect(() => {
+    setLocalDescription(description);
+  }, [description]);
+
+  useEffect(() => {
+    setLocalPrices(prices);
+  }, [prices]);
+
+  useEffect(() => {
+    setLocalCheckIn(checkIn);
+  }, [checkIn]);
+
+  useEffect(() => {
+    setLocalCheckOut(checkOut);
+  }, [checkOut]);
+
+  useEffect(() => {
+    setLocalNotes(notes);
+  }, [notes]);
+
+  // ✅ Debounce timer для батчинга изменений
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const pendingChangesRef = useRef<any>({});
+
+  // Очистка таймера при размонтировании
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
+
+  // ✅ Мемоизированная функция для батчинга изменений
   const updateRoomData = useCallback((updatedData) => {
-    const newData = {
-      name: localName,
-      images: localPhotos,
-      properties: localProperties,
-      conviniences: localConviniences,
-      description: localDescription,
-      price: localPrices,
-      checkStandart: {
-        checkIn: localCheckIn,
-        checkOut: localCheckOut
-      },
-      notes: localNotes,
+    // Накапливаем изменения
+    pendingChangesRef.current = {
+      ...pendingChangesRef.current,
       ...updatedData
     };
-    onDataChange(newData);
+
+    // Очищаем предыдущий таймер
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Устанавливаем новый таймер (500ms debounce)
+    debounceTimerRef.current = setTimeout(() => {
+      const newData = {
+        name: localName,
+        images: localPhotos,
+        properties: localProperties,
+        conviniences: localConviniences,
+        description: localDescription,
+        price: localPrices,
+        checkStandart: {
+          checkIn: localCheckIn,
+          checkOut: localCheckOut
+        },
+        notes: localNotes,
+        ...pendingChangesRef.current // ✅ Применяем накопленные изменения
+      };
+      
+      console.log('🔄 NewRoomCard: Sending batched changes:', Object.keys(pendingChangesRef.current));
+      onDataChange(newData);
+      
+      // Очищаем накопленные изменения
+      pendingChangesRef.current = {};
+      debounceTimerRef.current = null;
+    }, 500); // ✅ 500ms задержка для батчинга
   }, [localName, localPhotos, localProperties, localConviniences, localDescription, localPrices, localCheckIn, localCheckOut, localNotes, onDataChange]);
 
   // Мемоизированные обработчики для каждого поля
