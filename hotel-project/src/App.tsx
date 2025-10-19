@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useContext, useState, useEffect } from "react";
-import { createHashRouter, RouterProvider, ScrollRestoration, Outlet } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, ScrollRestoration, Outlet } from 'react-router-dom';
 import { observer } from "mobx-react-lite";
 import { Context } from "./index";
 import LoadingScreen from './components/LoadingScreen';
@@ -23,7 +23,7 @@ const NotFound = lazy(() => import('./components/NotFoundPage.tsx'))  // Доб�
 
 
 
-const publicrouter = createHashRouter([
+const publicrouter = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
@@ -76,7 +76,7 @@ const publicrouter = createHashRouter([
   }
 ]);
 
-const hiderouter = createHashRouter([
+const hiderouter = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
