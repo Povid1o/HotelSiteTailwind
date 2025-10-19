@@ -194,42 +194,39 @@ const App= observer(() => {
 
       return (
           <>
-            {!user.isAuth ?
-                (
-                    <RouterProvider router={hiderouter}/>
-                )
-                :
-                (
-                    <div  style={{ position: 'relative', minHeight: '100vh' }}>
-                      <section
-                          style={{
-                            position: 'fixed',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            opacity: loading ? 1 : 0,
-                            visibility: loading ? 'visible' : 'hidden',
-                            transition: 'opacity 1s ease-out, visibility 1s ease-out',
-                            zIndex: 1000,
-                          }}
-                      >
-                        <LoadingScreen />
-                      </section>
-                      <section
-                          style={{
-                            opacity: loading ? 0 : 1,
-                            transition: 'opacity 1s ease-in',
-                            visibility: loading ? 'hidden' : 'visible',
-                          }}
-                      >
-                        {!user.isAuth && <RouterProvider router={publicrouter}/>}
-                        {user.isAuth && <RouterProvider router={hiderouter}/>}
-
-                      </section>
-                      {showModal && <ModalWindow onClose={handleCloseModal}></ModalWindow>}
-                    </div>
-                )}
+            <div style={{ position: 'relative', minHeight: '100vh' }}>
+              {/* Loading screen - показываем ДЛЯ ВСЕХ во время загрузки контента */}
+              <section
+                  style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    opacity: loading ? 1 : 0,
+                    visibility: loading ? 'visible' : 'hidden',
+                    transition: 'opacity 1s ease-out, visibility 1s ease-out',
+                    zIndex: 1000,
+                  }}
+              >
+                <LoadingScreen />
+              </section>
+              
+              {/* Main content */}
+              <section
+                  style={{
+                    opacity: loading ? 0 : 1,
+                    transition: 'opacity 1s ease-in',
+                    visibility: loading ? 'hidden' : 'visible',
+                  }}
+              >
+                {/* Правильная логика роутеров */}
+                <RouterProvider router={user.isAuth ? hiderouter : publicrouter} />
+              </section>
+              
+              {/* Modal - показываем только для авторизованных */}
+              {user.isAuth && showModal && <ModalWindow onClose={handleCloseModal} />}
+            </div>
           </>
       );
     }
