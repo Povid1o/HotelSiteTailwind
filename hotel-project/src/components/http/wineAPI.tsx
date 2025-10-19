@@ -35,6 +35,19 @@ const createFormDataWithFiles = (data: any) => {
 export const fetchWines = async () => {
   const { data } = await $host.get('api/wines/tree');
   // Map image urls to absolute
+  const normalizeImageSrc = (src: string): string | null => {
+    if (!src) return null;
+    if (src.startsWith('blob:')) return null;
+    if (/^https?:\/\//i.test(src)) return src; // already absolute
+    // Known absolute-from-backend prefixes served by nginx/backend
+    if (src.startsWith('/static/') || src.startsWith('/uploads/')) return `${API_BASE}${src}`;
+    if (src.startsWith('static/')) return `${API_BASE}/${src}`;
+    // Bare relative segment like "wines/abc.jpg" → serve from /static/<segment>
+    if (/^(wines|rooms|pages|dishes|videos|fallbacks)\//.test(src)) return `${API_BASE}/static/${src}`;
+    // Fallback: prefix with API_BASE
+    return `${API_BASE}/${src.replace(/^\/+/, '')}`;
+  };
+
   const mapped = (Array.isArray(data) ? data : []).map((t: any) => ({
     type: t.name,
     assortment: (t.assortment || []).map((s: any) => ({
@@ -48,12 +61,7 @@ export const fetchWines = async () => {
         temperature: w.temperature,
         price: typeof w.price === 'string' ? Number(w.price) : (w.price ?? 0),
         description: (w.description || []).map((d: any) => d.description_text || d),
-        images: (w.images || []).map((img: any) => {
-          const src = img?.url || ''
-          if (!src) return null
-          if (src.startsWith('/static/')) return `${API_BASE}${src}`
-          return src
-        }).filter(Boolean)
+        images: (w.images || []).map((img: any) => normalizeImageSrc(img?.url || '')).filter(Boolean)
       }))
     }))
   }))

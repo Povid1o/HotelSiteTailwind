@@ -1,10 +1,10 @@
 // Получаем базовый URL API из переменной окружения
-const API_BASE = (process.env.REACT_APP_API_URL || 'http://localhost:5001').replace(/\/+$/, '');
+const API_BASE = (process.env.REACT_APP_API_URL !== undefined ? process.env.REACT_APP_API_URL : 'http://localhost:5001').replace(/\/+$/, '');
 
 // Base URL for static files (images, videos, etc.)
-// В hurricane: статические файлы обслуживаются через nginx на порту 3000
+// В Docker: используем ОТНОСИТЕЛЬНЫЕ пути (nginx проксирует /static/ на backend)
 // Локально: статические файлы обслуживаются через backend на порту 5001
-const STATIC_BASE = process.env.REACT_APP_API_URL !== undefined ? 'http://localhost:3000' : 'http://localhost:5001';
+const STATIC_BASE = process.env.REACT_APP_API_URL !== undefined ? '' : 'http://localhost:5001';
 
 /**
  * Преобразует относительный путь к медиа-файлу в полный URL

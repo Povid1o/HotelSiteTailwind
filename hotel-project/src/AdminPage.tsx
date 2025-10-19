@@ -23,6 +23,7 @@ import PhotoSelector from './components/text_inputs/PhotoSelector';
 import { Tabs } from "flowbite-react";
 import { Table } from "flowbite-react";
 import "./AdminPage.css";
+import AdminStatusBadge from './components/AdminStatusBadge';
 // Нужно
 // (можно будет удалить, когда вставим бэк)
 import Bottle from './components/assets/wine-bottle.png';
@@ -333,6 +334,7 @@ const AdminPage = observer(() =>  {
 
   return (
     <div className="h-screen flex flex-col bg-no-repeat bg-cover">
+      <AdminStatusBadge />
       <Navbar />
       <div className="container m-auto p-4 mt-auto md:p-6 lg:p-12">
         <div className="flex justify-between items-center mb-4">
