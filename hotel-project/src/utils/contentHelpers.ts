@@ -1,6 +1,11 @@
 // Получаем базовый URL API из переменной окружения
 const API_BASE = (process.env.REACT_APP_API_URL || 'http://localhost:5001').replace(/\/+$/, '');
 
+// Base URL for static files (images, videos, etc.)
+// В hurricane: статические файлы обслуживаются через nginx на порту 3000
+// Локально: статические файлы обслуживаются через backend на порту 5001
+const STATIC_BASE = process.env.REACT_APP_API_URL !== undefined ? 'http://localhost:3000' : 'http://localhost:5001';
+
 /**
  * Преобразует относительный путь к медиа-файлу в полный URL
  * Если путь уже является полным URL (начинается с http:// или https://), возвращает как есть
@@ -17,9 +22,9 @@ export const getMediaUrl = (path: string | File | null | undefined): string => {
     return path;
   }
   
-  // Если это относительный путь к static, добавляем базовый URL
+  // Если это относительный путь к static, добавляем базовый URL для статических файлов
   if (path.startsWith('/static/')) {
-    return `${API_BASE}${path}`;
+    return `${STATIC_BASE}${path}`;
   }
   
   // Для всех остальных случаев возвращаем как есть

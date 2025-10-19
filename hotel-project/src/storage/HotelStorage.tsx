@@ -8,6 +8,7 @@ import {
   fetchOneRoom,
   uploadFile
 } from '../components/http/hotelAPI';
+import { STATIC_BASE } from '../components/http';
 import { API_BASE } from '../components/http/index';
 
 interface RoomPrice {
@@ -72,8 +73,8 @@ export default class HotelStorageNew {
       if (url.startsWith('http://') || url.startsWith('https://')) {
         return url;
       }
-      // If URL is relative, prepend API_BASE
-      return `${API_BASE}${url.startsWith('/') ? '' : '/'}${url}`;
+      // If URL is relative, prepend STATIC_BASE
+      return `${STATIC_BASE}${url.startsWith('/') ? '' : '/'}${url}`;
     };
 
     return {

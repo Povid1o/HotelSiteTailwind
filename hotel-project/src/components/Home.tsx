@@ -22,7 +22,7 @@ import './styles/base.css';
 
 import { standardRoomEmergency, standardPlusRoomEmergency, homeSectionsEmergency, homeServicesEmergency, homeGalleryEmergency } from '../emergencyContent/text';
 import { getContentOrEmergency } from '../utils/contentHelpers';
-import { API_BASE } from './http';
+import { API_BASE, STATIC_BASE } from './http';
 
 const GaleryCard = () => {
     return(
@@ -126,7 +126,7 @@ const Home = observer(({nav}: HomeProps) => {
                 return image;
             }
             // Relative path from backend (starts with /)
-            return `${API_BASE}${image}`;
+            return `${STATIC_BASE}${image}`;
         }
         return '';
     };

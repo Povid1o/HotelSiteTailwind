@@ -45,6 +45,8 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=2005vino2024
       - JWT_SECRET=your-super-secret-jwt-key-here-2024
+    volumes:
+      - backend_static:/app/static
 
     
   frontend:
@@ -61,3 +63,4 @@ services:
 
 volumes:
   postgres_data:
+  backend_static:

@@ -1,4 +1,4 @@
-import { $authHost, $host, API_BASE } from "./index";
+import { $authHost, $host, API_BASE, STATIC_BASE } from "./index";
 
 // Утилита для создания FormData с файлами
 const createFormDataWithFiles = (data: any) => {
@@ -81,7 +81,7 @@ export const fetchDishes = async () => {
           if (!src) return null
           if (src.startsWith('/static/')) {
             const cleanPath = src.startsWith('/') ? src : `/${src}`
-            const fullUrl = `${API_BASE}${cleanPath}`
+            const fullUrl = `${STATIC_BASE}${cleanPath}`
             console.log(`Converting image URL: ${src} -> ${fullUrl}`)
             return fullUrl
           }

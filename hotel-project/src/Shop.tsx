@@ -19,7 +19,7 @@ import CircularPagination from "./components/CircularPagination";
 import "./components/styles/shop.css"
 import { winesEmergency } from './emergencyContent/text';
 import { getArrayOrEmergency } from './utils/contentHelpers';
-import { API_BASE } from './components/http';
+import { API_BASE, STATIC_BASE } from './components/http';
 
 interface Wine {
   id: number;
@@ -82,7 +82,7 @@ const Shop = observer(() => {
         return image;
       }
       // Relative path from backend (starts with /)
-      return `${API_BASE}${image}`;
+      return `${STATIC_BASE}${image}`;
     }
     return '';
   };

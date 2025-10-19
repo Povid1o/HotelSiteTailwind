@@ -10,7 +10,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { Context } from './index';
 import { observer } from 'mobx-react-lite';
-import { API_BASE } from './components/http';
+import { API_BASE, STATIC_BASE } from './components/http';
 
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer";
@@ -179,7 +179,7 @@ const Vinery = observer(() => {
                 return image;
             }
             // Relative path from backend (starts with /)
-            const fullUrl = `${API_BASE}${image}`;
+            const fullUrl = `${STATIC_BASE}${image}`;
             console.log('🖼️ Vinery: Image URL (relative -> absolute):', fullUrl);
             return fullUrl;
         }

@@ -5,6 +5,11 @@ import axios from "axios"
 // Локально: REACT_APP_API_URL = undefined → baseURL = 'http://localhost:5001'
 export const API_BASE = (process.env.REACT_APP_API_URL !== undefined ? process.env.REACT_APP_API_URL : 'http://localhost:5001').replace(/\/+$/, '')
 
+// Base URL for static files (images, videos, etc.)
+// В Docker: статические файлы обслуживаются через nginx на порту 3000
+// Локально: статические файлы обслуживаются через backend на порту 5001
+export const STATIC_BASE = process.env.REACT_APP_API_URL !== undefined ? 'http://localhost:3000' : 'http://localhost:5001'
+
 // Debug: Log API_BASE value
 console.log('🔧 API_BASE:', API_BASE);
 console.log('🔧 process.env.REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
