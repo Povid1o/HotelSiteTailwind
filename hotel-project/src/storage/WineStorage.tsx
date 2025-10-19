@@ -108,8 +108,13 @@ export default class WineStorage {
           if (wine) {
             wine.id = response.id;
           }
-        }).catch(error => {
-          console.error('Error creating wine:', error);
+        }).catch((error: any) => {
+          if (error?.response?.status === 413) {
+            console.error('❌ File too large! Max size: 100MB');
+            alert('Файл слишком большой! Максимальный размер: 100 МБ. Попробуйте загрузить файл меньшего размера или сжать его.');
+          } else {
+            console.error('Error creating wine:', error);
+          }
           assortmentItem.wines = assortmentItem.wines.filter(w => w.id !== tempId);
         });
       }
@@ -152,8 +157,13 @@ export default class WineStorage {
           const oldData = { ...wine };
           Object.assign(wine, updatedData);
           
-          updateWine(wineId, updatedData, wineType, sweetness).catch(error => {
-            console.error('Error updating wine:', error);
+          updateWine(wineId, updatedData, wineType, sweetness).catch((error: any) => {
+            if (error?.response?.status === 413) {
+              console.error('❌ File too large! Max size: 100MB');
+              alert('Файл слишком большой! Максимальный размер: 100 МБ. Попробуйте загрузить файл меньшего размера или сжать его.');
+            } else {
+              console.error('Error updating wine:', error);
+            }
             Object.assign(wine, oldData);
           });
         }

@@ -33,7 +33,8 @@ export default class UserStorage {
     this._isAuth = false;
     this._user = {};
     localStorage.removeItem("isAuth");
-    localStorage.removeItem("user"); // Добавлено удаление информации о пользователе
+    localStorage.removeItem("user");
+    localStorage.removeItem("token"); // ✅ Удаляем токен при выходе
   }
 
   get isAuth(): boolean {

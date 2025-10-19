@@ -9,7 +9,8 @@ module.exports = function (req, res, next) {
         if (!token) {
             return res.status(401).json({message: "Не авторизован"})
         }
-        const decoded = jwt.verify(token, process.env.SECRET_KEY)
+        // ✅ КРИТИЧНО: Используем JWT_SECRET, как и в userController.js
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
         req.user = decoded
         next()
     } catch (e) {

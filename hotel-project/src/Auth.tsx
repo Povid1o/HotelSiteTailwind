@@ -1,12 +1,13 @@
 import React, { useContext, useState } from "react";
 import Navbar from "./components/Navbar";
 import { login, registration } from "./components/http/userAPI";
-import { useLocation, NavLink } from "react-router-dom";
+import { useLocation, NavLink, useNavigate } from "react-router-dom";
 import { Context } from "./index";
 
 const Auth = () => {
   const { user } = useContext(Context);
   const location = useLocation();
+  const navigate = useNavigate();
   const isLogin = location.pathname === "/login";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,6 +24,9 @@ const Auth = () => {
       }
       user.setUser(data);
       user.setIsAuth(true);
+      // ✅ Перенаправляем на админку после успешного логина
+      console.log('✅ Auth: Login successful, navigating to /admin');
+      navigate('/admin');
     } catch (error) {
       setError(error.response.data.message);
     }

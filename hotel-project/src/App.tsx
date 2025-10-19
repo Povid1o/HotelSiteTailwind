@@ -163,28 +163,28 @@ const App= observer(() => {
       const [loading, setLoading] = useState(true);
       const [showModal, setShowModal] = useState(false);
 
-      // Загружаем все данные и проверяем авторизацию при старте приложения
+      // Загружаем все данные при старте приложения
+      // ✅ НЕ вызываем checkAuth() автоматически - флаг isAuth уже установлен из localStorage
       useEffect(() => {
-        console.log('=== App: Загрузка данных при старте приложения + проверка авторизации ===');
+        console.log('=== App: Загрузка данных при старте приложения ===');
         let canceled = false;
         const bootstrap = async () => {
           if (!appCtx) {
             setLoading(false);
             return;
           }
-          const { user, dish, hotel, pageContent, wine, events } = appCtx;
+          const { dish, hotel, pageContent, wine, events } = appCtx;
           try {
-            const authPromise = typeof (user as any).checkAuth === 'function' ? (user as any).checkAuth() : Promise.resolve(true);
-            const dataPromise = Promise.all([
+            // Загружаем данные без проверки токена на backend
+            await Promise.all([
               dish.loadDishes().catch(err => console.error('Ошибка загрузки блюд:', err)),
               hotel.loadRooms().catch(err => console.error('Ошибка загрузки номеров:', err)),
               pageContent.loadPageContent().catch(err => console.error('Ошибка загрузки страниц:', err)),
               wine.loadWines().catch(err => console.error('Ошибка загрузки вин:', err)),
               events.refreshAll().catch(err => console.error('Ошибка загрузки мероприятий:', err))
             ]);
-            await Promise.all([authPromise, dataPromise]);
             if (!canceled) {
-              console.log('✅ Авторизация проверена и все данные загружены');
+              console.log('✅ Все данные загружены. Статус авторизации из localStorage:', user.isAuth);
               setLoading(false);
             }
           } catch (e) {

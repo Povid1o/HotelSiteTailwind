@@ -26,7 +26,6 @@ interface DishCategory {
 }
 
 
-
 export default class DishStorage {
   private _dishes: DishCategory[] = [];
   private _isLoading = false;
@@ -163,8 +162,13 @@ export default class DishStorage {
         }
         this._pendingCreates.delete(tempId);
         return response.id;
-      }).catch(error => {
-        console.error('Error creating dish:', error);
+      }).catch((error: any) => {
+        if (error?.response?.status === 413) {
+          console.error('❌ File too large! Max size: 100MB');
+          alert('Файл слишком большой! Максимальный размер: 100 МБ. Попробуйте загрузить файл меньшего размера или сжать его.');
+        } else {
+          console.error('Error creating dish:', error);
+        }
         // Убираем продукт в случае ошибки
         category.products = category.products.filter(p => p.id !== tempId);
         this._pendingCreates.delete(tempId);
@@ -222,8 +226,13 @@ export default class DishStorage {
             // Для реальных ID просто обновляем
             await updateDish(categoryName, productId, updatedData);
           }
-        } catch (error) {
-          console.error('Error updating dish:', error);
+        } catch (error: any) {
+          if (error?.response?.status === 413) {
+            console.error('❌ File too large! Max size: 100MB');
+            alert('Файл слишком большой! Максимальный размер: 100 МБ. Попробуйте загрузить файл меньшего размера или сжать его.');
+          } else {
+            console.error('Error updating dish:', error);
+          }
           Object.assign(product, oldData);
         }
       }

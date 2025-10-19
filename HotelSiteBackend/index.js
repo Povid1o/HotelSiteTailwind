@@ -12,7 +12,9 @@ const PORT = process.env.PORT || 5001
 
 const app = express()
 app.use(cors())
-app.use(express.json())
+// ✅ Увеличиваем лимит для JSON body до 100MB
+app.use(express.json({ limit: '100mb' }))
+app.use(express.urlencoded({ extended: true, limit: '100mb' }))
 // Normalize duplicate slashes to avoid //static/... 404s
 app.use((req, _res, next) => {
   if (typeof req.url === 'string' && req.url.includes('//')) {
@@ -25,7 +27,12 @@ app.use((req, _res, next) => {
 app.use(express.static(path.resolve(__dirname, 'static')))
 // Дополнительная настройка для обслуживания файлов из подпапок
 app.use('/static', express.static(path.resolve(__dirname, 'static')))
-app.use(fileUpload({}))
+// ✅ Увеличиваем лимит для загрузки файлов до 100MB
+app.use(fileUpload({
+  limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB
+  useTempFiles: true,
+  tempFileDir: '/tmp/'
+}))
 
 // Эндпоинт для загрузки файлов (должен быть ПЕРЕД основным роутером)
 app.post('/api/upload', (req, res) => {

@@ -249,8 +249,13 @@ export default class HotelStorageNew {
         this._rooms = [...this._rooms];
         
         console.log('✅ Room updated successfully with real URLs:', updatedRoom);
-      } catch (error) {
-        console.error('❌ Error updating room:', error);
+      } catch (error: any) {
+        if (error?.response?.status === 413) {
+          console.error('❌ File too large! Max size: 100MB');
+          alert('Файл слишком большой! Максимальный размер: 100 МБ. Попробуйте загрузить файл меньшего размера или сжать его.');
+        } else {
+          console.error('❌ Error updating room:', error);
+        }
         // Откатываем изменения
         Object.assign(room, oldData);
         throw error; // Пробрасываем ошибку для обработки в UI

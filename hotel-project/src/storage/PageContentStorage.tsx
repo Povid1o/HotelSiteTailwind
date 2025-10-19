@@ -170,8 +170,13 @@ export default class PageContentStorage {
       console.log('🟡 PageContentStorage: sending plain content:', plainContent);
       
       // Используем page.id вместо pageName
-      updatePageContent(page.id, plainContent).catch(error => {
-        console.error('Error updating page content:', error);
+      updatePageContent(page.id, plainContent).catch((error: any) => {
+        if (error?.response?.status === 413) {
+          console.error('❌ File too large! Max size: 100MB');
+          alert('Файл слишком большой! Максимальный размер: 100 МБ. Попробуйте загрузить файл меньшего размера или сжать его.');
+        } else {
+          console.error('Error updating page content:', error);
+        }
         // Откатываем изменения
         page.content = {
           ...page.content,
