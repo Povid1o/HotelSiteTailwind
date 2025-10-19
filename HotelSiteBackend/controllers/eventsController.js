@@ -7,7 +7,8 @@ const eventSchema = Joi.object({
   description: Joi.string().allow('').optional(),
   categoryId: Joi.number().integer().required(),
   images: Joi.array().items(Joi.object({
-    url: Joi.string().uri().required(),
+    // ✅ Разрешаем как полные URI, так и относительные пути (начинающиеся с /)
+    url: Joi.string().required(),
     alt_text: Joi.string().allow(''),
     order: Joi.number().integer().min(0)
   })).optional()
