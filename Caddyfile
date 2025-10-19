@@ -1,0 +1,35 @@
+{
+    email tati8877@yandex.ru
+}
+
+www.xn--80adsuhsg7e.xn--p1ai {
+    redir https://xn--80adsuhsg7e.xn--p1ai{uri} permanent
+}
+
+xn--80adsuhsg7e.xn--p1ai {
+    encode zstd gzip
+
+    # API → backend
+    @api path /api*
+    handle @api {
+        reverse_proxy backend:8000
+    }
+
+    # Static assets React
+    @assets path /static/* /manifest.json /favicon.ico /logo192.png
+    handle @assets {
+        reverse_proxy frontend:80
+    }
+
+    # Все остальное — SPA
+    handle {
+        reverse_proxy frontend:80
+    }
+
+    handle_errors {
+        @notFound expression {http.error.status_code} == 404
+        rewrite @notFound /index.html
+        reverse_proxy frontend:80
+    }
+}
+
