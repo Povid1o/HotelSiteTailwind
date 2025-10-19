@@ -84,6 +84,9 @@ const VineryEdit = ({ pageData, onContentChange }) => {
     // Состояния для батч-сохранения изменений
     const [pendingStageChanges, setPendingStageChanges] = useState({});
     const [hasUnsavedStageChanges, setHasUnsavedStageChanges] = useState(false);
+    
+    // Состояние для количества добавляемых процессов (храним как строку для удобства ввода)
+    const [addStagesCount, setAddStagesCount] = useState('1');
 
     // Handlers for main background
     const handleMainBackgroundTitleChange = useCallback((newTitle) => {
@@ -250,16 +253,26 @@ const VineryEdit = ({ pageData, onContentChange }) => {
     }, [onContentChange, pageData.productionSection]);
 
     const handleProductionStageAdd = useCallback(() => {
-        const newStage = {
-            name: "Новый процесс",
+        // Валидируем и получаем число из строки
+        const count = Math.max(1, Math.min(10, parseInt(addStagesCount) || 1));
+        
+        // Создаем массив новых процессов
+        const newStages = Array.from({ length: count }, (_, index) => ({
+            id: Date.now() + index, // Уникальный ID для каждого
+            name: `Новый процесс ${pageData.productionSection.stages.length + index + 1}`,
             image: null
-        };
+        }));
+        
+        const updatedStages = [...pageData.productionSection.stages, ...newStages];
         
         onContentChange('productionSection', {
             ...pageData.productionSection,
-            stages: [...pageData.productionSection.stages, newStage]
+            stages: updatedStages
         });
-    }, [onContentChange, pageData.productionSection]);
+        
+        // Показываем уведомление пользователю
+        alert(`✅ Добавлено ${count} процессов!\n\n⚠️ Закройте и откройте модальное окно, чтобы увидеть изменения.`);
+    }, [onContentChange, pageData.productionSection, addStagesCount]);
 
     // Handlers for region section
     const handleRegionSectionTitleChange = useCallback((newTitle) => {
@@ -579,13 +592,40 @@ const VineryEdit = ({ pageData, onContentChange }) => {
                                 onSave={handleProductionSectionTitleChange} 
                             />
                         </div>
-                        <button
-                            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl flex items-center gap-2"
-                            onClick={handleProductionStageAdd}
-                        >
-                            <FaPlus className="w-4 h-4" />
-                            Добавить процесс
-                        </button>
+                        <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2">
+                                <label className="text-sm font-medium text-gray-700">Количество:</label>
+                                <input
+                                    type="text"
+                                    value={addStagesCount}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        // Разрешаем только цифры и пустую строку
+                                        if (value === '' || /^\d+$/.test(value)) {
+                                            setAddStagesCount(value);
+                                        }
+                                    }}
+                                    onBlur={(e) => {
+                                        // При потере фокуса валидируем значение
+                                        const num = parseInt(e.target.value);
+                                        if (isNaN(num) || num < 1) {
+                                            setAddStagesCount('1');
+                                        } else if (num > 10) {
+                                            setAddStagesCount('10');
+                                        }
+                                    }}
+                                    placeholder="1-10"
+                                    className="w-16 px-2 py-1 border border-gray-300 rounded-md text-center"
+                                />
+                            </div>
+                            <button
+                                className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl flex items-center gap-2 whitespace-nowrap"
+                                onClick={handleProductionStageAdd}
+                            >
+                                <FaPlus className="w-4 h-4" />
+                                Добавить процессы
+                            </button>
+                        </div>
                     </div>
                     
                     {/* Редактирование процессов производства */}

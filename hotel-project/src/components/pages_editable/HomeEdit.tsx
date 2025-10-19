@@ -23,6 +23,8 @@ const HomeEdit = ({ pageData, onContentChange }) => {
     const [pendingServiceChanges, setPendingServiceChanges] = useState({});
     const [hasUnsavedServiceChanges, setHasUnsavedServiceChanges] = useState(false);
     
+    // Состояние для количества добавляемых элементов (храним как строку для удобства ввода)
+    const [addServicesCount, setAddServicesCount] = useState('1');
 
     const handleMainBackgroundTitleChange = useCallback((newTitle) => {
         onContentChange('mainBackground', { 
@@ -179,17 +181,28 @@ const HomeEdit = ({ pageData, onContentChange }) => {
         });
     }, [onContentChange, pageData.servicesSection]);
 
-    // Добавление сервиса (аналогично кнопке в VineryEdit)
+    // Добавление нескольких сервисов за раз
     const handleServiceAdd = useCallback(() => {
-        const newService = {
-            name: "Новый элемент",
+        // Валидируем и получаем число из строки
+        const count = Math.max(1, Math.min(10, parseInt(addServicesCount) || 1));
+        
+        // Создаем массив новых сервисов
+        const newServices = Array.from({ length: count }, (_, index) => ({
+            id: Date.now() + index, // Уникальный ID для каждого
+            name: `Новый элемент ${pageData.servicesSection.services.length + index + 1}`,
             image: null
-        };
+        }));
+        
+        const updatedServices = [...pageData.servicesSection.services, ...newServices];
+        
         onContentChange('servicesSection', {
             ...pageData.servicesSection,
-            services: [...pageData.servicesSection.services, newService]
+            services: updatedServices
         });
-    }, [onContentChange, pageData.servicesSection]);
+        
+        // Показываем уведомление пользователю
+        alert(`✅ Добавлено ${count} элементов!\n\n⚠️ Закройте и откройте модальное окно, чтобы увидеть изменения.`);
+    }, [onContentChange, pageData.servicesSection, addServicesCount]);
     
     // Функция для создания стабильного URL для отображения (изображения и видео)
     const getDisplayImageSrc = (imageSrc) => {
@@ -349,13 +362,40 @@ const HomeEdit = ({ pageData, onContentChange }) => {
                         isShort={true} 
                         onSave={handleServicesSectionTitleChange} 
                     />
-                    <button
-                        className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl flex items-center gap-2"
-                        onClick={handleServiceAdd}
-                    >
-                        <FaPlus className="w-4 h-4" />
-                        Добавить элемент
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                            <label className="text-sm font-medium text-gray-700">Количество:</label>
+                            <input
+                                type="text"
+                                value={addServicesCount}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    // Разрешаем только цифры и пустую строку
+                                    if (value === '' || /^\d+$/.test(value)) {
+                                        setAddServicesCount(value);
+                                    }
+                                }}
+                                onBlur={(e) => {
+                                    // При потере фокуса валидируем значение
+                                    const num = parseInt(e.target.value);
+                                    if (isNaN(num) || num < 1) {
+                                        setAddServicesCount('1');
+                                    } else if (num > 10) {
+                                        setAddServicesCount('10');
+                                    }
+                                }}
+                                placeholder="1-10"
+                                className="w-16 px-2 py-1 border border-gray-300 rounded-md text-center"
+                            />
+                        </div>
+                        <button
+                            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl flex items-center gap-2 whitespace-nowrap"
+                            onClick={handleServiceAdd}
+                        >
+                            <FaPlus className="w-4 h-4" />
+                            Добавить элементы
+                        </button>
+                    </div>
                 </div>
                 <ul className='flex flex-wrap flex-row'>
                     {pageData.servicesSection.services.map((service, index) => (
