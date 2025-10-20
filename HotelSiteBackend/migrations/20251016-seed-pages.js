@@ -115,7 +115,7 @@ module.exports = {
         description: "Откройте для себя мир превосходных вин в нашей винодельне! Мы предлагаем уникальные и высококачественные сорта вин, созданные с любовью и вниманием к каждой детали. Посетите нашу винодельню и убедитесь в качестве наших вин самостоятельно. Здесь вы сможете насладиться изысканными напитками, отдохнуть и провести время в уютной атмосфере.",
         image: threeBottles,
         buttonText: "Ассортимент вин",
-        buttonLink: "/Каталог"
+        buttonLink: "/Shop"
       },
       historySection: {
         title: "НАША ИСТОРИЯ",
@@ -134,7 +134,7 @@ module.exports = {
         firstText: "У нас вы сможете попробовать как классические, так и эксклюзивные вина, созданные по уникальным рецептурам. Наши опытные сомелье помогут вам выбрать вино, которое идеально подойдёт именно для вашего случая.",
         secondText: "Наш каталог включает более 100 наименований вин, среди которых вы обязательно найдете напиток по своему вкусу. Мы гордимся тем, что наши вина получают высокие оценки от экспертов и ценителей со всего мира.",
         buttonText: "Наша винотека",
-        buttonLink: "/Каталог"
+        buttonLink: "/Shop"
       },
       productionSection: {
         title: "ЭТАПЫ НАШЕГО ПРОИЗВОДСТВА",
@@ -179,13 +179,13 @@ module.exports = {
 
     const existingVinery = await queryInterface.sequelize.query(
       'SELECT id FROM pages WHERE path = ?',
-      { replacements: ['/Винодельня'], type: Sequelize.QueryTypes.SELECT }
+      { replacements: ['/Vinery'], type: Sequelize.QueryTypes.SELECT }
     );
 
     if (existingVinery.length === 0) {
       await queryInterface.bulkInsert('pages', [{
         name: 'Винодельня',
-        path: '/Винодельня',
+        path: '/Vinery',
         is_active: true,
         content_json: JSON.stringify(vineryPageContent),
         created_at: now,
@@ -194,7 +194,7 @@ module.exports = {
     } else {
       await queryInterface.sequelize.query(
         'UPDATE pages SET content_json = ?, updated_at = ? WHERE path = ?',
-        { replacements: [JSON.stringify(vineryPageContent), now, '/Винодельня'] }
+        { replacements: [JSON.stringify(vineryPageContent), now, '/Vinery'] }
       );
     }
   },
@@ -202,7 +202,7 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     // Remove seeded pages
     await queryInterface.bulkDelete('pages', {
-      path: ['/', '/Винодельня']
+      path: ['/', '/Vinery']
     });
   }
 };

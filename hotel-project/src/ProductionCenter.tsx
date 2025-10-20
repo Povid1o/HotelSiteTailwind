@@ -223,7 +223,7 @@ export default function ProductionCenter({title}: ProductionCenterProps) {
                         {store.map((value) => {
                             return(
                                 <div className='z-[2]'>
-                                    <Link to='/Мероприятия'>
+                                    <Link to='/Events'>
                                         <div className={` cursor-pointer w-80 h-80 bg-[url('./components/assets/ProductionBg.png')] flex items-end justify-start p-5  rounded-xl`}>
                                             <div className="text-2xl text-bold text-white">{value.name}</div>
                                         </div>

@@ -146,13 +146,13 @@ const start = async() => {
       },
       {
         name: 'Винодельня',
-        path: '/Винодельня',
+        path: '/Vinery',
         is_active: true,
         content_json: {
           mainBackground: { image: 'https://images.unsplash.com/photo-1468777675496-5782faaea55b?q=80&w=1600&auto=format&fit=crop', title: 'Винодельня' },
-          introSection: { title: 'Винодельня', description: 'Откройте для себя мир превосходных вин в нашей винодельне!', image: '', buttonText: 'Ассортимент вин', buttonLink: '/Каталог' },
+          introSection: { title: 'Винодельня', description: 'Откройте для себя мир превосходных вин в нашей винодельне!', image: '', buttonText: 'Ассортимент вин', buttonLink: '/Shop' },
           historySection: { title: 'НАША ИСТОРИЯ', leftDates: [], rightDates: [] },
-          wineSection: { firstText: '', secondText: '', buttonText: 'Наша винотека', buttonLink: '/Каталог' },
+          wineSection: { firstText: '', secondText: '', buttonText: 'Наша винотека', buttonLink: '/Shop' },
           productionSection: { title: 'ЭТАПЫ НАШЕГО ПРОИЗВОДСТВА', stages: [] },
           regionSection: { title: 'ВИННЫЙ РЕГИОН', firstText: '', secondText: '', backgroundImage: '' }
         }
