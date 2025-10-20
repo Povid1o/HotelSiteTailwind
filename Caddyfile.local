@@ -1,0 +1,32 @@
+{
+    email tati8877@yandex.ru
+    auto_https off
+}
+
+:80 {
+    encode zstd gzip
+
+    # API > backend:8000
+    @api path /api*
+    handle @api {
+        reverse_proxy backend:8000
+    }
+    
+    @doubleapi path /api/api*
+    handle @doubleapi {
+        uri strip_prefix /api
+        reverse_proxy backend:8000
+    }
+
+    # Фронтенд > nginx внутри контейнера frontend:80
+    handle {
+        reverse_proxy frontend:80
+    }
+
+    # SPA fallback: 404 > index.html (роутинг на фронте)
+    handle_errors {
+        @notFound expression {http.error.status_code} == 404
+        rewrite @notFound /index.html
+        reverse_proxy frontend:80
+    }
+}
