@@ -159,21 +159,18 @@ const HotelRoom: React.MemoExoticComponent<(props: HotelRoomProps) => React.Reac
             </div>
           </div>
 
-          <div>
-            <h1 className="text-xl font-bold">Минимальный срок проживания</h1>
-            <p>{checkInOut?.minStay}</p>
-          </div>
         </ul>
 
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:flex flex-row justify-around">
-          {restrictions.map((restriction, index) => (
+          {rules.map((note, index) => (
             <div key={index} className="flex flex-row mr-5">
               <span className="h-1 w-1 bg-main_theme rounded-full my-auto mr-1" />
-              <p className="my-auto">{restriction}</p>
+              <p className="my-auto">{note}</p>
             </div>
           ))}
         </ul>
       </div>
+
 
       {/* Booking Button and Form */}
       <div className="w-full max-w-md my-6">
