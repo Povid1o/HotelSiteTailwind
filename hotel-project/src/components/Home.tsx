@@ -126,7 +126,7 @@ const Home = observer(({nav}: HomeProps) => {
                 return image;
             }
             // Relative path from backend (starts with /)
-            return `${STATIC_BASE}${image}`;
+            return `${API_BASE}${image}`;
         }
         return '';
     };
