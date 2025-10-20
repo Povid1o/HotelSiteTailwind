@@ -52,8 +52,12 @@ services:
     networks: [appnet]
     expose:
       - "8000"
-    # Если у тебя миграции через sequelize-cli:
-    # command: sh -c "npm run migrate || true; node index.js"
+    command: >
+      sh -c "
+       mkdir -p /app/static/rooms /app/static/pages &&
+       echo 'Static folders ensured' &&
+       node index.js
+      "
 
   frontend:
     build:
