@@ -1,0 +1,155 @@
+.error-boundary-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #3e1c28 0%, #6a2b35 50%, #8b3a4a 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff4e6;
+    font-family: 'Georgia', serif;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  /* Анимация бочки */
+  .barrel-animation {
+    position: relative;
+    margin-bottom: 2rem;
+    animation: wobble 3s ease-in-out infinite;
+  }
+  
+  @keyframes wobble {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(3deg); }
+    75% { transform: rotate(-3deg); }
+  }
+  
+  .barrel {
+    position: relative;
+    width: 100px;
+    height: 120px;
+  }
+  
+  .barrel-body {
+    background: linear-gradient(135deg, #5a2a1e, #7a3d2c);
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    box-shadow: inset -5px 0 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .barrel-ring {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: #3d1d12;
+    border-radius: 5px;
+  }
+  
+  .barrel-ring.top {
+    top: 10px;
+  }
+  .barrel-ring.bottom {
+    bottom: 10px;
+  }
+  
+  /* Пролитое вино */
+  .wine-spill {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    width: 80px;
+    height: 20px;
+    background: radial-gradient(circle, #9b2c3a 0%, transparent 70%);
+    transform: translateX(-50%) rotate(10deg);
+    opacity: 0.8;
+    animation: spill 3s ease-in-out infinite alternate;
+  }
+  
+  @keyframes spill {
+    0% { transform: translateX(-50%) scale(1) rotate(10deg); opacity: 0.8; }
+    100% { transform: translateX(-50%) scale(1.2) rotate(-5deg); opacity: 0.6; }
+  }
+  
+  /* Текст */
+  .error-boundary-content {
+    max-width: 600px;
+    z-index: 2;
+  }
+  
+  .error-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #f8e4d0;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+  
+  .error-description {
+    font-size: 1.1rem;
+    color: #f3d6c0;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+  
+  /* Кнопка */
+  .btn-primary {
+    background: linear-gradient(135deg, #8b3a4a 0%, #b85d6b 100%);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 40px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(139, 58, 74, 0.5);
+  }
+  
+  /* Декоративные лозы */
+  .vine-decor {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M10,50 Q30,20 50,50 T90,50" stroke="white" stroke-width="2" fill="none"/><circle cx="30" cy="35" r="8" fill="white"/><circle cx="70" cy="35" r="8" fill="white"/><circle cx="50" cy="50" r="10" fill="white"/></svg>') no-repeat center;
+    background-size: contain;
+    opacity: 0.1;
+    animation: vineFloat 6s ease-in-out infinite;
+  }
+  
+  .vine-left {
+    top: 10%;
+    left: 5%;
+  }
+  
+  .vine-right {
+    bottom: 10%;
+    right: 5%;
+    transform: rotate(180deg);
+    animation-delay: 2s;
+  }
+  
+  @keyframes vineFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  /* Адаптивность */
+  @media (max-width: 768px) {
+    .error-title {
+      font-size: 1.6rem;
+    }
+    .error-description {
+      font-size: 1rem;
+    }
+  }
