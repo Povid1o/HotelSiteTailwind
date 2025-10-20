@@ -283,7 +283,12 @@ const Home = observer(({nav}: HomeProps) => {
 
             {/* Blue Swiper */}
             <section className="mx-auto unShown max-sm:w-5/6 md:w-3/4 xl:hidden show">
-                <BlueSwiper />
+                <BlueSwiper 
+                    images={firstGallery.images.map(img => ({
+                        src: getImageUrl(img.src),
+                        alt: img.alt || ''
+                    }))}
+                />
             </section>
 
 
