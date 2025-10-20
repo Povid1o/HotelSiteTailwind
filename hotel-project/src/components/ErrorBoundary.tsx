@@ -4,14 +4,51 @@ import './styles/errorBoundary.css';
 
 interface Props {
   children: ReactNode;
-  fallbackPath?: string;
-  navigate?: (path: string) => void;
 }
 
 interface State {
   hasError: boolean;
   error?: Error;
 }
+
+// Внутренний компонент для использования хуков
+const ErrorDisplay: React.FC<{ onNavigate: () => void }> = ({ onNavigate }) => {
+  React.useEffect(() => {
+    const timer = setTimeout(onNavigate, 4000); // авто-редирект через 4 сек
+    return () => clearTimeout(timer);
+  }, [onNavigate]);
+
+  return (
+    <div className="error-boundary-container">
+      <div className="barrel-animation">
+        <div className="barrel">
+          <div className="barrel-ring top"></div>
+          <div className="barrel-body"></div>
+          <div className="barrel-ring bottom"></div>
+        </div>
+        <div className="wine-spill"></div>
+      </div>
+
+      <div className="error-boundary-content">
+        <h1 className="error-title">Упс… Приложение перебродило 🍇</h1>
+        <p className="error-description">
+          Кажется, система слегка перебрала и упала под стол.  
+          Дайте ей глоточек отдыха — мы вас сейчас вернём на главную.
+        </p>
+
+        <button 
+          onClick={onNavigate}
+          className="btn-primary"
+        >
+          <span>🏠</span> Вернуться на главную
+        </button>
+      </div>
+
+      <div className="vine-decor vine-left"></div>
+      <div className="vine-decor vine-right"></div>
+    </div>
+  );
+};
 
 class ErrorBoundary extends Component<Props, State> {
   public state: State = {
@@ -24,58 +61,34 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('🍷 ErrorBoundary перехватил ошибку:', error, errorInfo);
+    console.error('🍷 ErrorBoundary перехватил ошибку:', error);
+    console.error('📍 Component stack:', errorInfo.componentStack);
+    
+    // Специальная обработка для ошибки #310
+    if (error.message.includes('Rendered more hooks than during the previous render')) {
+      console.error('🔧 Это ошибка #310 - проблема с хуками React');
+      console.error('💡 Рекомендация: Проверьте условный рендеринг хуков в компонентах');
+    }
   }
-
-  private handleRedirect = () => {
-    const navigate = this.props.navigate!;
-    const fallbackPath = this.props.fallbackPath || '/';
-    navigate(fallbackPath);
-  };
 
   public render() {
     if (this.state.hasError) {
-      setTimeout(this.handleRedirect, 4000); // авто-редирект через 4 сек
-
-      return (
-        <div className="error-boundary-container">
-          <div className="barrel-animation">
-            <div className="barrel">
-              <div className="barrel-ring top"></div>
-              <div className="barrel-body"></div>
-              <div className="barrel-ring bottom"></div>
-            </div>
-            <div className="wine-spill"></div>
-          </div>
-
-          <div className="error-boundary-content">
-            <h1 className="error-title">Упс… Приложение перебродило 🍇</h1>
-            <p className="error-description">
-              Кажется, система слегка перебрала и упала под стол.  
-              Дайте ей глоточек отдыха — мы вас сейчас вернём на главную.
-            </p>
-
-            <button 
-              onClick={this.handleRedirect}
-              className="btn-primary"
-            >
-              <span>🏠</span> Вернуться на главную
-            </button>
-          </div>
-
-          <div className="vine-decor vine-left"></div>
-          <div className="vine-decor vine-right"></div>
-        </div>
-      );
+      return <ErrorDisplayWrapper />;
     }
 
     return this.props.children;
   }
 }
 
-const ErrorBoundaryWithNavigate = ({ children, fallbackPath }: Props) => {
+// Обёртка для использования хуков вне классового компонента
+const ErrorDisplayWrapper: React.FC = () => {
   const navigate = useNavigate();
-  return <ErrorBoundary children={children} fallbackPath={fallbackPath} navigate={navigate} />;
+  
+  const handleNavigate = () => {
+    navigate('/');
+  };
+
+  return <ErrorDisplay onNavigate={handleNavigate} />;
 };
 
-export default ErrorBoundaryWithNavigate;
+export default ErrorBoundary;

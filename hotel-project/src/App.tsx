@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import { Context } from "./index";
 import LoadingScreen from './components/LoadingScreen';
 import TravelLineScript from "./components/TravelLineScript.tsx";
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Ленивая загрузка компонентов
 const WineHotel = lazy(() => import("./WineHotel.tsx"));
@@ -34,7 +35,11 @@ const publicrouter = createBrowserRouter([
       },
       {
         path: "/Hotel",
-        element: <WineHotel />,
+        element: (
+          <ErrorBoundary>
+            <WineHotel />
+          </ErrorBoundary>
+        ),
       },
       {
         path:"/Events",
@@ -95,7 +100,11 @@ const hiderouter = createBrowserRouter([
       },
       {
         path: "/Hotel",
-        element: <WineHotel />,
+        element: (
+          <ErrorBoundary>
+            <WineHotel />
+          </ErrorBoundary>
+        ),
       },
       {
         path:"/Events",
@@ -238,8 +247,10 @@ const App= observer(() => {
                     visibility: loading ? 'hidden' : 'visible',
                   }}
               >
-                {/* Правильная логика роутеров */}
-                <RouterProvider router={user.isAuth ? hiderouter : publicrouter} />
+                {/* ErrorBoundary для ловли ошибок рендера */}
+                <ErrorBoundary>
+                  <RouterProvider router={user.isAuth ? hiderouter : publicrouter} />
+                </ErrorBoundary>
               </section>
               
               {/* Modal - показываем только для авторизованных */}
