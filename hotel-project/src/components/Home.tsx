@@ -79,6 +79,10 @@ const Home = observer(({nav}: HomeProps) => {
     }
     const { pageContent, hotel } = context;
 
+    // ✅ ДОБАВЬТЕ: Фиксируем данные при первой загрузке
+    const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+    const [fixedRooms, setFixedRooms] = useState<any[]>([]);
+
     // Log data from stores
     useEffect(() => {
         const homePage = pageContent.pages.find(p => p.name === "Главная");
@@ -91,8 +95,25 @@ const Home = observer(({nav}: HomeProps) => {
         });
     }, [pageContent.pages, hotel.rooms]);
 
-    // Show loading if data is still being fetched
-    if (pageContent.isLoading || hotel.isLoading) {
+    // ✅ Фиксируем данные номеров при первой загрузке
+    useEffect(() => {
+        if (!initialDataLoaded && !pageContent.isLoading && !hotel.isLoading) {
+            // Фиксируем данные номеров
+            if (hotel.rooms.length > 0) {
+                setFixedRooms(hotel.rooms);
+            } else {
+                // Используем emergency данные
+                setFixedRooms([
+                    getContentOrEmergency(null, standardRoomEmergency),
+                    getContentOrEmergency(null, standardPlusRoomEmergency)
+                ]);
+            }
+            setInitialDataLoaded(true);
+        }
+    }, [pageContent.isLoading, hotel.isLoading, hotel.rooms, initialDataLoaded]);
+
+    // Show loading only on first load
+    if ((pageContent.isLoading || hotel.isLoading) && !initialDataLoaded) {
         return (
             <div className="h-screen flex justify-center items-center">
                 <div className="text-2xl text-gray-600">Загрузка...</div>
@@ -161,7 +182,7 @@ const Home = observer(({nav}: HomeProps) => {
     };
 
     // Extract rooms data with fallbacks
-    const rooms = hotel.rooms.length > 0 ? hotel.rooms : [
+    const rooms = fixedRooms.length > 0 ? fixedRooms : [
         getContentOrEmergency(null, standardRoomEmergency),
         getContentOrEmergency(null, standardPlusRoomEmergency)
     ];

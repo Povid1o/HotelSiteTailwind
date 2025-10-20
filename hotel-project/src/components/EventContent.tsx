@@ -44,6 +44,11 @@ const EventContent = observer(() => {
     }
     const { events } = context;
 
+    // ✅ ДОБАВЬТЕ: Фиксируем данные при первой загрузке
+    const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+    const [fixedCategories, setFixedCategories] = useState<any[]>([]);
+    const [fixedEvents, setFixedEvents] = useState<any[]>([]);
+
     // Load events data
     useEffect(() => {
         console.log('=== EVENTS PAGE DATA ===');
@@ -51,6 +56,25 @@ const EventContent = observer(() => {
         console.log('All events:', events.events);
         console.log('Loading state:', { events: events.isLoading });
     }, [events.categories, events.events]);
+
+    // ✅ Фиксируем данные при первой загрузке
+    useEffect(() => {
+        if (!initialDataLoaded && !events.isLoading) {
+            if (events.categories.length > 0) {
+                setFixedCategories(events.categories);
+            } else {
+                setFixedCategories(eventCategoriesEmergency);
+            }
+            
+            if (events.events.length > 0) {
+                setFixedEvents(events.events);
+            } else {
+                setFixedEvents(eventsEmergency);
+            }
+            
+            setInitialDataLoaded(true);
+        }
+    }, [events.isLoading, events.categories, events.events, initialDataLoaded]);
 
     // Icon mapping for categories
     const iconMap: Record<string, string> = {
@@ -80,8 +104,8 @@ const EventContent = observer(() => {
         return '';
     };
 
-    // Show loading if data is still being fetched
-    if (events.isLoading) {
+    // Show loading only on first load
+    if (events.isLoading && !initialDataLoaded) {
         return (
             <div className="h-screen flex justify-center items-center">
                 <div className="text-2xl text-gray-600">Загрузка...</div>
@@ -89,8 +113,8 @@ const EventContent = observer(() => {
         );
     }
 
-    // Combine categories with icons
-    const categoriesWithIcons = events.categories.map(cat => ({
+    // ✅ ИСПОЛЬЗУЙТЕ ФИКСИРОВАННЫЕ ДАННЫЕ
+    const categoriesWithIcons = fixedCategories.map(cat => ({
         id: cat.id,
         header: cat.header,
         description: cat.description,
@@ -98,8 +122,7 @@ const EventContent = observer(() => {
         events: cat.events || []
     }));
 
-    // Get all events for "Откройте для себя винодельню" section
-    const allEvents = events.events;
+    const allEvents = fixedEvents;
 
     return (
         <div>

@@ -5,7 +5,7 @@ import { Dropdown, DropdownItem } from "flowbite-react";
 import Navbar from './Navbar';
 import Footer from './Footer';
 import EventCard from './cards/EventCard';
-import { eventsEmergency } from '../emergencyContent/text';
+import { eventsEmergency, eventCategoriesEmergency } from '../emergencyContent/text';
 import { Context } from '../index';
 import { observer } from 'mobx-react-lite';
 import { API_BASE } from './http';
@@ -23,6 +23,10 @@ const EventsList = observer(() => {
     }
     const { events } = context;
 
+    // ✅ ДОБАВЬТЕ: Фиксируем данные при первой загрузке
+    const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+    const [fixedCategories, setFixedCategories] = useState<any[]>([]);
+
     // Load events data
     useEffect(() => {
         console.log('=== EVENTS LIST PAGE DATA ===');
@@ -30,6 +34,18 @@ const EventsList = observer(() => {
         console.log('All events:', events.events);
         console.log('Loading state:', { events: events.isLoading });
     }, [events.categories, events.events]);
+
+    // ✅ Фиксируем данные при первой загрузке
+    useEffect(() => {
+        if (!initialDataLoaded && !events.isLoading) {
+            if (events.categories.length > 0) {
+                setFixedCategories(events.categories);
+            } else {
+                setFixedCategories(eventCategoriesEmergency);
+            }
+            setInitialDataLoaded(true);
+        }
+    }, [events.isLoading, events.categories, events.events, initialDataLoaded]);
 
     // Helper to get image URL
     const getImageUrl = (image: string | File) => {
@@ -48,8 +64,8 @@ const EventsList = observer(() => {
         return '';
     };
 
-    // Show loading if data is still being fetched
-    if (events.isLoading) {
+    // Show loading only on first load
+    if (events.isLoading && !initialDataLoaded) {
         return (
             <div className="h-screen flex justify-center items-center">
                 <div className="text-2xl text-gray-600">Загрузка...</div>
@@ -59,8 +75,8 @@ const EventsList = observer(() => {
 
     const categorieName = decodeURIComponent(params.categorie || '');
     
-    // Find current category from events.categories
-    const currentCategory = events.categories.find(cat => cat.header === categorieName);
+    // ✅ ИСПОЛЬЗУЙТЕ ФИКСИРОВАННЫЕ ДАННЫЕ
+    const currentCategory = fixedCategories.find(cat => cat.header === categorieName);
     const categoryDescription = currentCategory?.description || '';
     
     // Get events for this category
@@ -81,7 +97,7 @@ const EventsList = observer(() => {
             <div className='w-5/6 mx-auto flex justify-between'>
 
                 <Dropdown label="Категории" size="xl" className=''>
-                    {events.categories.map(({id, header}) => (
+                    {fixedCategories.map(({id, header}) => (
                         <DropdownItem 
                             key={id}
                             onClick={() => navigate(`/Events/${encodeURIComponent(header)}`)}

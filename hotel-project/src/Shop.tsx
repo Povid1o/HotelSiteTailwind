@@ -63,12 +63,45 @@ const Shop = observer(() => {
   }
   const { wine } = context;
 
-  // Log data from stores
+  // ✅ ДОБАВЬТЕ: Фиксируем данные при первой загрузке
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+  const [fixedWines, setFixedWines] = useState<Wine[]>([]);
+
+  // ✅ ИЗМЕНИТЕ: Transform WineStorage structure to flat Wine[] array
   useEffect(() => {
-    console.log('=== SHOP PAGE DATA ===');
-    console.log('All wines:', wine.wines);
-    console.log('Loading state:', { wine: wine.isLoading });
-  }, [wine.wines]);
+    if (!initialDataLoaded && !wine.isLoading) {
+      if (wine.wines.length === 0) {
+        // Используем emergency данные только один раз
+        setFixedWines(winesEmergency as unknown as Wine[]);
+      } else {
+        // Преобразуем реальные данные
+        const flatWines: Wine[] = [];
+        wine.wines.forEach((wineType) => {
+          wineType.assortment.forEach((assortment) => {
+            assortment.wines.forEach((w) => {
+              const normalizedType = typeof wineType.type === 'string' ? wineType.type.trim().toLowerCase() : wineType.type;
+              const normalizedSweetness = typeof assortment.sweetness === 'string' ? assortment.sweetness.trim().toLowerCase() : assortment.sweetness;
+              flatWines.push({
+                id: w.id,
+                name: w.name,
+                image: getImageUrl(w.images?.[0] || ''),
+                type: normalizedType,
+                year: w.year,
+                sweetness: normalizedSweetness,
+                alcohol: w.alcohol,
+                sugar: w.sugar,
+                temperature: w.temperature,
+                price: w.price,
+                description: w.description,
+              });
+            });
+          });
+        });
+        setFixedWines(flatWines);
+      }
+      setInitialDataLoaded(true);
+    }
+  }, [wine.wines, wine.isLoading, initialDataLoaded]);
 
   // Helper to get image URL
   const getImageUrl = (image: string | File) => {
@@ -112,57 +145,16 @@ const Shop = observer(() => {
     }
   };
 
-  // Transform WineStorage structure to flat Wine[] array
-  const wines: Wine[] = useMemo(() => {
-    if (wine.wines.length === 0) {
-      // Fallback to emergency data
-      return winesEmergency as unknown as Wine[];
-    }
-
-    const flatWines: Wine[] = [];
-    wine.wines.forEach((wineType) => {
-      wineType.assortment.forEach((assortment) => {
-        assortment.wines.forEach((w) => {
-          const normalizedType = typeof wineType.type === 'string' ? wineType.type.trim().toLowerCase() : wineType.type;
-          const normalizedSweetness = typeof assortment.sweetness === 'string' ? assortment.sweetness.trim().toLowerCase() : assortment.sweetness;
-          flatWines.push({
-            id: w.id,
-            name: w.name,
-            image: getImageUrl(w.images?.[0] || ''),
-            type: normalizedType,
-            year: w.year,
-            sweetness: normalizedSweetness,
-            alcohol: w.alcohol,
-            sugar: w.sugar,
-            temperature: w.temperature,
-            price: w.price,
-            description: w.description,
-          });
-        });
-      });
-    });
-    
-    // Debug: Log wine types and sweetness to verify data structure
-    console.log('=== SHOP: Wines data ===');
-    console.log('Total wines:', flatWines.length);
-    console.log('Unique types:', [...new Set(flatWines.map(w => w.type))]);
-    console.log('Unique sweetness:', [...new Set(flatWines.map(w => w.sweetness))]);
-    console.log('All wines with type and sweetness:');
-    flatWines.forEach((w, idx) => {
-      console.log(`  [${idx}] ${w.name}: type="${w.type}" (${typeof w.type}), sweetness="${w.sweetness}" (${typeof w.sweetness})`);
-    });
-    
-    return flatWines;
-  }, [wine.wines]);
+  // ✅ ИСПОЛЬЗУЕМ fixedWines вместо старого useMemo
 
   // Вычисляем минимальный и максимальный год для слайдера
   const { minYear, maxYear } = useMemo(() => {
     let min = 1970; // Значение по умолчанию
     let max = 2025; // Значение по умолчанию
     
-    if (wines.length > 0) {
+    if (fixedWines.length > 0) {
       // Фильтруем вина с годом и находим min/max
-      const yearsArray = wines
+      const yearsArray = fixedWines
         .filter(wine => wine.year !== undefined)
         .map(wine => wine.year as number);
       
@@ -173,7 +165,7 @@ const Shop = observer(() => {
     }
     
     return { minYear: min, maxYear: max };
-  }, [wines]);
+  }, [fixedWines]);
   
   // Используем useEffect для установки начальных значений activeYearRange только один раз
   useEffect(() => {
@@ -244,11 +236,11 @@ const Shop = observer(() => {
     
     // Проверяем корректность activeYearRange
     if (!activeYearRange || activeYearRange.length !== 2 || isNaN(activeYearRange[0]) || isNaN(activeYearRange[1])) {
-      return wines; // Возвращаем все вина при некорректном activeYearRange
+      return fixedWines; // Возвращаем все вина при некорректном activeYearRange
     }
     
     // Шаг 1: Фильтрация по чекбоксам (тип вина)
-    let filtered = wines;
+    let filtered = fixedWines; // ✅ ТЕПЕРЬ ИСПОЛЬЗУЕМ ФИКСИРОВАННЫЕ ДАННЫЕ
     
     if (activeTypes.length > 0) {
       const beforeFilter = filtered.length;
@@ -313,7 +305,7 @@ const Shop = observer(() => {
     
     console.log(`Final result: ${sorted.length} wines`);
     return sorted;
-  }, [wines, activeTypes, activeSweetness, activeYearRange, searchQuery, sortOption]);
+  }, [fixedWines, activeTypes, activeSweetness, activeYearRange, searchQuery, sortOption]);
 
   // Мемоизируем пагинацию для оптимизации
   const paginationData = useMemo(() => {
@@ -339,8 +331,8 @@ const Shop = observer(() => {
     };
   }, [filteredProducts, currentPage, itemsPerPage]);
 
-  // Show loading if data is still being fetched
-  if (wine.isLoading) {
+  // Show loading only on first load
+  if (wine.isLoading && !initialDataLoaded) {
     return (
       <div className="h-screen flex justify-center items-center">
         <div className="text-2xl text-gray-600">Загрузка...</div>
@@ -387,7 +379,7 @@ const Shop = observer(() => {
         <Search 
           isMobile={false}
           onSearch={handleSearch}
-          suggestionsList={wines.map(p => p.name)}
+          suggestionsList={fixedWines.map(p => p.name)}
         />
         
         <div className="flex flex-col items-center mt-4">
@@ -451,7 +443,7 @@ const Shop = observer(() => {
             <Search 
               isMobile={false}
               onSearch={handleSearch}
-              suggestionsList={wines.map(p => p.name)}
+              suggestionsList={fixedWines.map(p => p.name)}
             />
             <Sorting 
               isMobile={false}

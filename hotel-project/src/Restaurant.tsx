@@ -16,22 +16,18 @@ const Restaurant = observer(() => {
   }
   const { dish } = context;
   const [nav, setNav] = useState(false);
-
-  // Log data from stores
-  useEffect(() => {
-    console.log('=== RESTAURANT PAGE DATA ===');
-    console.log('All dishes:', dish.dishes);
-    console.log('Loading state:', { dish: dish.isLoading });
-  }, [dish.dishes]);
-
-  // Show loading if data is still being fetched
-  if (dish.isLoading) {
-    return (
-      <div className="h-screen flex justify-center items-center">
-        <div className="text-2xl text-gray-600">Загрузка...</div>
-      </div>
-    );
-  }
+  
+  // ✅ КЛЮЧЕВОЕ ИЗМЕНЕНИЕ: Фиксируем данные при первой загрузке
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+  const [displayData, setDisplayData] = useState(
+    restaurantMenuEmergency.map(section => ({
+      ...section,
+      products: section.products.map((product, index) => ({
+        ...product,
+        id: `emergency-${index}`
+      }))
+    }))
+  );
 
   // Helper to get image URL
   const getImageUrl = (image: string | File) => {
@@ -50,8 +46,43 @@ const Restaurant = observer(() => {
     return '';
   };
 
-  // Use dish.dishes if available, otherwise use emergency
-  const shouldUseEmergency = !dish.dishes || dish.dishes.length === 0;
+  // Загружаем данные при монтировании компонента
+  useEffect(() => {
+    console.log('=== RESTAURANT PAGE DATA ===');
+    console.log('All dishes:', dish.dishes);
+    console.log('Loading state:', { dish: dish.isLoading });
+
+    // ✅ Фиксируем данные только один раз после первой загрузки
+    if (!initialDataLoaded && !dish.isLoading) {
+      if (dish.dishes && dish.dishes.length > 0) {
+        // Преобразуем данные из DishStorage в формат для отображения
+        const transformedData = dish.dishes.map(cat => ({
+          category: cat.category,
+          products: cat.products.map((p, index) => ({
+            id: String(p.id || `emergency-${index}`),
+            name: p.name,
+            img: getImageUrl(p.images[0]),
+            header: p.header || p.name,
+            description: p.description || '',
+            descriptionFull: p.descriptionFull || p.description || '',
+            price: p.price,
+            weight: p.weight || ''
+          }))
+        }));
+        setDisplayData(transformedData);
+      }
+      setInitialDataLoaded(true);
+    }
+  }, [dish.dishes, dish.isLoading, initialDataLoaded]);
+
+  // Show loading if data is still being fetched
+  if (dish.isLoading && !initialDataLoaded) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <div className="text-2xl text-gray-600">Загрузка...</div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -59,30 +90,29 @@ const Restaurant = observer(() => {
 
       <div className="container mx-auto font-body sm:px-4">
         <h1 className="flex mx-auto justify-center items-center text-3xl font-bold pt-[7rem] mb-8">Меню</h1>
-        {!shouldUseEmergency ? (
-          dish.dishes.map((dishCategory, categoryIndex) => (
-          <div key={`${dishCategory.category}-${categoryIndex}`}>
+        {displayData.map((section, categoryIndex) => (
+          <div key={`${section.category}-${categoryIndex}`}>
             <h2 className="font-bold pt-2 mb-3 text-lg sm:pt-6 sm:mb-4 sm:text-xl text-center">
-              {dishCategory.category}
+              {section.category}
             </h2>
             <div className='grid gap-0 grid-cols-2 mx-auto max-w-[1000px]'>
-              {dishCategory.products.map((product) => (
+              {section.products.map((product, index) => (
                 <ExtCard
-                  key={product.id}
+                  key={product.id || index}
                   Card={() => 
                     <FoodCard
-                      imgSrc={getImageUrl(product.images[0]) || ''}
+                      imgSrc={product.img || ''}
                       header={product.name}
                       description={product.description || ''}
                     />
                   }
                   ExtContent={() => 
                     <ExtDishcard
-                      imgSrc={getImageUrl(product.images[0]) || ''}
-                      header={product.header || product.name}
-                      description={product.descriptionFull || product.description || ''}
+                      imgSrc={product.img || ''}
+                      header={product.header}
+                      description={product.descriptionFull}
                       price={`${product.price} ₽`}
-                      weight={product.weight || ''}
+                      weight={product.weight}
                     />
                   }
                 />
@@ -90,40 +120,7 @@ const Restaurant = observer(() => {
             </div>
             <hr className="border-gray-400 my-8" />
           </div>
-        ))
-        ) : (
-          restaurantMenuEmergency.map((section) => (
-            <div key={section.category}>
-              <h2 className="font-bold pt-2 mb-3 text-lg sm:pt-6 sm:mb-4 sm:text-xl text-center">
-                {section.category}
-              </h2>
-              <div className='grid gap-0 grid-cols-2 mx-auto max-w-[1000px]'>
-                {section.products.map((p) => (
-                  <ExtCard
-                    key={p.name}
-                    Card={() => 
-                      <FoodCard
-                        imgSrc={p.img}
-                        header={p.name}
-                        description={p.description}
-                      />
-                    }
-                    ExtContent={() => 
-                      <ExtDishcard
-                        imgSrc={p.img}
-                        header={p.header}
-                        description={p.descriptionFull}
-                        price={`${p.price} ₽`}
-                        weight={p.weight}
-                      />
-                    }
-                  />
-                ))}
-              </div>
-              <hr className="border-gray-400 my-8" />
-            </div>
-          ))
-        )}
+        ))}
       </div>
 
       <div>

@@ -99,6 +99,10 @@ const Vinery = observer(() => {
     }
     const { pageContent } = context;
 
+    // ✅ ДОБАВЬТЕ: Фиксируем данные при первой загрузке
+    const [initialDataLoaded, setInitialDataLoaded] = useState(false);
+    const [fixedPageData, setFixedPageData] = useState<any>(null);
+
     // Log data from stores
     useEffect(() => {
         const vineryPage = pageContent.pages.find(p => p.name === "Винодельня");
@@ -107,8 +111,19 @@ const Vinery = observer(() => {
         console.log('Loading state:', { pageContent: pageContent.isLoading });
     }, [pageContent.pages]);
 
-    // Show loading if data is still being fetched
-    if (pageContent.isLoading) {
+    // ✅ Фиксируем данные при первой загрузке
+    useEffect(() => {
+        if (!initialDataLoaded && !pageContent.isLoading) {
+            const vineryPage = pageContent.pages.find(p => p.name === "Винодельня");
+            if (vineryPage) {
+                setFixedPageData(vineryPage);
+            }
+            setInitialDataLoaded(true);
+        }
+    }, [pageContent.isLoading, pageContent.pages, initialDataLoaded]);
+
+    // Show loading only on first load
+    if (pageContent.isLoading && !initialDataLoaded) {
         return (
             <div className="h-screen flex justify-center items-center">
                 <div className="text-2xl text-gray-600">Загрузка...</div>
@@ -116,9 +131,10 @@ const Vinery = observer(() => {
         );
     }
 
-    // Extract page data with fallbacks
-    const vineryPage = pageContent.pages.find(p => p.name === "Винодельня");
-    const vineryPageContent = typeof vineryPage?.content === 'object' ? vineryPage.content : {};
+    // ✅ ИСПОЛЬЗУЙТЕ fixedPageData вместо pageContent.pages
+    const vineryPageContent = fixedPageData?.content 
+        ? (typeof fixedPageData.content === 'object' ? fixedPageData.content : {})
+        : {};
     
     const mainBackground = vineryPageContent.mainBackground || { image: '', title: 'Винодельня' };
     const introSection = vineryPageContent.introSection || { 
