@@ -26,6 +26,9 @@ jobs:
             echo 'Change directory to project'
             cd /home/HotelSiteTailwind || exit 1
 
+            echo 'Get current git commit'
+            git fetch origin dev && git pull
+
             echo 'Stop previous conteiners'
             docker-compose down
 
