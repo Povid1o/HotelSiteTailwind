@@ -6,6 +6,10 @@ const API_BASE = (process.env.REACT_APP_API_URL !== undefined ? process.env.REAC
 // Локально: статические файлы обслуживаются через backend на порту 5001
 const STATIC_BASE = process.env.REACT_APP_API_URL !== undefined ? '' : 'http://localhost:5001';
 
+// Debug logs
+console.log('📦 contentHelpers: API_BASE =', API_BASE);
+console.log('📦 contentHelpers: STATIC_BASE =', STATIC_BASE);
+
 /**
  * Преобразует относительный путь к медиа-файлу в полный URL
  * Если путь уже является полным URL (начинается с http:// или https://), возвращает как есть
@@ -22,8 +26,15 @@ export const getMediaUrl = (path: string | File | null | undefined): string => {
     return path;
   }
   
-  // Если это относительный путь к static, добавляем базовый URL для статических файлов
+  // ✅ Для относительных путей к static
+  // В Docker (STATIC_BASE пустая): возвращаем относительный путь (nginx проксирует)
+  // В разработке: добавляем полный URL backend
   if (path.startsWith('/static/')) {
+    if (STATIC_BASE === '') {
+      // Docker mode - nginx проксирует
+      return path;
+    }
+    // Dev mode - прямой доступ к backend
     return `${STATIC_BASE}${path}`;
   }
   
