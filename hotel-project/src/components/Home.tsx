@@ -228,15 +228,15 @@ const Home = observer(({nav}: HomeProps) => {
 
             {/*  Intro */}
             <section
-                className="mainBackground-page"
+                className="mainBackground-page lg:min-h-[575px] xl:min-h-screen"
                 style={{ backgroundImage: `url(${getImageUrl(mainBackground.image) || '../public/images/Wine_Background2_AI.png'})` }}
             >
-                <div className="max-w-[700px] h-screen mx-auto px-16 flex flex-col justify-center content-center text-center xl:max-w-[900px]">
+                <div className="max-w-[880px] h-screen mx-auto px-16 flex flex-col justify-center content-center text-center lg:min-h-[575px] xl:min-h-screen xl:max-w-[1200px] relative">
                     <h1 className='header-page'>{mainBackground.title}</h1>
-                </div>
 
-                <div className="absolute hidden bottom-10 left-1/2 transform -translate-x-1/2 w-3/4 max-w-4xl lg:flex">
-                  <TravelLineSearchForm id={'main'} />
+                    <div className="absolute hidden bottom-10 left-1/2 transform -translate-x-1/2 w-full lg:flex">
+                        <TravelLineSearchForm id={'main'} />
+                    </div>
                 </div>
 
                 {/* {width > 768 ? (
