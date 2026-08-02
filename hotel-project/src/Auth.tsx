@@ -1,14 +1,12 @@
 import React, { useContext, useState } from "react";
 import Navbar from "./components/Navbar";
-import { login, registration } from "./components/http/userAPI";
-import { useLocation, NavLink, useNavigate } from "react-router-dom";
+import { login } from "./components/http/userAPI";
+import { useNavigate } from "react-router-dom";
 import { Context } from "./index";
 
 const Auth = () => {
   const { user } = useContext(Context);
-  const location = useLocation();
   const navigate = useNavigate();
-  const isLogin = location.pathname === "/login";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -16,11 +14,9 @@ const Auth = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      let data;
-      if (isLogin) {
-        data = await login(email, password);
-      } else {
-        data = await registration(email, password);
+      const data = await login(email, password);
+      if (data.role !== 'ADMIN') {
+        throw new Error('Недостаточно прав для входа в панель управления');
       }
       user.setUser(data);
       user.setIsAuth(true);
@@ -28,7 +24,7 @@ const Auth = () => {
       console.log('✅ Auth: Login successful, navigating to /admin');
       navigate('/admin');
     } catch (error) {
-      setError(error.response.data.message);
+      setError(error.response?.data?.message || error.message || 'Не удалось выполнить вход');
     }
 };
   
@@ -41,7 +37,7 @@ if (!user.isAuth) {
           <div className="w-11/12 p-12 sm:w-8/12 md:w-6/12 lg:w-5/12 2xl:w-4/12 px-6 py-10 sm:px-10 sm:py-6 bg-white rounded-lg shadow-md lg:shadow-lg">
             
             <h2 className="text-center font-semibold text-3xl lg:text-4xl text-gray-800">
-              {isLogin ? "Login" : "Registration"}
+              Вход в панель управления
             </h2>
 
             <form onSubmit={handleSubmit}>
@@ -83,7 +79,7 @@ if (!user.isAuth) {
                 type="submit"
                 className="w-full py-3 mt-10 bg-gray-800 rounded-sm font-medium text-white uppercase focus:outline-none hover:bg-gray-700 hover:shadow-none"
               >
-                {isLogin ? "Войти" : "Зарегистрироваться"}
+                Войти
               </button>
             </form>
           </div>

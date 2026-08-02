@@ -1,5 +1,5 @@
 import { makeAutoObservable, toJS } from 'mobx';
-import { fetchPageContent, updatePageContent, togglePageActive, createPage } from '../components/http/pageAPI';
+import { fetchPageContent, updatePageSection, togglePageActive, createPage } from '../components/http/pageAPI';
 
 // Используем интерфейсы из ТЗ
 interface GalleryImage {
@@ -77,6 +77,10 @@ export default class PageContentStorage {
   private _pages: PageContent[] = [];
   private _isLoading = false;
   private _error: string | null = null;
+  private _saveQueues = new Map<number, Promise<void>>();
+  private _savingPageIds = new Set<number>();
+  private _pageSaveErrors = new Map<number, string>();
+  private _sectionVersions = new Map<string, number>();
 
   constructor() {
     makeAutoObservable(this);
@@ -93,6 +97,14 @@ export default class PageContentStorage {
 
   get error(): string | null {
     return this._error;
+  }
+
+  isSavingPage(pageId: number): boolean {
+    return this._savingPageIds.has(pageId);
+  }
+
+  getPageSaveError(pageId: number): string | null {
+    return this._pageSaveErrors.get(pageId) || null;
   }
 
   // Setters
@@ -127,15 +139,17 @@ export default class PageContentStorage {
   updatePageContentLocal = (pageName: string, sectionName: string, updatedData: any) => {
     const page = this._pages.find(p => p.name === pageName);
     if (page && typeof page.content === 'object') {
-      console.log('🟡 PageContentStorage: updating', sectionName, 'with data:', updatedData);
       const oldData = { ...page.content[sectionName] };
       page.content = {
         ...page.content,
         [sectionName]: updatedData
       };
-      
-      // Преобразуем MobX observable в обычный объект для отправки на сервер
-      // КРИТИЧНО: toJS превращает File в {}, поэтому заменяем File вручную
+
+      const sectionKey = `${page.id}:${sectionName}`;
+      const sectionVersion = (this._sectionVersions.get(sectionKey) || 0) + 1;
+      this._sectionVersions.set(sectionKey, sectionVersion);
+
+      // Convert MobX state without losing File values that must be uploaded.
       const preserveFiles = (mobxData: any, plainData: any) => {
         if (!mobxData || !plainData) return;
         
@@ -143,7 +157,6 @@ export default class PageContentStorage {
           mobxData.forEach((item: any, idx: number) => {
             // Проверяем File напрямую в mobxData
             if (item instanceof File) {
-              console.log(`🔧 PageContentStorage: Preserving File at index ${idx}:`, item.name);
               plainData[idx] = item;
             } else if (typeof item === 'object' && item !== null && !(item instanceof File)) {
               // Рекурсивно обрабатываем объекты
@@ -155,7 +168,6 @@ export default class PageContentStorage {
             const mobxValue = mobxData[key];
             // Проверяем File напрямую в mobxData
             if (mobxValue instanceof File) {
-              console.log(`🔧 PageContentStorage: Preserving File in key "${key}":`, mobxValue.name);
               plainData[key] = mobxValue;
             } else if (typeof mobxValue === 'object' && mobxValue !== null && !(mobxValue instanceof File)) {
               // Рекурсивно обрабатываем объекты и массивы
@@ -165,24 +177,49 @@ export default class PageContentStorage {
         }
       };
       
-      const plainContent = toJS(page.content);
-      preserveFiles(page.content, plainContent);
-      console.log('🟡 PageContentStorage: sending plain content:', plainContent);
-      
-      // Используем page.id вместо pageName
-      updatePageContent(page.id, plainContent).catch((error: any) => {
-        if (error?.response?.status === 413) {
-          console.error('❌ File too large! Max size: 100MB');
-          alert('Файл слишком большой! Максимальный размер: 100 МБ. Попробуйте загрузить файл меньшего размера или сжать его.');
-        } else {
-          console.error('Error updating page content:', error);
-        }
-        // Откатываем изменения
-        page.content = {
-          ...page.content,
-          [sectionName]: oldData
-        };
-      });
+      const plainSection = toJS(updatedData);
+      preserveFiles(updatedData, plainSection);
+
+      const previousSave = this._saveQueues.get(page.id) || Promise.resolve();
+      const save = previousSave
+        .catch(() => undefined)
+        .then(async () => {
+          this._savingPageIds.add(page.id);
+          this._pageSaveErrors.delete(page.id);
+          const savedPage = await updatePageSection(page.id, sectionName, plainSection);
+          const currentPage = this._pages.find(item => item.id === page.id);
+          if (
+            currentPage &&
+            typeof currentPage.content === 'object' &&
+            this._sectionVersions.get(sectionKey) === sectionVersion &&
+            typeof savedPage.content === 'object'
+          ) {
+            currentPage.content = {
+              ...currentPage.content,
+              [sectionName]: savedPage.content[sectionName]
+            };
+          }
+        })
+        .catch((error: any) => {
+          const message = error?.response?.data?.message || 'Не удалось сохранить изменения. Повторите попытку.';
+          this._pageSaveErrors.set(page.id, message);
+          const currentPage = this._pages.find(item => item.id === page.id);
+          if (
+            currentPage &&
+            typeof currentPage.content === 'object' &&
+            this._sectionVersions.get(sectionKey) === sectionVersion
+          ) {
+            currentPage.content = { ...currentPage.content, [sectionName]: oldData };
+          }
+        })
+        .finally(() => {
+          if (this._saveQueues.get(page.id) === save) {
+            this._savingPageIds.delete(page.id);
+          }
+        });
+
+      this._saveQueues.set(page.id, save);
+      return save;
     }
   };
 

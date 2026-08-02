@@ -45,9 +45,9 @@ export const fetchPageContent = async () => {
   }));
 };
 
-export const updatePageContent = async (pageId: number, content: any) => {
+export const updatePageSection = async (pageId: number, section: string, content: any) => {
   // Upload any File fields and replace with URLs
-  const uploadIfFile = async (val: any, type: string) => {
+  const uploadIfFile = async (val: any) => {
     // Проверяем как обычный File, так и File обернутый в MobX Proxy
     const isFile = val instanceof File || (val && val.constructor && val.constructor.name === 'File');
     
@@ -55,6 +55,7 @@ export const updatePageContent = async (pageId: number, content: any) => {
       console.log('📤 uploadIfFile: Uploading file:', val.name || 'unknown');
       const form = new FormData();
       form.append('file', val);
+      const type = val.type?.startsWith('video/') ? 'videos' : 'pages';
       form.append('type', type);
       const { data } = await $authHost.post('api/upload', form, { headers: { 'Content-Type': 'multipart/form-data' } });
       console.log('✅ uploadIfFile: File uploaded successfully to:', data.url);
@@ -69,7 +70,7 @@ export const updatePageContent = async (pageId: number, content: any) => {
     // Проверяем, является ли это File объектом (может быть обернут в MobX Proxy)
     if (obj instanceof File || (obj && obj.constructor && obj.constructor.name === 'File')) {
       console.log('🟢 pageAPI.deepProcess: Found raw File object, uploading...');
-      const result = await uploadIfFile(obj, 'pages');
+      const result = await uploadIfFile(obj);
       console.log('🟢 pageAPI.deepProcess: File uploaded to:', result);
       return result;
     }
@@ -90,7 +91,7 @@ export const updatePageContent = async (pageId: number, content: any) => {
       // ✅ ПАТЧ: если объект формата { src: File }, загружаем File и возвращаем { src: url }
       if (obj.src && (obj.src instanceof File || (obj.src.constructor && obj.src.constructor.name === 'File'))) {
         console.log('📤 pageAPI.deepProcess: Found { src: File } object, uploading File...');
-        const uploadedUrl = await uploadIfFile(obj.src, 'pages');
+        const uploadedUrl = await uploadIfFile(obj.src);
         console.log('✅ pageAPI.deepProcess: { src: File } uploaded to:', uploadedUrl);
         return { ...obj, src: uploadedUrl };
       }
@@ -119,17 +120,10 @@ export const updatePageContent = async (pageId: number, content: any) => {
     return obj
   }
 
-  // Сначала получаем текущую страницу
-  const { data: currentPage } = await $host.get(`api/pages/${pageId}`);
-  
-  const processed = await deepProcess(content, currentPage.name)
-  
-  // Отправляем обновление с правильной структурой
-  const { data } = await $authHost.put(`api/pages/${pageId}`, {
-    name: currentPage.name,
-    path: currentPage.path,
-    is_active: currentPage.is_active,
-    content_json: processed
+  const processed = await deepProcess(content, section)
+  const { data } = await $authHost.patch(`api/pages/${pageId}/content`, {
+    section,
+    data: processed
   });
   
   return {
@@ -159,16 +153,7 @@ export const createPage = async (pageData: any) => {
 };
 
 export const togglePageActive = async (pageId: number) => {
-  // Сначала получаем текущую страницу
-  const { data: currentPage } = await $host.get(`api/pages/${pageId}`);
-  
-  // Обновляем только is_active
-  const { data } = await $authHost.put(`api/pages/${pageId}`, {
-    name: currentPage.name,
-    path: currentPage.path,
-    is_active: !currentPage.is_active,
-    content_json: currentPage.content_json
-  });
+  const { data } = await $authHost.patch(`api/pages/${pageId}/toggle-active`);
   
   return {
     id: data.id,

@@ -7,6 +7,10 @@ const fileUpload = require('express-fileupload')
 const router = require('./routes/index')
 const errorHandler = require('./middleware/ErrorHandlingMiddleware')
 const path = require('path')
+const fs = require('fs')
+const crypto = require('crypto')
+const authMiddleware = require('./middleware/authMiddleware')
+const checkRole = require('./middleware/checkRoleMiddleware')
 
 const PORT = process.env.PORT || 5001
 
@@ -24,9 +28,57 @@ app.use((req, _res, next) => {
   }
   next()
 })
-app.use(express.static(path.resolve(__dirname, 'static')))
+
+// Логирование запросов к статическим файлам (для отладки)
+app.use('/static', (req, res, next) => {
+  console.log(`📁 Static file request: ${req.url} | Method: ${req.method}`);
+  next();
+});
+
+// Настройка статических файлов с явным указанием MIME-типов для видео
+app.use(express.static(path.resolve(__dirname, 'static'), {
+  setHeaders: (res, filePath) => {
+    // Явно устанавливаем MIME-типы для видео файлов
+    if (filePath.endsWith('.mp4')) {
+      res.setHeader('Content-Type', 'video/mp4');
+    } else if (filePath.endsWith('.webm')) {
+      res.setHeader('Content-Type', 'video/webm');
+    } else if (filePath.endsWith('.avi')) {
+      res.setHeader('Content-Type', 'video/x-msvideo');
+    } else if (filePath.endsWith('.mov')) {
+      res.setHeader('Content-Type', 'video/quicktime');
+    } else if (filePath.endsWith('.wmv')) {
+      res.setHeader('Content-Type', 'video/x-ms-wmv');
+    } else if (filePath.endsWith('.flv')) {
+      res.setHeader('Content-Type', 'video/x-flv');
+    } else if (filePath.endsWith('.mkv')) {
+      res.setHeader('Content-Type', 'video/x-matroska');
+    }
+    // Accept-Ranges для поддержки перемотки видео
+    res.setHeader('Accept-Ranges', 'bytes');
+  }
+}))
 // Дополнительная настройка для обслуживания файлов из подпапок
-app.use('/static', express.static(path.resolve(__dirname, 'static')))
+app.use('/static', express.static(path.resolve(__dirname, 'static'), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.mp4')) {
+      res.setHeader('Content-Type', 'video/mp4');
+    } else if (filePath.endsWith('.webm')) {
+      res.setHeader('Content-Type', 'video/webm');
+    } else if (filePath.endsWith('.avi')) {
+      res.setHeader('Content-Type', 'video/x-msvideo');
+    } else if (filePath.endsWith('.mov')) {
+      res.setHeader('Content-Type', 'video/quicktime');
+    } else if (filePath.endsWith('.wmv')) {
+      res.setHeader('Content-Type', 'video/x-ms-wmv');
+    } else if (filePath.endsWith('.flv')) {
+      res.setHeader('Content-Type', 'video/x-flv');
+    } else if (filePath.endsWith('.mkv')) {
+      res.setHeader('Content-Type', 'video/x-matroska');
+    }
+    res.setHeader('Accept-Ranges', 'bytes');
+  }
+}))
 // ✅ Увеличиваем лимит для загрузки файлов до 100MB
 app.use(fileUpload({
   limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB
@@ -34,55 +86,58 @@ app.use(fileUpload({
   tempFileDir: '/tmp/'
 }))
 
-// Эндпоинт для загрузки файлов (должен быть ПЕРЕД основным роутером)
-app.post('/api/upload', (req, res) => {
+const uploadPolicies = {
+  dishes: { extensions: new Set(['.jpg', '.jpeg', '.png', '.webp']), mimeTypes: new Set(['image/jpeg', 'image/png', 'image/webp']), maxBytes: 10 * 1024 * 1024 },
+  wines: { extensions: new Set(['.jpg', '.jpeg', '.png', '.webp']), mimeTypes: new Set(['image/jpeg', 'image/png', 'image/webp']), maxBytes: 10 * 1024 * 1024 },
+  rooms: { extensions: new Set(['.jpg', '.jpeg', '.png', '.webp']), mimeTypes: new Set(['image/jpeg', 'image/png', 'image/webp']), maxBytes: 10 * 1024 * 1024 },
+  pages: { extensions: new Set(['.jpg', '.jpeg', '.png', '.webp']), mimeTypes: new Set(['image/jpeg', 'image/png', 'image/webp']), maxBytes: 10 * 1024 * 1024 },
+  videos: { extensions: new Set(['.mp4', '.webm']), mimeTypes: new Set(['video/mp4', 'video/webm']), maxBytes: 100 * 1024 * 1024 }
+};
+
+// Media changes are admin-only.  The endpoint accepts a deliberately small
+// format allowlist; file names, MIME type and target directory are never taken
+// from the client unchecked.
+app.post('/api/upload', authMiddleware, checkRole('ADMIN'), async (req, res) => {
   try {
     if (!req.files || Object.keys(req.files).length === 0) {
       return res.status(400).json({ message: 'No files uploaded' });
     }
 
     const uploadedFile = req.files.file;
-    if (!uploadedFile) {
+    if (!uploadedFile || Array.isArray(uploadedFile)) {
       return res.status(400).json({ message: 'File field is required' });
     }
 
-    // Получаем категорию медиа из параметров запроса
-    const mediaType = req.body.type || req.query.type || 'general';
-    const allowedTypes = ['dishes', 'wines', 'rooms', 'pages', 'videos', 'general'];
-    
-    if (!allowedTypes.includes(mediaType)) {
+    const mediaType = req.body.type || req.query.type;
+    const policy = uploadPolicies[mediaType];
+    if (!policy) {
       return res.status(400).json({ message: 'Invalid media type' });
     }
 
-    // Создаём уникальное имя файла
-    const fileExtension = path.extname(uploadedFile.name);
-    const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}${fileExtension}`;
-    const uploadPath = path.resolve(__dirname, 'static', mediaType, fileName);
+    const fileExtension = path.extname(uploadedFile.name).toLowerCase();
+    if (!policy.extensions.has(fileExtension) || !policy.mimeTypes.has(uploadedFile.mimetype)) {
+      return res.status(415).json({ message: 'Unsupported media format' });
+    }
+    if (uploadedFile.size > policy.maxBytes) {
+      return res.status(413).json({ message: 'File is too large for this media type' });
+    }
 
-    console.log(`Uploading file: ${uploadedFile.name} -> ${mediaType}/${fileName}`);
+    const fileName = `${crypto.randomUUID()}${fileExtension}`;
+    const uploadDirectory = path.resolve(__dirname, 'static', mediaType);
+    const uploadPath = path.join(uploadDirectory, fileName);
+    await fs.promises.mkdir(uploadDirectory, { recursive: true });
 
-    uploadedFile.mv(uploadPath, (err) => {
-      if (err) {
-        console.error('File upload error:', err);
-        return res.status(500).json({ message: 'File upload failed', error: err.message });
-      }
-      
-      console.log(`File uploaded successfully: ${mediaType}/${fileName}`);
-      
-      // Return relative URL that will be handled by frontend
-      const relativeUrl = `/static/${mediaType}/${fileName}`;
-      
-      res.json({ 
-        url: relativeUrl,
-        fileName,
-        originalName: uploadedFile.name,
-        size: uploadedFile.size,
-        type: mediaType
-      });
+    await uploadedFile.mv(uploadPath);
+
+    res.status(201).json({
+      url: `/static/${mediaType}/${fileName}`,
+      fileName,
+      size: uploadedFile.size,
+      type: mediaType
     });
   } catch (error) {
     console.error('Upload endpoint error:', error);
-    res.status(500).json({ message: 'Internal server error', error: error.message });
+    res.status(500).json({ message: 'Media upload failed' });
   }
 });
 

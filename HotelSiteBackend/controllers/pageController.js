@@ -9,6 +9,11 @@ const pageSchema = Joi.object({
   content_json: Joi.object().default({})
 });
 
+const pageSectionSchema = Joi.object({
+  section: Joi.string().max(100).required(),
+  data: Joi.object().required()
+});
+
 const toJsonObject = (x) => {
   if (x && typeof x === 'string') {
     try { return JSON.parse(x); } catch { return {}; }
@@ -55,6 +60,18 @@ exports.update = asyncHandler(async (req, res) => {
   }
   const v = await pageSchema.validateAsync(payload);
   await p.update(v);
+  res.json(p);
+});
+
+// Update a single content section.  Replacing the complete JSON document from
+// each editor caused concurrent saves to overwrite one another.
+exports.updateSection = asyncHandler(async (req, res) => {
+  const p = await Page.findByPk(req.params.id);
+  if (!p) return res.sendStatus(404);
+
+  const { section, data } = await pageSectionSchema.validateAsync(req.body);
+  const content = toJsonObject(p.content_json);
+  await p.update({ content_json: { ...content, [section]: data } });
   res.json(p);
 });
 

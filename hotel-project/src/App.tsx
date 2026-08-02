@@ -58,10 +58,6 @@ const publicrouter = createBrowserRouter([
         element: <Vinery />,
       },
       {
-        path: "/registration",
-        element: <Auth/>
-      },
-      {
         path: "/Shop",
         element: <Shop/>
       },
@@ -75,10 +71,6 @@ const publicrouter = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <Auth/>
-      },
-      {
-        path: "/registration",
         element: <Auth/>
       },
       {
@@ -139,10 +131,6 @@ const hiderouter = createBrowserRouter([
         element: <Auth/>
       },
       {
-        path: "/registration",
-        element: <Auth/>
-      },
-      {
         path: '/admin',
         element: <AdminPage/>
       },
@@ -182,10 +170,11 @@ const App= observer(() => {
             setLoading(false);
             return;
           }
-          const { dish, hotel, pageContent, wine, events } = appCtx;
-          try {
-            // Загружаем данные без проверки токена на backend
+            const { dish, hotel, pageContent, wine, events, user: currentUser } = appCtx;
+            try {
+            // Confirm a saved token before exposing the admin router.
             await Promise.all([
+              currentUser.checkAuth().catch(() => false),
               dish.loadDishes().catch(err => console.error('Ошибка загрузки блюд:', err)),
               hotel.loadRooms().catch(err => console.error('Ошибка загрузки номеров:', err)),
               pageContent.loadPageContent().catch(err => console.error('Ошибка загрузки страниц:', err)),

@@ -39,8 +39,12 @@ const VideoWithUpload: React.FC<VideoWithUploadProps> = ({
   useEffect(() => {
     console.log('🎥 VideoWithUpload: sourceUrl changed', sourceUrl);
     
-    if (typeof sourceUrl === 'string' && sourceUrl !== currentVideoUrl) {
-      setCurrentVideoUrl(sourceUrl);
+    if (typeof sourceUrl === 'string') {
+      // Если это строка (URL), используем её напрямую
+      if (sourceUrl !== currentVideoUrl) {
+        console.log('🎥 VideoWithUpload: Setting string URL:', sourceUrl);
+        setCurrentVideoUrl(sourceUrl);
+      }
     } else if (sourceUrl instanceof File) {
       // Если пришел File объект, создаем blob URL для отображения
       const blobUrl = URL.createObjectURL(sourceUrl);
@@ -52,8 +56,11 @@ const VideoWithUpload: React.FC<VideoWithUploadProps> = ({
         URL.revokeObjectURL(savedBlobRef.current);
       }
       savedBlobRef.current = blobUrl;
+    } else if (!sourceUrl) {
+      // Если sourceUrl пустой, очищаем currentVideoUrl
+      setCurrentVideoUrl('');
     }
-  }, [sourceUrl, currentVideoUrl]);
+  }, [sourceUrl]);
 
   // Очистка blob URL при размонтировании компонента
   useEffect(() => {
@@ -77,8 +84,8 @@ const VideoWithUpload: React.FC<VideoWithUploadProps> = ({
     console.log(`Selected video file: ${selectedFile.name}`);
     
     try {
-      if (!selectedFile.type.startsWith('video/')) {
-        throw new Error('Выбранный файл не является видео');
+      if (!['video/mp4', 'video/webm'].includes(selectedFile.type)) {
+        throw new Error('Поддерживаются только видео MP4 и WebM');
       }
 
       // Очищаем предыдущий blob URL если он есть

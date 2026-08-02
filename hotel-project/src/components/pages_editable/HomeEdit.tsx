@@ -200,8 +200,6 @@ const HomeEdit = ({ pageData, onContentChange }) => {
             services: updatedServices
         });
         
-        // Показываем уведомление пользователю
-        alert(`✅ Добавлено ${count} элементов!\n\n⚠️ Закройте и откройте модальное окно, чтобы увидеть изменения.`);
     }, [onContentChange, pageData.servicesSection, addServicesCount]);
     
     // Функция для создания стабильного URL для отображения (изображения и видео)
@@ -238,7 +236,7 @@ const HomeEdit = ({ pageData, onContentChange }) => {
             return plainSrc;
         }
         
-        // Если это строка, преобразуем относительные пути в полные URL
+        // Если это строка, используем getMediaUrl для правильного преобразования URL
         if (typeof plainSrc === 'string') {
             const fullUrl = getMediaUrl(plainSrc);
             console.log('🎥 HomeEdit: Video is URL string:', fullUrl);
@@ -273,7 +271,7 @@ const HomeEdit = ({ pageData, onContentChange }) => {
             <BackgroundContentEdit 
             backgroundMedia={pageData.mainBackground.image}
             onMediaChange={handleMainBackgroundImageChange}
-            acceptedTypes="image/*,video/*" // Если нужны только изображения, или "image/*,video/*" для изображений и видео
+            acceptedTypes="image/jpeg,image/png,image/webp,video/mp4,video/webm"
         >
             <div className="max-w-[700px] mx-auto px-16 flex flex-col justify-center content-center text-center">
                 <div className="flex max-w-screen-lg flex-wrap items-end gap-4 px-4 py-3">
@@ -348,7 +346,7 @@ const HomeEdit = ({ pageData, onContentChange }) => {
                     onSave={handleVideoSectionTitleChange} 
                 />
                 <VideoWithUpload 
-                    sourceUrl={getDisplayVideoUrl(pageData.videoSection.videoUrl)}
+                    sourceUrl={typeof getDisplayVideoUrl(pageData.videoSection.videoUrl) === 'string' ? getDisplayVideoUrl(pageData.videoSection.videoUrl) : ''}
                     onVideoChange={handleVideoSectionVideoChange}
                 />
             </div>

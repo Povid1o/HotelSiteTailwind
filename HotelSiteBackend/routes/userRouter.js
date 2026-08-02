@@ -4,7 +4,10 @@ const userController = require('../controllers/userController')
 const authMiddleware = require('../middleware/authMiddleware')
 const checkRole = require('../middleware/checkRoleMiddleware')
 
-router.post('/registration', userController.registration)
+// New accounts are created by an authenticated administrator only.  The public
+// site has no self-service registration flow, so this route must never be an
+// escalation path to the admin panel.
+router.post('/registration', authMiddleware, checkRole('ADMIN'), userController.registration)
 router.post('/login',userController.login)
 router.get('/auth',authMiddleware, userController.check)
 

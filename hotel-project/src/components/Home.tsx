@@ -21,7 +21,7 @@ import './styles/base.css';
 // import { entries } from 'mobx';
 
 import { standardRoomEmergency, standardPlusRoomEmergency, homeSectionsEmergency, homeServicesEmergency, homeGalleryEmergency } from '../emergencyContent/text';
-import { getContentOrEmergency } from '../utils/contentHelpers';
+import { getContentOrEmergency, getMediaUrl } from '../utils/contentHelpers';
 import { API_BASE, STATIC_BASE } from './http';
 
 const GaleryCard = () => {
@@ -413,7 +413,12 @@ const Home = observer(({nav}: HomeProps) => {
             <section className='unShown card'>
                 <div className='section-format'>
                     <h1 className='header-section'>{videoSection.title}</h1>
-                    <VPlayer sourceUrl={getImageUrl(videoSection.videoUrl) || sampleVideo}/>
+                    <VPlayer sourceUrl={(() => {
+                        const url = getMediaUrl(videoSection.videoUrl) || sampleVideo;
+                        console.log('🎥 Home: videoSection.videoUrl:', videoSection.videoUrl);
+                        console.log('🎥 Home: getMediaUrl result:', url);
+                        return url;
+                    })()}/>
                 </div>
             </section>
 

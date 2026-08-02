@@ -16,7 +16,7 @@ const BackgroundContentEdit: React.FC<BackgroundContentEditProps> = ({
   onMediaChange, 
   children,
   className = "",
-  acceptedTypes = "image/*,video/*"
+  acceptedTypes = "image/jpeg,image/png,image/webp,video/mp4,video/webm"
 }) => {
   const [showButtons, setShowButtons] = useState<boolean>(false);
   const [currentMediaUrl, setCurrentMediaUrl] = useState<string>('');
@@ -93,8 +93,8 @@ const BackgroundContentEdit: React.FC<BackgroundContentEditProps> = ({
   }, []);
 
   const validateMediaFile = useCallback(async (file: File): Promise<boolean> => {
-    const isImage = file.type.startsWith('image/');
-    const isVideo = file.type.startsWith('video/');
+    const isImage = ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
+    const isVideo = ['video/mp4', 'video/webm'].includes(file.type);
     
     if (!isImage && !isVideo) {
       throw new Error('Выбранный файл не является изображением или видео');

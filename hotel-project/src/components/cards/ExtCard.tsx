@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, RefObject  } from 'react';
 import '../styles/ExitButton.css'
 
-const ExtCard = ({ Card, ExtContent }) => {
+const ExtCard = ({ Card, ExtContent, content }) => {
   const [showDialog, setShowDialog] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const [dialogOverflow, setDialogOverflow] = useState('hidden');
@@ -59,7 +59,7 @@ const ExtCard = ({ Card, ExtContent }) => {
               </div>
             </div>
           </div>
-            <ExtContent/>
+            {content ?? <ExtContent/>}
           </div>
         </div>
       )}

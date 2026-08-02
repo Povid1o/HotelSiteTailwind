@@ -1,9 +1,12 @@
 {
     email tati8877@yandex.ru
-    auto_https off
 }
 
-:80 {
+www.xn--80adsuhsg7e.xn--p1ai {
+    redir https://xn--80adsuhsg7e.xn--p1ai{uri} permanent
+}
+
+xn--80adsuhsg7e.xn--p1ai {
     encode zstd gzip
 
     # API > backend:8000
@@ -15,8 +18,16 @@
     @doubleapi path /api/api*
     handle @doubleapi {
         uri strip_prefix /api
-        reverse_proxy backend:8000
+    reverse_proxy backend:8000
     }
+
+
+    # Загруженные файлы (если нужно отдавать напрямую из volume)
+#    @static path /static*
+#    handle @static {
+#        root * /var/www/static
+#        file_server
+#    }
 
     # Фронтенд > nginx внутри контейнера frontend:80
     handle {

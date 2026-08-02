@@ -15,7 +15,7 @@ const generateJwt = (id, email, role) => {
 
 class UserController {
     async registration(req, res, next) {
-        const {email, password, role} = req.body
+        const {email, password} = req.body
         if (!email || !password) {
             return next(ApiError.badRequest('Некорректный email или password'))
         }
@@ -23,8 +23,11 @@ class UserController {
         if (candidate) {
             return next(ApiError.badRequest('Пользователь с таким email уже существует'))
         }
-        const hashPassword = await bcrypt.hash(password, 5)
-        const user = await User.create({email, role, password: hashPassword})
+        const hashPassword = await bcrypt.hash(password, 12)
+        // This endpoint is protected by the ADMIN role in the router.  Do not
+        // accept a role from the request body: it would let a caller choose
+        // their own privileges.
+        const user = await User.create({email, role: 'ADMIN', password: hashPassword})
         const basket = await Basket.create({userId: user.id})
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})

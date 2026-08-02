@@ -236,7 +236,7 @@ const AdminPage = observer(() =>  {
             Править
           </button>
         )}
-        ExtContent={() => (
+        content={
           <HomeEdit
             pageData={{
               mainBackground: { image: '', title: '', ...(typeof page.content === 'object' ? page.content.mainBackground : {}) },
@@ -250,7 +250,7 @@ const AdminPage = observer(() =>  {
               updatePageContent(page.name, sectionName, updatedData)
             }
           />
-        )}
+        }
       />
     ),
     "Винодельня": (page) => (
@@ -260,7 +260,7 @@ const AdminPage = observer(() =>  {
             Править
           </button>
         )}
-        ExtContent={() => (
+        content={
           <VineryEdit
             pageData={{
               mainBackground: { image: '', title: '', ...(typeof page.content === 'object' ? page.content.mainBackground : {}) },
@@ -274,7 +274,7 @@ const AdminPage = observer(() =>  {
               updatePageContent(page.name, sectionName, updatedData)
             }
           />
-        )}
+        }
       />
     ),
     "Ресторан": () => (
@@ -370,7 +370,11 @@ const AdminPage = observer(() =>  {
                       <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                         {page.name}
                       </Table.Cell>
-                      <Table.Cell>{page.isActive ? "Сохранено" : "Есть изменения"}</Table.Cell>
+                      <Table.Cell>
+                        {pageContent.isSavingPage(page.id)
+                          ? "Сохраняем…"
+                          : pageContent.getPageSaveError(page.id) || "Сохранено"}
+                      </Table.Cell>
                       <Table.Cell>
                         {pageContentHandlers[page.name] ? pageContentHandlers[page.name](page) : (
                           <span className="text-gray-500">
@@ -408,7 +412,7 @@ const AdminPage = observer(() =>  {
                               Править
                             </button>
                           )}
-                          ExtContent={() => (
+                          content={
                             <NewRoomCard
                               roomName={room.name}
                               photos={room.images}
@@ -421,7 +425,7 @@ const AdminPage = observer(() =>  {
                               notes={room.notes}
                               onDataChange={(updatedData) => updateRoomData(room.id, updatedData)}
                             />
-                          )}
+                          }
                         />
                       </Table.Cell>
                       <Table.Cell>
@@ -502,7 +506,7 @@ const AdminPage = observer(() =>  {
                                   Править
                                 </button>
                               )}
-                              ExtContent={() => (
+                              content={
                                 <NewDishCard
                                   dishName={name}
                                   photos={images}
@@ -512,7 +516,7 @@ const AdminPage = observer(() =>  {
                                   weight={weight}
                                   onDataChange={(updatedData) => updateDishData(category, id, updatedData)}
                                 />
-                              )}
+                              }
                             />
                           </Table.Cell>
                           <Table.Cell>
@@ -591,7 +595,7 @@ const AdminPage = observer(() =>  {
                                   Править
                                 </button>
                               )}
-                              ExtContent={() => (
+                              content={
                                 <div className="p-4">
                                   <div className="mb-4">
                                     <label className="block text-sm font-medium text-gray-700 mb-2">Название:</label>
@@ -622,7 +626,7 @@ const AdminPage = observer(() =>  {
                                     />
                                   </div>
                                 </div>
-                              )}
+                              }
                             />
                           </Table.Cell>
                           <Table.Cell>
@@ -693,7 +697,7 @@ const AdminPage = observer(() =>  {
                                       Править
                                     </button>
                                   )}
-                                  ExtContent={() => (
+                                  content={
                                     <NewWineCard
                                       dishName={name}
                                       photos={images}
@@ -705,7 +709,7 @@ const AdminPage = observer(() =>  {
                                       temperature={temperature}
                                       onDataChange={(updatedData) => updateWineData(type, sweetness, id, updatedData)}
                                     />
-                                  )}
+                                  }
                                 />
                               </Table.Cell>
                               <Table.Cell>

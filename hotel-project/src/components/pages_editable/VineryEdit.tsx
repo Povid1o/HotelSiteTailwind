@@ -270,8 +270,6 @@ const VineryEdit = ({ pageData, onContentChange }) => {
             stages: updatedStages
         });
         
-        // Показываем уведомление пользователю
-        alert(`✅ Добавлено ${count} процессов!\n\n⚠️ Закройте и откройте модальное окно, чтобы увидеть изменения.`);
     }, [onContentChange, pageData.productionSection, addStagesCount]);
 
     // Handlers for region section

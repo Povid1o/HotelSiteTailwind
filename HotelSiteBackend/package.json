@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "migrate": "sequelize-cli db:migrate"
+    "migrate": "sequelize-cli db:migrate",
+    "create-admin": "node scripts/create-admin.js",
+    "test": "node --test"
   },
   "keywords": [],
   "author": "",
