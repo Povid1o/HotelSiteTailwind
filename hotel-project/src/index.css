@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap');
 @import './components/styles/site-shell.css';
+@import './components/styles/design-v4.css';
+@import './components/styles/design-v4-layout.css';
 
 @tailwind base;
 @tailwind components;

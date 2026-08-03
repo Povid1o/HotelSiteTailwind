@@ -64,6 +64,7 @@ const Navbar = observer(({ nav = false, setNav }: NavbarProps) => {
               </NavLink>
             </li>
           ))}
+          <li className='site-nav__item--disabled'><span aria-disabled='true' title='Скоро'>Центр производства</span></li>
           {user?.isAuth && (
             <>
               <li>

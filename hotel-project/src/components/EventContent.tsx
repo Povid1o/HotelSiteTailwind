@@ -31,7 +31,7 @@ const EventContent = observer(() => {
     </section>
     <section className='v4-container v4-events'>
       <p className='v4-kicker'>Категории</p>
-      <div className='v4-event-chips'><button className={!active ? 'is-active' : ''} onClick={() => setActive('')}><LuCalendarDays />Все</button>{categories.map((category: any) => <button key={category.id} className={active === String(category.id) ? 'is-active' : ''} onClick={() => setActive(String(category.id))}>{categoryIcon(category.header)}{category.header}</button>)}</div>
+      <div className='v4-event-chips'>{categories.map((category: any) => <button key={category.id} className={active === String(category.id) ? 'is-active' : ''} onClick={() => setActive(active === String(category.id) ? '' : String(category.id))}>{categoryIcon(category.header)}{category.header}</button>)}</div>
       <div className='v4-events__grid'>{visible.map((event: any) => <article className='v4-card' key={event.id}><div className='v4-events__image'>{event.images?.[0]?.url && <img src={getMediaUrl(event.images[0].url)} alt={event.title} />}</div><div className='v4-card__body'><span className='v4-tag'>{event.category.header}</span><h3>{event.title}</h3><p>{event.description}</p><a href='#site-contacts'>Записаться →</a></div></article>)}</div>
     </section>
   </main>;

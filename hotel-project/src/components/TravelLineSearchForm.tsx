@@ -84,7 +84,7 @@ const TravelLineSearchForm = ({id}: {id: string}) => {
       padding: 20px 28px;
     }
     #block-search input, #block-search select { border-color: rgba(25,49,47,.18) !important; border-radius: 2px !important; color: #19312F !important; font-family: Manrope, sans-serif !important; }
-    #block-search button, #block-search [type=submit] { background: transparent !important; border: 1px solid #C7774D !important; border-radius: 2px !important; color: #19312F !important; font-family: Manrope, sans-serif !important; font-weight: 600 !important; }
+    #block-search button, #block-search [type=submit] { background: transparent !important; border: 1px solid #C7774D !important; border-radius: 2px !important; color: #C7774D !important; font-family: 'Cormorant Garamond', serif !important; font-size: 15px !important; font-weight: 600 !important; height: 36px !important; }
     #block-search button:hover, #block-search [type=submit]:hover { background:#C7774D !important; color:#fff !important; }
     @media (max-width: 640px) { .tl-container { padding:16px !important; } }
   `;

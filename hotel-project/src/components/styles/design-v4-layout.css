@@ -1,0 +1,17 @@
+/* Геометрия и каскад V4. Подключено до code-split экранов, чтобы токены
+   одинаково работали и при прямом открытии любой страницы. */
+.v4-home__hero{background-color:#DCE5DE!important;flex-direction:column;position:relative}
+.v4-home__hero-content{box-sizing:border-box;position:relative;z-index:1}
+.v4-home__hero h1{line-height:.95!important;margin:0 0 20px!important}
+.v4-home__lead{color:rgba(245,242,234,.85)!important;margin:0 0 32px!important}
+.v4-kicker--light{margin-bottom:16px}
+.v4-page{padding-top:92px!important}
+.v4-vinery__tasting-wrap{margin-top:64px;padding-bottom:112px}.v4-vinery__tasting{flex-wrap:wrap;margin-top:0!important}.v4-vinery__events{margin-top:0!important}
+.v4-shop__hero{height:36vh!important;min-height:260px!important}
+.v4-events>.v4-kicker{margin-bottom:16px}
+.v4-restaurant>h2{font-size:clamp(24px,3.2vw,32px)!important;margin:0 0 28px!important}
+.v4-privacy h1{margin-bottom:32px!important}.v4-privacy>div{margin-top:0!important}.v4-privacy>div+div{margin-top:28px!important}
+.v4-events .v4-event-chips button svg{color:#C7774D}
+.v4-events .v4-event-chips button.is-active,.v4-shop__filters button.is-active{background:#C7774D!important;border-color:#C7774D!important;color:#F5F2EA!important}
+.v4-events .v4-event-chips button.is-active svg{color:#F5F2EA!important}
+@media(max-width:1023px){.v4-page{padding-top:92px}}
