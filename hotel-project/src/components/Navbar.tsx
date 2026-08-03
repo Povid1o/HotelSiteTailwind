@@ -35,21 +35,18 @@ const Navbar = observer(({ nav = false, setNav }: NavbarProps) => {
     { to: '/Vinery', label: 'Винодельня' },
     { to: '/Restaurant', label: 'Ресторан' },
     { to: '/Shop', label: 'Витрина вин' },
-    { to: '/Ivents', label: 'Мероприятия' },
+    { to: '/Events', label: 'Мероприятия' },
     { to: '/Contacts', label: 'Контакты' },
   ];
 
   return (
     <header className='site-header'>
-      <div className='site-header__logo'>
-        <Link to='/' onClick={closeMenu}>
-          <p className='site-header__eyebrow'>Усадьба • Резиденция</p>
-          <span className='site-header__title'>Террасы</span>
-        </Link>
-      </div>
+      <Link to='/' className='site-header__brand' onClick={closeMenu} aria-label='Винные Террасы — главная'>
+        Винные Террасы
+      </Link>
       <button
         type='button'
-        className='site-header__toggle'
+        className='site-nav__toggle'
         onClick={handleClick}
         aria-label={nav ? 'Закрыть меню' : 'Открыть меню'}
       >

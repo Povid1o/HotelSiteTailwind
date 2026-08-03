@@ -57,6 +57,14 @@ const router = createBrowserRouter([
         element: <Ivents />,
       },
       {
+        path:"/Ivents",
+        element: <Ivents />,
+      },
+      {
+        path:"/Ivents/:categorie",
+        element: <Ivents />,
+      },
+      {
         path:"/Restaurant",
         element: <Restaurant />,
       },

@@ -21,7 +21,12 @@ const Home = observer(() => {
   const about = content.aboutSection || {};
   const gallery = content.firstGallery || {};
   const scenery = content.secondGallery || {};
-  const pictures = (gallery.images || []).map((image: any) => media(image?.src || image)).filter(Boolean);
+  const fallbackWhy1 = '/static/pages/why_stay_1.jpg';
+  const fallbackWhy2 = '/static/pages/why_stay_2.jpg';
+  const pictures = [
+    media(gallery.images?.[0]?.src || gallery.images?.[0], fallbackWhy1),
+    media(gallery.images?.[1]?.src || gallery.images?.[1], fallbackWhy2)
+  ].filter(Boolean);
   const sceneryImage = media(scenery.images?.[0]?.src || scenery.images?.[0], fallback);
   const rooms = hotel.rooms.filter((room: any) => room.isActive !== false).slice(0, 3);
   const restaurantDish: any = dish.dishes.flatMap((section: any) => section.products || [])[0];

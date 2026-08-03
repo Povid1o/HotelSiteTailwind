@@ -6,7 +6,9 @@
 .v4-home__lead{color:rgba(245,242,234,.85)!important;margin:0 0 32px!important}
 .v4-kicker--light{margin-bottom:16px}
 .v4-page{padding-top:92px!important}
-.v4-vinery__tasting-wrap{margin-top:64px;padding-bottom:112px}.v4-vinery__tasting{flex-wrap:wrap;margin-top:0!important}.v4-vinery__events{margin-top:0!important}
+.v4-vinery__tasting-wrap{margin-top:56px!important;padding-bottom:80px!important}.v4-vinery__tasting{flex-wrap:wrap;margin-top:0!important}.v4-vinery__events{margin-top:0!important}
+.v4-hotel__booking{margin:40px auto 32px!important;max-width:1048px!important;padding:0 24px!important;position:relative!important;z-index:3!important}
+.v4-vinery__wines .v4-center{margin-top:40px!important;margin-bottom:56px!important}
 .v4-shop__hero{height:36vh!important;min-height:260px!important}
 .v4-events>.v4-kicker{margin-bottom:16px}
 .v4-restaurant>h2{font-size:clamp(24px,3.2vw,32px)!important;margin:0 0 28px!important}
