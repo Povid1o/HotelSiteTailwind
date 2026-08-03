@@ -36,7 +36,10 @@ $authHost.interceptors.response.use(
     if (error?.response?.status === 401) {
       localStorage.removeItem('isAuth')
       localStorage.removeItem('user')
-      if (window.location.pathname !== '/login') {
+      // A session probe happens on every public page.  A missing/expired
+      // admin session there is expected and must not turn the visitor's page
+      // into the login screen.  Protected edit requests still redirect.
+      if (!error?.config?.skipAuthRedirect && window.location.pathname !== '/login') {
         window.location.assign('/login')
       }
     }

@@ -49,7 +49,7 @@ export default class UserStorage {
   // Проверяем валидность токена на backend и фиксируем флаг авторизации
   async checkAuth(): Promise<boolean> {
     try {
-      await $authHost.get('api/user/auth');
+      await $authHost.get('api/user/auth', { skipAuthRedirect: true } as any);
       this.setIsAuth(true);
       return true;
     } catch (e: any) {

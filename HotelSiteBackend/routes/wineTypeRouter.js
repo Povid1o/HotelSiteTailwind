@@ -2,10 +2,11 @@
 const { Router } = require('express');
 const router = Router();
 const c = require('../controllers/wineTypeController');
+const auth = require('../middleware/authMiddleware');
 const checkRole = require('../middleware/checkRoleMiddleware');
 
 router.get('/', c.list);
-router.post('/', checkRole('ADMIN'), c.create);
-router.delete('/:id', checkRole('ADMIN'), c.remove);
+router.post('/', auth, checkRole('ADMIN'), c.create);
+router.delete('/:id', auth, checkRole('ADMIN'), c.remove);
 
 module.exports = router;
