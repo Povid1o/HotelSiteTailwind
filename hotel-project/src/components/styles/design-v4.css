@@ -2,6 +2,9 @@
    типографику и кнопки, если главная ещё не была открыта. */
 .v4-container{box-sizing:border-box;margin:0 auto;max-width:1280px;padding-left:24px;padding-right:24px}
 .v4-kicker{color:#C7774D;font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.14em;line-height:1.2;margin:0 0 8px;text-transform:uppercase}
-.v4-btn{align-items:center!important;background:transparent;border:1px solid #C7774D;border-radius:2px;box-sizing:border-box;color:#19312F;display:inline-flex!important;font:600 15px/1 'Cormorant Garamond',serif!important;justify-content:center;min-height:44px;padding:14px 28px!important;text-decoration:none;transition:background-color 180ms ease,color 180ms ease}
+.v4-btn{align-items:center!important;background:transparent;border:1px solid #C7774D;border-radius:8px;box-sizing:border-box;color:#19312F;display:inline-flex!important;font:600 15px/1 'Cormorant Garamond',serif!important;justify-content:center;min-height:44px;padding:14px 28px!important;text-decoration:none;transition:background-color 180ms ease,border-color 180ms ease,color 180ms ease}
 .v4-btn--primary{border-color:#C7774D!important;color:#C7774D!important}.v4-btn--light{border-color:rgba(245,242,234,.4)!important;color:#F5F2EA!important}.v4-btn--secondary{color:#19312F!important}
-.v4-btn:hover,.v4-btn:focus-visible{background:#C7774D;border-color:#C7774D;color:#F5F2EA}
+.v4-btn--primary:hover,.v4-btn--primary:focus-visible{background:rgba(199,119,77,.12)!important;border-color:#C7774D!important;color:#C7774D!important}.v4-btn--primary:active{background:rgba(199,119,77,.22)!important}
+.v4-btn--secondary:hover,.v4-btn--secondary:focus-visible{background:rgba(25,49,47,.07)!important;color:#19312F!important}.v4-btn--secondary:active{background:rgba(25,49,47,.14)!important}
+.v4-btn--light:hover,.v4-btn--light:focus-visible{background:rgba(245,242,234,.07)!important;color:#F5F2EA!important}.v4-btn--light:active{background:rgba(245,242,234,.14)!important}
+.v4-btn--ghost:hover,.v4-btn--ghost:focus-visible{background:rgba(199,119,77,.10)!important;color:#C7774D!important}.v4-btn--ghost:active{background:rgba(199,119,77,.18)!important}

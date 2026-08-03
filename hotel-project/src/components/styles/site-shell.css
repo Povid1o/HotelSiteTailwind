@@ -75,8 +75,9 @@
   text-transform: none;
 }
 .site-nav__item--disabled { color: rgba(220,229,222,.4); cursor: default; font: 500 16px/1.2 Manrope,sans-serif; padding: 0; white-space: nowrap; }
-.site-header__booking { align-items:center; background: transparent; border: 1px solid var(--site-clay); border-radius:10px; box-sizing:border-box; color: var(--site-clay); display:inline-flex; font: 600 18px/1 'Cormorant Garamond',serif; justify-content:center; margin-left: auto; min-height:52px; padding:14px 24px; text-decoration: none; }
-.site-header__booking:hover,.site-header__booking:focus-visible { background: var(--site-clay); color: var(--site-paper); }
+.site-header__booking { align-items:center; background: transparent; border: 1px solid var(--site-clay); border-radius:8px; box-sizing:border-box; color: var(--site-clay); display:inline-flex; font: 600 18px/1 'Cormorant Garamond',serif; justify-content:center; margin-left: auto; min-height:52px; padding:14px 24px; text-decoration: none; transition:background-color 180ms ease; }
+.site-header__booking:hover,.site-header__booking:focus-visible { background: rgba(199,119,77,.12); color: var(--site-clay); }
+.site-header__booking:active { background: rgba(199,119,77,.22); }
 
 .site-nav__link::after {
   background: var(--site-clay);
