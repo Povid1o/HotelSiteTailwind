@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { $authHost, $host } from './http';
 import { useContext } from 'react';
 import { Context } from '../index';
@@ -27,8 +27,9 @@ const AdminStatusBadge: React.FC = () => {
   const isAuth = Boolean(user?.isAuth);
   const [apiStatus, setApiStatus] = useState<Status>('idle');
   const [consoleStatus, setConsoleStatus] = useState<Status>('ok');
+  const [isVisible, setIsVisible] = useState(() => !document.hidden);
 
-  const ping = useMemo(() => async () => {
+  const ping = useCallback(async () => {
     try {
       // Пытаемся дернуть защищенный эндпоинт, если токен есть, иначе публичный справочник
       const token = localStorage.getItem('token');
@@ -53,6 +54,13 @@ const AdminStatusBadge: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const updateVisibility = () => setIsVisible(!document.hidden);
+    document.addEventListener('visibilitychange', updateVisibility);
+    return () => document.removeEventListener('visibilitychange', updateVisibility);
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
     let cancelled = false;
     const run = async () => {
       await ping();
@@ -61,7 +69,7 @@ const AdminStatusBadge: React.FC = () => {
     run();
     const id = setInterval(run, 15000);
     return () => { cancelled = true; clearInterval(id); };
-  }, [ping]);
+  }, [isVisible, ping]);
 
   return (
     <div
@@ -99,5 +107,4 @@ const AdminStatusBadge: React.FC = () => {
 };
 
 export default AdminStatusBadge;
-
 

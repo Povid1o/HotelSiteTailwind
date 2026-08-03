@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useContext, useState, useEffect } from "react";
-import { createBrowserRouter, RouterProvider, ScrollRestoration, Outlet } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider, ScrollRestoration, Outlet } from 'react-router-dom';
 import { observer } from "mobx-react-lite";
 import { Context } from "./index";
 import LoadingScreen from './components/LoadingScreen';
@@ -7,9 +7,9 @@ import TravelLineScript from "./components/TravelLineScript.tsx";
 import ErrorBoundary from './components/ErrorBoundary';
 import SiteMeta from './components/SiteMeta';
 import AgeGate from './components/AgeGate';
+import RouteDataLoader from './components/RouteDataLoader';
 
 // Ленивая загрузка компонентов
-const WineHotel = lazy(() => import("./WineHotel.tsx"));
 const HotelPage = lazy(() => import("./HotelPage.tsx"));
 const InfoPages = lazy(() => import("./InfoPages.tsx"));
 const Ivents = lazy(() => import("./Ivents.tsx"));
@@ -26,62 +26,12 @@ const NotFound = lazy(() => import('./components/NotFoundPage.tsx'))  // Доб�
 
 
 
-const publicrouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
-        path: "/",
-        element: <Main />,
-      },
-      {
-        path: "/Hotel",
-        element: (
-          <ErrorBoundary>
-            <HotelPage />
-          </ErrorBoundary>
-        ),
-      },
-      {
-        path:"/Events",
-        element: <Ivents />,
-      },
-      {
-        path:"/Events/:categorie",
-        element: <Ivents />,
-      },
-      {
-        path:"/Restaurant",
-        element: <Restaurant />,
-      },
-      {
-        path:"/Vinery",
-        element: <Vinery />,
-      },
-      {
-        path: "/Shop",
-        element: <Shop/>
-      },
-      {
-        path: "/Shop/:productId",
-        element: <WinePage />,
-      },
-      { path: "/Contacts", element: <InfoPages /> },
-      { path: "/Privacy", element: <InfoPages /> },
-      {
-        path: "/login",
-        element: <Auth/>
-      },
-      {
-        path: "*",  // Добавлено
-        element: <NotFound />
-      },
-    ],
-  }
-]);
+const RequireAdmin = observer(() => {
+  const context = useContext(Context);
+  return context?.user.isAuth ? <AdminPage /> : <Navigate replace to="/login" />;
+});
 
-const hiderouter = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
@@ -130,7 +80,7 @@ const hiderouter = createBrowserRouter([
       },
       {
         path: '/admin',
-        element: <AdminPage/>
+        element: <RequireAdmin/>
       },
       {
         path: "*",  // Добавлено
@@ -146,6 +96,7 @@ function Layout() {
         <SiteMeta />
         <TravelLineScript />
         <ScrollRestoration />
+        <RouteDataLoader />
         <Suspense fallback={<LoadingScreen />}>
           <Outlet />
         </Suspense>
@@ -160,37 +111,22 @@ const App= observer(() => {
       const [showModal, setShowModal] = useState(false);
       const [showAgeGate, setShowAgeGate] = useState(false);
 
-      // Загружаем все данные при старте приложения
-      // ✅ НЕ вызываем checkAuth() автоматически - флаг isAuth уже установлен из localStorage
+      // Проверяем только сессию до первого рендера. Контент публичных страниц
+      // загружается самими маршрутами: это не даёт медленному API скрывать сайт.
       useEffect(() => {
-        console.log('=== App: Загрузка данных при старте приложения ===');
         let canceled = false;
-        const bootstrap = async () => {
+        const verifySession = async () => {
           if (!appCtx) {
             setLoading(false);
             return;
           }
-            const { dish, hotel, pageContent, wine, events, user: currentUser } = appCtx;
-            try {
-            // Confirm a saved token before exposing the admin router.
-            await Promise.all([
-              currentUser.checkAuth().catch(() => false),
-              dish.loadDishes().catch(err => console.error('Ошибка загрузки блюд:', err)),
-              hotel.loadRooms().catch(err => console.error('Ошибка загрузки номеров:', err)),
-              pageContent.loadPageContent().catch(err => console.error('Ошибка загрузки страниц:', err)),
-              wine.loadWines().catch(err => console.error('Ошибка загрузки вин:', err)),
-              events.refreshAll().catch(err => console.error('Ошибка загрузки мероприятий:', err))
-            ]);
-            if (!canceled) {
-              console.log('✅ Все данные загружены. Статус авторизации из localStorage:', user.isAuth);
-              setLoading(false);
-            }
-          } catch (e) {
-            console.error('❌ Ошибка при инициализации приложения:', e);
+          try {
+            await appCtx.user.checkAuth();
+          } finally {
             if (!canceled) setLoading(false);
           }
         };
-        bootstrap();
+        void verifySession();
         return () => { canceled = true; };
       }, [appCtx]);
 
@@ -247,7 +183,7 @@ const App= observer(() => {
               >
                 {/* ErrorBoundary для ловли ошибок рендера */}
                 <ErrorBoundary>
-                  <RouterProvider router={user.isAuth ? hiderouter : publicrouter} />
+                  <RouterProvider router={router} />
                 </ErrorBoundary>
               </section>
               

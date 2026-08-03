@@ -29,6 +29,20 @@ const authInterceptor = (config: any) => {
 }
 
 $authHost.interceptors.request.use(authInterceptor)
+$authHost.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error?.response?.status === 401) {
+      localStorage.removeItem('isAuth')
+      localStorage.removeItem('user')
+      localStorage.removeItem('token')
+      if (window.location.pathname !== '/login') {
+        window.location.assign('/login')
+      }
+    }
+    return Promise.reject(error)
+  }
+)
 
 export {
   $host,

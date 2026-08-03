@@ -83,9 +83,9 @@ const TravelLineSearchForm = ({id}: {id: string}) => {
     .tl-container {
       padding: 20px 28px;
     }
-    #block-search input, #block-search select { border-color: rgba(25,49,47,.18) !important; border-radius: 2px !important; color: #19312F !important; font-family: Manrope, sans-serif !important; }
-    #block-search button, #block-search [type=submit] { background: transparent !important; border: 1px solid #C7774D !important; border-radius: 2px !important; color: #C7774D !important; font-family: 'Cormorant Garamond', serif !important; font-size: 15px !important; font-weight: 600 !important; height: 36px !important; }
-    #block-search button:hover, #block-search [type=submit]:hover { background:#C7774D !important; color:#fff !important; }
+    #block-search input, #block-search select { border-color: rgba(25,49,47,.18) !important; border-radius: 8px !important; color: #19312F !important; font-family: Manrope, sans-serif !important; }
+    #block-search button, #block-search [type=submit] { background: transparent !important; border: 1px solid #C7774D !important; border-radius: 8px !important; color: #C7774D !important; font-family: 'Cormorant Garamond', serif !important; font-size: 15px !important; font-weight: 600 !important; height: 36px !important; }
+    #block-search button:hover, #block-search [type=submit]:hover { background:rgba(199,119,77,.12) !important; color:#C7774D !important; }
     @media (max-width: 640px) { .tl-container { padding:16px !important; } }
   `;
 
@@ -96,7 +96,7 @@ const TravelLineSearchForm = ({id}: {id: string}) => {
         <div id={searchFormUniqueId} className="tl-container">
           <a
             href="https://www.travelline.ru/products/tl-hotel/"
-            rel="nofollow"
+            rel="nofollow noreferrer"
             target="_blank"
           >
             TravelLine

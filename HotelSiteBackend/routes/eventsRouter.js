@@ -1,5 +1,5 @@
-const Router = require('express');
-const router = new Router();
+const { Router } = require('express');
+const router = Router();
 const c = require('../controllers/eventsController');
 const auth = require('../middleware/authMiddleware');
 const checkRole = require('../middleware/checkRoleMiddleware');
@@ -16,5 +16,4 @@ router.put('/:id', auth, checkRole('ADMIN'), c.updateEvent);
 router.delete('/:id', auth, checkRole('ADMIN'), c.deleteEvent);
 
 module.exports = router;
-
 

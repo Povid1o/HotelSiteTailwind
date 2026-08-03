@@ -1,5 +1,5 @@
-const Router = require('express')
-const router = new Router()
+const { Router } = require('express')
+const router = Router()
 const typeController = require('../controllers/typeController')
 const checkRole = require('../middleware/checkRoleMiddleware')
 

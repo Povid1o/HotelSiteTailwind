@@ -91,6 +91,7 @@ export default class PageContentStorage {
   private _savingPageIds = new Set<number>();
   private _pageSaveErrors = new Map<number, string>();
   private _sectionVersions = new Map<string, number>();
+  private _sectionDebounceTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
   constructor() {
     makeAutoObservable(this);
@@ -190,8 +191,24 @@ export default class PageContentStorage {
       const plainSection = toJS(updatedData);
       preserveFiles(updatedData, plainSection);
 
-      const previousSave = this._saveQueues.get(page.id) || Promise.resolve();
-      const save = previousSave
+      const pendingTimer = this._sectionDebounceTimers.get(sectionKey);
+      if (pendingTimer) clearTimeout(pendingTimer);
+
+      const debounce = new Promise<void>((resolve) => {
+        const timer = setTimeout(() => {
+          this._sectionDebounceTimers.delete(sectionKey);
+          resolve();
+        }, 600);
+        this._sectionDebounceTimers.set(sectionKey, timer);
+      });
+
+      const save = debounce.then(() => {
+        // Более новая правка этой секции уже поставлена в очередь: она и должна
+        // быть единственным запросом к API.
+        if (this._sectionVersions.get(sectionKey) !== sectionVersion) return;
+
+        const previousSave = this._saveQueues.get(page.id) || Promise.resolve();
+        const request = previousSave
         .catch(() => undefined)
         .then(async () => {
           this._savingPageIds.add(page.id);
@@ -223,12 +240,15 @@ export default class PageContentStorage {
           }
         })
         .finally(() => {
-          if (this._saveQueues.get(page.id) === save) {
+          if (this._saveQueues.get(page.id) === request) {
             this._savingPageIds.delete(page.id);
           }
         });
 
-      this._saveQueues.set(page.id, save);
+        this._saveQueues.set(page.id, request);
+        return request;
+      });
+
       return save;
     }
   };

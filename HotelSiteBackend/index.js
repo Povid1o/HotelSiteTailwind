@@ -3,6 +3,9 @@ const express = require('express')
 const sequelize = require('./db')
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
+const rateLimit = require('express-rate-limit')
+const helmet = require('helmet')
+const { fromFile } = require('file-type')
 const router = require('./routes/index')
 const errorHandler = require('./middleware/ErrorHandlingMiddleware')
 const path = require('path')
@@ -14,8 +17,33 @@ const checkRole = require('./middleware/checkRoleMiddleware')
 const PORT = process.env.PORT || 5001
 
 const app = express()
+app.disable('x-powered-by')
+// Public requests reach Express through Caddy and nginx. Trust only those two
+// internal hops so rate limiting uses the client address from X-Forwarded-For,
+// rather than treating every visitor as the proxy container.
+app.set('trust proxy', 2)
+// The public HTML is served by nginx/Caddy, while this process serves the API
+// and media. Keep media embeddable from the same public origin, but apply the
+// remaining Helmet protections to every API response.
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+}))
 const allowedOrigins = process.env.CORS_ORIGIN?.split(',').map((origin) => origin.trim()).filter(Boolean);
 app.use(cors(allowedOrigins?.length ? { origin: allowedOrigins } : { origin: process.env.NODE_ENV !== 'production' }))
+
+// Login is deliberately throttled separately from the rest of the API: bcrypt
+// is expensive by design, so unrestricted attempts can become both a password
+// guessing vector and a CPU-exhaustion vector.
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: { message: 'Слишком много попыток входа. Повторите через 15 минут.' }
+})
+app.use('/api/user/login', loginLimiter)
 // JSON в API не содержит медиа: файлы принимаются отдельным защищённым endpoint.
 app.use(express.json({ limit: '1mb' }))
 app.use(express.urlencoded({ extended: true, limit: '1mb' }))
@@ -56,6 +84,8 @@ app.use('/static', express.static(path.resolve(__dirname, 'static'), {
 // ✅ Увеличиваем лимит для загрузки файлов до 100MB
 app.use(fileUpload({
   limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB
+  abortOnLimit: true,
+  responseOnLimit: 'Размер файла превышает допустимый лимит.',
   useTempFiles: true,
   tempFileDir: '/tmp/'
 }))
@@ -81,6 +111,9 @@ app.post('/api/upload', authMiddleware, checkRole('ADMIN'), async (req, res) => 
     if (!uploadedFile || Array.isArray(uploadedFile)) {
       return res.status(400).json({ message: 'File field is required' });
     }
+    if (uploadedFile.truncated) {
+      return res.status(413).json({ message: 'File is too large' });
+    }
 
     const mediaType = req.body.type || req.query.type;
     const policy = uploadPolicies[mediaType];
@@ -94,6 +127,13 @@ app.post('/api/upload', authMiddleware, checkRole('ADMIN'), async (req, res) => 
     }
     if (uploadedFile.size > policy.maxBytes) {
       return res.status(413).json({ message: 'File is too large for this media type' });
+    }
+
+    // Do not trust the MIME type sent by the browser.  Identify the bytes in
+    // the temporary file before it is moved into public static storage.
+    const detectedType = await fromFile(uploadedFile.tempFilePath);
+    if (!detectedType || !policy.mimeTypes.has(detectedType.mime)) {
+      return res.status(415).json({ message: 'File contents do not match an allowed media format' });
     }
 
     const fileName = `${crypto.randomUUID()}${fileExtension}`;

@@ -1,5 +1,5 @@
-const Router = require('express');
-const router = new Router();
+const { Router } = require('express');
+const router = Router();
 
 // Healthcheck для корня /api, чтобы не получать "Cannot GET /api"
 router.get('/', (req, res) => {

@@ -1,6 +1,6 @@
-const Router = require('express')
+const { Router } = require('express')
 const productController = require('../controllers/productController')
-const router = new Router()
+const router = Router()
 const checkRole = require('../middleware/checkRoleMiddleware')
 
 router.post('/', checkRole('ADMIN'), productController.create)

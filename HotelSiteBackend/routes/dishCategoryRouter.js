@@ -1,6 +1,6 @@
 // routes/dishCategoryRouter.js
-const Router = require('express');
-const router = new Router();
+const { Router } = require('express');
+const router = Router();
 const c = require('../controllers/dishCategoryController');
 const checkRole = require('../middleware/checkRoleMiddleware');
 

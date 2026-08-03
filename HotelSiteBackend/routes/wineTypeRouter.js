@@ -1,6 +1,6 @@
 // routes/wineTypeRouter.js
-const Router = require('express');
-const router = new Router();
+const { Router } = require('express');
+const router = Router();
 const c = require('../controllers/wineTypeController');
 const checkRole = require('../middleware/checkRoleMiddleware');
 
