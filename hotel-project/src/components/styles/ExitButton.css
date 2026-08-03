@@ -16,14 +16,14 @@
   transition: all .3s ease-in;
   opacity: 0;
   cursor: pointer;
-  font-family: Bitter;
+  font-family: Manrope, sans-serif;
 }
 .cl-btn-6-in:before, .cl-btn-6-in:after {
   position: absolute;
   content: '';
   height: 2px;
   width: inherit;
-  background: #80143c;
+  background: var(--color-brand);
   left: 0;
   transition: all .3s ease-in;
 }

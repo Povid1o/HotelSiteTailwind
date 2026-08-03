@@ -73,12 +73,28 @@ const NewRoomCard = ({
   // ✅ Debounce timer для батчинга изменений
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const pendingChangesRef = useRef<any>({});
+  const onDataChangeRef = useRef(onDataChange);
+  const latestDataRef = useRef<any>({});
+  onDataChangeRef.current = onDataChange;
+  latestDataRef.current = {
+    name: localName,
+    images: localPhotos,
+    properties: localProperties,
+    conviniences: localConviniences,
+    description: localDescription,
+    price: localPrices,
+    checkStandart: { checkIn: localCheckIn, checkOut: localCheckOut },
+    notes: localNotes,
+  };
 
-  // Очистка таймера при размонтировании
+  // Closing the editor must not discard an edit still inside the debounce window.
   useEffect(() => {
     return () => {
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
+        onDataChangeRef.current({ ...latestDataRef.current, ...pendingChangesRef.current });
+        pendingChangesRef.current = {};
+        debounceTimerRef.current = null;
       }
     };
   }, []);

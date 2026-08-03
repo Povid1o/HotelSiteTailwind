@@ -109,15 +109,22 @@ export const createCategory = async (categoryName: string) => {
   return data;
 };
 
+const getDishCategoryId = async (categoryName: string): Promise<number> => {
+  const categories = await fetchDishCategories();
+  const category = categories.find(item => item.name === categoryName);
+  if (!category) throw new Error(`Категория не найдена: ${categoryName}`);
+  return category.id;
+};
+
 export const deleteCategory = async (categoryName: string) => {
-  // Бэкенд ждёт id в пути. Если сейчас приходит имя — это несовместимо.
-  // Оставляем как есть, но фронт должен сначала получить список и взять id.
-  const { data } = await $authHost.delete(`api/dish-categories/${encodeURIComponent(categoryName)}`);
+  const categoryId = await getDishCategoryId(categoryName);
+  const { data } = await $authHost.delete(`api/dish-categories/${categoryId}`);
   return data;
 };
 
-export const updateCategory = async (oldNameOrId: string, newName: string) => {
-  const { data } = await $authHost.put(`api/dish-categories/${encodeURIComponent(oldNameOrId)}`, {
+export const updateCategory = async (oldName: string, newName: string) => {
+  const categoryId = await getDishCategoryId(oldName);
+  const { data } = await $authHost.put(`api/dish-categories/${categoryId}`, {
     name: newName
   });
   return data;
@@ -223,7 +230,7 @@ export const updateDish = async (categoryName: string, dishId: number, dishData:
 
     // ⚠️ КРИТИЧНО: Отправляем images ТОЛЬКО если есть валидные изображения после фильтрации
     if (dishData.images !== undefined) {
-      if (images.length > 0) {
+      if (images.length > 0 || dishData.images.length === 0) {
         payload.images = images;
       } else {
         console.warn('⚠️ All dish images were blob URLs and filtered out. NOT sending images field to preserve existing photos in DB.');

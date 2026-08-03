@@ -1,23 +1,20 @@
 import React from 'react';
-import Logo from './assets/VineTerracesLogo.png'
 import { YMaps, Map, Placemark} from '@pbe/react-yandex-maps';
-import useWindowDimensions from './WindowResizeListener';
+import { Link } from 'react-router-dom';
 
 import "./styles/footer.css"
 
 
 
 const YandexMap = () => {
-    const {height, width} = useWindowDimensions();
   return (
-    // <div className="w-3/4 rounded-xl bg-gray-200 mx-auto">
-    <div className="w-full -z-50">
+    <div className="w-full">
       <YMaps >
         <Map defaultState={{
             center: [44.738755, 37.599938],
             zoom: 10
             }}
-            style={{ width: '${width}px', height: '240px' }}>
+            style={{ width: '100%', height: '240px' }}>
           <Placemark geometry={[44.738755, 37.599938]} />
         </Map>
       </YMaps>
@@ -29,41 +26,23 @@ const YandexMap = () => {
 const Footer = () => {
 
      return (
-        <div>
-
-        <footer className="bg-main_theme shadow-2xl rounded-t-lg font-body mt-14 py-8">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-wrap">
-                <div className="w-full md:w-1/4 mb-4 md:mb-0">
-                  <img src={Logo} className='w-[100px]' />
-                </div>
+        <>
+          <footer className="site-footer" id="site-contacts">
+            <div className="site-footer__top">
+              <Link to='/' className="site-footer__brand">Винные Террасы</Link>
+              <nav className="site-footer__nav" aria-label="Навигация в подвале">
+                <Link to="/Hotel">Апартаменты</Link>
+                <Link to="/Events">Мероприятия</Link>
+                <a href="#site-map">Как добраться</a>
+                <Link to="/Contacts">Контакты</Link>
+                <Link to="/Privacy">Политика конфиденциальности</Link>
+              </nav>
             </div>
-            <hr className="border-gray-400 my-8" />
-            <ul className="flex flex-wrap justify-center flex-row mx-auto text-nowrap md:gap-8 lg:gap-12 xl:gap-16">
-                <div className="footer-element">
-                    <h2 className="text"><a href='#' className='underlineDesktop'>Апартаменты</a></h2>
-                </div>
-
-                <div className="footer-element">
-                    <h2 className="text"><a href='#' className='underlineDesktop'>Как добраться</a></h2>
-                </div>
-
-                <div className="footer-element">
-                    <h2 className="text"><a href='#' className='underlineDesktop'>Контакты</a></h2>
-                </div>
-
-                <div className="footer-element">
-                    <h2 className="text"><a href='#' className='underlineDesktop'>Политика конфиденциальности</a></h2>
-                </div>
-
-            </ul>
-            <div className="w-full md:w-1/3 my-4 mx-auto md:mb-0 text-center">
-                <p className="text-[#F8F7F4] font-body">© {new Date().getFullYear()} Винные Терассы</p>
-            </div>
-          </div>
-        </footer>
-        <YandexMap />
-        </div>
+            <hr className="site-footer__rule" />
+            <div id="site-map" className="site-footer__map"><YandexMap /></div>
+            <div className="site-footer__bottom"><span>Абрау-Дюрсо, Краснодарский край</span><span>© {new Date().getFullYear()} Винные Террасы</span></div>
+          </footer>
+        </>
       );
 }
  

@@ -8,6 +8,7 @@ import {
   updateDish,
   deleteDish
 } from '../components/http/dishAPI';
+import { STATIC_BASE } from '../components/http';
 
 interface DishProduct {
   id: number;
@@ -31,6 +32,10 @@ export default class DishStorage {
   private _isLoading = false;
   private _error: string | null = null;
   private _pendingCreates: Map<number, Promise<number>> = new Map();
+  private _productSaveQueues = new Map<number, Promise<void>>();
+  private _savingProductIds = new Set<number>();
+  private _productSaveErrors = new Map<number, string>();
+  private _productSaveVersions = new Map<number, number>();
 
   constructor() {
     makeAutoObservable(this);
@@ -47,6 +52,14 @@ export default class DishStorage {
 
   get error(): string | null {
     return this._error;
+  }
+
+  isSavingProduct(productId: number): boolean {
+    return this._savingProductIds.has(productId);
+  }
+
+  getProductSaveError(productId: number): string | null {
+    return this._productSaveErrors.get(productId) || null;
   }
 
   // Setters
@@ -175,6 +188,7 @@ export default class DishStorage {
         throw error;
       });
       this._pendingCreates.set(tempId, createPromise);
+      void createPromise.catch(() => undefined);
     }
   };
 
@@ -205,37 +219,62 @@ export default class DishStorage {
     }
   };
 
-  updateProduct = async (categoryName: string, productId: number, updatedData: Partial<DishProduct>) => {
+  updateProduct = (categoryName: string, productId: number, updatedData: Partial<DishProduct>) => {
     const category = this._dishes.find(cat => cat.category === categoryName);
-    if (category) {
-      const product = category.products.find(p => p.id === productId);
-      if (product) {
-        const oldData = { ...product };
-        Object.assign(product, updatedData);
+    const product = category?.products.find(p => p.id === productId);
+    if (!product) return Promise.resolve();
+
+    const oldData = { ...product };
+    const version = (this._productSaveVersions.get(productId) || 0) + 1;
+    const pendingCreate = productId < 0 ? this._pendingCreates.get(productId) : undefined;
+    this._productSaveVersions.set(productId, version);
+    this._productSaveErrors.delete(productId);
+    Object.assign(product, updatedData);
+    this._dishes = [...this._dishes];
+
+    const previousSave = this._productSaveQueues.get(productId) || Promise.resolve();
+    this._savingProductIds.add(productId);
+    const save = previousSave
+      .catch(() => undefined)
+      .then(async () => {
         try {
-          // Если id временный (отрицательный) и создание ещё не завершено — дождаться
-          if (productId < 0 && this._pendingCreates.has(productId)) {
-            const realId = await this._pendingCreates.get(productId)!;
-            await updateDish(categoryName, realId, updatedData);
-            product.id = realId;
-          } else if (productId < 0) {
-            // Если почему-то промиса нет для временного ID, просто откатить и перезагрузить
-            console.warn('Pending create not found for temp id, reloading dishes');
-            await this.loadDishes();
-          } else {
-            // Для реальных ID просто обновляем
-            await updateDish(categoryName, productId, updatedData);
+          const realId = pendingCreate ? await pendingCreate : product.id;
+          if (realId < 0) throw new Error('Создание блюда ещё не завершено');
+          const response = await updateDish(categoryName, realId, updatedData);
+          if (this._productSaveVersions.get(productId) === version) {
+            Object.assign(product, {
+              id: response.id,
+              name: response.name,
+              header: response.header ?? '',
+              description: response.description_short ?? '',
+              descriptionFull: response.description_full ?? '',
+              weight: response.weight ?? '',
+              price: Number(response.price) || 0,
+              images: (response.images || []).map((image: any) => {
+                const url = image?.url || '';
+                return url.startsWith('/static/') ? `${STATIC_BASE}${url}` : url;
+              }).filter(Boolean),
+            });
+            this._dishes = [...this._dishes];
           }
         } catch (error: any) {
-          if (error?.response?.status === 413) {
-            console.error('❌ File too large! Max size: 100MB');
-            alert('Файл слишком большой! Максимальный размер: 100 МБ. Попробуйте загрузить файл меньшего размера или сжать его.');
-          } else {
-            console.error('Error updating dish:', error);
+          const message = error?.response?.data?.message || error?.message || 'Не удалось сохранить блюдо';
+          console.error('Error updating dish:', error);
+          if (this._productSaveVersions.get(productId) === version) {
+            Object.assign(product, oldData);
+            this._dishes = [...this._dishes];
+            this._productSaveErrors.set(productId, message);
           }
-          Object.assign(product, oldData);
         }
+      });
+
+    this._productSaveQueues.set(productId, save);
+    void save.finally(() => {
+      if (this._productSaveQueues.get(productId) === save) {
+        this._productSaveQueues.delete(productId);
+        this._savingProductIds.delete(productId);
       }
-    }
+    });
+    return save;
   };
 }

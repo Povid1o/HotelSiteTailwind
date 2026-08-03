@@ -5,7 +5,7 @@ module.exports = withMT({
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
     'node_modules/flowbite-react/lib/esm/**/*.js',
-    "./src/componemts/styles/vinery.css",
+    "./src/components/styles/**/*.css",
   ],
   theme: {
     screens: {
@@ -17,12 +17,16 @@ module.exports = withMT({
     },
     extend: {
       colors:{
-        'main_theme': '#80143c'
+        'main_theme': '#1F4D4A',
+        'ink': '#19312F',
+        'sand': '#F5F2EA',
+        'clay': '#C7774D',
+        'mist': '#DCE5DE'
       },
       
       fontFamily: {
-        body : ['Bitter'],
-        // sans: ['Graphik', 'sans-serif'],
+        body: ['Manrope', 'sans-serif'],
+        display: ['Cormorant Garamond', 'serif'],
       },
       screens: {
         'mobile': '320px',

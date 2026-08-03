@@ -18,6 +18,12 @@ const dishSchema = Joi.object({
   images: Joi.array().items(Joi.object({ url: Joi.string().required(), alt_text: Joi.string().allow('', null), order: Joi.number().integer() })).default([])
 });
 
+// Updates must distinguish an omitted images field from an explicit empty list.
+// The latter means "remove all images"; the former means "leave images intact".
+const dishUpdateSchema = dishSchema.keys({
+  images: Joi.array().items(Joi.object({ url: Joi.string().required(), alt_text: Joi.string().allow('', null), order: Joi.number().integer() })).optional()
+});
+
 const normalizeNutrients = (n) => {
   if (n === null || n === undefined || n === '') return null;
   if (typeof n === 'object') return n;
@@ -53,14 +59,16 @@ exports.get = asyncHandler(async (req, res) => {
 });
 
 exports.update = asyncHandler(async (req, res) => {
-  const value = await dishSchema.validateAsync(req.body);
+  const value = await dishUpdateSchema.validateAsync(req.body);
   const dish = await Dish.findByPk(req.params.id);
   if (!dish) return res.sendStatus(404);
   const payload = { ...value, nutrients: normalizeNutrients(value.nutrients) };
   await dish.update(payload);
-  await DishImage.destroy({ where: { dish_id: dish.id } });
-  if (value.images?.length) {
-    await DishImage.bulkCreate(value.images.map(i => ({ ...i, dish_id: dish.id })));
+  if (value.images !== undefined) {
+    await DishImage.destroy({ where: { dish_id: dish.id } });
+    if (value.images.length) {
+      await DishImage.bulkCreate(value.images.map(i => ({ ...i, dish_id: dish.id })));
+    }
   }
   const withIncludes = await Dish.findByPk(dish.id, { include: [{ model: DishImage, as: 'images' }] });
   res.json(withIncludes);

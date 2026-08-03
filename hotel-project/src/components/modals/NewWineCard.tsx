@@ -65,12 +65,28 @@ const NewDishCard = ({
   // ✅ Debounce timer для батчинга изменений
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const pendingChangesRef = useRef<any>({});
+  const onDataChangeRef = useRef(onDataChange);
+  const latestDataRef = useRef<any>({});
+  onDataChangeRef.current = onDataChange;
+  latestDataRef.current = {
+    name: localName,
+    images: localPhotos,
+    description: localDescription,
+    sugar: localSugar,
+    price: localPrice,
+    alcohol: localAlcohol,
+    temperature: localTemperature,
+    year: localYear,
+  };
 
-  // Очистка таймера при размонтировании
+  // Do not lose the final edit when the modal is closed immediately.
   useEffect(() => {
     return () => {
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
+        onDataChangeRef.current({ ...latestDataRef.current, ...pendingChangesRef.current });
+        pendingChangesRef.current = {};
+        debounceTimerRef.current = null;
       }
     };
   }, []);

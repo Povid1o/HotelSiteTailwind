@@ -211,6 +211,23 @@ const start = async() => {
           productionSection: { title: 'ЭТАПЫ НАШЕГО ПРОИЗВОДСТВА', stages: [] },
           regionSection: { title: 'ВИННЫЙ РЕГИОН', firstText: '', secondText: '', backgroundImage: '' }
         }
+      },
+      {
+        name: 'Витрина вина',
+        path: '/Shop',
+        is_active: true,
+        content_json: {
+          shopHero: {
+            title: 'Коллекция вин',
+            description: 'Познакомьтесь с винами Террас и выберите свой маршрут для дегустации.',
+            image: ''
+          },
+          shopOrderBanner: {
+            title: 'Заказ вина',
+            description: 'Для заказа напишите нам на электронную почту.',
+            email: ''
+          }
+        }
       }
     ]
     for (const p of pagesSeed) {

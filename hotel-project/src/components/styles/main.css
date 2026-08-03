@@ -60,7 +60,7 @@
 
 .main-logo {
     position: absolute;
-    background: #80143c;
+    background: var(--color-brand);
     border-radius: 50%;
     top: 50%;
     left: 50%;

@@ -1,9 +1,9 @@
 import Navbar from "./components/Navbar"
 // import EventContent from "./components/EventContent.js"
 import Footer from "./components/Footer";
-import { useState, lazy } from "react";
+import { useState } from "react";
 
-const EventContent = lazy(() => import("./components/EventContent"));
+import EventContent from './components/EventContent';
 
 function Ivents() {
 
@@ -11,7 +11,7 @@ function Ivents() {
     return (
         <div>
             <Navbar nav={nav} setNav={setNav} />
-            <EventContent/>
+            <EventContent />
             <Footer />
         </div>
     );

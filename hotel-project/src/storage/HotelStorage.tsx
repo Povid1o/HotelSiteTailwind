@@ -4,12 +4,10 @@ import {
   createRoom, 
   updateRoom, 
   deleteRoom, 
-  toggleRoomActive,
   fetchOneRoom,
   uploadFile
 } from '../components/http/hotelAPI';
 import { STATIC_BASE } from '../components/http';
-import { API_BASE } from '../components/http/index';
 
 interface RoomPrice {
   title: string;
@@ -33,6 +31,10 @@ export default class HotelStorageNew {
   private _rooms: HotelRoom[] = [];
   private _isLoading = false;
   private _error: string | null = null;
+  private _roomSaveQueues = new Map<number, Promise<void>>();
+  private _savingRoomIds = new Set<number>();
+  private _roomSaveErrors = new Map<number, string>();
+  private _roomSaveVersions = new Map<number, number>();
 
   constructor() {
     makeAutoObservable(this);
@@ -49,6 +51,14 @@ export default class HotelStorageNew {
 
   get error(): string | null {
     return this._error;
+  }
+
+  isSavingRoom(roomId: number): boolean {
+    return this._savingRoomIds.has(roomId);
+  }
+
+  getRoomSaveError(roomId: number): string | null {
+    return this._roomSaveErrors.get(roomId) || null;
   }
 
   // Setters
@@ -154,10 +164,9 @@ export default class HotelStorageNew {
       console.log('📸 Images to save:', validUrls);
       console.log('📸 Original images count:', frontendRoom.images.length, '| Valid after filtering:', validUrls.length);
       
-      // ⚠️ КРИТИЧНО: Отправляем images ТОЛЬКО если есть валидные URL
-      // Если все URL были blob: и отфильтровались, НЕ отправляем images вообще,
-      // чтобы backend НЕ УДАЛИЛ существующие фото из БД
-      if (validUrls.length > 0) {
+      // An empty array is an explicit user action to remove all images. Blob-only
+      // input is omitted to avoid replacing persisted images with unusable URLs.
+      if (validUrls.length > 0 || frontendRoom.images.length === 0) {
         backendData.images = validUrls.map((url, index) => ({
           url,
           alt_text: '',
@@ -220,47 +229,52 @@ export default class HotelStorageNew {
   toggleRoomActiveLocal = (roomId: number) => {
     const room = this._rooms.find(r => r.id === roomId);
     if (room) {
-      room.isActive = !room.isActive;
-      
-      toggleRoomActive(roomId).catch(error => {
-        console.error('Error toggling room active:', error);
-        // Откатываем изменения
-        room.isActive = !room.isActive;
-      });
+      return this.updateRoomLocal(roomId, { isActive: !room.isActive });
     }
   };
 
-  updateRoomLocal = async (roomId: number, updatedData: Partial<HotelRoom>) => {
+  updateRoomLocal = (roomId: number, updatedData: Partial<HotelRoom>) => {
     const room = this._rooms.find(r => r.id === roomId);
-    if (room) {
-      const oldData = { ...room };
-      
-      try {
-        // Отправляем данные на backend
-        const backendData = await this.transformRoomToBackend(updatedData);
-        const response = await updateRoom(roomId, backendData);
-        
-        // ✅ КРИТИЧНО: Обновляем данные из backend (с реальными URL, без blob://)
-        const updatedRoom = this.transformRoomFromBackend(response);
-        Object.assign(room, updatedRoom);
-        
-        // ✅ Принудительно обновляем массив для реактивности MobX
-        // Это гарантирует, что все компоненты-наблюдатели увидят изменения
-        this._rooms = [...this._rooms];
-        
-        console.log('✅ Room updated successfully with real URLs:', updatedRoom);
-      } catch (error: any) {
-        if (error?.response?.status === 413) {
-          console.error('❌ File too large! Max size: 100MB');
-          alert('Файл слишком большой! Максимальный размер: 100 МБ. Попробуйте загрузить файл меньшего размера или сжать его.');
-        } else {
-          console.error('❌ Error updating room:', error);
+    if (!room) return Promise.resolve();
+
+    const oldData = { ...room };
+    const version = (this._roomSaveVersions.get(roomId) || 0) + 1;
+    this._roomSaveVersions.set(roomId, version);
+    this._roomSaveErrors.delete(roomId);
+    Object.assign(room, updatedData);
+    this._rooms = [...this._rooms];
+
+    const previousSave = this._roomSaveQueues.get(roomId) || Promise.resolve();
+    this._savingRoomIds.add(roomId);
+    const save = previousSave
+      .catch(() => undefined)
+      .then(async () => {
+        try {
+          const backendData = await this.transformRoomToBackend(updatedData);
+          const response = await updateRoom(roomId, backendData);
+          if (this._roomSaveVersions.get(roomId) === version) {
+            Object.assign(room, this.transformRoomFromBackend(response));
+            this._rooms = [...this._rooms];
+          }
+        } catch (error: any) {
+          const message = error?.response?.data?.message || error?.message || 'Не удалось сохранить номер';
+          console.error('Error updating room:', error);
+          if (this._roomSaveVersions.get(roomId) === version) {
+            Object.assign(room, oldData);
+            this._rooms = [...this._rooms];
+            this._roomSaveErrors.set(roomId, message);
+          }
         }
-        // Откатываем изменения
-        Object.assign(room, oldData);
-        throw error; // Пробрасываем ошибку для обработки в UI
+      });
+
+    this._roomSaveQueues.set(roomId, save);
+    void save.finally(() => {
+      if (this._roomSaveQueues.get(roomId) === save) {
+        this._roomSaveQueues.delete(roomId);
+        this._savingRoomIds.delete(roomId);
       }
-    }
+    });
+    return save;
   };
 
   addRoom = async () => {

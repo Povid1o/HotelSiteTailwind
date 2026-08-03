@@ -8,6 +8,7 @@ import { MdModeEdit } from "react-icons/md";
 
 const NewDishCard = ({
   dishName, 
+  header,
   photos, 
   description, 
   descriptionBrief, 
@@ -53,12 +54,27 @@ const NewDishCard = ({
   // ✅ Debounce timer для батчинга изменений
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const pendingChangesRef = useRef<any>({});
+  const onDataChangeRef = useRef(onDataChange);
+  const latestDataRef = useRef<any>({});
+  onDataChangeRef.current = onDataChange;
+  latestDataRef.current = {
+    name: localName,
+    header: header ?? '',
+    images: localPhotos,
+    description: localDescriptionBrief,
+    descriptionFull: localDescription,
+    price: localPrice,
+    weight: localWeight,
+  };
 
-  // Очистка таймера при размонтировании
+  // Do not lose the final edit when the modal is closed immediately.
   useEffect(() => {
     return () => {
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
+        onDataChangeRef.current({ ...latestDataRef.current, ...pendingChangesRef.current });
+        pendingChangesRef.current = {};
+        debounceTimerRef.current = null;
       }
     };
   }, []);
@@ -80,6 +96,7 @@ const NewDishCard = ({
     debounceTimerRef.current = setTimeout(() => {
       const newData = {
         name: localName,
+        header: header ?? '',
         images: localPhotos,
         description: localDescriptionBrief,
         descriptionFull: localDescription,
@@ -95,7 +112,7 @@ const NewDishCard = ({
       pendingChangesRef.current = {};
       debounceTimerRef.current = null;
     }, 500); // ✅ 500ms задержка для батчинга
-  }, [localName, localPhotos, localDescription, localDescriptionBrief, localPrice, localWeight, onDataChange]);
+  }, [localName, header, localPhotos, localDescription, localDescriptionBrief, localPrice, localWeight, onDataChange]);
 
   // Мемоизированные обработчики для каждого поля
   const handleNameSave = useCallback((newName) => {

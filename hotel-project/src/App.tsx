@@ -5,19 +5,21 @@ import { Context } from "./index";
 import LoadingScreen from './components/LoadingScreen';
 import TravelLineScript from "./components/TravelLineScript.tsx";
 import ErrorBoundary from './components/ErrorBoundary';
+import SiteMeta from './components/SiteMeta';
+import AgeGate from './components/AgeGate';
 
 // Ленивая загрузка компонентов
 const WineHotel = lazy(() => import("./WineHotel.tsx"));
+const HotelPage = lazy(() => import("./HotelPage.tsx"));
+const InfoPages = lazy(() => import("./InfoPages.tsx"));
 const Ivents = lazy(() => import("./Ivents.tsx"));
 const Restaurant = lazy(() => import("./Restaurant.tsx"));
 const Vinery = lazy(() => import("./Vinery.tsx"));
 const Shop = lazy(() => import("./Shop.tsx"));
-const EventsList = lazy(() => import("./components/EventsList.tsx"));
 const Auth = lazy(() => import("./Auth.tsx"));
 const AdminPage = lazy(() => import("./AdminPage.tsx"));
 const WinePage = lazy(() => import("./components/cards/WinePage.tsx"));
 const ModalWindow = lazy(() => import('./components/modals/ModalWindow.tsx'))
-const ProductionCenter = lazy(() => import( "./ProductionCenter.tsx"))
 const Main = lazy(() => import('./components/Main'))
 const NotFound = lazy(() => import('./components/NotFoundPage.tsx'))  // Добавлено
 
@@ -37,7 +39,7 @@ const publicrouter = createBrowserRouter([
         path: "/Hotel",
         element: (
           <ErrorBoundary>
-            <WineHotel />
+            <HotelPage />
           </ErrorBoundary>
         ),
       },
@@ -47,7 +49,7 @@ const publicrouter = createBrowserRouter([
       },
       {
         path:"/Events/:categorie",
-        element: <EventsList />,
+        element: <Ivents />,
       },
       {
         path:"/Restaurant",
@@ -65,10 +67,8 @@ const publicrouter = createBrowserRouter([
         path: "/Shop/:productId",
         element: <WinePage />,
       },
-      {
-        path: "/ProductionCenter",
-        element: <ProductionCenter />,
-      },
+      { path: "/Contacts", element: <InfoPages /> },
+      { path: "/Privacy", element: <InfoPages /> },
       {
         path: "/login",
         element: <Auth/>
@@ -94,7 +94,7 @@ const hiderouter = createBrowserRouter([
         path: "/Hotel",
         element: (
           <ErrorBoundary>
-            <WineHotel />
+            <HotelPage />
           </ErrorBoundary>
         ),
       },
@@ -104,7 +104,7 @@ const hiderouter = createBrowserRouter([
       },
       {
         path:"/Events/:categorie",
-        element: <EventsList />,
+        element: <Ivents />,
       },
       {
         path:"/Restaurant",
@@ -122,10 +122,8 @@ const hiderouter = createBrowserRouter([
         path: "/Shop/:productId",
         element: <WinePage />,
       },
-      {
-        path: "/ProductionCenter",
-        element: <ProductionCenter />,
-      },
+      { path: "/Contacts", element: <InfoPages /> },
+      { path: "/Privacy", element: <InfoPages /> },
       {
         path: "/login",
         element: <Auth/>
@@ -145,6 +143,7 @@ const hiderouter = createBrowserRouter([
 function Layout() {
   return (
       <div>
+        <SiteMeta />
         <TravelLineScript />
         <ScrollRestoration />
         <Suspense fallback={<LoadingScreen />}>
@@ -159,6 +158,7 @@ const App= observer(() => {
       const user = appCtx ? appCtx.user : { isAuth: false } as any;
       const [loading, setLoading] = useState(true);
       const [showModal, setShowModal] = useState(false);
+      const [showAgeGate, setShowAgeGate] = useState(false);
 
       // Загружаем все данные при старте приложения
       // ✅ НЕ вызываем checkAuth() автоматически - флаг isAuth уже установлен из localStorage
@@ -200,6 +200,15 @@ const App= observer(() => {
           setShowModal(true);
         }
       }, []);
+
+      useEffect(() => {
+        setShowAgeGate(localStorage.getItem('ageConfirmed') !== 'true');
+      }, []);
+
+      const confirmAge = () => {
+        localStorage.setItem('ageConfirmed', 'true');
+        setShowAgeGate(false);
+      };
 
 
       const handleCloseModal = () => {
@@ -244,6 +253,7 @@ const App= observer(() => {
               
               {/* Modal - показываем только для авторизованных */}
               {user.isAuth && showModal && <ModalWindow onClose={handleCloseModal} />}
+              {showAgeGate && <AgeGate onConfirm={confirmAge} />}
             </div>
           </>
       );

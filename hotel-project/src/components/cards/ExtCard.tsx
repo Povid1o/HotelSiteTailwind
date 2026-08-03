@@ -19,6 +19,7 @@ const ExtCard = ({ Card, ExtContent, content }) => {
   };
 
   useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
     if (showDialog) {
       document.body.style.overflow = 'hidden';
       setDialogOverflow('auto');
@@ -26,6 +27,10 @@ const ExtCard = ({ Card, ExtContent, content }) => {
       document.body.style.overflow = 'auto';
       setDialogOverflow('hidden');
     }
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
   }, [showDialog]);
 
   useEffect(() => {

@@ -28,12 +28,12 @@
 
 .swiper-button-next,
 .swiper-button-prev {
-color:#80143c;
+color: var(--color-brand);
 
 }
 
 .swiper-pagination-bullet-active {
-background-color:#80143c ;
+background-color: var(--color-brand);
 }
 
 

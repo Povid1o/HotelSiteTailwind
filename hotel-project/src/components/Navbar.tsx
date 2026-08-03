@@ -1,16 +1,14 @@
 import React, { useContext } from 'react';
-import Logo from './assets/VineTerracesLogo.png';
 import { FaBars, FaTimes } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import './styles/hover.css';
+import { Link, NavLink } from 'react-router-dom';
 import { Context } from '../index';
 import { observer } from 'mobx-react-lite';
 import UserStorage from '../storage/UserStorage';
 import ProductStorage from '../storage/ProductStorage';
 
 interface NavbarProps {
-  nav: boolean;
-  setNav: (nav: boolean) => void;
+  nav?: boolean;
+  setNav?: (nav: boolean) => void;
 }
 
 interface AppContext {
@@ -18,104 +16,70 @@ interface AppContext {
   product: ProductStorage;
 }
 
-const Navbar = observer(({ nav, setNav }: NavbarProps) => {
+const Navbar = observer(({ nav = false, setNav }: NavbarProps) => {
   const context = useContext(Context) as AppContext | null;
   const user = context?.user;
 
-  const handleClick = () => setNav(!nav);
+  // В админке шапка используется без мобильного меню. Не допускаем падения
+  // компонента, если управляющие props намеренно не переданы.
+  const handleClick = () => setNav?.(!nav);
+  const closeMenu = () => setNav?.(false);
   const handleLogout = () => {
     user?.logout();
+    closeMenu();
   };
 
+  const publicLinks = [
+    { to: '/Hotel', label: 'Отель' },
+    { to: '/Vinery', label: 'Винодельня' },
+    { to: '/Restaurant', label: 'Ресторан' },
+    { to: '/Events', label: 'Мероприятия' },
+  ];
+
   return (
-    <nav className='fixed w-screen h-[80px] font-body flex justify-between items-center px-4 bg-main_theme text-white z-[30]'>
-      <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
-        integrity="sha512-wnea99uKIC3TJF7v4eKk4Y+lMz2Mklv18+r4na2Gn1abDRPPOeef95xTzdwGD9e6zXJBteMIhZ1+68QC5byJZw=="
-        crossOrigin="anonymous"
-        referrerPolicy="no-referrer"
-      />
+    <header className='site-header'>
+      <Link to='/' className='site-header__brand' onClick={closeMenu} aria-label='Винные Террасы — главная'>Винные Террасы</Link>
 
-      <div>
-        <img src={Logo} className='w-[100px]' alt="Логотип" />
-      </div>
-
-      {/* Menu */}
-      {user?.isAuth ? (
-        <ul className='hidden md:flex '>
-          <li className='underlineDesktop computerList'>
-            <Link to='/Hotel'>Отель</Link>
-          </li>
-          <li className='underlineDesktop computerList'>
-            <Link to='/Vinery'>Винодельня</Link>
-          </li>
-          <li className='underlineDesktop computerList'>
-            <Link to='/Restaurant'>Ресторан</Link>
-          </li>
-          <li className='underlineDesktop computerList'>
-            <Link to='/Events'>Мероприятия</Link>
-          </li>
-            <li className='underlineDesktop text-lg'>
-                <Link to='/ProductionCenter'>Центр производства</Link>
+      <nav aria-label='Основная навигация'>
+        <button
+          type='button'
+          className='site-nav__toggle'
+          onClick={handleClick}
+          aria-expanded={nav}
+          aria-controls='main-navigation'
+          aria-label={nav ? 'Закрыть меню' : 'Открыть меню'}
+        >
+          {nav ? <FaTimes aria-hidden='true' /> : <FaBars aria-hidden='true' />}
+        </button>
+        <ul id='main-navigation' className={`site-nav__list${nav ? ' site-nav__list--open' : ''}`}>
+          {publicLinks.map(({ to, label, end }) => (
+            <li key={to}>
+              <NavLink
+                to={to}
+                end={end}
+                onClick={closeMenu}
+                className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}
+              >
+                {label}
+              </NavLink>
             </li>
-          <li className='underlineDesktop text-lg'>
-            <Link to='/admin'>Панель Админа</Link>
-          </li>
-          <li className='underlineDesktop computerList' onClick={handleLogout}>
-            Выйти
-          </li>
+          ))}
+          {user?.isAuth && (
+            <>
+              <li>
+                <NavLink to='/admin' onClick={closeMenu} className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}>
+                  Админка
+                </NavLink>
+              </li>
+              <li>
+                <button type='button' className='site-nav__action' onClick={handleLogout}>Выйти</button>
+              </li>
+            </>
+          )}
         </ul>
-      ) : (
-        <ul className='hidden md:flex '>
-          <li className='underlineDesktop computerList'>
-            <Link to='/Hotel'>Отель</Link>
-          </li>
-          <li className='underlineDesktop computerList'>
-            <Link to='/Vinery'>Винодельня</Link>
-          </li>
-          <li className='underlineDesktop computerList'>
-            <Link to='/Restaurant'>Ресторан</Link>
-          </li>
-          <li className='underlineDesktop computerList'>
-            <Link to='/Events'>Мероприятия</Link>
-          </li>
-            <li className='underlineDesktop text-lg'>
-                <Link to='/ProductionCenter'>Центр производства</Link>
-            </li>
-        </ul>
-      )}
-
-      {/* Hamburger */}
-      <div onClick={handleClick} className="md:hidden z-[31]">
-        {!nav ? <FaBars /> : <FaTimes />}
-      </div>
-
-      {/* Mobile Menu */}
-      <ul
-        className={
-          !nav
-            ? 'absolute top-0 left-0 opacity-0 invisible'
-            : 'transition-opacity duration-300 ease-out opacity-100 absolute top-0 left-0 w-full h-screen bg-main_theme flex flex-col justify-center items-center visible'
-        }
-      >
-        <li className='py-6 text-4xl underlineMobile'>
-          <Link to='/Hotel'>Отель</Link>
-        </li>
-        <li className='py-6 text-4xl underlineMobile'>
-          <Link to='/Vinery'>Винодельня</Link>
-        </li>
-        <li className='py-6 text-4xl underlineMobile'>
-          <Link to='/Restaurant'>Ресторан</Link>
-        </li>
-        <li className='py-6 text-4xl underlineMobile'>
-          <Link to='/Events'>Мероприятия</Link>
-        </li>
-          <li className='py-6 text-4xl underlineMobile'>
-              <Link to='/ProductionCenter'>Центр Производства</Link>
-          </li>
-      </ul>
-    </nav>
+      </nav>
+      <Link to='/Hotel#booking' className='site-header__booking' onClick={closeMenu}>Забронировать</Link>
+    </header>
   );
 });
 

@@ -170,7 +170,7 @@ export const updateWine = async (wineId: number, wineData: any, contextTypeName?
 
   // ⚠️ КРИТИЧНО: Отправляем images ТОЛЬКО если есть валидные изображения после фильтрации
   if (wineData.images !== undefined) {
-    if (images.length > 0) {
+    if (images.length > 0 || wineData.images.length === 0) {
       payload.images = images;
     } else {
       console.warn('⚠️ All wine images were blob URLs and filtered out. NOT sending images field to preserve existing photos in DB.');

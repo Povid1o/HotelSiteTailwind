@@ -19,6 +19,11 @@ const wineSchema = Joi.object({
   images: Joi.array().items(Joi.object({ url: Joi.string().required(), alt_text: Joi.string().allow('', null), order: Joi.number().integer() })).default([])
 });
 
+// On update, absence of images must not be coerced into an empty list.
+const wineUpdateSchema = wineSchema.keys({
+  images: Joi.array().items(Joi.object({ url: Joi.string().required(), alt_text: Joi.string().allow('', null), order: Joi.number().integer() })).optional()
+});
+
 exports.tree = asyncHandler(async (req, res) => {
   const [types, sweetnesses, wines] = await Promise.all([
     WineType.findAll(),
@@ -61,7 +66,7 @@ exports.create = asyncHandler(async (req, res) => {
 });
 
 exports.update = asyncHandler(async (req, res) => {
-  const v = await wineSchema.validateAsync({
+  const v = await wineUpdateSchema.validateAsync({
     ...req.body,
     type_id: Number(req.body.type_id),
     sweetness_id: Number(req.body.sweetness_id)
@@ -77,10 +82,10 @@ exports.update = asyncHandler(async (req, res) => {
   if (!type || !sweet) return res.status(400).json({ message: 'Invalid type_id or sweetness_id' });
 
   await wine.update(v);
-  await Promise.all([
-    WineDescription.destroy({ where: { wine_id: wine.id } }),
-    WineImage.destroy({ where: { wine_id: wine.id } }),
-  ]);
+  await WineDescription.destroy({ where: { wine_id: wine.id } });
+  if (v.images !== undefined) {
+    await WineImage.destroy({ where: { wine_id: wine.id } });
+  }
   if (v.description?.length)
     await WineDescription.bulkCreate(v.description.map((text, idx) => ({ wine_id: wine.id, description_text: text, order: idx + 1 })));
   if (v.images?.length)

@@ -70,6 +70,16 @@ interface PageContent {
       secondText: string;
       backgroundImage: string | File;
     };
+    shopHero?: {
+      title: string;
+      description: string;
+      image: string | File | null;
+    };
+    shopOrderBanner?: {
+      title: string;
+      description: string;
+      email: string;
+    };
   } | string;
 }
 

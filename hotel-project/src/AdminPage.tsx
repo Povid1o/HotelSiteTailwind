@@ -3,6 +3,7 @@ import React, { useState, useCallback, useContext, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import HomeEdit from './components/pages_editable/HomeEdit';
 import VineryEdit from './components/pages_editable/VineryEdit';
+import ShopEdit from './components/pages_editable/ShopEdit';
 import Card from './components/cards/Card';
 
 import CreateProduct from './components/modals/CreateProduct';
@@ -277,6 +278,26 @@ const AdminPage = observer(() =>  {
         }
       />
     ),
+    "Витрина вина": (page) => (
+      <ExtCard
+        Card={() => (
+          <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
+            Править
+          </button>
+        )}
+        content={
+          <ShopEdit
+            pageData={{
+              shopHero: { title: '', description: '', image: null, ...(typeof page.content === 'object' ? page.content.shopHero : {}) },
+              shopOrderBanner: { title: '', description: '', email: '', ...(typeof page.content === 'object' ? page.content.shopOrderBanner : {}) },
+            }}
+            onContentChange={(sectionName, updatedData) =>
+              updatePageContent(page.name, sectionName, updatedData)
+            }
+          />
+        }
+      />
+    ),
     "Ресторан": () => (
       <span className="text-gray-500">
         Контент редактируется в разделе "Меню Ресторана"
@@ -404,7 +425,11 @@ const AdminPage = observer(() =>  {
                         {room.name}
                       </Table.Cell>
                       <Table.Cell>{room.price[0]?.price || 'N/A'}</Table.Cell>
-                      <Table.Cell>{room.isActive ? "Активно" : "В архиве"}</Table.Cell>
+                      <Table.Cell>
+                        {hotel.isSavingRoom(room.id)
+                          ? "Сохраняем…"
+                          : hotel.getRoomSaveError(room.id) || (room.isActive ? "Активно" : "В архиве")}
+                      </Table.Cell>
                       <Table.Cell>
                           <ExtCard
                           Card={() => (
@@ -496,7 +521,9 @@ const AdminPage = observer(() =>  {
                       {products.map(({ id, images, name, header, description, descriptionFull, weight, price}) => (
                         <Table.Row key={id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                            {name}
+                            <div>{name}</div>
+                            {dish.isSavingProduct(id) && <div className="text-xs text-gray-500">Сохраняем…</div>}
+                            {dish.getProductSaveError(id) && <div className="text-xs text-red-600">Ошибка сохранения</div>}
                           </Table.Cell>
                           <Table.Cell>{price}</Table.Cell>
                           <Table.Cell>
@@ -509,6 +536,7 @@ const AdminPage = observer(() =>  {
                               content={
                                 <NewDishCard
                                   dishName={name}
+                                  header={header}
                                   photos={images}
                                   price={price}
                                   description={descriptionFull}
@@ -586,7 +614,9 @@ const AdminPage = observer(() =>  {
                       {(cat.events || []).map((ev) => (
                         <Table.Row key={ev.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                           <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                            {ev.title}
+                            <div>{ev.title}</div>
+                            {events.isSavingEvent(ev.id) && <div className="text-xs text-gray-500">Сохраняем…</div>}
+                            {events.getEventSaveError(ev.id) && <div className="text-xs text-red-600">Ошибка сохранения</div>}
                           </Table.Cell>
                           <Table.Cell>
                             <ExtCard
@@ -687,7 +717,9 @@ const AdminPage = observer(() =>  {
                           {wines.map(({ id, name, images, year, alcohol, sugar, temperature, price, description }) => (
                             <Table.Row key={id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                               <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                {name}
+                                <div>{name}</div>
+                                {wine.isSavingWine(id) && <div className="text-xs text-gray-500">Сохраняем…</div>}
+                                {wine.getWineSaveError(id) && <div className="text-xs text-red-600">Ошибка сохранения</div>}
                               </Table.Cell>
                               <Table.Cell>{price}</Table.Cell>
                               <Table.Cell>

@@ -45,14 +45,14 @@ exports.getEventById = asyncHandler(async (req, res) => {
 exports.createEvent = asyncHandler(async (req, res) => {
   const v = await eventSchema.validateAsync(req.body);
   const ev = await s.createEvent(v);
-  res.status(201).json(ev);
+  res.status(201).json(await s.getEventById(ev.id));
 });
 
 exports.updateEvent = asyncHandler(async (req, res) => {
   const v = await eventSchema.fork(['title','categoryId'], (schema) => schema.optional()).validateAsync(req.body);
   const ev = await s.updateEvent(req.params.id, v);
   if (!ev) return res.sendStatus(404);
-  res.json(ev);
+  res.json(await s.getEventById(ev.id));
 });
 
 exports.deleteEvent = asyncHandler(async (req, res) => {
@@ -60,5 +60,4 @@ exports.deleteEvent = asyncHandler(async (req, res) => {
   if (!count) return res.sendStatus(404);
   res.json({ ok: true });
 });
-
 

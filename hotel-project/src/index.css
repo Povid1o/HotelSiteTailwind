@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap');
+@import './components/styles/site-shell.css';
 
 @tailwind base;
 @tailwind components;
@@ -10,12 +11,20 @@
 
 
 @layer base {
+    :root {
+        --color-ink: #19312F;
+        --color-brand: #1F4D4A;
+        --color-sand: #F5F2EA;
+        --color-clay: #C7774D;
+        --color-mist: #DCE5DE;
+    }
+
     body {
-        @apply font-[Bitter];
+        @apply bg-sand font-body text-ink antialiased;
     }
     li {
         @apply px-4;
-        @apply cursor-pointer
+        @apply cursor-pointer;
     }
 }
 

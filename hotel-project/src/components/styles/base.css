@@ -1,13 +1,13 @@
 .header-section{
-    @apply text-4xl text-gray-700 font-bold pt-4 pb-6 lg:text-5xl xl:text-6xl pt-8
+    @apply font-display text-4xl font-semibold leading-[0.9] tracking-[-0.035em] text-ink pt-4 pb-6 lg:text-5xl xl:text-6xl xl:pt-8;
 }
 
 .header-page{
-    @apply text-3xl font-bold font-body py-3 relative text-white drop-shadow-2xl isolate md:text-5xl xl:text-7xl
+    @apply font-display text-5xl font-semibold leading-[0.9] tracking-[-0.04em] py-3 relative text-white drop-shadow-2xl isolate md:text-7xl xl:text-8xl;
 }
 
 .mainBackground-page{
-    @apply bg-no-repeat bg-cover bg-gray-300 bg-blend-multiply w-full h-screen rounded-xl
+    @apply bg-no-repeat bg-cover bg-main_theme bg-blend-multiply w-full h-screen;
 }
 
 .typing-effect {
@@ -22,7 +22,7 @@
     
 
 .section-format{
-    @apply mt-14 mx-auto justify-center font-body max-sm:w-5/6 md:w-3/4 xl:container
+    @apply mt-20 mx-auto justify-center font-body max-sm:w-5/6 md:w-3/4 xl:max-w-6xl;
 }
 
 .horizontal-list{
@@ -32,5 +32,4 @@
 .horizontal-list-boxElement{
     @apply mx-10 my-auto text-lg mobile:text-xl md:text-2xl font-semibold
 }
-
 

@@ -106,9 +106,9 @@ export const updateEvent = async (id: number, payload: CreateUpdateEventDto) => 
     categoryId: payload.categoryId
   };
   // ⚠️ КРИТИЧНО: Отправляем images ТОЛЬКО если есть валидные изображения после фильтрации
-  if (payload.images) {
+  if (payload.images !== undefined) {
     const normalized = await normalizeImages(payload.images);
-    if (normalized.length > 0) {
+    if (normalized.length > 0 || payload.images.length === 0) {
       body.images = normalized;
     } else {
       console.warn('⚠️ All event images were blob URLs and filtered out. NOT sending images field to preserve existing photos in DB.');
@@ -122,5 +122,4 @@ export const deleteEvent = async (id: number) => {
   const { data } = await $authHost.delete(`api/events/${id}`);
   return data;
 };
-
 

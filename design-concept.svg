@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1960" viewBox="0 0 1440 1960" role="img" aria-labelledby="title desc">
+  <title id="title">Концепт главной страницы отеля и винодельни</title>
+  <desc id="desc">Новая независимая дизайн-система: хвойно-зелёная палитра, известняк, терракота, редакционная типографика.</desc>
+  <defs>
+    <linearGradient id="hero" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#19312F"/><stop offset=".62" stop-color="#41695C"/><stop offset="1" stop-color="#A2AB84"/></linearGradient>
+    <linearGradient id="photo" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#7E9A78"/><stop offset="1" stop-color="#24463F"/></linearGradient>
+    <pattern id="vines" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M0 39C13 25 24 25 48 4M-5 17C14 3 28 5 53-10" fill="none" stroke="#C9D6B5" stroke-opacity=".35" stroke-width="2"/><circle cx="26" cy="27" r="4" fill="#D8C182" fill-opacity=".5"/></pattern>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="130%"><feDropShadow dx="0" dy="12" stdDeviation="20" flood-color="#19312F" flood-opacity=".14"/></filter>
+    <style>
+      .serif { font-family: Georgia, 'Times New Roman', serif; }
+      .sans { font-family: Arial, Helvetica, sans-serif; letter-spacing: .08em; }
+      .tiny { font-size: 11px; }
+    </style>
+  </defs>
+  <rect width="1440" height="1960" fill="#F5F2EA"/>
+  <rect x="0" y="0" width="1440" height="700" fill="url(#hero)"/>
+  <rect x="0" y="0" width="1440" height="700" fill="url(#vines)" opacity=".58"/>
+  <path d="M780 700V395C874 336 942 268 1055 225C1150 189 1275 179 1440 201V700Z" fill="#6E8971" opacity=".9"/>
+  <path d="M926 700V470C1023 382 1107 335 1212 306C1297 283 1364 286 1440 300V700Z" fill="#D7C68B" opacity=".66"/>
+  <rect x="72" y="36" width="1296" height="58" rx="4" fill="#19312F" fill-opacity=".82"/>
+  <text x="105" y="71" fill="#F5F2EA" class="sans" font-size="15">ТЕРРАСЫ</text>
+  <text x="790" y="70" fill="#F5F2EA" class="sans tiny">ОТЕЛЬ</text><text x="878" y="70" fill="#F5F2EA" class="sans tiny">ВИНОДЕЛЬНЯ</text><text x="1015" y="70" fill="#F5F2EA" class="sans tiny">РЕСТОРАН</text><text x="1130" y="70" fill="#F5F2EA" class="sans tiny">СОБЫТИЯ</text>
+  <rect x="1222" y="51" width="112" height="28" rx="14" fill="#C7774D"/><text x="1240" y="70" fill="#fff" class="sans tiny">ЗАБРОНИРОВАТЬ</text>
+  <text x="126" y="253" fill="#F5F2EA" class="sans" font-size="12">ОТЕЛЬ · АБРАУ-ДЮРСО</text>
+  <text x="119" y="370" fill="#fff" class="serif" font-size="86">Место, где</text>
+  <text x="119" y="454" fill="#fff" class="serif" font-size="86">остаются дольше</text>
+  <line x1="124" y1="495" x2="252" y2="495" stroke="#C7774D" stroke-width="4"/>
+  <text x="124" y="536" fill="#F5F2EA" font-family="Arial" font-size="16">Свет, тишина и виноградники — в своём ритме.</text>
+  <rect x="119" y="580" width="210" height="52" rx="2" fill="#F5F2EA"/><text x="146" y="612" fill="#19312F" class="sans" font-size="12">ОТКРЫТЬ ОТЕЛЬ</text>
+  <text x="120" y="670" fill="#F5F2EA" class="sans tiny">01 / 04</text><line x1="183" y1="665" x2="323" y2="665" stroke="#F5F2EA" stroke-opacity=".6"/>
+  <text x="120" y="818" fill="#C7774D" class="sans" font-size="12">НЕ СПЕШИТЬ</text>
+  <text x="118" y="900" fill="#19312F" class="serif" font-size="62">Время, которое</text><text x="118" y="963" fill="#19312F" class="serif" font-size="62">становится вашим</text>
+  <text x="790" y="830" fill="#40514D" font-family="Arial" font-size="17">Утро начинается с вида на склоны, а день не требует</text><text x="790" y="857" fill="#40514D" font-family="Arial" font-size="17">плана. Мы оставили пространство для тишины, разговоров</text><text x="790" y="884" fill="#40514D" font-family="Arial" font-size="17">и маленьких личных открытий.</text>
+  <rect x="119" y="1040" width="510" height="286" fill="url(#photo)"/><rect x="119" y="1040" width="510" height="286" fill="url(#vines)" opacity=".28"/>
+  <rect x="659" y="1040" width="272" height="286" fill="#C7774D"/><text x="689" y="1110" fill="#F5F2EA" class="sans tiny">НОМЕРА</text><text x="687" y="1190" fill="#fff" class="serif" font-size="43">Тихий</text><text x="687" y="1235" fill="#fff" class="serif" font-size="43">комфорт</text><text x="687" y="1280" fill="#fff" class="sans tiny">СМОТРЕТЬ →</text>
+  <rect x="961" y="1040" width="360" height="286" fill="#DCE5DE"/><path d="M997 1278C1072 1150 1125 1086 1289 1050" stroke="#41695C" stroke-width="34" fill="none" stroke-linecap="round"/><circle cx="1118" cy="1177" r="23" fill="#C7774D"/><text x="996" y="1110" fill="#19312F" class="sans tiny">ПРОГУЛКИ</text><text x="995" y="1280" fill="#19312F" class="sans tiny">МАРШРУТЫ ПО ТЕРРУАРУ →</text>
+  <rect x="0" y="1390" width="1440" height="332" fill="#19312F"/>
+  <text x="118" y="1460" fill="#C7774D" class="sans tiny">ТЕРРУАР</text><text x="118" y="1536" fill="#F5F2EA" class="serif" font-size="58">Открывать вкус</text><text x="118" y="1595" fill="#F5F2EA" class="serif" font-size="58">с места его рождения</text>
+  <text x="834" y="1492" fill="#DCE5DE" font-family="Arial" font-size="16">Дегустации, гастрономия и виноградники —</text><text x="834" y="1520" fill="#DCE5DE" font-family="Arial" font-size="16">единый маршрут без декораций.</text><rect x="834" y="1560" width="230" height="49" fill="#C7774D"/><text x="861" y="1591" fill="#fff" class="sans tiny">УЗНАТЬ О ВИНАХ</text>
+  <rect x="72" y="1770" width="1296" height="120" fill="#DCE5DE"/><text x="107" y="1818" fill="#19312F" class="sans tiny">ОСТАНЬТЕСЬ НА НЕСКОЛЬКО ДНЕЙ</text><text x="107" y="1861" fill="#19312F" class="serif" font-size="33">Выберите свой ритм</text><rect x="1070" y="1807" width="236" height="48" fill="#19312F"/><text x="1097" y="1837" fill="#fff" class="sans tiny">ПОДОБРАТЬ НОМЕР</text>
+  <rect x="0" y="1920" width="1440" height="40" fill="#19312F"/><text x="74" y="1945" fill="#DCE5DE" class="sans tiny">ТЕРРАСЫ · НОВАЯ ВИЗУАЛЬНАЯ СИСТЕМА · КОНЦЕПТ</text>
+</svg>

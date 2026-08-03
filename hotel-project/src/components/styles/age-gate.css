@@ -1,0 +1,6 @@
+.age-gate { align-items: center; background: rgba(16,37,35,.92); color: var(--site-sand); display: flex; inset: 0; justify-content: center; padding: 20px; position: fixed; z-index: 200; }
+.age-gate__panel { border: 1px solid rgba(245,242,234,.42); max-width: 570px; padding: clamp(32px,6vw,70px); text-align: center; }
+.age-gate__panel p { color: var(--site-clay); font: 700 10px Manrope,sans-serif; letter-spacing: .16em; text-transform: uppercase; }
+.age-gate__panel h1 { font: 500 clamp(44px,7vw,74px)/.9 "Cormorant Garamond",serif; letter-spacing: -.045em; margin: 22px 0; }
+.age-gate__panel span { display: block; font: 14px/1.55 Manrope,sans-serif; }
+.age-gate__panel button { background: var(--site-clay); border: 0; color: var(--site-paper); cursor: pointer; font: 700 10px Manrope,sans-serif; letter-spacing: .12em; margin-top: 34px; min-height: 50px; padding: 0 22px; text-transform: uppercase; }

@@ -1,0 +1,257 @@
+:root {
+  --site-ink: #19312f;
+  --site-forest: #1f4d4a;
+  --site-sand: #f5f2ea;
+  --site-paper: #fffdf8;
+  --site-clay: #c7774d;
+  --site-mist: #dce5de;
+  --site-line: rgba(25, 49, 47, 0.18);
+  --site-shadow: 0 20px 60px rgba(25, 49, 47, 0.14);
+}
+
+.site-header {
+  background: rgba(25, 49, 47, .94);
+  backdrop-filter: blur(10px);
+  color: var(--site-sand);
+  display: flex;
+  height: 80px;
+  justify-content: flex-start;
+  left: 0;
+  padding: 0 24px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 50;
+}
+
+.site-header__brand {
+  align-items: center;
+  color: inherit;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 20px;
+  font-weight: 600;
+  min-height: 44px;
+  text-decoration: none;
+}
+
+.site-nav__list {
+  align-items: center;
+  display: flex;
+  gap: 28px;
+  margin-left: 32px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-nav__list li {
+  padding: 0;
+}
+
+.site-nav__link,
+.site-nav__action {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: Manrope, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  min-height: 44px;
+  padding: 14px 0;
+  position: relative;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.site-header__booking { background: transparent; border: 1px solid var(--site-clay); color: var(--site-sand); font: 600 14px Manrope,sans-serif; margin-left: auto; padding: 10px 18px; text-decoration: none; }
+.site-header__booking:hover,.site-header__booking:focus-visible { background: var(--site-clay); color: var(--site-paper); }
+
+.site-nav__link::after {
+  background: var(--site-clay);
+  bottom: 9px;
+  content: "";
+  height: 2px;
+  left: 0;
+  position: absolute;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 180ms ease;
+  width: 100%;
+}
+
+.site-nav__link:hover::after,
+.site-nav__link:focus-visible::after,
+.site-nav__link--active::after {
+  transform: scaleX(1);
+}
+
+.site-nav__link:focus-visible,
+.site-nav__action:focus-visible,
+.site-header__brand:focus-visible,
+.site-nav__toggle:focus-visible {
+  outline: 2px solid var(--site-clay);
+  outline-offset: 4px;
+}
+
+.site-nav__toggle {
+  align-items: center;
+  background: transparent;
+  border: 1px solid rgba(245, 242, 234, 0.42);
+  color: inherit;
+  cursor: pointer;
+  display: none;
+  height: 44px;
+  justify-content: center;
+  width: 44px;
+}
+
+.site-footer {
+  background: var(--site-forest);
+  color: var(--site-sand);
+  margin-top: 0;
+  padding: 64px 24px 40px;
+}
+
+.site-footer__top {
+  align-items: flex-start;
+  display: flex;
+  gap: 32px;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 1320px;
+}
+
+.site-footer__contacts,
+.site-footer__legal {
+  max-width: 290px;
+}
+
+.site-footer__label {
+  color: var(--site-clay);
+  font-family: Manrope, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  margin: 0 0 15px;
+  text-transform: uppercase;
+}
+
+.site-footer__contacts > p:not(.site-footer__label) {
+  color: rgba(245, 242, 234, .78);
+  font: 13px/1.55 Manrope, sans-serif;
+  margin: 0;
+}
+
+.site-footer__contacts a,
+.site-footer__legal a {
+  color: var(--site-sand);
+  display: block;
+  font: 12px/1.45 Manrope, sans-serif;
+  margin-top: 11px;
+  text-decoration: none;
+}
+
+.site-footer__contacts a { border-bottom: 1px solid var(--site-clay); padding-bottom: 3px; width: fit-content; }
+.site-footer__contacts a:hover,
+.site-footer__contacts a:focus-visible,
+.site-footer__legal a:hover,
+.site-footer__legal a:focus-visible { color: var(--site-clay); }
+
+.site-footer__brand { color: var(--site-sand); font: 600 22px 'Cormorant Garamond', serif; text-decoration: none; }
+
+.site-footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 32px;
+  justify-content: flex-end;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-footer__nav a {
+  color: inherit;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.site-footer__nav a:hover,
+.site-footer__nav a:focus-visible {
+  color: var(--site-clay);
+}
+
+.site-footer__rule { background: rgba(220,229,222,.2); border: 0; height: 1px; margin: 32px 0; }
+.site-footer__map { border-radius: 8px; margin-bottom: 24px; overflow: hidden; }.site-footer__map .w-full { height: 220px; }.site-footer__map [class*="ymaps"] { filter: saturate(.55) contrast(.9); }
+.site-footer__bottom {
+  align-items: flex-start;
+  color: rgba(245, 242, 234, 0.7);
+  font-size: 12px;
+  margin: 0 auto;
+  max-width: 1320px;
+  display: flex;
+  gap: 18px 40px;
+  justify-content: space-between;
+}
+
+@media (max-width: 1023px) {
+  .site-nav__toggle {
+    display: inline-flex;
+  }
+
+  .site-nav__list {
+    background: var(--site-ink);
+    border-bottom: 1px solid rgba(245, 242, 234, 0.18);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    left: 0;
+    padding: 24px clamp(20px, 8vw, 64px) 36px;
+    position: fixed;
+    right: 0;
+    top: 80px;
+    transform: translateY(-125%);
+    transition: transform 220ms ease;
+    visibility: hidden;
+  }
+
+  .site-nav__list--open {
+    transform: translateY(0);
+    visibility: visible;
+  }
+
+  .site-nav__link,
+  .site-nav__action {
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(28px, 6vw, 42px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    padding: 10px 0;
+    text-transform: none;
+  }
+
+  .site-nav__link::after {
+    bottom: 7px;
+  }
+
+  .site-footer__top {
+    flex-direction: column;
+  }
+
+  .site-footer__bottom { flex-direction: column; }
+
+  .site-footer__nav {
+    justify-content: flex-start;
+  }
+  .site-header__booking { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-nav__link::after,
+  .site-nav__list {
+    transition: none;
+  }
+}
