@@ -22,7 +22,12 @@ const toJsonObject = (x) => {
 };
 
 exports.list = asyncHandler(async (req, res) => {
-  const pages = await Page.findAll();
+  const where = req.query.path ? { path: String(req.query.path) } : undefined;
+  const requestedLimit = Number.parseInt(String(req.query.limit || ''), 10);
+  const requestedOffset = Number.parseInt(String(req.query.offset || ''), 10);
+  const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 100) : undefined;
+  const offset = Number.isFinite(requestedOffset) ? Math.max(requestedOffset, 0) : undefined;
+  const pages = await Page.findAll({ where, limit, offset, order: [['id', 'ASC']] });
   res.json(pages);
 });
 

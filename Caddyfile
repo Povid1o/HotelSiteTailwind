@@ -20,7 +20,7 @@
 
     # Uploads live in the shared read-only volume. Serve them here instead of
     # sending every photo/video through Caddy → nginx → backend.
-    @media path /static/*
+    @media path /static/dishes/* /static/pages/* /static/rooms/* /static/wines/* /static/videos/* /static/fallbacks/*
     handle @media {
         root * /var/www
         header Cache-Control "public, max-age=31536000, immutable"
