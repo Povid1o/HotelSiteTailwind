@@ -13,6 +13,7 @@ const fs = require('fs')
 const crypto = require('crypto')
 const authMiddleware = require('./middleware/authMiddleware')
 const checkRole = require('./middleware/checkRoleMiddleware')
+const { parseCookies } = require('./utils/session')
 
 const PORT = process.env.PORT || 5001
 
@@ -44,6 +45,17 @@ const loginLimiter = rateLimit({
   message: { message: 'Слишком много попыток входа. Повторите через 15 минут.' }
 })
 app.use('/api/user/login', loginLimiter)
+app.use('/api', (req, res, next) => {
+  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method) || req.path === '/user/login') return next();
+  const cookies = parseCookies(req.headers.cookie);
+  const csrfHeader = req.get('x-csrf-token');
+  const cookieToken = cookies.csrf_token ? Buffer.from(cookies.csrf_token) : null;
+  const headerToken = csrfHeader ? Buffer.from(csrfHeader) : null;
+  if (!cookieToken || !headerToken || cookieToken.length !== headerToken.length || !crypto.timingSafeEqual(cookieToken, headerToken)) {
+    return res.status(403).json({ message: 'Недействительный CSRF-токен' });
+  }
+  next();
+})
 // JSON в API не содержит медиа: файлы принимаются отдельным защищённым endpoint.
 app.use(express.json({ limit: '1mb' }))
 app.use(express.urlencoded({ extended: true, limit: '1mb' }))

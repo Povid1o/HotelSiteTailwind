@@ -22,7 +22,7 @@ function responseRecorder() {
   };
 }
 
-test('auth middleware rejects a request without a bearer token', () => {
+test('auth middleware rejects a request without a session cookie', () => {
   const res = responseRecorder();
   let calledNext = false;
 
@@ -32,10 +32,10 @@ test('auth middleware rejects a request without a bearer token', () => {
   assert.equal(res.statusCode, 401);
 });
 
-test('auth middleware accepts a valid bearer token', () => {
+test('auth middleware accepts a valid httpOnly session cookie', () => {
   const res = responseRecorder();
   const token = jwt.sign({ id: 42, email: 'admin@example.test', role: 'ADMIN' }, process.env.JWT_SECRET);
-  const req = { method: 'POST', headers: { authorization: `Bearer ${token}` } };
+  const req = { method: 'POST', headers: { cookie: `hotel_session=${token}` } };
   let calledNext = false;
 
   auth(req, res, () => { calledNext = true; });
@@ -47,11 +47,10 @@ test('auth middleware accepts a valid bearer token', () => {
 
 test('role middleware rejects an authenticated non-admin user', () => {
   const res = responseRecorder();
-  const token = jwt.sign({ id: 7, email: 'user@example.test', role: 'USER' }, process.env.JWT_SECRET);
   let calledNext = false;
 
   checkRole('ADMIN')(
-    { method: 'DELETE', headers: { authorization: `Bearer ${token}` } },
+    { method: 'DELETE', headers: {}, user: { id: 7, email: 'user@example.test', role: 'USER' } },
     res,
     () => { calledNext = true; }
   );

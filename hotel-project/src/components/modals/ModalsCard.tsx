@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-import '../styles/ExitButton.css'
 
 const Create = ({ Card, ExtContent }) => {
   const [showDialog, setShowDialog] = useState(false);
@@ -33,6 +32,15 @@ const Create = ({ Card, ExtContent }) => {
     }
   }, [dialogOverflow]);
 
+  useEffect(() => {
+    if (!showDialog) return;
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') handleClose();
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [showDialog]);
+
 
   return (
     <div className="flex items-center justify-center">
@@ -43,15 +51,17 @@ const Create = ({ Card, ExtContent }) => {
           <Card/>
         </button>
       {showDialog && (
-        <div className="fixed z-50 flex-wrap mt-20 inset-0 bg-black bg-opacity-50 flex items-center justify-center" ref={dialogRef}>
-          <div className="bg-white p-8 rounded-lg shadow-md  w-5/6 overflow-y-scroll h-5/6  mt-20 lg:mt-14 mb-12 max-w-[1040px]  " > 
-          <div className="relative">
-            <div onClick={handleClose} className="cl-btn-6 absolute left-[99%]">
-              <div class="cl-btn-6-in ">
-                <label class="cl-btn-6-txt text-gray-600">Close</label>
-              </div>
-            </div>
-          </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" ref={dialogRef} role="presentation">
+          <div className="relative max-h-[calc(100vh-2rem)] w-full max-w-[1040px] overflow-y-auto rounded-lg bg-white p-8 shadow-md" role="dialog" aria-modal="true" aria-label="Редактор">
+            <button
+              type="button"
+              onClick={handleClose}
+              className="absolute right-3 top-3 grid h-10 w-10 place-items-center rounded-full text-2xl leading-none text-gray-600 transition hover:bg-gray-100 hover:text-main_theme focus:outline-none focus:ring-2 focus:ring-main_theme"
+              aria-label="Закрыть редактор"
+              title="Закрыть"
+            >
+              ×
+            </button>
             <ExtContent/>
           </div>
         </div>

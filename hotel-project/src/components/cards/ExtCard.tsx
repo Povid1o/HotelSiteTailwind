@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef, RefObject  } from 'react';
-import '../styles/ExitButton.css'
+import React, { useEffect, useState, useRef } from 'react';
 
 const ExtCard = ({ Card, ExtContent, content }) => {
   const [showDialog, setShowDialog] = useState(false);
@@ -39,6 +38,15 @@ const ExtCard = ({ Card, ExtContent, content }) => {
     }
   }, [dialogOverflow]);
 
+  useEffect(() => {
+    if (!showDialog) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') handleClose();
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [showDialog]);
+
 
   return (
     <div className="flex items-center justify-center">
@@ -55,15 +63,17 @@ const ExtCard = ({ Card, ExtContent, content }) => {
           <Card />
         </div>
       {showDialog && (
-        <div className="fixed z-50 flex-wrap mt-15 inset-0 bg-black bg-opacity-50 flex items-center justify-center" ref={dialogRef}>
-          <div className="bg-white px-8 py-4 rounded-lg shadow-md  w-5/6 overflow-y-scroll mt-20 lg:mt-14 mb-5 max-w-[1040px]  " > 
-          <div className="relative mb-2">
-            <div onClick={handleClose} className="cl-btn-6 absolute left-[99%]">
-              <div className="cl-btn-6-in ">
-                <label className="cl-btn-6-txt text-gray-600">Close</label>
-              </div>
-            </div>
-          </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" ref={dialogRef} role="presentation">
+          <div className="relative max-h-[calc(100vh-2rem)] w-full max-w-[1040px] overflow-y-auto rounded-lg bg-white px-8 py-6 shadow-md" role="dialog" aria-modal="true" aria-label="Редактор">
+            <button
+              type="button"
+              onClick={handleClose}
+              className="absolute right-3 top-3 grid h-10 w-10 place-items-center rounded-full text-2xl leading-none text-gray-600 transition hover:bg-gray-100 hover:text-main_theme focus:outline-none focus:ring-2 focus:ring-main_theme"
+              aria-label="Закрыть редактор"
+              title="Закрыть"
+            >
+              ×
+            </button>
             {content ?? <ExtContent/>}
           </div>
         </div>

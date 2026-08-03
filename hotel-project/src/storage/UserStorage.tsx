@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { $authHost } from "../components/http";
+import { logout as requestLogout } from "../components/http/userAPI";
 
 // Определяем интерфейс для пользователя
 interface User {
@@ -34,7 +35,7 @@ export default class UserStorage {
     this._user = {};
     localStorage.removeItem("isAuth");
     localStorage.removeItem("user");
-    localStorage.removeItem("token"); // ✅ Удаляем токен при выходе
+    void requestLogout().catch(() => undefined);
   }
 
   get isAuth(): boolean {
@@ -47,13 +48,6 @@ export default class UserStorage {
 
   // Проверяем валидность токена на backend и фиксируем флаг авторизации
   async checkAuth(): Promise<boolean> {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      // Нет токена - значит пользователь не авторизован
-      this.logout();
-      return false;
-    }
-    
     try {
       await $authHost.get('api/user/auth');
       this.setIsAuth(true);

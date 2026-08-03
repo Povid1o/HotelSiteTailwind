@@ -1,17 +1,14 @@
-const jwt = require('jsonwebtoken')
+const { authenticateRequest } = require('../utils/session')
 
 module.exports = function (req, res, next) {
     if (req.method === "OPTIONS") {
         return next()
     }
     try {
-        const authorization = req.headers.authorization || ''
-        const token = authorization.startsWith('Bearer ') ? authorization.slice(7) : null
-        if (!token) {
+        const decoded = authenticateRequest(req)
+        if (!decoded) {
             return res.status(401).json({message: "Не авторизован"})
         }
-        // ✅ КРИТИЧНО: Используем JWT_SECRET, как и в userController.js
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
         req.user = decoded
         next()
     } catch (e) {

@@ -4,7 +4,6 @@ import { Link, NavLink } from 'react-router-dom';
 import { Context } from '../index';
 import { observer } from 'mobx-react-lite';
 import UserStorage from '../storage/UserStorage';
-import ProductStorage from '../storage/ProductStorage';
 
 interface NavbarProps {
   nav?: boolean;
@@ -13,7 +12,6 @@ interface NavbarProps {
 
 interface AppContext {
   user: UserStorage;
-  product: ProductStorage;
 }
 
 const Navbar = observer(({ nav = false, setNav }: NavbarProps) => {

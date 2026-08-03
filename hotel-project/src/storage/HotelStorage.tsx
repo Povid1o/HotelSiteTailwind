@@ -301,6 +301,7 @@ export default class HotelStorageNew {
     } catch (error) {
       console.error('Error creating room:', error);
       this._rooms = this._rooms.filter(r => r.id !== newRoom.id);
+      throw error;
     }
   };
 

@@ -8,9 +8,6 @@ import V4InfoPageEdit from './components/pages_editable/V4InfoPageEdit';
 import V4HeroEdit from './components/pages_editable/V4HeroEdit';
 import Card from './components/cards/Card';
 
-import CreateProduct from './components/modals/CreateProduct';
-import CreateClase from './components/modals/CreateClase';
-import CreateType from './components/modals/СreateType';
 import ModalsCard from './components/modals/ModalsCard'
 
 import { Context } from './index';
@@ -78,6 +75,7 @@ const AdminPage = observer(() =>  {
   const [isAddingDish, setIsAddingDish] = useState(false);
   const [isAddingWine, setIsAddingWine] = useState(false);
   const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [isAddingRoom, setIsAddingRoom] = useState(false);
 
   useEffect(() => {
     console.log('=== AdminPage: Загрузка данных ===');
@@ -168,8 +166,16 @@ const AdminPage = observer(() =>  {
   }, [hotel]);
 
   // Добавьте функцию для добавления номера:
-  const addRoom = () => {
-    hotel.addRoom();
+  const addRoom = async () => {
+    if (isAddingRoom) return;
+    setIsAddingRoom(true);
+    try {
+      await hotel.addRoom();
+    } catch (error: any) {
+      alert(error?.response?.data?.message || 'Не удалось создать номер.');
+    } finally {
+      setIsAddingRoom(false);
+    }
   };
 
   // Добавьте функцию для удаления номера:
@@ -433,6 +439,17 @@ const AdminPage = observer(() =>  {
 
           <Tabs.Item title="Карточки номеров" icon={FaHotel}>
             <div className="overflow-x-auto">
+              <div className="mb-4 flex justify-end">
+                <button
+                  type="button"
+                  onClick={addRoom}
+                  disabled={isAddingRoom}
+                  className="inline-flex items-center gap-2 rounded-lg bg-main_theme px-4 py-2 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <IoMdAdd className="h-5 w-5" />
+                  {isAddingRoom ? 'Создаём…' : 'Добавить номер'}
+                </button>
+              </div>
               <Table hoverable>
                 <Table.Head>
                   <Table.HeadCell>Название номера</Table.HeadCell>

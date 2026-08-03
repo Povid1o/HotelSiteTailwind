@@ -4,7 +4,6 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 import UserStorage from './storage/UserStorage';
-import ProductStorage from './storage/ProductStorage';
 // Импорты новых хранилищ
 import DishStorage from './storage/DishStorage';
 import HotelStorage from './storage/HotelStorage';
@@ -15,7 +14,6 @@ import EventStorage from './storage/EventStorage';
 
 interface AppContext {
   user: UserStorage;
-  product: ProductStorage; // Сохраняем для обратной совместимости
   // Новые хранилища
   dish: DishStorage;
   hotel: HotelStorage;
@@ -27,7 +25,6 @@ interface AppContext {
 export const Context = createContext<AppContext | null>(null);
 
 const userStorage = new UserStorage();
-const productStorage = new ProductStorage();
 // Создание экземпляров новых хранилищ
 const dishStorage = new DishStorage();
 const hotelStorage = new HotelStorage();
@@ -43,7 +40,6 @@ if (rootElement) {
     <Context.Provider
       value={{
         user: userStorage,
-        product: productStorage, // Оставляем для совместимости
         dish: dishStorage,
         hotel: hotelStorage,
         pageContent: pageContentStorage,

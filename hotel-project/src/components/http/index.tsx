@@ -10,21 +10,22 @@ export const API_BASE = (process.env.REACT_APP_API_URL !== undefined ? process.e
 // Локально: статические файлы обслуживаются через backend на порту 5001
 export const STATIC_BASE = process.env.REACT_APP_API_URL !== undefined ? '' : 'http://localhost:5001'
 
-// Debug: Log API_BASE value
-console.log('🔧 API_BASE:', API_BASE);
-console.log('🔧 STATIC_BASE:', STATIC_BASE);
-console.log('🔧 process.env.REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
-
 const $host = axios.create({
-  baseURL: API_BASE
+  baseURL: API_BASE,
+  withCredentials: true
 })
 
 const $authHost = axios.create({
-  baseURL: API_BASE
+  baseURL: API_BASE,
+  withCredentials: true
 })
 
 const authInterceptor = (config: any) => {
-  config.headers.authorization = `Bearer ${localStorage.getItem('token')}`
+  const csrfCookie = document.cookie.split('; ').find((item) => item.startsWith('csrf_token='))
+  const csrfToken = csrfCookie?.slice('csrf_token='.length)
+  if (csrfToken && !['get', 'head', 'options'].includes((config.method || 'get').toLowerCase())) {
+    config.headers['x-csrf-token'] = decodeURIComponent(csrfToken)
+  }
   return config
 }
 
@@ -35,7 +36,6 @@ $authHost.interceptors.response.use(
     if (error?.response?.status === 401) {
       localStorage.removeItem('isAuth')
       localStorage.removeItem('user')
-      localStorage.removeItem('token')
       if (window.location.pathname !== '/login') {
         window.location.assign('/login')
       }
