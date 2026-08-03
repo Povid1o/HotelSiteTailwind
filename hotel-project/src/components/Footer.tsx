@@ -6,7 +6,9 @@ import "./styles/footer.css"
 
 
 
-const YandexMap = () => {
+// Карта — отдельный переиспользуемый блок. Так на странице «Контакты» и в
+// футере всегда отображается одна и та же реальная карта, а не её заглушка.
+export const YandexMap = ({ height = '240px' }: { height?: string }) => {
   return (
     <div className="w-full">
       <YMaps >
@@ -14,7 +16,7 @@ const YandexMap = () => {
             center: [44.738755, 37.599938],
             zoom: 10
             }}
-            style={{ width: '100%', height: '240px' }}>
+            style={{ width: '100%', height }}>
           <Placemark geometry={[44.738755, 37.599938]} />
         </Map>
       </YMaps>

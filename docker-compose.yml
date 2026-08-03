@@ -13,9 +13,9 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: HotelSite
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 2005vino2024
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks: [appnet]
@@ -33,15 +33,14 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: "5432"
-      DB_NAME: HotelSite
-      DB_USER: postgres
-      DB_PASSWORD: 2005vino2024
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
       NODE_ENV: "production"
       PORT: "8000"
-      JWT_SECRET: 155bc783171b1117ccc706f62d6791ca5dd36a894b1261dab471171e9dafedf61a438542b069072f1be84a293a0f912f
-      SECRET_KEY: hotel2025
-      # Если хочешь оставить sync в деве:
-      # DB_SYNC: "false"
+      JWT_SECRET: ${JWT_SECRET}
+      SECRET_KEY: ${SECRET_KEY}
+      CORS_ORIGIN: ${CORS_ORIGIN:-}
     depends_on:
       db:
         condition: service_healthy
@@ -54,6 +53,7 @@ services:
       sh -c "
        mkdir -p /app/static/rooms /app/static/pages &&
        echo 'Static folders ensured' &&
+       node scripts/bootstrapDatabase.js &&
        node index.js
       "
 

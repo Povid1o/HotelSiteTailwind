@@ -4,6 +4,8 @@ import Navbar from './components/Navbar';
 import HomeEdit from './components/pages_editable/HomeEdit';
 import VineryEdit from './components/pages_editable/VineryEdit';
 import ShopEdit from './components/pages_editable/ShopEdit';
+import V4InfoPageEdit from './components/pages_editable/V4InfoPageEdit';
+import V4HeroEdit from './components/pages_editable/V4HeroEdit';
 import Card from './components/cards/Card';
 
 import CreateProduct from './components/modals/CreateProduct';
@@ -298,15 +300,34 @@ const AdminPage = observer(() =>  {
         }
       />
     ),
+    "Отель": (page) => (
+      <ExtCard Card={() => <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">Править</button>} content={<V4HeroEdit pageTitle="Отель" content={page.content} onSave={(section, data) => updatePageContent(page.name, section, data)} />} />
+    ),
     "Ресторан": () => (
-      <span className="text-gray-500">
-        Контент редактируется в разделе "Меню Ресторана"
-      </span>
+      <span className="text-gray-500">Контент редактируется в разделе "Меню Ресторана"</span>
     ),
     "Мероприятия": () => (
       <span className="text-gray-500">
         Контент редактируется в разделе "Мероприятия"
       </span>
+    ),
+    "Контакты": (page) => (
+      <ExtCard
+        Card={() => <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">Править</button>}
+        content={<V4InfoPageEdit type="contacts" content={page.content} onSave={(section, data) => updatePageContent(page.name, section, data)} />}
+      />
+    ),
+    "Политика конфиденциальности": (page) => (
+      <ExtCard
+        Card={() => <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">Править</button>}
+        content={<V4InfoPageEdit type="privacy" content={page.content} onSave={(section, data) => updatePageContent(page.name, section, data)} />}
+      />
+    ),
+    "Страница ресторана": (page) => (
+      <ExtCard Card={() => <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">Править</button>} content={<V4HeroEdit pageTitle="Ресторан" content={page.content} onSave={(section, data) => updatePageContent(page.name, section, data)} />} />
+    ),
+    "Страница мероприятий": (page) => (
+      <ExtCard Card={() => <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">Править</button>} content={<V4HeroEdit pageTitle="Мероприятия" content={page.content} onSave={(section, data) => updatePageContent(page.name, section, data)} />} />
     ),
   };
   // ЗАМЕНИТЕ функцию для страниц:

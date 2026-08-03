@@ -1,7 +1,6 @@
 require('dotenv').config()
 const express = require('express')
 const sequelize = require('./db')
-const models = require('./models/models')
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
 const router = require('./routes/index')
@@ -15,10 +14,11 @@ const checkRole = require('./middleware/checkRoleMiddleware')
 const PORT = process.env.PORT || 5001
 
 const app = express()
-app.use(cors())
-// ✅ Увеличиваем лимит для JSON body до 100MB
-app.use(express.json({ limit: '100mb' }))
-app.use(express.urlencoded({ extended: true, limit: '100mb' }))
+const allowedOrigins = process.env.CORS_ORIGIN?.split(',').map((origin) => origin.trim()).filter(Boolean);
+app.use(cors(allowedOrigins?.length ? { origin: allowedOrigins } : { origin: process.env.NODE_ENV !== 'production' }))
+// JSON в API не содержит медиа: файлы принимаются отдельным защищённым endpoint.
+app.use(express.json({ limit: '1mb' }))
+app.use(express.urlencoded({ extended: true, limit: '1mb' }))
 // Normalize duplicate slashes to avoid //static/... 404s
 app.use((req, _res, next) => {
   if (typeof req.url === 'string' && req.url.includes('//')) {
@@ -29,14 +29,9 @@ app.use((req, _res, next) => {
   next()
 })
 
-// Логирование запросов к статическим файлам (для отладки)
-app.use('/static', (req, res, next) => {
-  console.log(`📁 Static file request: ${req.url} | Method: ${req.method}`);
-  next();
-});
-
-// Настройка статических файлов с явным указанием MIME-типов для видео
-app.use(express.static(path.resolve(__dirname, 'static'), {
+// Статика доступна только по явному префиксу; это исключает двойную обработку
+// каждого файла и не смешивает API с файловой системой.
+app.use('/static', express.static(path.resolve(__dirname, 'static'), {
   setHeaders: (res, filePath) => {
     // Явно устанавливаем MIME-типы для видео файлов
     if (filePath.endsWith('.mp4')) {
@@ -55,27 +50,6 @@ app.use(express.static(path.resolve(__dirname, 'static'), {
       res.setHeader('Content-Type', 'video/x-matroska');
     }
     // Accept-Ranges для поддержки перемотки видео
-    res.setHeader('Accept-Ranges', 'bytes');
-  }
-}))
-// Дополнительная настройка для обслуживания файлов из подпапок
-app.use('/static', express.static(path.resolve(__dirname, 'static'), {
-  setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.mp4')) {
-      res.setHeader('Content-Type', 'video/mp4');
-    } else if (filePath.endsWith('.webm')) {
-      res.setHeader('Content-Type', 'video/webm');
-    } else if (filePath.endsWith('.avi')) {
-      res.setHeader('Content-Type', 'video/x-msvideo');
-    } else if (filePath.endsWith('.mov')) {
-      res.setHeader('Content-Type', 'video/quicktime');
-    } else if (filePath.endsWith('.wmv')) {
-      res.setHeader('Content-Type', 'video/x-ms-wmv');
-    } else if (filePath.endsWith('.flv')) {
-      res.setHeader('Content-Type', 'video/x-flv');
-    } else if (filePath.endsWith('.mkv')) {
-      res.setHeader('Content-Type', 'video/x-matroska');
-    }
     res.setHeader('Accept-Ranges', 'bytes');
   }
 }))
@@ -166,79 +140,6 @@ app.use(errorHandler)
 const start = async() => {
   try{
     await sequelize.authenticate()
-    await sequelize.sync()
-
-    // Seed default wine types, sweetness and pages
-    const { WineType, WineSweetness, Page } = models
-    // wine types
-    for (const name of ['красное','белое','розовое']) {
-      await WineType.findOrCreate({ where: { name } })
-    }
-    // sweetness
-    for (const name of ['сухое','полусухое','полусладкое','сладкое']) {
-      await WineSweetness.findOrCreate({ where: { name } })
-    }
-    // pages
-    const pagesSeed = [
-      {
-        name: 'Главная',
-        path: '/',
-        is_active: true,
-        content_json: {
-          mainBackground: {
-            image: 'https://images.unsplash.com/photo-1508258470050-ef421c36e6de?q=80&w=1600&auto=format&fit=crop',
-            title: 'Добро пожаловать на Винные Террасы'
-          },
-          aboutSection: {
-            title: 'Кто мы?',
-            description: 'Отель-винодельня "Винные Террасы" — это уникальное место, сочетающее шарм и гостеприимство с изысканными винами.'
-          },
-          firstGallery: { title: 'Номерной Фонд', images: [] },
-          secondGallery: { title: 'Отель расположен в самой живописной локации Абрау', images: [] },
-          videoSection: { title: 'Посмотрите видео-презентацию', videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' },
-          servicesSection: { title: 'Ваш отдых — наша ответственность', services: [] }
-        }
-      },
-      {
-        name: 'Винодельня',
-        path: '/Vinery',
-        is_active: true,
-        content_json: {
-          mainBackground: { image: 'https://images.unsplash.com/photo-1468777675496-5782faaea55b?q=80&w=1600&auto=format&fit=crop', title: 'Винодельня' },
-          introSection: { title: 'Винодельня', description: 'Откройте для себя мир превосходных вин в нашей винодельне!', image: '', buttonText: 'Ассортимент вин', buttonLink: '/Shop' },
-          historySection: { title: 'НАША ИСТОРИЯ', leftDates: [], rightDates: [] },
-          wineSection: { firstText: '', secondText: '', buttonText: 'Наша винотека', buttonLink: '/Shop' },
-          productionSection: { title: 'ЭТАПЫ НАШЕГО ПРОИЗВОДСТВА', stages: [] },
-          regionSection: { title: 'ВИННЫЙ РЕГИОН', firstText: '', secondText: '', backgroundImage: '' }
-        }
-      },
-      {
-        name: 'Витрина вина',
-        path: '/Shop',
-        is_active: true,
-        content_json: {
-          shopHero: {
-            title: 'Коллекция вин',
-            description: 'Познакомьтесь с винами Террас и выберите свой маршрут для дегустации.',
-            image: ''
-          },
-          shopOrderBanner: {
-            title: 'Заказ вина',
-            description: 'Для заказа напишите нам на электронную почту.',
-            email: ''
-          }
-        }
-      }
-    ]
-    for (const p of pagesSeed) {
-      const exists = await Page.findOne({ where: { name: p.name } })
-      if (!exists) await Page.create(p)
-    }
-
-    // Seed event categories
-    const seedEvents = require('./seed/seedEvents');
-    await seedEvents();
-
     app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
   } catch(e) {
       console.log(e)

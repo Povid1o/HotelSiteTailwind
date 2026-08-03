@@ -1,5 +1,6 @@
 
 HotelSiteBackend/.env
+.env
 hotel-project/package.json
 hotel-project/package-lock.json
 hotel-project/node_modules
