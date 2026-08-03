@@ -2,6 +2,7 @@
 @import './components/styles/site-shell.css';
 @import './components/styles/design-v4.css';
 @import './components/styles/design-v4-layout.css';
+@import './components/styles/TravelLineSearchForm.css';
 
 @tailwind base;
 @tailwind components;

@@ -1,18 +1,184 @@
+/* ==========================================================================
+   TravelLine Search Form - Custom Site Styling Override
+   Colors:
+     - Background: #F5F2EA (Sand) / #FFFFFF
+     - Ink / Main Text: #19312F
+     - Clay / Accent: #C7774D
+     - Brand / Deep Green: #1F4D4A
+     - Border: rgba(25, 49, 47, 0.16)
+   Typography:
+     - Heading / Button Font: 'Cormorant Garamond', Georgia, serif
+     - Body / Form Font: 'Manrope', system-ui, sans-serif
+   ========================================================================== */
+
 #block-search,
-      #block-search * {
-        box-sizing: border-box;
-      }
-      #block-search {
-        background-color: #fff;
-        width: 100%;
-        max-width: 1260px;
-        margin: 0 auto;
-        border-radius: 20px;
-      }
-      #block-search.block-search--mobile {
-        border: 1px solid #e0e0e0;
-        box-shadow: 0 0 30px 0 #0000001a;
-      }
-      .tl-container {
-        padding: 0 25px;
-      }
+#block-search * {
+  box-sizing: border-box !important;
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif !important;
+}
+
+#block-search {
+  background-color: #F5F2EA !important;
+  border: 1px solid rgba(25, 49, 47, 0.14) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 12px 32px rgba(25, 49, 47, 0.08) !important;
+  color: #19312F !important;
+  margin: 0 auto !important;
+  max-width: 1200px !important;
+  padding: 12px 20px !important;
+  transition: all 0.2s ease-in-out;
+}
+
+#block-search.block-search--mobile {
+  border: 1px solid rgba(25, 49, 47, 0.18) !important;
+  box-shadow: 0 8px 24px rgba(25, 49, 47, 0.12) !important;
+  background-color: #F5F2EA !important;
+}
+
+.tl-container {
+  padding: 8px 12px !important;
+  background: transparent !important;
+}
+
+/* Field labels and Titles */
+#block-search label,
+#block-search .tl-label,
+#block-search .tl-field-label,
+#block-search .tl-caption,
+[class*="tl-"] .tl-label {
+  color: #1F4D4A !important;
+  font-family: 'Manrope', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 4px !important;
+}
+
+/* Inputs, Selects, Values */
+#block-search input,
+#block-search select,
+#block-search .tl-input,
+#block-search .tl-select,
+#block-search .tl-control,
+#block-search .tl-field-value,
+#block-search .tl-value,
+[class*="tl-"] input,
+[class*="tl-"] select {
+  background-color: #FFFFFF !important;
+  border: 1px solid rgba(25, 49, 47, 0.20) !important;
+  border-radius: 8px !important;
+  color: #19312F !important;
+  font-family: 'Manrope', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 8px 12px !important;
+  outline: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+/* Focus and Active States */
+#block-search input:focus,
+#block-search select:focus,
+#block-search input:active,
+#block-search select:active,
+[class*="tl-"] input:focus,
+[class*="tl-"] select:focus {
+  border-color: #C7774D !important;
+  box-shadow: 0 0 0 3px rgba(199, 119, 77, 0.18) !important;
+}
+
+/* Primary Action Buttons */
+#block-search button,
+#block-search [type=submit],
+#block-search .tl-btn,
+#block-search .tl-submit-btn,
+#block-search .tl-search-btn,
+[class*="tl-"] .tl-submit,
+[class*="tl-"] button[type="submit"] {
+  background-color: #C7774D !important;
+  border: 1px solid #C7774D !important;
+  border-radius: 8px !important;
+  color: #F5F2EA !important;
+  cursor: pointer !important;
+  font-family: 'Cormorant Garamond', Georgia, serif !important;
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.03em !important;
+  padding: 10px 24px !important;
+  min-height: 44px !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease !important;
+  box-shadow: 0 4px 12px rgba(199, 119, 77, 0.20) !important;
+}
+
+#block-search button:hover,
+#block-search [type=submit]:hover,
+#block-search .tl-btn:hover,
+#block-search .tl-submit-btn:hover,
+[class*="tl-"] button[type="submit"]:hover {
+  background-color: #b2643c !important;
+  border-color: #b2643c !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 6px 16px rgba(199, 119, 77, 0.30) !important;
+}
+
+#block-search button:active,
+#block-search [type=submit]:active,
+[class*="tl-"] button[type="submit"]:active {
+  background-color: #9e5531 !important;
+  transform: translateY(1px) !important;
+}
+
+/* Icons */
+#block-search svg,
+#block-search i,
+[class*="tl-"] svg {
+  color: #1F4D4A !important;
+  fill: #1F4D4A !important;
+}
+
+/* Calendar Datepicker & Dropdown Popovers */
+.tl-popover,
+.tl-datepicker,
+.tl-calendar,
+.tl-dropdown,
+[class*="tl-popover"],
+[class*="tl-datepicker"] {
+  background-color: #FFFFFF !important;
+  border: 1px solid rgba(25, 49, 47, 0.16) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 16px 40px rgba(25, 49, 47, 0.14) !important;
+  font-family: 'Manrope', sans-serif !important;
+  color: #19312F !important;
+}
+
+.tl-datepicker .tl-cell-selected,
+.tl-datepicker .tl-day-selected,
+.tl-calendar .tl-cell-active,
+[class*="tl-"] .tl-selected {
+  background-color: #C7774D !important;
+  color: #FFFFFF !important;
+  border-radius: 6px !important;
+}
+
+.tl-datepicker .tl-cell:hover,
+.tl-calendar .tl-day:hover {
+  background-color: rgba(199, 119, 77, 0.15) !important;
+  color: #19312F !important;
+  border-radius: 6px !important;
+}
+
+#block-search a,
+.tl-container a {
+  color: rgba(25, 49, 47, 0.5) !important;
+  font-family: 'Manrope', sans-serif !important;
+  font-size: 11px !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease !important;
+}
+
+#block-search a:hover,
+.tl-container a:hover {
+  color: #C7774D !important;
+  text-decoration: underline !important;
+}

@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { getMediaUrl } from '../utils/contentHelpers';
 import './styles/public-cards-v4.css';
 
+import { openTravelLineBooking } from '../utils/travelLine';
+
 const image = (value: any) => value && !(value instanceof File) ? getMediaUrl(value.url || value) : '';
 const money = (value: any) => Number(value || 0).toLocaleString('ru-RU');
 
@@ -39,7 +41,19 @@ export const RoomDialog = ({ room, onClose }: { room: any; onClose: () => void }
       <div className='public-room-dialog__media'>{roomImage && <img src={roomImage} alt={room.name} />}</div>
       <p className='public-room-dialog__description'>{room.description || 'Номер с видом на террасы и спокойным ритмом отдыха.'}</p>
       <div className='public-room-dialog__details'><div><b>Удобства</b>{amenities.length ? amenities.map((item: string) => <p key={item}>· {item}</p>) : <p>· По запросу</p>}</div><div><b>Заезд / выезд</b><p>С {room.checkStandart?.checkIn || '14:00'} · до {room.checkStandart?.checkOut || '12:00'}</p>{notes.map((item: string) => <small key={item}>{item}</small>)}</div></div>
-      <div className='public-dialog__actions'><button type='button' className='public-outline-button' onClick={onClose}>Закрыть</button><a className='public-primary-button' href='#booking'>от {price ? `${money(price)} ₽` : '…'} — Забронировать</a></div>
+      <div className='public-dialog__actions'>
+        <button type='button' className='public-outline-button' onClick={onClose}>Закрыть</button>
+        <button
+          type='button'
+          className='public-primary-button'
+          onClick={(e) => {
+            onClose();
+            openTravelLineBooking(e, room.id);
+          }}
+        >
+          от {price ? `${money(price)} ₽` : '…'} — Забронировать
+        </button>
+      </div>
     </section>
   </div>;
 };

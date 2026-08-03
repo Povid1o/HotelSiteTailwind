@@ -5,6 +5,8 @@ import { Context } from '../index';
 import { observer } from 'mobx-react-lite';
 import UserStorage from '../storage/UserStorage';
 
+import { openTravelLineBooking } from '../utils/travelLine';
+
 interface NavbarProps {
   nav?: boolean;
   setNav?: (nav: boolean) => void;
@@ -27,42 +29,48 @@ const Navbar = observer(({ nav = false, setNav }: NavbarProps) => {
     closeMenu();
   };
 
-  const publicLinks = [
+  const navLinks = [
+    { to: '/', label: 'Главная' },
     { to: '/Hotel', label: 'Отель' },
     { to: '/Vinery', label: 'Винодельня' },
     { to: '/Restaurant', label: 'Ресторан' },
-    { to: '/Events', label: 'Мероприятия' },
+    { to: '/Shop', label: 'Витрина вин' },
+    { to: '/Ivents', label: 'Мероприятия' },
+    { to: '/Contacts', label: 'Контакты' },
   ];
 
   return (
     <header className='site-header'>
-      <Link to='/' className='site-header__brand' onClick={closeMenu} aria-label='Винные Террасы — главная'>Винные Террасы</Link>
+      <div className='site-header__logo'>
+        <Link to='/' onClick={closeMenu}>
+          <p className='site-header__eyebrow'>Усадьба • Резиденция</p>
+          <span className='site-header__title'>Террасы</span>
+        </Link>
+      </div>
+      <button
+        type='button'
+        className='site-header__toggle'
+        onClick={handleClick}
+        aria-label={nav ? 'Закрыть меню' : 'Открыть меню'}
+      >
+        {nav ? <FaTimes size={20} /> : <FaBars size={20} />}
+      </button>
 
-      <nav aria-label='Основная навигация'>
-        <button
-          type='button'
-          className='site-nav__toggle'
-          onClick={handleClick}
-          aria-expanded={nav}
-          aria-controls='main-navigation'
-          aria-label={nav ? 'Закрыть меню' : 'Открыть меню'}
-        >
-          {nav ? <FaTimes aria-hidden='true' /> : <FaBars aria-hidden='true' />}
-        </button>
-        <ul id='main-navigation' className={`site-nav__list${nav ? ' site-nav__list--open' : ''}`}>
-          {publicLinks.map(({ to, label, end }) => (
+      <nav className={`site-nav${nav ? ' site-nav--open' : ''}`}>
+        <ul className='site-nav__list'>
+          {navLinks.map(({ to, label }) => (
             <li key={to}>
               <NavLink
                 to={to}
-                end={end}
                 onClick={closeMenu}
-                className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}
+                className={({ isActive }) =>
+                  `site-nav__link${isActive ? ' site-nav__link--active' : ''}`
+                }
               >
                 {label}
               </NavLink>
             </li>
           ))}
-          <li className='site-nav__item--disabled'><span aria-disabled='true' title='Скоро'>Центр производства</span></li>
           {user?.isAuth && (
             <>
               <li>
@@ -77,7 +85,16 @@ const Navbar = observer(({ nav = false, setNav }: NavbarProps) => {
           )}
         </ul>
       </nav>
-      <Link to='/Hotel#booking' className='site-header__booking' onClick={closeMenu}>Забронировать</Link>
+      <a
+        href='#booking'
+        className='site-header__booking'
+        onClick={(e) => {
+          closeMenu();
+          openTravelLineBooking(e);
+        }}
+      >
+        Забронировать
+      </a>
     </header>
   );
 });
