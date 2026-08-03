@@ -5,6 +5,8 @@ import './styles/public-cards-v4.css';
 const image = (value: any) => value && !(value instanceof File) ? getMediaUrl(value.url || value) : '';
 const money = (value: any) => Number(value || 0).toLocaleString('ru-RU');
 
+const CloseIcon = () => <svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round'><line x1='18' y1='6' x2='6' y2='18' /><line x1='6' y1='6' x2='18' y2='18' /></svg>;
+
 export const RoomCard = ({ room, compact = false, onOpen }: { room: any; compact?: boolean; onOpen: () => void }) => {
   const roomImage = image(room.images?.[0]);
   const price = room.price?.[0]?.price;
@@ -29,12 +31,14 @@ export const RoomDialog = ({ room, onClose }: { room: any; onClose: () => void }
   if (!room) return null;
   const roomImage = image(room.images?.[0]);
   const price = room.price?.[0]?.price;
+  const amenities = room.conviniences || [];
+  const notes = room.notes || [];
   return <div className='public-dialog-backdrop' onMouseDown={onClose}>
     <section className='public-room-dialog' role='dialog' aria-modal='true' aria-label={room.name} onMouseDown={event => event.stopPropagation()}>
-      <div className='public-dialog__header'><h3>{room.name}</h3><button type='button' onClick={onClose} aria-label='Закрыть'>×</button></div>
+      <div className='public-dialog__header'><h3>{room.name}</h3><button type='button' onClick={onClose} aria-label='Закрыть'><CloseIcon /></button></div>
       <div className='public-room-dialog__media'>{roomImage && <img src={roomImage} alt={room.name} />}</div>
       <p className='public-room-dialog__description'>{room.description || 'Номер с видом на террасы и спокойным ритмом отдыха.'}</p>
-      <div className='public-room-dialog__details'><div><b>Удобства</b>{(room.conviniences || []).map((item: string) => <p key={item}>· {item}</p>) || <p>· По запросу</p>}</div><div><b>Заезд / выезд</b><p>С {room.checkStandart?.checkIn || '14:00'} · до {room.checkStandart?.checkOut || '12:00'}</p>{(room.notes || []).map((item: string) => <small key={item}>{item}</small>)}</div></div>
+      <div className='public-room-dialog__details'><div><b>Удобства</b>{amenities.length ? amenities.map((item: string) => <p key={item}>· {item}</p>) : <p>· По запросу</p>}</div><div><b>Заезд / выезд</b><p>С {room.checkStandart?.checkIn || '14:00'} · до {room.checkStandart?.checkOut || '12:00'}</p>{notes.map((item: string) => <small key={item}>{item}</small>)}</div></div>
       <div className='public-dialog__actions'><button type='button' className='public-outline-button' onClick={onClose}>Закрыть</button><a className='public-primary-button' href='#booking'>от {price ? `${money(price)} ₽` : '…'} — Забронировать</a></div>
     </section>
   </div>;
@@ -70,4 +74,21 @@ export const EventCard = ({ event, category }: { event: any; category: string })
 export const DishCard = ({ dish, onOpen }: { dish: any; onOpen: () => void }) => {
   const dishImage = image(dish.images?.[0]);
   return <article className='public-dish-card'><button type='button' onClick={onOpen}><div>{dishImage && <img src={dishImage} alt={dish.name} />}</div><h3>{dish.name}</h3><p>{dish.description}</p></button></article>;
+};
+
+export const DishDialog = ({ dish, onClose }: { dish: any; onClose: () => void }) => {
+  useEffect(() => { const onKeyDown = (event: KeyboardEvent) => event.key === 'Escape' && onClose(); window.addEventListener('keydown', onKeyDown); return () => window.removeEventListener('keydown', onKeyDown); }, [onClose]);
+  if (!dish) return null;
+  const dishImage = image(dish.images?.[0]);
+  const description = dish.descriptionFull || dish.description || 'Подробности о блюде доступны по запросу.';
+  const price = dish.price ? `${money(dish.price)} ₽` : 'По запросу';
+  return <div className='public-dialog-backdrop' onMouseDown={onClose}>
+    <section className='public-dish-dialog' role='dialog' aria-modal='true' aria-label={dish.name} onMouseDown={event => event.stopPropagation()}>
+      <div className='public-dialog__header'><h3>{dish.name}</h3><button type='button' onClick={onClose} aria-label='Закрыть'><CloseIcon /></button></div>
+      <div className='public-dish-dialog__media'>{dishImage && <img src={dishImage} alt={dish.name} />}</div>
+      <p className='public-dish-dialog__description'>{description}</p>
+      {dish.weight && <p className='public-dish-dialog__weight'>{dish.weight}</p>}
+      <div className='public-dialog__actions'><button type='button' className='public-outline-button' onClick={onClose}>Закрыть</button><strong>{price}</strong></div>
+    </section>
+  </div>;
 };
