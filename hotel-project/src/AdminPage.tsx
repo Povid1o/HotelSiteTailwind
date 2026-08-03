@@ -2,10 +2,12 @@
 import React, { useState, useCallback, useContext, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import HomeEdit from './components/pages_editable/HomeEdit';
-import VineryEdit from './components/pages_editable/VineryEdit';
-import ShopEdit from './components/pages_editable/ShopEdit';
+import { HomePageData, GalleryImage } from './components/pages_editable/HomeEdit';
+import RestaurantEdit from './components/pages_editable/RestaurantEdit';
 import V4InfoPageEdit from './components/pages_editable/V4InfoPageEdit';
 import V4HeroEdit from './components/pages_editable/V4HeroEdit';
+import PagePreviewCard from './components/pages_editable/PagePreviewCard';
+import { EditableImageValue } from './components/editable/EditableImageSlot';
 import Card from './components/cards/Card';
 
 import ModalsCard from './components/modals/ModalsCard'
@@ -39,6 +41,52 @@ import { FaHotel } from "react-icons/fa6";
 import { FaHome } from "react-icons/fa";
 import { MdOutlineRestaurant, MdModeEdit } from "react-icons/md";
 // Нужно
+
+type ContentRecord = Record<string, unknown>;
+type AdminEditablePage = { id: number; name: string; path: string; content: unknown };
+type PreviewData = { title: string; description: string; image: EditableImageValue; type: 'hero' | 'document' };
+
+const asContentRecord = (value: unknown): ContentRecord => typeof value === 'object' && value !== null && !Array.isArray(value) ? value as ContentRecord : {};
+const textValue = (value: unknown, fallback = ''): string => typeof value === 'string' ? value : fallback;
+const imageValue = (value: unknown): EditableImageValue => typeof value === 'string' || value instanceof File ? value : null;
+const sectionRecord = (content: ContentRecord, section: string): ContentRecord => asContentRecord(content[section]);
+const galleryImages = (value: unknown): GalleryImage[] => Array.isArray(value) ? value.map(item => {
+  const image = asContentRecord(item);
+  return { src: imageValue(image.src ?? item), alt: textValue(image.alt) };
+}) : [];
+
+const homeEditorData = (content: ContentRecord): HomePageData => {
+  const hero = sectionRecord(content, 'mainBackground');
+  const about = sectionRecord(content, 'aboutSection');
+  const firstGallery = sectionRecord(content, 'firstGallery');
+  const secondGallery = sectionRecord(content, 'secondGallery');
+  return {
+    mainBackground: { title: textValue(hero.title), description: textValue(hero.description), image: imageValue(hero.image) },
+    aboutSection: { title: textValue(about.title), description: textValue(about.description) },
+    firstGallery: { title: textValue(firstGallery.title), images: galleryImages(firstGallery.images) },
+    secondGallery: { title: textValue(secondGallery.title), images: galleryImages(secondGallery.images) },
+  };
+};
+
+const pagePreview = (page: AdminEditablePage): PreviewData => {
+  const content = asContentRecord(page.content);
+  if (page.path === '/Contacts') {
+    const contacts = sectionRecord(content, 'contacts');
+    return { title: textValue(contacts.title, 'Контакты'), description: textValue(contacts.address, 'Контактная информация'), image: null, type: 'document' };
+  }
+  if (page.path === '/Privacy') {
+    const privacy = sectionRecord(content, 'privacy');
+    return { title: textValue(privacy.title, 'Политика конфиденциальности'), description: textValue(privacy.eyebrow, 'Документы'), image: null, type: 'document' };
+  }
+  const section = page.path === '/' || page.path === '/Vinery' ? 'mainBackground' : page.path === '/Shop' ? 'shopHero' : 'hero';
+  const hero = sectionRecord(content, section);
+  return { title: textValue(hero.title, page.name), description: textValue(hero.description), image: imageValue(hero.image), type: 'hero' };
+};
+
+const EditPreviewCard: React.FC<{ page: AdminEditablePage }> = ({ page }) => {
+  const preview = pagePreview(page);
+  return <PagePreviewCard {...preview} />;
+};
 
 // Начальные изображения для комнат
 const initialImages = [
@@ -237,24 +285,13 @@ const AdminPage = observer(() =>  {
   }, [events]);
   // КОНЕЦ ФУНКЦИЙ ДЛЯ МЕРОПРИЯТИЙ
 
-  const pageContentHandlers = {
+  const pageContentHandlers: Record<string, (page: AdminEditablePage) => React.ReactNode> = {
     "Главная": (page) => (
       <ExtCard
-        Card={() => (
-          <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
-            Править
-          </button>
-        )}
+        Card={() => <EditPreviewCard page={page} />}
         content={
           <HomeEdit
-            pageData={{
-              mainBackground: { image: '', title: '', ...(typeof page.content === 'object' ? page.content.mainBackground : {}) },
-              aboutSection: { title: '', description: '', ...(typeof page.content === 'object' ? page.content.aboutSection : {}) },
-              firstGallery: { title: '', images: [], ...(typeof page.content === 'object' ? page.content.firstGallery : {}) },
-              secondGallery: { title: '', images: [], ...(typeof page.content === 'object' ? page.content.secondGallery : {}) },
-              videoSection: { title: '', videoUrl: '', ...(typeof page.content === 'object' ? page.content.videoSection : {}) },
-              servicesSection: { title: '', services: [], ...(typeof page.content === 'object' ? page.content.servicesSection : {}) }
-            }}
+            pageData={homeEditorData(asContentRecord(page.content))}
             onContentChange={(sectionName, updatedData) =>
               updatePageContent(page.name, sectionName, updatedData)
             }
@@ -264,76 +301,38 @@ const AdminPage = observer(() =>  {
     ),
     "Винодельня": (page) => (
       <ExtCard
-        Card={() => (
-          <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
-            Править
-          </button>
-        )}
-        content={
-          <VineryEdit
-            pageData={{
-              mainBackground: { image: '', title: '', ...(typeof page.content === 'object' ? page.content.mainBackground : {}) },
-              introSection: { title: '', description: '', image: '', buttonText: '', buttonLink: '', ...(typeof page.content === 'object' ? page.content.introSection : {}) },
-              historySection: { title: '', leftDates: [], rightDates: [], ...(typeof page.content === 'object' ? page.content.historySection : {}) },
-              wineSection: { firstText: '', secondText: '', buttonText: '', buttonLink: '', ...(typeof page.content === 'object' ? page.content.wineSection : {}) },
-              productionSection: { title: '', stages: [], ...(typeof page.content === 'object' ? page.content.productionSection : {}) },
-              regionSection: { title: '', firstText: '', secondText: '', backgroundImage: '', ...(typeof page.content === 'object' ? page.content.regionSection : {}) },
-            }}
-            onContentChange={(sectionName, updatedData) =>
-              updatePageContent(page.name, sectionName, updatedData)
-            }
-          />
-        }
+        Card={() => <EditPreviewCard page={page} />}
+        content={<V4HeroEdit pageTitle="Винодельня" section="mainBackground" imageLabel="Фото хедера винодельни" content={asContentRecord(page.content)} onSave={(section, data) => updatePageContent(page.name, section, data)} />}
       />
     ),
     "Витрина вина": (page) => (
       <ExtCard
-        Card={() => (
-          <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
-            Править
-          </button>
-        )}
-        content={
-          <ShopEdit
-            pageData={{
-              shopHero: { title: '', description: '', image: null, ...(typeof page.content === 'object' ? page.content.shopHero : {}) },
-              shopOrderBanner: { title: '', description: '', email: '', ...(typeof page.content === 'object' ? page.content.shopOrderBanner : {}) },
-            }}
-            onContentChange={(sectionName, updatedData) =>
-              updatePageContent(page.name, sectionName, updatedData)
-            }
-          />
-        }
+        Card={() => <EditPreviewCard page={page} />}
+        content={<V4HeroEdit pageTitle="Витрина вина" section="shopHero" imageLabel="Фото хедера витрины" content={asContentRecord(page.content)} onSave={(section, data) => updatePageContent(page.name, section, data)} />}
       />
     ),
     "Отель": (page) => (
-      <ExtCard Card={() => <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">Править</button>} content={<V4HeroEdit pageTitle="Отель" content={page.content} onSave={(section, data) => updatePageContent(page.name, section, data)} />} />
+      <ExtCard Card={() => <EditPreviewCard page={page} />} content={<V4HeroEdit pageTitle="Отель" imageLabel="Фото хедера отеля" content={asContentRecord(page.content)} onSave={(section, data) => updatePageContent(page.name, section, data)} />} />
     ),
-    "Ресторан": () => (
-      <span className="text-gray-500">Контент редактируется в разделе "Меню Ресторана"</span>
-    ),
-    "Мероприятия": () => (
-      <span className="text-gray-500">
-        Контент редактируется в разделе "Мероприятия"
-      </span>
-    ),
+    "Ресторан": (page) => <ExtCard Card={() => <EditPreviewCard page={page} />} content={<RestaurantEdit content={asContentRecord(page.content)} onSave={(section, data) => updatePageContent(page.name, section, data)} />} />,
+    "Мероприятия": (page) => <ExtCard Card={() => <EditPreviewCard page={page} />} content={<V4HeroEdit pageTitle="Мероприятия" imageLabel="Фото хедера мероприятий" content={asContentRecord(page.content)} onSave={(section, data) => updatePageContent(page.name, section, data)} />} />,
     "Контакты": (page) => (
       <ExtCard
-        Card={() => <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">Править</button>}
-        content={<V4InfoPageEdit type="contacts" content={page.content} onSave={(section, data) => updatePageContent(page.name, section, data)} />}
+        Card={() => <EditPreviewCard page={page} />}
+        content={<V4InfoPageEdit type="contacts" content={asContentRecord(page.content)} onSave={(section, data) => updatePageContent(page.name, section, data)} />}
       />
     ),
     "Политика конфиденциальности": (page) => (
       <ExtCard
-        Card={() => <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">Править</button>}
-        content={<V4InfoPageEdit type="privacy" content={page.content} onSave={(section, data) => updatePageContent(page.name, section, data)} />}
+        Card={() => <EditPreviewCard page={page} />}
+        content={<V4InfoPageEdit type="privacy" content={asContentRecord(page.content)} onSave={(section, data) => updatePageContent(page.name, section, data)} />}
       />
     ),
     "Страница ресторана": (page) => (
-      <ExtCard Card={() => <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">Править</button>} content={<V4HeroEdit pageTitle="Ресторан" content={page.content} onSave={(section, data) => updatePageContent(page.name, section, data)} />} />
+      <ExtCard Card={() => <EditPreviewCard page={page} />} content={<RestaurantEdit content={asContentRecord(page.content)} onSave={(section, data) => updatePageContent(page.name, section, data)} />} />
     ),
     "Страница мероприятий": (page) => (
-      <ExtCard Card={() => <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">Править</button>} content={<V4HeroEdit pageTitle="Мероприятия" content={page.content} onSave={(section, data) => updatePageContent(page.name, section, data)} />} />
+      <ExtCard Card={() => <EditPreviewCard page={page} />} content={<V4HeroEdit pageTitle="Мероприятия" imageLabel="Фото хедера мероприятий" content={asContentRecord(page.content)} onSave={(section, data) => updatePageContent(page.name, section, data)} />} />
     ),
   };
   // ЗАМЕНИТЕ функцию для страниц:
@@ -424,7 +423,7 @@ const AdminPage = observer(() =>  {
                           : pageContent.getPageSaveError(page.id) || "Сохранено"}
                       </Table.Cell>
                       <Table.Cell>
-                        {pageContentHandlers[page.name] ? pageContentHandlers[page.name](page) : (
+                        {pageContentHandlers[page.name] ? pageContentHandlers[page.name]({ id: page.id, name: page.name, path: page.path, content: page.content }) : (
                           <span className="text-gray-500">
                             {String(page.content)}
                           </span>

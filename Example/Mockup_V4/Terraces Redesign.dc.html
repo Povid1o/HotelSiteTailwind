@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/classical-e43cb81d-247a-463d-83e7-ead17edb9305/styles.css">
+  <script src="_ds/classical-e43cb81d-247a-463d-83e7-ead17edb9305/_ds_bundle.js"></script>
+  <script src="./image-slot.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+    :root {
+      --color-bg: #F5F2EA;
+      --color-surface: #EAE6DA;
+      --color-text: #19312F;
+      --color-accent: #C7774D;
+      --color-accent-2: #1F4D4A;
+      --color-divider: color-mix(in srgb, #19312F 16%, transparent);
+      --font-heading: 'Cormorant Garamond', serif;
+      --font-body: 'Manrope', system-ui, sans-serif;
+      --radius-sm: 2px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --shadow-sm: 0 1px 3px rgba(25,49,47,0.08);
+      --shadow-md: 0 4px 16px rgba(25,49,47,0.10);
+      --shadow-lg: 0 12px 32px rgba(25,49,47,0.14);
+    }
+    body { margin: 0; }
+    a { color: var(--color-accent); }
+    a:hover { color: #19312F; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    }
+  </style>
+</helmet>
+
+<div style="background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden;">
+
+  <header style="position:fixed;top:0;left:0;right:0;z-index:40;">
+    <nav class="nav" style="background:rgba(25,49,47,0.94);backdrop-filter:blur(10px);border-bottom:none;padding:14px 24px;">
+      <a href="#home" onClick="{{goHomeClick}}" style="text-decoration:none;">
+        <span class="nav-brand" style="font-size:20px;color:#F5F2EA;letter-spacing:0.01em;">Винные Террасы</span>
+      </a>
+
+      <sc-if value="{{windowWide}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;align-items:center;gap:28px;margin-left:32px;">
+          <a href="#hotel" onClick="{{goHotelClick}}" aria-current="{{hotelAriaCurrent}}" style="color:#DCE5DE;">Отель</a>
+          <a href="#vinery" onClick="{{goVineryClick}}" aria-current="{{vineryAriaCurrent}}" style="color:#DCE5DE;">Винодельня</a>
+          <a href="#restaurant" onClick="{{goRestaurantClick}}" aria-current="{{restaurantAriaCurrent}}" style="color:#DCE5DE;">Ресторан</a>
+          <a href="#events" onClick="{{goEventsClick}}" aria-current="{{eventsAriaCurrent}}" style="color:#DCE5DE;">Мероприятия</a>
+          <span style="color:rgba(220,229,222,0.4);cursor:default;" title="Скоро">Центр производства</span>
+        </div>
+        <button class="btn btn-primary" style="margin-left:auto;font-size:14px;" onClick="{{goHotelClick}}">Забронировать</button>
+      </sc-if>
+
+      <sc-if value="{{windowNarrow}}" hint-placeholder-val="{{false}}">
+        <button onClick="{{toggleMobileNav}}" aria-label="Открыть меню" style="margin-left:auto;background:none;border:none;cursor:pointer;color:#F5F2EA;padding:4px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>
+        </button>
+      </sc-if>
+    </nav>
+  </header>
+
+  <sc-if value="{{mobileNavOpen}}" hint-placeholder-val="{{false}}">
+    <div role="dialog" aria-modal="true" aria-label="Меню" style="position:fixed;inset:0;background:#19312F;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;">
+      <button onClick="{{closeMobileNav}}" aria-label="Закрыть меню" style="position:absolute;top:20px;right:20px;background:none;border:none;color:#F5F2EA;cursor:pointer;padding:6px;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <a href="#hotel" onClick="{{goHotelClick}}" style="font-family:var(--font-heading);font-weight:600;font-size:30px;color:#F5F2EA;text-decoration:none;">Отель</a>
+      <a href="#vinery" onClick="{{goVineryClick}}" style="font-family:var(--font-heading);font-weight:600;font-size:30px;color:#F5F2EA;text-decoration:none;">Винодельня</a>
+      <a href="#restaurant" onClick="{{goRestaurantClick}}" style="font-family:var(--font-heading);font-weight:600;font-size:30px;color:#F5F2EA;text-decoration:none;">Ресторан</a>
+      <a href="#events" onClick="{{goEventsClick}}" style="font-family:var(--font-heading);font-weight:600;font-size:30px;color:#F5F2EA;text-decoration:none;">Мероприятия</a>
+      <span style="font-family:var(--font-heading);font-size:30px;color:rgba(245,242,234,0.35);">Центр производства</span>
+    </div>
+  </sc-if>
+
+  <!-- ================= HOME ================= -->
+  <sc-if value="{{isHome}}" hint-placeholder-val="{{true}}">
+    <div data-screen-label="Главная" id="home">
+      <section style="position:relative;height:100vh;min-height:640px;display:flex;flex-direction:column;justify-content:flex-end;">
+        <div style="position:absolute;inset:0;">
+          <image-slot id="hero-main" shape="rect" placeholder="Панорама террас на закате"></image-slot>
+          <sc-if value="{{heroVideoSrc}}" hint-placeholder-val="{{false}}">
+            <video autoPlay="{{true}}" muted="{{true}}" loop="{{true}}" playsInline="{{true}}" onError="{{heroVideoError}}" ref="{{heroVideoRef}}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:{{heroVideoDisplay}};">
+              <source src="{{heroVideoSrc}}" type="video/mp4"></source>
+            </video>
+          </sc-if>
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(25,49,47,0.12) 0%, rgba(25,49,47,0.78) 100%);pointer-events:none;"></div>
+        </div>
+        <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 24px 64px;width:100%;box-sizing:border-box;">
+          <p style="font-family:var(--font-heading);letter-spacing:0.14em;text-transform:uppercase;font-size:13px;color:#DCE5DE;margin:0 0 16px;">Абрау-Дюрсо</p>
+          <h1 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(40px,7vw,88px);line-height:0.95;color:#F5F2EA;max-width:820px;margin:0 0 20px;">Время, которое течёт медленнее</h1>
+          <p style="font-size:18px;color:rgba(245,242,234,0.85);max-width:520px;margin:0 0 32px;">Терруарный retreat среди виноградников — проживание, вино, гастрономия и тишина в одном маршруте.</p>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;">
+            <button class="btn btn-primary" style="font-size:15px;padding:14px 28px;" onClick="{{goHotelClick}}">Выбрать номер</button>
+            <button class="btn btn-secondary" style="font-size:15px;padding:14px 28px;color:#F5F2EA;border-color:rgba(245,242,234,0.4);" onClick="{{goVineryClick}}">Смотреть винодельню</button>
+          </div>
+        </div>
+      </section>
+
+      <sc-if value="{{showBookingWidget}}" hint-placeholder-val="{{true}}">
+        <section style="max-width:1000px;margin:-56px auto 0;padding:0 24px;position:relative;z-index:3;">
+          <div class="card elev-md" style="background:#FFFFFF;border:none;border-radius:12px;padding:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;align-items:end;">
+            <div class="field"><label>Заезд</label><input class="input" type="date"></div>
+            <div class="field"><label>Выезд</label><input class="input" type="date"></div>
+            <div class="field"><label>Гости</label><input class="input" type="number" min="1" value="2"></div>
+            <button class="btn btn-primary btn-block" style="height:36px;margin-top:0;" onClick="{{goHotelClick}}">Найти номер</button>
+          </div>
+        </section>
+      </sc-if>
+
+      <section style="max-width:1280px;margin:112px auto 0;padding:0 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:48px;align-items:center;">
+        <div>
+          <p class="card-kicker" style="margin-bottom:8px;">Почему остаться</p>
+          <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(28px,4vw,44px);line-height:1.05;margin:0 0 20px;color:#19312F;">Терраса, вино и время без расписания</h2>
+          <p style="font-size:16px;line-height:1.7;color:rgba(25,49,47,0.78);max-width:46ch;margin:0;">Здесь нет программы на каждый час. Есть терраса с видом на виноградники, неспешный завтрак, дегустация без спешки и вечер у моря. Мы соединили отель, винодельню и ресторан в один маршрут — гость выбирает темп сам.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:16px;">
+          <div style="grid-row:span 2;border-radius:8px;overflow:hidden;">
+            <image-slot id="home-why-1" shape="rect" placeholder="Терраса с видом на виноградники" style="filter:saturate(0.62) contrast(0.9) brightness(1.06);"></image-slot>
+          </div>
+          <div style="border-radius:8px;overflow:hidden;align-self:end;height:220px;">
+            <image-slot id="home-why-2" shape="rect" placeholder="Утренний свет над рядами лозы" style="filter:saturate(0.62) contrast(0.9) brightness(1.06);"></image-slot>
+          </div>
+        </div>
+      </section>
+
+      <section style="max-width:1280px;margin:112px auto 0;padding:0 24px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:32px;">
+          <div>
+            <p class="card-kicker" style="margin-bottom:8px;">Проживание</p>
+            <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(28px,4vw,40px);margin:0;color:#19312F;">Номера с видом на террасы</h2>
+          </div>
+          <button class="btn btn-secondary" onClick="{{goHotelClick}}">Все номера →</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,320px));gap:24px;">
+          <sc-for list="{{homeRooms}}" as="room" hint-placeholder-count="3">
+            <div class="card" style="padding:0;border-radius:8px;overflow:hidden;background:#fff;border-color:rgba(25,49,47,0.12);">
+              <div style="height:220px;"><image-slot id="{{room.thumbId}}" shape="rect" placeholder="Фото номера"></image-slot></div>
+              <div style="padding:20px;">
+                <span class="tag tag-outline" style="border-color:#C7774D;color:#C7774D;">{{room.tagLabel}}</span>
+                <h3 class="card-title" style="margin:12px 0 8px;color:#19312F;">{{room.name}}</h3>
+                <p class="card-body" style="color:rgba(25,49,47,0.72);">{{room.blurb}}</p>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;">
+                  <span style="font-family:var(--font-heading);font-size:20px;font-weight:600;color:#19312F;">от {{room.price}} ₽</span>
+                  <button class="btn btn-ghost" onClick="{{room.onOpen}}">Подробнее →</button>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="max-width:1280px;margin:112px auto 0;padding:0 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:48px;align-items:center;">
+        <div style="border-radius:8px;overflow:hidden;height:420px;min-width:300px;">
+          <image-slot id="home-vinery" shape="rect" placeholder="Ряды лозы в утреннем свете" style="filter:saturate(0.6) contrast(0.88) brightness(1.08);"></image-slot>
+        </div>
+        <div>
+          <p class="card-kicker" style="margin-bottom:8px;">Винодельня</p>
+          <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:0 0 16px;color:#19312F;">Место рассказывает о себе через вино</h2>
+          <p style="font-size:16px;line-height:1.7;color:rgba(25,49,47,0.78);max-width:46ch;margin:0 0 24px;">Виноградники на террасах видят море и получают утренний свет — так формируется характер каждого сорта. Мы показываем не бутылки, а процесс: землю, время и руки.</p>
+          <button class="btn btn-primary" onClick="{{goVineryClick}}">Узнать о винодельне →</button>
+        </div>
+      </section>
+
+      <section style="max-width:1280px;margin:112px auto 0;padding:0 24px;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;">
+          <div class="card" style="border-radius:8px;padding:0;overflow:hidden;background:#fff;border-color:rgba(25,49,47,0.12);">
+            <div style="height:200px;position:relative;">
+              <image-slot id="home-restaurant" shape="rect" placeholder="Сезонное блюдо ресторана"></image-slot>
+            </div>
+            <div style="padding:20px;">
+              <p class="card-kicker" style="margin:0 0 4px;">Ресторан</p>
+              <h3 class="card-title" style="color:#19312F;margin:0 0 8px;">Сезонное меню террас</h3>
+              <p class="card-body" style="color:rgba(25,49,47,0.72);margin:0 0 12px;">Продукты своей земли и виноделия — меню меняется с урожаем.</p>
+              <button class="btn btn-ghost" style="padding-left:0;" onClick="{{goRestaurantClick}}">Смотреть меню →</button>
+            </div>
+          </div>
+          <div class="card" style="border-radius:8px;padding:20px;background:#fff;border-color:rgba(25,49,47,0.12);">
+            <p class="card-kicker" style="margin:0 0 4px;">Мероприятия</p>
+            <h3 class="card-title" style="color:#19312F;margin:0 0 8px;">Ближайшие события</h3>
+            <sc-for list="{{events}}" as="ev" hint-placeholder-count="2">
+              <div style="display:flex;gap:16px;padding:12px 0;border-top:1px solid rgba(25,49,47,0.1);">
+                <span style="font-family:var(--font-heading);font-weight:600;color:#C7774D;min-width:92px;">{{ev.date}}</span>
+                <div>
+                  <p style="margin:0 0 4px;font-weight:600;color:#19312F;">{{ev.title}}</p>
+                  <p style="margin:0;font-size:13px;color:rgba(25,49,47,0.65);">{{ev.text}}</p>
+                </div>
+              </div>
+            </sc-for>
+            <button class="btn btn-ghost" style="margin-top:12px;padding-left:0;" onClick="{{goEventsClick}}">Все мероприятия →</button>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin:144px 0 0;padding:80px 24px;background:#19312F;text-align:center;">
+        <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(28px,4vw,44px);color:#F5F2EA;margin:0 0 16px;">Готовы приехать?</h2>
+        <p style="color:rgba(245,242,234,0.75);margin:0 0 28px;">Выберите номер и даты — мы подтвердим бронирование в течение дня.</p>
+        <button class="btn btn-primary" style="padding:14px 32px;font-size:15px;" onClick="{{goHotelClick}}">Забронировать номер</button>
+      </section>
+    </div>
+  </sc-if>
+
+  <!-- ================= HOTEL ================= -->
+  <sc-if value="{{isHotel}}" hint-placeholder-val="{{false}}">
+    <div data-screen-label="Отель" id="hotel" style="padding-top:80px;">
+      <div style="position:relative;height:46vh;min-height:340px;">
+        <image-slot id="hotel-hero" shape="rect" placeholder="Фасад отеля на террасах"></image-slot>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(25,49,47,0.1), rgba(25,49,47,0.6));"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;max-width:1280px;margin:0 auto;padding:0 24px 40px;">
+          <h1 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(36px,5vw,64px);color:#F5F2EA;margin:0;">Отель</h1>
+          <p style="color:rgba(245,242,234,0.85);margin:8px 0 0;max-width:520px;">Номера на террасах — от компактного стандарта до люкса с панорамным видом.</p>
+        </div>
+      </div>
+
+      <div style="max-width:1280px;margin:40px auto 0;padding:0 24px;">
+        <div class="seg">
+          <label class="seg-opt"><input type="radio" name="rf" checked="{{filterAllChecked}}" onChange="{{setFilterAll}}"><span>Все</span></label>
+          <label class="seg-opt"><input type="radio" name="rf" checked="{{filterStandardChecked}}" onChange="{{setFilterStandard}}"><span>Стандарт</span></label>
+          <label class="seg-opt"><input type="radio" name="rf" checked="{{filterSuiteChecked}}" onChange="{{setFilterSuite}}"><span>Люкс</span></label>
+        </div>
+      </div>
+
+      <div style="max-width:1280px;margin:24px auto 0;padding:0 24px 112px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,340px));gap:24px;">
+        <sc-for list="{{rooms}}" as="room" hint-placeholder-count="4">
+          <div class="card" style="padding:0;border-radius:8px;overflow:hidden;background:#fff;border-color:rgba(25,49,47,0.12);">
+            <div style="height:240px;"><image-slot id="{{room.fullId}}" shape="rect" placeholder="Фото номера"></image-slot></div>
+            <div style="padding:20px;">
+              <span class="tag tag-outline" style="border-color:#C7774D;color:#C7774D;">{{room.tagLabel}}</span>
+              <h3 class="card-title" style="margin:12px 0 4px;color:#19312F;">{{room.name}}</h3>
+              <p class="card-body" style="color:rgba(25,49,47,0.72);margin-bottom:12px;">{{room.blurb}}</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+                <sc-for list="{{room.features}}" as="feat" hint-placeholder-count="3">
+                  <span class="tag tag-neutral">{{feat}}</span>
+                </sc-for>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-family:var(--font-heading);font-size:20px;font-weight:600;color:#19312F;">от {{room.price}} ₽</span>
+                <button class="btn btn-secondary" onClick="{{room.onOpen}}">Подробнее</button>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ================= VINERY ================= -->
+  <sc-if value="{{isVinery}}" hint-placeholder-val="{{false}}">
+    <div data-screen-label="Винодельня" id="vinery" style="padding-top:80px;">
+      <div style="position:relative;height:46vh;min-height:340px;">
+        <image-slot id="vinery-hero" shape="rect" placeholder="Виноградники на террасах"></image-slot>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(25,49,47,0.1), rgba(25,49,47,0.6));"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;max-width:1280px;margin:0 auto;padding:0 24px 40px;">
+          <h1 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(36px,5vw,64px);color:#F5F2EA;margin:0;">Винодельня</h1>
+          <p style="color:rgba(245,242,234,0.85);margin:8px 0 0;max-width:560px;">Терруар, время и ручной труд — то, что стоит за каждой бутылкой.</p>
+        </div>
+      </div>
+
+      <div style="max-width:1280px;margin:80px auto 0;padding:0 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:48px;align-items:center;">
+        <div>
+          <p class="card-kicker" style="margin-bottom:8px;">Территория</p>
+          <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(26px,3.6vw,38px);margin:0 0 16px;color:#19312F;">Террасы над морем</h2>
+          <p style="font-size:16px;line-height:1.75;color:rgba(25,49,47,0.78);margin:0;">Лозы растут на склонах, которые видят и море, и горы — разница высот даёт разный свет и разную зрелость. Мы собираем урожай вручную, по террасе за раз, и не торопим ферментацию.</p>
+        </div>
+        <div style="height:380px;border-radius:8px;overflow:hidden;">
+          <image-slot id="vinery-story" shape="rect" placeholder="Терраса виноградника, утро" style="filter:saturate(0.6) contrast(0.88) brightness(1.06);"></image-slot>
+        </div>
+      </div>
+
+      <div style="max-width:1280px;margin:112px auto 0;padding:0 24px;">
+        <p class="card-kicker" style="margin-bottom:8px;">Процесс</p>
+        <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(26px,3.6vw,38px);margin:0 0 40px;color:#19312F;">От лозы до бутылки</h2>
+        <div style="position:relative;height:clamp(300px,38vw,400px);perspective:1400px;user-select:none;touch-action:none;cursor:{{galleryCursor}};" onPointerDown="{{galleryPointerDown}}" onPointerMove="{{galleryPointerMove}}" onPointerUp="{{galleryPointerUp}}" onPointerLeave="{{galleryPointerUp}}">
+          <div style="position:absolute;inset:0;transform-style:preserve-3d;">
+            <sc-for list="{{galleryItems}}" as="stage" hint-placeholder-count="6">
+              <div style="position:absolute;top:50%;left:50%;width:190px;height:260px;margin:-130px 0 0 -95px;transform:{{stage.transform}};transition:{{stage.transition}};border-radius:8px;overflow:hidden;box-shadow:var(--shadow-md);cursor:pointer;backface-visibility:hidden;-webkit-backface-visibility:hidden;" onClick="{{stage.onFocus}}">
+                <image-slot id="{{stage.imgId}}" shape="rect" placeholder="{{stage.label}}"></image-slot>
+                <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 14px;background:linear-gradient(180deg, transparent, rgba(25,49,47,0.88));">
+                  <span style="font-family:var(--font-heading);color:#F5F2EA;font-weight:600;font-size:14px;">{{stage.n}}. {{stage.label}}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:12px;margin-top:24px;">
+          <button class="btn btn-icon" aria-label="Предыдущий этап" onClick="{{galleryPrev}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+          <button class="btn btn-icon" aria-label="Следующий этап" onClick="{{galleryNext}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+        </div>
+      </div>
+
+      <div style="max-width:1280px;margin:112px auto 0;padding:0 24px;">
+        <p class="card-kicker" style="margin-bottom:8px;">Ассортимент</p>
+        <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(26px,3.6vw,38px);margin:0 0 32px;color:#19312F;">Вина, которыми мы гордимся</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,220px));gap:20px;">
+          <sc-for list="{{featuredWines}}" as="wine" hint-placeholder-count="6">
+            <div class="card" style="padding:0;border-radius:8px;overflow:hidden;background:#fff;border-color:rgba(25,49,47,0.12);display:flex;flex-direction:column;cursor:pointer;" onClick="{{wine.onOpen}}">
+              <div style="height:260px;background:var(--color-surface);"><image-slot id="{{wine.bottleId}}" shape="rect" placeholder="{{wine.name}} — бутылка"></image-slot></div>
+              <div style="padding:16px;">
+                <span class="tag tag-outline" style="border-color:#C7774D;color:#C7774D;">{{wine.type}}</span>
+                <h3 class="card-title" style="margin:10px 0 2px;font-size:19px;color:#19312F;">{{wine.name}}</h3>
+                <p style="margin:0 0 10px;font-size:13px;color:rgba(25,49,47,0.62);">{{wine.sweetness}}</p>
+                <p style="margin:0;font-family:var(--font-heading);font-weight:600;font-size:17px;color:#19312F;">{{wine.price}} ₽</p>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="text-align:center;margin-top:40px;">
+          <button class="btn btn-secondary" onClick="{{goShopClick}}">Смотреть весь ассортимент →</button>
+        </div>
+      </div>
+
+      <div style="max-width:1280px;margin:64px auto 0;padding:0 24px 112px;">
+        <div class="card" style="padding:32px;border-radius:8px;background:#DCE5DE;border:none;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+          <div>
+            <h3 style="font-family:var(--font-heading);font-weight:600;font-size:24px;margin:0 0 8px;color:#19312F;">Дегустация с виноделом</h3>
+            <p style="margin:0;color:rgba(25,49,47,0.75);max-width:44ch;">Экскурсия по террасам и дегустация шести вин — по предварительной записи.</p>
+          </div>
+          <a href="#site-contacts" class="btn btn-primary" style="padding:12px 24px;text-decoration:none;">Записаться на дегустацию</a>
+        </div>
+      </div>
+
+      <div style="max-width:1280px;margin:0 auto;padding:0 24px 112px;">
+        <p class="card-kicker" style="margin-bottom:8px;">Ближайшие события</p>
+        <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(24px,3.2vw,32px);margin:0 0 24px;color:#19312F;">Дегустации на террасах</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,360px));gap:20px;">
+          <sc-for list="{{tastingEvents}}" as="ev" hint-placeholder-count="2">
+            <div class="card" style="border-radius:8px;padding:20px;background:#fff;border-color:rgba(25,49,47,0.12);">
+              <span style="font-family:var(--font-heading);font-weight:600;color:#C7774D;font-size:14px;">{{ev.date}}</span>
+              <h3 class="card-title" style="margin:8px 0;color:#19312F;">{{ev.title}}</h3>
+              <p style="margin:0 0 14px;font-size:13px;color:rgba(25,49,47,0.68);">{{ev.text}}</p>
+              <a href="#site-contacts" class="btn btn-ghost" style="padding-left:0;text-decoration:none;">Записаться →</a>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ================= SHOP ================= -->
+  <sc-if value="{{isShop}}" hint-placeholder-val="{{false}}">
+    <div data-screen-label="Магазин вин" id="shop" style="padding-top:80px;">
+      <div style="position:relative;height:36vh;min-height:260px;">
+        <image-slot id="shop-hero" shape="rect" placeholder="Полки с бутылками винодельни"></image-slot>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(25,49,47,0.1), rgba(25,49,47,0.6));"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;max-width:1280px;margin:0 auto;padding:0 24px 32px;">
+          <h1 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(32px,4.4vw,52px);color:#F5F2EA;margin:0;">Весь ассортимент</h1>
+          <p style="color:rgba(245,242,234,0.85);margin:8px 0 0;">{{wineCount}} вин собственного производства — от лёгкого розе до выдержанного брюта.</p>
+        </div>
+      </div>
+      <div style="max-width:1280px;margin:48px auto 0;padding:0 24px 112px;display:grid;grid-template-columns:{{shopLayoutColumns}};gap:32px;align-items:start;">
+        <aside>
+          <sc-if value="{{windowNarrow}}" hint-placeholder-val="{{false}}">
+            <button class="btn btn-secondary btn-block" onClick="{{toggleShopFiltersPanel}}" style="margin-bottom:16px;">Фильтры и сортировка</button>
+          </sc-if>
+          <sc-if value="{{filtersVisible}}" hint-placeholder-val="{{true}}">
+            <div style="display:flex;flex-direction:column;gap:24px;padding:20px;background:#fff;border:1px solid rgba(25,49,47,0.12);border-radius:8px;">
+              <div>
+                <p style="margin:0 0 10px;font-weight:600;font-size:13px;color:#19312F;">Тип вина</p>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                  <sc-for list="{{typeChips}}" as="chip" hint-placeholder-count="4">
+                    <button style="{{chip.style}}border:1px solid;border-radius:999px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:var(--font-body);" onClick="{{chip.onToggle}}">{{chip.label}}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div>
+                <p style="margin:0 0 10px;font-weight:600;font-size:13px;color:#19312F;">Сладость</p>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                  <sc-for list="{{sweetnessChips}}" as="chip" hint-placeholder-count="4">
+                    <button style="{{chip.style}}border:1px solid;border-radius:999px;padding:6px 14px;font-size:13px;cursor:pointer;font-family:var(--font-body);" onClick="{{chip.onToggle}}">{{chip.label}}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <sc-if value="{{shopFiltersActive}}" hint-placeholder-val="{{false}}">
+                <button class="btn btn-ghost" style="padding-left:0;align-self:flex-start;" onClick="{{resetShopFilters}}">Сбросить фильтры</button>
+              </sc-if>
+            </div>
+          </sc-if>
+        </aside>
+
+        <div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:end;margin-bottom:24px;">
+            <div class="field" style="flex:1;min-width:220px;margin:0;">
+              <label>Поиск</label>
+              <input class="input" type="text" placeholder="Например, Шардоне" value="{{shopSearch}}" onChange="{{setShopSearch}}">
+            </div>
+            <div class="field" style="min-width:200px;margin:0;">
+              <label>Сортировка</label>
+              <select class="input" value="{{shopSortOption}}" onChange="{{setShopSort}}">
+                <sc-for list="{{shopSortOptions}}" as="opt" hint-placeholder-count="5">
+                  <option value="{{opt}}">{{opt}}</option>
+                </sc-for>
+              </select>
+            </div>
+          </div>
+
+          <sc-if value="{{shopWines.length}}" hint-placeholder-val="{{true}}">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,220px));gap:20px;">
+              <sc-for list="{{shopWines}}" as="wine" hint-placeholder-count="9">
+                <div class="card" style="padding:0;border-radius:8px;overflow:hidden;background:#fff;border-color:rgba(25,49,47,0.12);display:flex;flex-direction:column;cursor:pointer;" onClick="{{wine.onOpen}}">
+                  <div style="height:260px;background:var(--color-surface);"><image-slot id="{{wine.bottleId}}" shape="rect" placeholder="{{wine.name}} — бутылка"></image-slot></div>
+                  <div style="padding:16px;">
+                    <span class="tag tag-outline" style="border-color:#C7774D;color:#C7774D;">{{wine.type}}</span>
+                    <h3 class="card-title" style="margin:10px 0 2px;font-size:19px;color:#19312F;">{{wine.name}}</h3>
+                    <p style="margin:0 0 10px;font-size:13px;color:rgba(25,49,47,0.62);">{{wine.sweetness}}</p>
+                    <p style="margin:0;font-family:var(--font-heading);font-weight:600;font-size:17px;color:#19312F;">{{wine.price}} ₽</p>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{shopEmpty}}" hint-placeholder-val="{{false}}">
+            <div style="text-align:center;padding:56px 0;color:rgba(25,49,47,0.6);">
+              <p style="margin:0 0 12px;font-family:var(--font-heading);font-size:20px;color:#19312F;">Ничего не нашлось</p>
+              <p style="margin:0 0 20px;font-size:14px;">Попробуйте изменить фильтры или запрос поиска.</p>
+              <button class="btn btn-secondary" onClick="{{resetShopFilters}}">Сбросить фильтры</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ================= EVENTS ================= -->
+  <sc-if value="{{isEvents}}" hint-placeholder-val="{{false}}">
+    <div data-screen-label="Мероприятия" id="events" style="padding-top:80px;">
+      <div style="position:relative;height:46vh;min-height:340px;">
+        <image-slot id="events-hero" shape="rect" placeholder="Стол, накрытый на террасе к вечеру"></image-slot>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(25,49,47,0.1), rgba(25,49,47,0.6));"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;max-width:1280px;margin:0 auto;padding:0 24px 40px;">
+          <h1 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(36px,5vw,64px);color:#F5F2EA;margin:0;">Мероприятия</h1>
+          <p style="color:rgba(245,242,234,0.85);margin:8px 0 0;max-width:560px;">Дегустации, ужины и события на террасах — приходите или бронируйте место заранее.</p>
+        </div>
+      </div>
+
+      <div style="max-width:1280px;margin:56px auto 0;padding:0 24px;">
+        <p class="card-kicker" style="margin-bottom:16px;">Категории</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button style="{{catStyleTasting}}display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:13px;border:1px solid;border-radius:999px;cursor:pointer;font-family:var(--font-body);" onClick="{{toggleCatTasting}}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8"></path><path d="M12 15v7"></path><path d="M7 3h10l-1 8a4 4 0 0 1-8 0z"></path></svg>
+            Дегустации
+          </button>
+          <button style="{{catStyleRestaurant}}display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:13px;border:1px solid;border-radius:999px;cursor:pointer;font-family:var(--font-body);" onClick="{{toggleCatRestaurant}}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v20"></path><path d="M21 15V2a5 5 0 0 0-5 5v6a2 2 0 0 0 2 2h3Zm0 0v7"></path><path d="M7 2a4 4 0 0 0-4 4v3a2 2 0 0 0 2 2h4"></path></svg>
+            Ресторан
+          </button>
+          <button style="{{catStyleExcursion}}display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:13px;border:1px solid;border-radius:999px;cursor:pointer;font-family:var(--font-body);" onClick="{{toggleCatExcursion}}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+            Экскурсии
+          </button>
+          <button style="{{catStyleSeasonal}}display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:13px;border:1px solid;border-radius:999px;cursor:pointer;font-family:var(--font-body);" onClick="{{toggleCatSeasonal}}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 11 13.24 11 11"></path></svg>
+            Сезонные
+          </button>
+          <button style="{{catStyleSport}}display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:13px;border:1px solid;border-radius:999px;cursor:pointer;font-family:var(--font-body);" onClick="{{toggleCatSport}}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="1"></circle><path d="m7 20 3-6 1.5-3.5L14 12l3 3"></path><path d="M6 8l3.5 1.5L11 12"></path><path d="m9 10-3 1.5"></path></svg>
+            Спорт
+          </button>
+          <button style="{{catStyleOpenair}}display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:13px;border:1px solid;border-radius:999px;cursor:pointer;font-family:var(--font-body);" onClick="{{toggleCatOpenair}}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+            Open-air
+          </button>
+        </div>
+      </div>
+
+      <div style="max-width:1280px;margin:40px auto 0;padding:0 24px 112px;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,400px));gap:24px;justify-content:center;">
+        <sc-for list="{{filteredEventItems}}" as="ev" hint-placeholder-count="6">
+          <div class="card" style="padding:0;border-radius:8px;overflow:hidden;background:#fff;border-color:rgba(25,49,47,0.12);">
+            <div style="height:200px;"><image-slot id="{{ev.imgId}}" shape="rect" placeholder="{{ev.title}}"></image-slot></div>
+            <div style="padding:20px;">
+              <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;">
+                <span class="tag tag-outline" style="border-color:#C7774D;color:#C7774D;">{{ev.category}}</span>
+                <span style="font-size:12px;color:rgba(25,49,47,0.55);font-family:var(--font-heading);font-variant-numeric:tabular-nums;">{{ev.date}}</span>
+              </div>
+              <h3 class="card-title" style="margin:0 0 8px;color:#19312F;">{{ev.title}}</h3>
+              <p class="card-body" style="color:rgba(25,49,47,0.72);margin:0 0 16px;">{{ev.text}}</p>
+              <a href="#site-contacts" class="btn btn-ghost" style="text-decoration:none;">Записаться →</a>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ================= RESTAURANT ================= -->
+  <sc-if value="{{isRestaurant}}" hint-placeholder-val="{{false}}">
+    <div data-screen-label="Ресторан" id="restaurant" style="padding-top:80px;">
+      <div style="position:relative;height:46vh;min-height:340px;">
+        <image-slot id="restaurant-hero" shape="rect" placeholder="Стол ресторана на террасе"></image-slot>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(25,49,47,0.1), rgba(25,49,47,0.6));"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;max-width:1280px;margin:0 auto;padding:0 24px 40px;">
+          <h1 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(36px,5vw,64px);color:#F5F2EA;margin:0;">Ресторан</h1>
+          <p style="color:rgba(245,242,234,0.85);margin:8px 0 0;max-width:520px;">Сезонное меню из продуктов своей земли и виноделия.</p>
+        </div>
+      </div>
+
+      <sc-for list="{{restaurantMenu}}" as="cat" hint-placeholder-count="3">
+        <div style="max-width:1000px;margin:80px auto 0;padding:0 24px;">
+          <h2 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(24px,3.2vw,32px);margin:0 0 28px;color:#19312F;text-align:center;">{{cat.category}}</h2>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,280px));gap:24px;justify-content:center;">
+            <sc-for list="{{cat.dishes}}" as="dish" hint-placeholder-count="2">
+              <div style="cursor:pointer;" onClick="{{dish.onOpen}}">
+                <div style="height:200px;border-radius:8px;overflow:hidden;margin-bottom:12px;">
+                  <image-slot id="{{dish.imgId}}" shape="rect" placeholder="{{dish.name}}"></image-slot>
+                </div>
+                <h3 class="card-title" style="margin:0 0 6px;color:#19312F;">{{dish.name}}</h3>
+                <p style="margin:0;font-size:13px;color:rgba(25,49,47,0.65);">{{dish.shortDesc}}</p>
+              </div>
+            </sc-for>
+          </div>
+          <hr class="hr" style="margin:56px 0 0;">
+        </div>
+      </sc-for>
+      <div style="height:56px;"></div>
+    </div>
+  </sc-if>
+
+  <!-- ================= CONTACTS ================= -->
+  <sc-if value="{{isContacts}}" hint-placeholder-val="{{false}}">
+    <div data-screen-label="Контакты" id="contacts" style="padding-top:80px;">
+      <div style="max-width:1280px;margin:64px auto 0;padding:0 24px 112px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:56px;align-items:start;">
+        <div>
+          <p class="card-kicker" style="margin-bottom:8px;">Контакты</p>
+          <h1 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(32px,4.4vw,52px);line-height:1.02;margin:0 0 28px;color:#19312F;">Будем рады видеть вас на террасах</h1>
+          <div style="display:flex;flex-direction:column;gap:20px;font-size:16px;color:rgba(25,49,47,0.8);">
+            <div><p style="margin:0 0 4px;font-weight:600;color:#19312F;">Адрес</p><p style="margin:0;">Абрау-Дюрсо, Краснодарский край</p></div>
+            <div><p style="margin:0 0 4px;font-weight:600;color:#19312F;">Телефон</p><p style="margin:0;"><a href="tel:+78612000000">+7 (861) 200-00-00</a></p></div>
+            <div><p style="margin:0 0 4px;font-weight:600;color:#19312F;">Почта</p><p style="margin:0;"><a href="mailto:info@vineterraces.ru">info@vineterraces.ru</a></p></div>
+            <div><p style="margin:0 0 4px;font-weight:600;color:#19312F;">Ресепшн</p><p style="margin:0;">Ежедневно, 08:00 — 22:00</p></div>
+          </div>
+          <button class="btn btn-primary" style="margin-top:32px;" onClick="{{goHotelClick}}">Забронировать номер</button>
+        </div>
+        <div style="height:420px;border-radius:8px;overflow:hidden;">
+          <image-slot id="contacts-map" shape="rect" placeholder="Карта — Абрау-Дюрсо, Краснодарский край"></image-slot>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ================= PRIVACY ================= -->
+  <sc-if value="{{isPrivacy}}" hint-placeholder-val="{{false}}">
+    <div data-screen-label="Политика конфиденциальности" id="privacy" style="padding-top:80px;">
+      <div style="max-width:720px;margin:64px auto 0;padding:0 24px 112px;">
+        <p class="card-kicker" style="margin-bottom:8px;">Документы</p>
+        <h1 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(30px,4vw,44px);margin:0 0 32px;color:#19312F;">Политика конфиденциальности</h1>
+        <div style="display:flex;flex-direction:column;gap:28px;font-size:15px;line-height:1.75;color:rgba(25,49,47,0.78);">
+          <div>
+            <h3 style="font-family:var(--font-heading);font-weight:600;font-size:20px;margin:0 0 8px;color:#19312F;">1. Какие данные мы собираем</h3>
+            <p style="margin:0;">Имя, телефон и почту — при бронировании номера, дегустации или места на мероприятии.</p>
+          </div>
+          <div>
+            <h3 style="font-family:var(--font-heading);font-weight:600;font-size:20px;margin:0 0 8px;color:#19312F;">2. Как мы их используем</h3>
+            <p style="margin:0;">Только для подтверждения брони и связи с вами по поводу вашего визита — без передачи третьим лицам и без рассылок без согласия.</p>
+          </div>
+          <div>
+            <h3 style="font-family:var(--font-heading);font-weight:600;font-size:20px;margin:0 0 8px;color:#19312F;">3. Хранение</h3>
+            <p style="margin:0;">Данные хранятся не дольше срока, необходимого для оказания услуги, и удаляются по вашему запросу.</p>
+          </div>
+          <div>
+            <h3 style="font-family:var(--font-heading);font-weight:600;font-size:20px;margin:0 0 8px;color:#19312F;">4. Ваши права</h3>
+            <p style="margin:0;">Вы можете запросить, изменить или удалить свои данные, написав на <a href="mailto:info@vineterraces.ru">info@vineterraces.ru</a>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <footer style="background:#1F4D4A;padding:64px 24px 40px;">
+    <div style="max-width:1280px;margin:0 auto;">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:32px;">
+        <span style="font-family:var(--font-heading);font-weight:600;font-size:22px;color:#F5F2EA;">Винные Террасы</span>
+        <nav style="display:flex;gap:32px;flex-wrap:wrap;">
+          <a href="#hotel" onClick="{{goHotelClick}}" style="color:#DCE5DE;font-size:14px;text-decoration:none;">Апартаменты</a>
+          <a href="#events" onClick="{{goEventsClick}}" style="color:#DCE5DE;font-size:14px;text-decoration:none;">Мероприятия</a>
+          <a href="#site-map" style="color:#DCE5DE;font-size:14px;text-decoration:none;">Как добраться</a>
+          <a href="#contacts" onClick="{{goContactsClick}}" style="color:#DCE5DE;font-size:14px;text-decoration:none;">Контакты</a>
+          <a href="#privacy" onClick="{{goPrivacyClick}}" style="color:rgba(220,229,222,0.7);font-size:14px;text-decoration:none;">Политика конфиденциальности</a>
+        </nav>
+      </div>
+      <hr class="hr" style="background:rgba(220,229,222,0.2);margin:32px 0;">
+      <div id="site-map" style="height:220px;border-radius:8px;overflow:hidden;margin-bottom:24px;">
+        <image-slot id="footer-map" shape="rect" placeholder="Карта — Абрау-Дюрсо, Краснодарский край"></image-slot>
+      </div>
+      <div id="site-contacts" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;color:rgba(220,229,222,0.7);font-size:13px;">
+        <span>Абрау-Дюрсо, Краснодарский край</span>
+        <span>© {{year}} Винные Террасы</span>
+      </div>
+    </div>
+  </footer>
+
+  <sc-if value="{{activeDish}}" hint-placeholder-val="{{false}}">
+    <div class="dialog-backdrop" style="z-index:60;" onClick="{{closeDish}}">
+      <div class="dialog" role="dialog" aria-modal="true" style="max-width:520px;width:100%;" onClick="{{stop}}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <h3 class="dialog-title" style="color:#19312F;margin:0;">{{activeDish.name}}</h3>
+          <button onClick="{{closeDish}}" aria-label="Закрыть" style="background:none;border:none;cursor:pointer;color:#19312F;padding:4px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+        <div style="height:220px;border-radius:8px;overflow:hidden;">
+          <image-slot id="{{activeDish.imgId}}" shape="rect" placeholder="{{activeDish.name}}"></image-slot>
+        </div>
+        <p class="dialog-body" style="color:rgba(25,49,47,0.75);">{{activeDish.fullDesc}}</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:rgba(25,49,47,0.6);margin-bottom:8px;">
+          <span>{{activeDish.weight}}</span>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn btn-secondary" onClick="{{closeDish}}">Закрыть</button>
+          <span style="font-family:var(--font-heading);font-weight:600;font-size:20px;color:#19312F;align-self:center;">{{activeDish.price}} ₽</span>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{activeWine}}" hint-placeholder-val="{{false}}">
+    <div style="position:fixed;inset:0;z-index:70;background:var(--color-bg);overflow-y:auto;">
+      <div style="display:grid;grid-template-columns:{{wineDetailColumns}};min-height:100vh;min-width:0;">
+        <div style="position:relative;height:{{wineDetailImgHeight}};background:var(--color-surface);min-width:0;">
+          <image-slot id="{{activeWine.bottleId}}-detail" shape="rect" placeholder="{{activeWine.name}} — бутылка"></image-slot>
+        </div>
+        <div style="padding:40px 40px 64px;max-width:640px;min-width:0;">
+          <button onClick="{{closeWine}}" style="background:none;border:none;cursor:pointer;color:#19312F;display:flex;align-items:center;gap:8px;padding:0;margin-bottom:32px;font-size:15px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            Назад к ассортименту
+          </button>
+          <span class="tag tag-outline" style="border-color:#C7774D;color:#C7774D;">{{activeWine.type}}</span>
+          <h1 style="font-family:var(--font-heading);font-weight:600;font-size:clamp(34px,4.4vw,52px);margin:16px 0 24px;color:#19312F;">{{activeWine.name}}</h1>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:24px 0;border-top:1px solid rgba(25,49,47,0.15);border-bottom:1px solid rgba(25,49,47,0.15);margin-bottom:28px;">
+            <div>
+              <p style="margin:0 0 4px;font-size:12px;color:rgba(25,49,47,0.55);">Алкоголь</p>
+              <p style="margin:0;font-family:var(--font-heading);font-weight:600;font-size:24px;font-variant-numeric:tabular-nums;color:#19312F;">{{activeWine.alcohol}}%</p>
+            </div>
+            <div>
+              <p style="margin:0 0 4px;font-size:12px;color:rgba(25,49,47,0.55);">Сахар, г/дм³</p>
+              <p style="margin:0;font-family:var(--font-heading);font-weight:600;font-size:24px;font-variant-numeric:tabular-nums;color:#19312F;">{{activeWine.sugar}}</p>
+            </div>
+            <div>
+              <p style="margin:0 0 4px;font-size:12px;color:rgba(25,49,47,0.55);">Подача, °C</p>
+              <p style="margin:0;font-family:var(--font-heading);font-weight:600;font-size:24px;font-variant-numeric:tabular-nums;color:#19312F;">{{activeWine.temperature}}</p>
+            </div>
+          </div>
+          <p style="font-family:var(--font-heading);font-weight:600;font-size:28px;margin:0 0 28px;color:#19312F;">{{activeWine.price}} ₽</p>
+          <h2 style="font-family:var(--font-heading);font-weight:600;font-size:20px;margin:0 0 12px;color:#19312F;">Описание</h2>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{activeWine.description}}" as="p" hint-placeholder-count="2">
+              <p style="margin:0;font-size:15px;line-height:1.7;color:rgba(25,49,47,0.78);">{{p}}</p>
+            </sc-for>
+          </div>
+          <button class="btn btn-primary" style="margin-top:32px;">Добавить в заказ — {{activeWine.price}} ₽</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ageGateOpen}}" hint-placeholder-val="{{true}}">
+    <div role="dialog" aria-modal="true" aria-label="Подтверждение возраста" style="position:fixed;inset:0;z-index:100;background:rgba(25,49,47,0.82);display:flex;align-items:center;justify-content:center;padding:24px;">
+      <sc-if value="{{ageDeclined}}" hint-placeholder-val="{{false}}">
+        <div style="background:#F5F2EA;border-radius:8px;max-width:420px;width:100%;padding:40px 32px;text-align:center;">
+          <h2 style="font-family:var(--font-heading);font-weight:600;font-size:26px;margin:0 0 12px;color:#19312F;">Доступ ограничен</h2>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:rgba(25,49,47,0.75);">Сайт содержит информацию о продукции, предназначенной для лиц старше 18 лет.</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{ageNotDeclined}}" hint-placeholder-val="{{true}}">
+        <div style="background:#F5F2EA;border-radius:8px;max-width:440px;width:100%;padding:44px 36px;text-align:center;">
+          <p style="font-family:var(--font-heading);letter-spacing:0.12em;text-transform:uppercase;font-size:12px;color:#C7774D;margin:0 0 16px;">Винные Террасы</p>
+          <h2 style="font-family:var(--font-heading);font-weight:600;font-size:28px;line-height:1.15;margin:0 0 12px;color:#19312F;">Подтвердите, что вам исполнилось 18 лет</h2>
+          <p style="margin:0 0 28px;font-size:14px;color:rgba(25,49,47,0.7);">Сайт содержит информацию об алкогольной продукции.</p>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <button class="btn btn-primary btn-block" onClick="{{confirmAge}}">Да, мне есть 18</button>
+            <button class="btn btn-secondary btn-block" onClick="{{declineAge}}">Нет, мне нет 18</button>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{activeRoom}}" hint-placeholder-val="{{false}}">
+    <div class="dialog-backdrop" style="z-index:60;" onClick="{{closeRoom}}">
+      <div class="dialog" role="dialog" aria-modal="true" style="max-width:560px;width:100%;" onClick="{{stop}}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <h3 class="dialog-title" style="color:#19312F;margin:0;">{{activeRoom.name}}</h3>
+          <button onClick="{{closeRoom}}" aria-label="Закрыть" style="background:none;border:none;cursor:pointer;color:#19312F;padding:4px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+        <div style="height:200px;border-radius:8px;overflow:hidden;">
+          <image-slot id="{{activeRoom.dialogId}}" shape="rect" placeholder="Фото номера"></image-slot>
+        </div>
+        <p class="dialog-body" style="color:rgba(25,49,47,0.75);">{{activeRoom.blurb}}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px;">
+          <div>
+            <p style="margin:0 0 6px;font-weight:600;color:#19312F;">Удобства</p>
+            <sc-for list="{{activeRoom.amenities}}" as="am" hint-placeholder-count="4">
+              <p style="margin:0 0 4px;color:rgba(25,49,47,0.72);">· {{am}}</p>
+            </sc-for>
+          </div>
+          <div>
+            <p style="margin:0 0 6px;font-weight:600;color:#19312F;">Заезд / выезд</p>
+            <p style="margin:0 0 4px;color:rgba(25,49,47,0.72);">С {{activeRoom.checkIn}} · до {{activeRoom.checkOut}}</p>
+            <sc-for list="{{activeRoom.notes}}" as="note" hint-placeholder-count="2">
+              <p style="margin:0 0 4px;color:rgba(25,49,47,0.6);font-size:12px;">{{note}}</p>
+            </sc-for>
+          </div>
+        </div>
+        <div class="dialog-actions">
+          <button class="btn btn-secondary" onClick="{{closeRoom}}">Закрыть</button>
+          <button class="btn btn-primary">от {{activeRoom.price}} ₽ — Забронировать</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;initialPage&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;home&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;hotel&quot;,&quot;vinery&quot;,&quot;shop&quot;,&quot;events&quot;],&quot;tsType&quot;:&quot;'home'|'hotel'|'vinery'|'shop'|'events'&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;defaultRoomFilter&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;all&quot;,&quot;options&quot;:[&quot;all&quot;,&quot;standard&quot;,&quot;suite&quot;],&quot;tsType&quot;:&quot;'all'|'standard'|'suite'&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;showBookingWidget&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;heroVideoSrc&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Behavior&quot;}}">
+class Component extends DCLogic {
+  state = {
+    page: this.props.initialPage || 'home',
+    mobileNavOpen: false,
+    roomFilter: this.props.defaultRoomFilter || 'all',
+    activeRoomId: null,
+    activeDishId: null,
+    activeWineId: null,
+    windowWide: true,
+    galleryRotation: 0,
+    galleryDragging: false,
+    gallerySnap: false,
+    shopSearch: '',
+    shopSortOption: 'По умолчанию',
+    shopTypes: [],
+    shopSweetness: [],
+    shopFiltersOpen: false,
+    activeEventCategory: null,
+    ageGateOpen: true,
+    ageDeclined: false,
+    heroVideoFailed: false,
+  };
+
+  shopTypeOptions = ['Белое', 'Красное', 'Розовое', 'Игристое'];
+  shopSweetnessOptions = ['Сухое', 'Полусухое', 'Десертное', 'Брют'];
+  shopSortOptions = ['По умолчанию', 'По цене (возрастание)', 'По цене (убывание)', 'По названию (А-Я)', 'По названию (Я-А)'];
+
+  productionStages = [
+    { id: 'harvest', n: '01', label: 'Сбор винограда' },
+    { id: 'crush', n: '02', label: 'Дробление и прессование' },
+    { id: 'ferment', n: '03', label: 'Ферментация' },
+    { id: 'age', n: '04', label: 'Выдержка' },
+    { id: 'filter', n: '05', label: 'Фильтрация' },
+    { id: 'bottle', n: '06', label: 'Розлив' },
+  ];
+
+  rooms = [
+    { id: 'standart', name: 'Стандарт', tag: 'standard', tagLabel: 'Стандарт', blurb: 'Компактный номер с видом на сад и террасой для утреннего кофе.', price: '9 400', features: ['22 м²', 'Кровать king-size', 'Терраса'], amenities: ['Wi-Fi', 'Кондиционер', 'Мини-бар', 'Душ'], checkIn: '14:00', checkOut: '12:00', notes: ['Заезд с животными не предусмотрен', 'Курение на террасах запрещено'] },
+    { id: 'standart-plus', name: 'Стандарт Плюс', tag: 'standard', tagLabel: 'Стандарт', blurb: 'Больше света и пространства, вид на виноградники.', price: '12 200', features: ['28 м²', 'Кровать king-size', 'Балкон'], amenities: ['Wi-Fi', 'Кондиционер', 'Мини-бар', 'Ванна'], checkIn: '14:00', checkOut: '12:00', notes: ['Заезд с животными не предусмотрен'] },
+    { id: 'suite-terrace', name: 'Люкс Терраса', tag: 'suite', tagLabel: 'Люкс', blurb: 'Угловой номер с собственной террасой и видом на закат.', price: '18 900', features: ['42 м²', 'Гостиная зона', 'Своя терраса'], amenities: ['Wi-Fi', 'Кондиционер', 'Мини-бар', 'Ванна', 'Халаты'], checkIn: '14:00', checkOut: '12:00', notes: ['Ранний заезд по запросу'] },
+    { id: 'suite-panorama', name: 'Люкс Панорама', tag: 'suite', tagLabel: 'Люкс', blurb: 'Панорамное остекление, вид на долину и виноградники.', price: '23 500', features: ['48 м²', 'Панорамные окна', 'Гостиная зона'], amenities: ['Wi-Fi', 'Кондиционер', 'Мини-бар', 'Ванна', 'Халаты', 'Кофемашина'], checkIn: '14:00', checkOut: '12:00', notes: ['Ранний заезд по запросу'] },
+  ];
+
+  wines = [
+    { id: 'shardone', name: 'Шардоне', type: 'Белое', sweetness: 'Сухое', price: '1 900', featured: true, alcohol: '12.5', sugar: '2', temperature: '10-12', description: ['Сухое белое с нотами белого персика и лёгкой ванилью от выдержки в дубе.', 'Хорошо сочетается с белой рыбой и морепродуктами.'] },
+    { id: 'rizling', name: 'Рислинг', type: 'Белое', sweetness: 'Полусухое', price: '2 100', featured: true, alcohol: '11', sugar: '8', temperature: '8-10', description: ['Полусухое, с яркой кислотностью и ароматом зелёного яблока и цитруса.', 'Хорош как аперитив в жаркий день.'] },
+    { id: 'sauvignon', name: 'Совиньон Блан', type: 'Белое', sweetness: 'Сухое', price: '2 000', featured: false, alcohol: '12', sugar: '1', temperature: '10-12', description: ['Травянистые и цитрусовые тона, свежий и лёгкий.', 'Идеален с козьим сыром и лёгкими закусками.'] },
+    { id: 'cabernet', name: 'Каберне Совиньон', type: 'Красное', sweetness: 'Сухое', price: '2 400', featured: true, alcohol: '13.5', sugar: '1', temperature: '16-18', description: ['Плотное красное с тёмной вишней, чёрной смородиной и мягким танином.', 'Раскрывается с выдержанным мясом и твёрдыми сырами.'] },
+    { id: 'merlot', name: 'Мерло', type: 'Красное', sweetness: 'Сухое', price: '2 200', featured: false, alcohol: '13', sugar: '1', temperature: '16-18', description: ['Мягкое и округлое, со сливой и лёгкой пряностью.', 'Универсальное вино к большинству мясных блюд.'] },
+    { id: 'pinot-noir', name: 'Пино Нуар', type: 'Красное', sweetness: 'Сухое', price: '2 600', featured: false, alcohol: '12.8', sugar: '1', temperature: '14-16', description: ['Лёгкое красное с ягодным ароматом и шёлковой текстурой.', 'Хорошо с уткой и грибными блюдами.'] },
+    { id: 'roze', name: 'Розе', type: 'Розовое', sweetness: 'Сухое', price: '2 000', featured: true, alcohol: '12', sugar: '3', temperature: '10-12', description: ['Свежее розовое с ароматом клубники и лепестков розы.', 'Летнее вино для террасы на закате.'] },
+    { id: 'brut', name: 'Брют', type: 'Игристое', sweetness: 'Брют', price: '2 800', featured: true, alcohol: '12', sugar: '6', temperature: '6-8', description: ['Игристое классическим методом, с тонкой цитрусовой нотой и хлебной коркой.', 'Праздничное вино для любого повода.'] },
+    { id: 'muscat', name: 'Мускат', type: 'Белое', sweetness: 'Десертное', price: '2 300', featured: false, alcohol: '11', sugar: '60', temperature: '8-10', description: ['Десертное вино с ароматом муската и мёда.', 'Подавайте к десертам или голубому сыру.'] },
+  ];
+
+  restaurantMenu = [
+    { id: 'antipasti', category: 'Антипасти', dishes: [
+      { id: 'brusketta', name: 'Брускетта', shortDesc: 'Хрустящий хлеб с томатом и базиликом.', fullDesc: 'Поджаренный ремесленный хлеб с сочными томатами, свежим базиликом и чесноком, сбрызнутый оливковым маслом первого отжима.', weight: '150 г', price: '590' },
+      { id: 'caprese', name: 'Салат Капрезе', shortDesc: 'Моцарелла, томаты и базилик.', fullDesc: 'Слои свежей моцареллы, спелых томатов и ароматного базилика с бальзамическим глейзом и оливковым маслом.', weight: '200 г', price: '690' },
+    ]},
+    { id: 'main', category: 'Первые блюда', dishes: [
+      { id: 'carbonara', name: 'Спагетти Карбонара', shortDesc: 'Паста, панчетта, яйцо, пекорино.', fullDesc: 'Паста аль денте с хрустящей панчеттой, яйцом и сыром пекорино романо, с щедрой ноткой чёрного перца.', weight: '300 г', price: '990' },
+      { id: 'risotto', name: 'Ризотто с грибами', shortDesc: 'Рис арборио, лесные грибы, пармезан.', fullDesc: 'Сливочное ризотто из риса арборио с ассорти лесных грибов, белым вином и пармиджано-реджано, с каплей трюфельного масла.', weight: '280 г', price: '1 090' },
+    ]},
+    { id: 'soups', category: 'Супы', dishes: [
+      { id: 'borsch', name: 'Борщ', shortDesc: 'Говядина, свёкла, капуста, сметана.', fullDesc: 'Наваристый борщ с нежной говядиной, свёклой и капустой, подаётся со сметаной и свежим укропом.', weight: '400 мл', price: '650' },
+      { id: 'pumpkin-soup', name: 'Крем-суп из тыквы', shortDesc: 'Тыква, сливки, тыквенное масло.', fullDesc: 'Нежный крем-суп из печёной тыквы со сливками и обжаренными тыквенными семечками, с ноткой тыквенного масла.', weight: '350 мл', price: '590' },
+    ]},
+  ];
+
+  eventCategories = [
+    { id: 'tasting', label: 'Дегустации' },
+    { id: 'restaurant', label: 'Ресторан' },
+    { id: 'excursion', label: 'Экскурсии' },
+    { id: 'seasonal', label: 'Сезонные' },
+    { id: 'sport', label: 'Спорт' },
+    { id: 'openair', label: 'Open-air' },
+  ];
+
+  eventItems = [
+    { id: 'ev1', category: 'Дегустации', date: '14 сентября', title: 'Дегустация урожая', text: 'Вертикальная дегустация трёх последних лет — Шардоне, Рислинг и Каберне.' },
+    { id: 'ev2', category: 'Ресторан', date: '20 сентября', title: 'Ужин с виноделом', text: 'Пять блюд сезонного меню в паре с винами хозяйства, за одним столом с виноделом.' },
+    { id: 'ev3', category: 'Экскурсии', date: '21 сентября', title: 'Экскурсия по террасам', text: 'Прогулка по виноградникам и подвалам с рассказом о сборе и выдержке.' },
+    { id: 'ev4', category: 'Сезонные', date: '27 сентября', title: 'Праздник урожая', text: 'Ручной сбор винограда, обед на террасе и живая музыка на закате.' },
+    { id: 'ev5', category: 'Open-air', date: '28 сентября', title: 'Ужин в винограднике', text: 'Закрытый ужин на террасах на закате — рассадка среди лоз.' },
+    { id: 'ev6', category: 'Спорт', date: '5 октября', title: 'Утренняя пробежка по террасам', text: 'Лёгкий забег среди виноградников с видом на море, для гостей отеля.' },
+    { id: 'ev7', category: 'Дегустации', date: '12 октября', title: 'Дегустация в подвале', text: 'Шесть вин при свечах в винном подвале, с рассказом о выдержке.' },
+  ];
+
+  timeline = [
+    { n: '01', title: 'Сбор', text: 'Ручной сбор винограда на террасах в утренние часы.' },
+    { n: '02', title: 'Ферментация', text: 'Медленное брожение при контролируемой температуре.' },
+    { n: '03', title: 'Выдержка', text: 'Отдых в дубе и стали — от нескольких месяцев до двух лет.' },
+    { n: '04', title: 'Розлив', text: 'Розлив партиями, у каждой — свой номер и год.' },
+  ];
+
+  events = [
+    { date: '14 сентября', title: 'Дегустация урожая', text: 'Вертикальная дегустация трёх последних лет.' },
+    { date: '28 сентября', title: 'Ужин в винограднике', text: 'Закрытый ужин на террасах на закате.' },
+  ];
+
+  componentDidMount() {
+    try {
+      if (localStorage.getItem('terraces-age-confirmed') === '1') {
+        this.setState({ ageGateOpen: false });
+      }
+    } catch (e) {}
+    this.updateWidth();
+    this._onResize = () => this.updateWidth();
+    window.addEventListener('resize', this._onResize);
+    this._lastFrameTime = performance.now();
+    const loop = (t) => {
+      const dt = t - this._lastFrameTime;
+      this._lastFrameTime = t;
+      if (this.state.page === 'vinery' && !this.state.galleryDragging) {
+        this.setState((s) => ({ galleryRotation: s.galleryRotation + dt * 0.012 }));
+      }
+      this._galleryRaf = requestAnimationFrame(loop);
+    };
+    this._galleryRaf = requestAnimationFrame(loop);
+    this._onKey = (e) => {
+      if (e.key === 'Escape') {
+        if (this.state.activeRoomId) this.closeRoom();
+        else if (this.state.activeDishId) this.closeDish();
+        else if (this.state.activeWineId) this.closeWine();
+        else if (this.state.mobileNavOpen) this.closeMobileNav();
+      }
+    };
+    document.addEventListener('keydown', this._onKey);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._onResize);
+    document.removeEventListener('keydown', this._onKey);
+    cancelAnimationFrame(this._galleryRaf);
+    clearTimeout(this._gallerySnapTimer);
+  }
+
+  galleryPointerDown = (e) => {
+    this._dragStartX = e.clientX;
+    this._dragStartRotation = this.state.galleryRotation;
+    this.setState({ galleryDragging: true });
+  };
+  galleryPointerMove = (e) => {
+    if (!this.state.galleryDragging) return;
+    const dx = e.clientX - this._dragStartX;
+    this.setState({ galleryRotation: this._dragStartRotation + dx * 0.4 });
+  };
+  galleryPointerUp = () => {
+    if (this.state.galleryDragging) this.setState({ galleryDragging: false });
+  };
+  gallerySnapTo = (deg) => {
+    clearTimeout(this._gallerySnapTimer);
+    this.setState({ galleryRotation: deg, gallerySnap: true });
+    this._gallerySnapTimer = setTimeout(() => this.setState({ gallerySnap: false }), 500);
+  };
+  galleryFocus = (index) => {
+    const step = 360 / this.productionStages.length;
+    this.gallerySnapTo(-(index * step));
+  };
+  galleryPrev = () => {
+    const step = 360 / this.productionStages.length;
+    this.gallerySnapTo(this.state.galleryRotation + step);
+  };
+  galleryNext = () => {
+    const step = 360 / this.productionStages.length;
+    this.gallerySnapTo(this.state.galleryRotation - step);
+  };
+
+  setShopSearch = (v) => this.setState({ shopSearch: v });
+  setShopSort = (v) => this.setState({ shopSortOption: v });
+  toggleShopType = (v) => this.setState((s) => ({ shopTypes: s.shopTypes.includes(v) ? s.shopTypes.filter((t) => t !== v) : [...s.shopTypes, v] }));
+  toggleShopSweetness = (v) => this.setState((s) => ({ shopSweetness: s.shopSweetness.includes(v) ? s.shopSweetness.filter((t) => t !== v) : [...s.shopSweetness, v] }));
+  resetShopFilters = () => this.setState({ shopSearch: '', shopTypes: [], shopSweetness: [], shopSortOption: 'По умолчанию' });
+  toggleShopFiltersPanel = () => this.setState((s) => ({ shopFiltersOpen: !s.shopFiltersOpen }));
+  toggleEventCategory = (label) => this.setState((s) => ({ activeEventCategory: s.activeEventCategory === label ? null : label }));
+
+  confirmAge = () => {
+    try { localStorage.setItem('terraces-age-confirmed', '1'); } catch (e) {}
+    this.setState({ ageGateOpen: false });
+  };
+  declineAge = () => this.setState({ ageDeclined: true });
+  heroVideoError = () => this.setState({ heroVideoFailed: true });
+  heroVideoRef = (el) => {
+    this.heroVideoEl = el;
+    if (el && window.matchMedia('(prefers-reduced-motion: reduce)').matches) el.pause();
+  };
+
+  updateWidth() {
+    this.setState({ windowWide: window.innerWidth >= 900 });
+  }
+
+  goTo = (page) => {
+    this.setState({ page, mobileNavOpen: false, activeRoomId: null, activeDishId: null, activeWineId: null });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  goHomeClick = (e) => { e.preventDefault(); this.goTo('home'); };
+  goHotelClick = (e) => { e.preventDefault(); this.goTo('hotel'); };
+  goVineryClick = (e) => { e.preventDefault(); this.goTo('vinery'); };
+  goEventsClick = (e) => { e.preventDefault(); this.goTo('events'); };
+  goShopClick = (e) => { e.preventDefault(); this.goTo('shop'); };
+  goRestaurantClick = (e) => { e.preventDefault(); this.goTo('restaurant'); };
+  goContactsClick = (e) => { e.preventDefault(); this.goTo('contacts'); };
+  goPrivacyClick = (e) => { e.preventDefault(); this.goTo('privacy'); };
+  openDish = (id) => this.setState({ activeDishId: id });
+  closeDish = () => this.setState({ activeDishId: null });
+  openWine = (id) => this.setState({ activeWineId: id });
+  closeWine = () => this.setState({ activeWineId: null });
+  toggleMobileNav = () => this.setState((s) => ({ mobileNavOpen: !s.mobileNavOpen }));
+  closeMobileNav = () => this.setState({ mobileNavOpen: false });
+  setRoomFilter = (f) => this.setState({ roomFilter: f });
+  openRoom = (id) => this.setState({ activeRoomId: id });
+  closeRoom = () => this.setState({ activeRoomId: null });
+  stop = (e) => e.stopPropagation();
+
+  renderVals() {
+    const { page, mobileNavOpen, roomFilter, activeRoomId, activeDishId, activeWineId, windowWide, galleryRotation, galleryDragging, gallerySnap, shopSearch, shopSortOption, shopTypes, shopSweetness, shopFiltersOpen } = this.state;
+
+    const n = this.productionStages.length;
+    const step = 360 / n;
+    const radius = 300;
+    const galleryItems = this.productionStages.map((stage, i) => {
+      const angle = i * step + galleryRotation;
+      return {
+        ...stage,
+        imgId: 'stage-' + stage.id,
+        transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
+        transition: gallerySnap ? 'transform 0.5s cubic-bezier(.22,.9,.32,1)' : 'none',
+        onFocus: () => this.galleryFocus(i),
+      };
+    });
+
+    const withHandlers = (r) => ({
+      ...r,
+      thumbId: r.id + '-thumb',
+      fullId: r.id + '-full',
+      dialogId: r.id + '-dialog',
+      onOpen: () => this.openRoom(r.id),
+    });
+
+    const rooms = (roomFilter === 'all' ? this.rooms : this.rooms.filter((r) => r.tag === roomFilter)).map(withHandlers);
+    const homeRooms = this.rooms.slice(0, 3).map(withHandlers);
+    const activeRoom = activeRoomId ? withHandlers(this.rooms.find((r) => r.id === activeRoomId)) : null;
+
+    const withBottleId = (w) => ({ ...w, bottleId: 'bottle-' + w.id, onOpen: () => this.openWine(w.id) });
+    const wines = this.wines.map(withBottleId);
+    const featuredWines = wines.filter((w) => w.featured);
+    const eventItems = this.eventItems.map((ev) => ({ ...ev, imgId: 'event-' + ev.id }));
+    const filteredEventItems = this.state.activeEventCategory ? eventItems.filter((ev) => ev.category === this.state.activeEventCategory) : eventItems;
+    const tastingEvents = eventItems.filter((ev) => ev.category === 'Дегустации');
+    const eventCatChipStyle = (label) => this.state.activeEventCategory === label
+      ? 'background:#C7774D;color:#F5F2EA;border-color:#C7774D;'
+      : 'background:transparent;color:#19312F;border-color:rgba(25,49,47,0.25);';
+    const activeWine = activeWineId ? withBottleId(this.wines.find((w) => w.id === activeWineId)) : null;
+
+    let shopList = this.wines.slice();
+    const q = shopSearch.trim().toLowerCase();
+    if (q) shopList = shopList.filter((w) => w.name.toLowerCase().includes(q));
+    if (shopTypes.length) shopList = shopList.filter((w) => shopTypes.includes(w.type));
+    if (shopSweetness.length) shopList = shopList.filter((w) => shopSweetness.includes(w.sweetness));
+    const priceNum = (w) => parseInt(w.price.replace(/\D/g, ''), 10) || 0;
+    switch (shopSortOption) {
+      case 'По цене (возрастание)': shopList.sort((a, b) => priceNum(a) - priceNum(b)); break;
+      case 'По цене (убывание)': shopList.sort((a, b) => priceNum(b) - priceNum(a)); break;
+      case 'По названию (А-Я)': shopList.sort((a, b) => a.name.localeCompare(b.name, 'ru')); break;
+      case 'По названию (Я-А)': shopList.sort((a, b) => b.name.localeCompare(a.name, 'ru')); break;
+      default: break;
+    }
+    const shopWines = shopList.map(withBottleId);
+    const shopFiltersActive = shopTypes.length > 0 || shopSweetness.length > 0 || q.length > 0 || shopSortOption !== 'По умолчанию';
+    const filtersVisible = windowWide || shopFiltersOpen;
+    const chipStyle = (active) => active ? 'background:#C7774D;color:#F5F2EA;border-color:#C7774D;' : 'background:transparent;color:#19312F;border-color:rgba(25,49,47,0.25);';
+    const typeChips = this.shopTypeOptions.map((t) => ({ label: t, style: chipStyle(shopTypes.includes(t)), onToggle: () => this.toggleShopType(t) }));
+    const sweetnessChips = this.shopSweetnessOptions.map((t) => ({ label: t, style: chipStyle(shopSweetness.includes(t)), onToggle: () => this.toggleShopSweetness(t) }));
+
+    const restaurantMenu = this.restaurantMenu.map((cat) => ({
+      ...cat,
+      dishes: cat.dishes.map((d) => ({ ...d, imgId: 'dish-' + d.id, onOpen: () => this.openDish(d.id) })),
+    }));
+    let activeDish = null;
+    for (const cat of this.restaurantMenu) {
+      const found = cat.dishes.find((d) => d.id === activeDishId);
+      if (found) { activeDish = { ...found, imgId: 'dish-' + found.id }; break; }
+    }
+
+    return {
+      page,
+      isHome: page === 'home',
+      isHotel: page === 'hotel',
+      isVinery: page === 'vinery',
+      isEvents: page === 'events',
+      isShop: page === 'shop',
+      isRestaurant: page === 'restaurant',
+      isContacts: page === 'contacts',
+      isPrivacy: page === 'privacy',
+      goEventsClick: this.goEventsClick,
+      goShopClick: this.goShopClick,
+      goRestaurantClick: this.goRestaurantClick,
+      goContactsClick: this.goContactsClick,
+      goPrivacyClick: this.goPrivacyClick,
+      restaurantAriaCurrent: page === 'restaurant' ? 'page' : undefined,
+      eventsAriaCurrent: page === 'events' ? 'page' : undefined,
+      eventCategories: this.eventCategories,
+      eventItems,
+      filteredEventItems,
+      tastingEvents,
+      catStyleTasting: eventCatChipStyle('Дегустации'),
+      catStyleRestaurant: eventCatChipStyle('Ресторан'),
+      catStyleExcursion: eventCatChipStyle('Экскурсии'),
+      catStyleSeasonal: eventCatChipStyle('Сезонные'),
+      catStyleSport: eventCatChipStyle('Спорт'),
+      catStyleOpenair: eventCatChipStyle('Open-air'),
+      toggleCatTasting: () => this.toggleEventCategory('Дегустации'),
+      toggleCatRestaurant: () => this.toggleEventCategory('Ресторан'),
+      toggleCatExcursion: () => this.toggleEventCategory('Экскурсии'),
+      toggleCatSeasonal: () => this.toggleEventCategory('Сезонные'),
+      toggleCatSport: () => this.toggleEventCategory('Спорт'),
+      toggleCatOpenair: () => this.toggleEventCategory('Open-air'),
+      wines,
+      featuredWines,
+      wineCount: wines.length,
+      restaurantMenu,
+      activeDish,
+      closeDish: this.closeDish,
+      activeWine,
+      closeWine: this.closeWine,
+      wineDetailColumns: windowWide ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)',
+      ageGateOpen: this.state.ageGateOpen,
+      ageDeclined: this.state.ageDeclined,
+      ageNotDeclined: !this.state.ageDeclined,
+      confirmAge: this.confirmAge,
+      declineAge: this.declineAge,
+      heroVideoDisplay: this.state.heroVideoFailed ? 'none' : 'block',
+      heroVideoError: this.heroVideoError,
+      heroVideoRef: this.heroVideoRef,
+      heroVideoSrc: this.props.heroVideoSrc || null,
+      galleryItems,
+      galleryCursor: galleryDragging ? 'grabbing' : 'grab',
+      galleryPointerDown: this.galleryPointerDown,
+      galleryPointerMove: this.galleryPointerMove,
+      galleryPointerUp: this.galleryPointerUp,
+      galleryPrev: this.galleryPrev,
+      galleryNext: this.galleryNext,
+      shopWines,
+      shopSearch,
+      shopSortOption,
+      shopSortOptions: this.shopSortOptions,
+      setShopSearch: (e) => this.setShopSearch(e.target.value),
+      setShopSort: (e) => this.setShopSort(e.target.value),
+      typeChips,
+      sweetnessChips,
+      shopFiltersActive,
+      resetShopFilters: this.resetShopFilters,
+      filtersVisible,
+      shopFiltersOpen,
+      toggleShopFiltersPanel: this.toggleShopFiltersPanel,
+      shopLayoutColumns: windowWide ? '240px minmax(0,1fr)' : 'minmax(0,1fr)',
+      shopEmpty: shopWines.length === 0,
+      wineDetailImgHeight: windowWide ? '100vh' : '46vh',
+      windowWide,
+      windowNarrow: !windowWide,
+      mobileNavOpen,
+      toggleMobileNav: this.toggleMobileNav,
+      closeMobileNav: this.closeMobileNav,
+      goHomeClick: this.goHomeClick,
+      goHotelClick: this.goHotelClick,
+      goVineryClick: this.goVineryClick,
+      hotelAriaCurrent: page === 'hotel' ? 'page' : undefined,
+      vineryAriaCurrent: page === 'vinery' ? 'page' : undefined,
+      rooms,
+      homeRooms,
+      timeline: this.timeline,
+      events: this.events,
+      roomFilter,
+      filterAllChecked: roomFilter === 'all',
+      filterStandardChecked: roomFilter === 'standard',
+      filterSuiteChecked: roomFilter === 'suite',
+      setFilterAll: () => this.setRoomFilter('all'),
+      setFilterStandard: () => this.setRoomFilter('standard'),
+      setFilterSuite: () => this.setRoomFilter('suite'),
+      activeRoom,
+      closeRoom: this.closeRoom,
+      stop: this.stop,
+      showBookingWidget: this.props.showBookingWidget !== false,
+      year: new Date().getFullYear(),
+    };
+  }
+}
+</script>
+</body>
+</html>
