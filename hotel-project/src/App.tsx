@@ -116,8 +116,14 @@ const App= observer(() => {
       const appCtx = useContext(Context);
       const user = appCtx ? appCtx.user : { isAuth: false } as any;
       const [loading, setLoading] = useState(true);
-      const [showModal, setShowModal] = useState(false);
-      const [showAgeGate, setShowAgeGate] = useState(false);
+      // Инициализируем эти флаги до первого рендера. Обновление состояния из
+      // useEffect могло совпасть с загрузкой lazy-чанка в production.
+      const [showModal, setShowModal] = useState(
+        () => localStorage.getItem("hasVisited") !== "true"
+      );
+      const [showAgeGate, setShowAgeGate] = useState(
+        () => localStorage.getItem('ageConfirmed') !== 'true'
+      );
 
       // Проверяем только сессию до первого рендера. Контент публичных страниц
       // загружается самими маршрутами: это не даёт медленному API скрывать сайт.
@@ -137,17 +143,6 @@ const App= observer(() => {
         void verifySession();
         return () => { canceled = true; };
       }, [appCtx]);
-
-      useEffect(() => {
-        const hasVisited = localStorage.getItem("hasVisited");
-        if (hasVisited !== "true") {
-          setShowModal(true);
-        }
-      }, []);
-
-      useEffect(() => {
-        setShowAgeGate(localStorage.getItem('ageConfirmed') !== 'true');
-      }, []);
 
       const confirmAge = () => {
         localStorage.setItem('ageConfirmed', 'true');
@@ -196,7 +191,11 @@ const App= observer(() => {
               </section>
               
               {/* Modal - показываем только для авторизованных */}
-              {user.isAuth && showModal && <ModalWindow onClose={handleCloseModal} />}
+              {user.isAuth && showModal && (
+                <Suspense fallback={null}>
+                  <ModalWindow onClose={handleCloseModal} />
+                </Suspense>
+              )}
               {showAgeGate && <AgeGate onConfirm={confirmAge} />}
             </div>
           </>
