@@ -210,6 +210,7 @@
    Меню переключается заранее, чтобы не возникало промежуточного «сбитого» состояния. */
 @media (max-width: 1500px) {
   .site-header {
+    backdrop-filter: none;
     height: 80px;
     padding: 0 clamp(20px, 4vw, 40px);
   }
@@ -227,21 +228,27 @@
   .site-nav__list {
     background: var(--site-ink);
     border-bottom: 1px solid rgba(245, 242, 234, 0.18);
+    bottom: 0;
     display: flex;
     flex-direction: column;
     gap: 0;
     left: 0;
+    margin: 0;
+    opacity: 0;
+    overflow-y: auto;
     padding: 24px clamp(20px, 8vw, 64px) 36px;
+    pointer-events: none;
     position: fixed;
     right: 0;
     top: 80px;
-    transform: translateY(-125%);
-    transition: transform 220ms ease;
+    transition: opacity 260ms ease, visibility 0s linear 260ms;
     visibility: hidden;
   }
 
   .site-nav.site-nav--open .site-nav__list {
-    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 0s;
     visibility: visible;
   }
 
