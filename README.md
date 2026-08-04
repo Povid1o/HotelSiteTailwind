@@ -1,311 +1,188 @@
-# HotelSite - Веб-приложение отеля с винодельней
+# HotelSite - Веб-приложение отеля с винодельней (V4 Redesign)
 
-Полнофункциональное веб-приложение для управления отелем с винодельней, включающее административную панель, систему бронирования, каталог вин и ресторанное меню.
+Полнофункциональное веб-приложение для управления отелем с винодельней, включающее современную публичную часть (V4 редизайн), административную панель управления динамическим контентом, систему онлайн-бронирования номеров TravelLine, винную галерею с фильтрацией и ресторанное меню.
+
+---
 
 ## 🏗️ Архитектура проекта
 
 ### Технологический стек
-- **Frontend**: React 18.3.1 + TypeScript + Tailwind CSS + MobX
-- **Backend**: Node.js + Express + Sequelize ORM
-- **База данных**: PostgreSQL
-- **Контейнеризация**: Docker + Docker Compose
-- **Reverse Proxy**: Nginx
-- **Аутентификация**: JWT токены
 
-### Структура проекта
+- **Frontend**: React 18.3.1 + TypeScript + Tailwind CSS + MobX (управление состоянием)
+- **Backend**: Node.js + Express + Sequelize ORM
+- **База данных**: PostgreSQL 16 Alpine (с поддержкой JSONB для гибкого контента страниц)
+- **Reverse Proxy / Edge Server**: Caddy 2 (с поддержкой HTTP/2, HTTP/3, Zstd/Gzip сжатия, проксирования API и автоматической прямой отдачи статических медиа-файлов через shared volume)
+- **Интеграция бронирования**: Модуль и виджет поиска **TravelLine** (`TravelLineScript`, `TravelLineSearchForm`, `travelLine.ts`)
+- **Контейнеризация**: Docker + Docker Compose
+- **Аутентификация**: JWT (JSON Web Tokens)
+- **SEO & Безопасность**: `SiteMeta` (динамические OpenGraph и мета-теги), `AgeGate` (подтверждение 18+ для алкогольной продукции)
+
+---
+
+### 📂 Структура проекта
+
 ```
 HotelSiteTailwind/
-├── hotel-project/           # Frontend (React приложение)
+├── Caddyfile                  # Конфигурация основного Caddy reverse-proxy
+├── Caddyfile.local            # Локальная конфигурация Caddy
+├── Caddyfile.server           # Серверная конфигурация Caddy (с автоматическим HTTPS)
+├── docker-compose.yml         # Оркестрация сервисов (db, backend, frontend, caddy)
+│
+├── docs/                      # Проектная документация и аудиты
+│   ├── agent-redesign-brief.md         # Бриф и ТЗ по V4 редизайну
+│   ├── backend-db-audit-2026-08-03.md  # Аудит структуры БД и моделей
+│   └── project-improvement-plan.md     # План оптимизации и развития
+│
+├── Example/                   # Дизайн-макеты и концепты (V4 Mockup)
+│
+├── hotel-project/             # Frontend (React + TypeScript + Tailwind + MobX)
 │   ├── src/
-│   │   ├── components/      # React компоненты
-│   │   ├── storage/         # MobX stores
-│   │   ├── components/http/ # API клиенты
-│   │   └── ...
-│   ├── public/             # Статические файлы
-│   ├── Dockerfile          # Frontend контейнер
-│   └── nginx.conf          # Nginx конфигурация
-├── HotelSiteBackend/        # Backend (Express API)
-│   ├── controllers/         # Контроллеры API
-│   ├── models/             # Sequelize модели
-│   ├── routes/             # API маршруты
-│   ├── middleware/         # Middleware (auth, validation)
-│   ├── static/             # Статические файлы (изображения, видео)
-│   └── Dockerfile          # Backend контейнер
-├── Docker-compose.yml      # Docker Compose конфигурация
-└── README.md              # Этот файл
+│   │   ├── components/
+│   │   │   ├── editable/           # Базовые визуальные редакторские компоненты
+│   │   │   ├── pages_editable/     # Постраничные редакторы V4 (HomeEdit, VineryEdit, etc.)
+│   │   │   ├── cards/              # Карточки вин, номеров и блюд
+│   │   │   ├── modals/             # Модальные окна (дегустации, предупреждения)
+│   │   │   ├── TravelLineSearchForm.tsx # Интерактивный форма поиска номеров TravelLine
+│   │   │   ├── TravelLineScript.tsx     # Загрузчик скрипта TravelLine
+│   │   │   ├── AgeGate.tsx         # Плашка подтверждения возраста 18+
+│   │   │   ├── SiteMeta.tsx        # Динамические мета-теги и SEO
+│   │   │   └── RouteDataLoader.tsx # Оптимизированная предзагрузка данных маршрутов
+│   │   ├── storage/                # MobX сторы (PageStore, WineStore, DishStore, etc.)
+│   │   ├── utils/                  # Утилиты (travelLine.ts, API хелперы)
+│   │   └── emergencyContent/       # Резервный статический контент при сбоях API
+│   ├── Dockerfile                  # Сборка фронтенда в Nginx контейнер
+│   └── nginx.conf                  # Внутренняя конфигурация Nginx для фронтенда
+│
+└── HotelSiteBackend/          # Backend (Node.js Express API)
+    ├── controllers/            # Контроллеры API (dishes, rooms, wines, pages, etc.)
+    ├── models/                 # Sequelize модели (PostgreSQL + JSONB таблицы)
+    ├── routes/                 # Маршруты REST API (/api/...)
+    ├── middleware/             # Прослойки (JWT auth, загрузка файлов, обработка ошибок)
+    ├── scripts/                # Скрипты инициализации (bootstrapDatabase.js)
+    ├── seed/                   # Начальные сиды данных
+    ├── static/                 # Загруженные медиафайлы (номера, вина, блюда, видео)
+    └── Dockerfile              # Dockerfile бэкенда
 ```
+
+---
 
 ## 🚀 Быстрый старт
 
 ### Предварительные требования
-- Docker и Docker Compose
-- Git
+- Docker и Docker Compose (v2+)
+- Node.js 18+ (для локальной разработки вне Docker)
 
-### Запуск проекта
+### 1. Запуск в Docker (Рекомендуемый способ)
 
-1. **Клонирование репозитория**
 ```bash
+# 1. Клонирование репозитория
 git clone <repository-url>
 cd HotelSiteTailwind
+
+# 2. Настройка переменных окружения
+cp .env.example .env
+
+# 3. Запуск всех сервисов (db, backend, frontend, caddy)
+docker compose up -d --build
 ```
 
-2. **Запуск всех сервисов**
-```bash
-docker compose up -d
-```
+### Доступ к сервисам
 
-3. **Проверка статуса**
-```bash
-docker compose ps
-```
+| Сервис | URL | Описание |
+| :--- | :--- | :--- |
+| **Приложение (Caddy Proxy)** | `http://localhost:8081` | Основной вход (Frontend + API прокси) |
+| **Backend API (Прямой)** | `http://localhost:8000/api` | REST API сервис (Node.js) |
+| **Swagger API Docs** | `http://localhost:8000/api-docs` | Документация REST API |
+| **Adminer (База данных)** | `http://localhost:8080` | СУБД Web-интерфейс (запускается по требованию) |
 
-### Доступ к приложению
-
-|       Сервис     |               URL              |        Описание         |
-|------------------|--------------------------------|-------------------------|
-|    **Frontend**  |      http://localhost:3000     |   Основное приложение   |
-|  **Backend API** |    http://localhost:5001/api   |        REST API         |
-| **Adminer (БД)** |      http://localhost:8080     | Управление базой данных |
-|    **Swagger**   | http://localhost:5001/api-docs |     API документация    |
-
-### Данные для входа в Adminer
+### Данные для входа в Adminer:
+- **Система**: PostgreSQL
 - **Сервер**: `db`
 - **Пользователь**: `postgres`
-- **Пароль**: `2005vino2024`
 - **База данных**: `HotelSite`
+
+---
 
 ## 📱 Функциональность
 
-### Публичная часть
-- **Главная страница**: Информация об отеле и услугах
-- **Винодельня**: Процесс производства вина, галерея
-- **Ресторан**: Меню блюд с фотографиями и описаниями
-- **Магазин**: Каталог вин с фильтрацией и поиском
-- **Номера**: Информация о номерах отеля
-- **Мероприятия**: Календарь событий и мероприятий
-- **Центр производства локальных продуктов**: Каталог локальных продуктов
+### Публичная часть (V4 Redesign)
+- **Главная (`/`)**: Визитка отеля с V4-дизайном, интерактивными блоками и модулем быстрого поиска TravelLine.
+- **Отель (`/Hotel`)**: Номера отеля с динамическим списком удобств, характеристик, цен и интеграцией прямых ссылок в модуль бронирования.
+- **Винодельня (`/Vinery`)**: История винодельни, философия производства, сорта винограда и модальное окно записи на дегустации.
+- **Ресторан (`/Restaurant`)**: Меню блюд по категориям (закуски, горячее, десерты) с подробными карточками, КБЖУ и фото.
+- **Винный магазин (`/Shop` & `/Shop/:productId`)**: Каталог вин собственного производства с фильтрацией по видам (красное, белое, розовое) и сладости, а также детальной карточкой каждого винного сорта.
+- **Мероприятия (`/Events`)**: Афиша предстоящих событий и тематических вечеров.
+- **Возрастная проверка (`AgeGate`)**: Защитная плашка 18+ при доступе к разделам с информацией об алкогольной продукции.
 
-### Административная панель
-- **Аутентификация**: JWT-based авторизация
-- **Управление контентом**: Редактирование всех страниц сайта
-- **Медиа-менеджер**: Загрузка и управление изображениями/видео
-- **CRUD операции**: Создание, редактирование, удаление всех сущностей
-- **Реальное время**: Мгновенное обновление контента на всех устройствах
+### Административная панель (`/admin`)
+- **JWT Авторизация (`/login`)**: Безопасный доступ для администраторов.
+- **Постраничный V4-редактор**: Визуальное редактирование заголовков, текстов, плашек и медиа-контента страниц (`V4HeroEdit`, `V4InfoPageEdit`, `HomeEdit`, `VineryEdit` и др.) с сохранением в `content_json` (PostgreSQL JSONB).
+- **Управление каталогами**: CRUD-операции для вин, блюд ресторана, номеров отеля и мероприятий.
+- **Медиа-менеджер**: Прямая загрузка изображений и видео с автоматическим кэшированием через Caddy.
 
-## 🔧 Разработка
+---
 
-### Локальная разработка
+## 🔧 Локальная разработка (без Docker)
 
-1. **Запуск только базы данных**
+### 1. Запуск СУБД в Docker
+
 ```bash
-docker compose up -d db adminer
+docker compose up -d db
 ```
 
-2. **Запуск frontend в dev режиме**
-```bash
-cd hotel-project
-npm install
-npm start
-```
+### 2. Запуск Backend API
 
-3. **Запуск backend в dev режиме**
 ```bash
 cd HotelSiteBackend
 npm install
 npm run dev
 ```
+Backend запустится на `http://localhost:8000`. При первом старте скрипт `scripts/bootstrapDatabase.js` автоматически создаст необходимую структуру таблиц и админ-аккаунт.
 
-### Структура API
-
-#### Основные эндпоинты
-- `GET /api/rooms` - Список номеров
-- `GET /api/wines` - Каталог вин
-- `GET /api/dishes` - Меню ресторана
-- `GET /api/events` - Мероприятия
-- `GET /api/pages` - Контент страниц
-
-#### Административные эндпоинты (требуют авторизации)
-- `POST /api/user/login` - Авторизация
-- `POST /api/rooms` - Создание номера
-- `PUT /api/rooms/:id` - Обновление номера
-- `DELETE /api/rooms/:id` - Удаление номера
-
-### База данных
-
-#### Основные таблицы
-- `rooms` - Номера отеля
-- `wines` - Каталог вин
-- `dishes` - Блюда ресторана
-- `events` - Мероприятия
-- `pages` - Контент страниц
-- `users` - Пользователи системы
-
-#### Связанные таблицы
-- `room_images`, `wine_images`, `dish_images` - Изображения
-- `room_properties`, `room_conveniences` - Свойства номеров
-- `wine_types`, `wine_sweetness` - Классификация вин
-
-## 🐛 Отладка и диагностика
-
-### Просмотр логов
+### 3. Запуск Frontend
 
 ```bash
-# Все сервисы
-docker compose logs -f
-
-# Конкретный сервис
-docker compose logs -f frontend
-docker compose logs -f backend
-docker compose logs -f db
+cd hotel-project
+npm install
+npm start
 ```
-
-### Проверка состояния контейнеров
-
-```bash
-# Статус контейнеров
-docker compose ps
-
-# Использование ресурсов
-docker stats
-
-# Проверка портов
-netstat -tulpn | grep :3000
-netstat -tulpn | grep :5001
-```
-
-### Частые проблемы и решения
-
-#### 1. Белый экран приложения
-**Причина**: Проблемы с nginx конфигурацией или сборкой frontend
-**Решение**:
-```bash
-docker compose down
-docker rmi kireyd/frontend:latest
-docker compose build --no-cache frontend
-docker compose up -d
-```
-
-#### 2. Ошибка "Cannot connect to backend"
-**Причина**: Backend не может подключиться к базе данных
-**Решение**:
-```bash
-# Проверить логи backend
-docker compose logs backend
-
-# Перезапустить backend
-docker compose restart backend
-```
-
-#### 3. Изображения не загружаются
-**Причина**: Проблемы с проксированием статических файлов
-**Решение**:
-```bash
-# Проверить nginx конфигурацию
-docker compose exec frontend cat /etc/nginx/conf.d/default.conf
-
-# Проверить доступность статики
-curl http://localhost:3000/static/rooms/test.jpg
-```
-
-#### 4. Ошибки авторизации (401 Unauthorized)
-**Причина**: Проблемы с JWT токенами
-**Решение**:
-```bash
-# Проверить переменные окружения backend
-docker compose exec backend env | grep JWT
-
-# Очистить localStorage в браузере
-# Открыть DevTools → Application → Local Storage → Clear All
-```
-
-### Мониторинг производительности
-
-```bash
-# Использование памяти и CPU
-docker stats
-
-# Проверка дискового пространства
-docker system df
-
-# Очистка неиспользуемых ресурсов
-docker system prune -a
-```
-
-## 🔒 Безопасность
-
-### JWT Аутентификация
-- Токены действительны 24 часа
-- Автоматическое обновление при активности
-- Защищенные маршруты требуют валидный токен
-
-### Переменные окружения
-```bash
-# Backend
-JWT_SECRET=your-super-secret-jwt-key-here-2024
-DB_HOST=db
-DB_PORT=5432
-DB_NAME=HotelSite
-DB_USER=postgres
-DB_PASSWORD=2005vino2024
-
-# Frontend
-REACT_APP_API_URL=""  # Пустая строка для относительных путей
-```
-
-## 📦 Деплой
-
-### Подготовка к продакшену
-
-1. **Обновить переменные окружения**
-```yaml
-# В Docker-compose.yml
-environment:
-  - JWT_SECRET=production-secret-key
-  - DB_PASSWORD=secure-production-password
-```
-
-2. **Собрать образы**
-```bash
-docker compose build --no-cache
-```
-
-3. **Загрузить на Docker Hub**
-```bash
-docker push kireyd/frontend:latest
-docker push kireyd/backend:latest
-```
-
-### Деплой на сервер
-
-```bash
-# На сервере
-git clone <repository-url>
-cd HotelSiteTailwind
-docker compose pull
-docker compose up -d
-```
-
-## 📚 Дополнительная документация
-
-- [README_FIXES.md](./README_FIXES.md) - Подробный анализ всех исправленных ошибок
-- [TECHNICAL_REQUIREMENTS.md](./TECHNICAL_REQUIREMENTS.md) - Техническое задание
-- [DOCKER_FIX_INSTRUCTIONS.md](./DOCKER_FIX_INSTRUCTIONS.md) - Инструкции по Docker
-
-## 🤝 Поддержка
-
-При возникновении проблем:
-
-1. Проверьте логи: `docker compose logs -f`
-2. Убедитесь, что все контейнеры запущены: `docker compose ps`
-3. Проверьте доступность портов: `netstat -tulpn | grep :3000`
-4. Очистите кеш браузера: `Ctrl+Shift+R` (Windows) или `Cmd+Shift+R` (Mac)
-
-## 📄 Лицензия
-
-Проект разработан для внутреннего использования отеля.
+Frontend запустится на `http://localhost:3000`.
 
 ---
 
-**Последнее обновление**: 20 октября 2025  
-**Версия**: 1.0.0  
-**Статус**: ✅ Полностью функциональный
+## ⚡ Особенности Caddy Reverse Proxy
+
+В проекте используется **Caddy 2** в качестве единой точки входа:
+1. **Эффективное обслуживание медиа-файлов**: Запросы к `/static/*` обрабатываются Caddy напрямую из общего Docker volume в обход Node.js / Express, что существенно снижает нагрузку на CPU и память.
+2. **Автоматическое сжатие**: Включены алгоритмы `zstd` и `gzip`.
+3. **SPA Роутинг**: Автоматический фоллбек для ненайденных путей на `index.html` для корректной работы React Router.
+
+---
+
+## 📚 Проектная документация
+
+- [docs/agent-redesign-brief.md](./docs/agent-redesign-brief.md) — Подробное техническое задание на V4 редизайн
+- [docs/backend-db-audit-2026-08-03.md](./docs/backend-db-audit-2026-08-03.md) — Результаты аудита бэкенда и базы данных
+- [docs/project-improvement-plan.md](./docs/project-improvement-plan.md) — План пошаговых улучшений и рефакторинга
+- [HotelSiteBackend/MEDIA_GUIDE.md](./HotelSiteBackend/MEDIA_GUIDE.md) — Руководство по загрузке и работе со статическими медиафайлами
+
+---
+
+## 🤝 Поддержка и диагностика
+
+### Просмотр логов контейнеров
+```bash
+# Логи всех сервисов
+docker compose logs -f
+
+# Логи конкретного сервиса
+docker compose logs -f caddy
+docker compose logs -f backend
+docker compose logs -f frontend
+```
+
+---
+
+**Версия**: 4.0.0 (V4 Redesign)  
+**Статус**: ✅ Активный проект
+
