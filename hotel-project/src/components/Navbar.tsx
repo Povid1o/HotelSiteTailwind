@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { Link, NavLink } from 'react-router-dom';
 import { Context } from '../index';
@@ -19,11 +19,17 @@ interface AppContext {
 const Navbar = observer(({ nav = false, setNav }: NavbarProps) => {
   const context = useContext(Context) as AppContext | null;
   const user = context?.user;
+  const [internalNav, setInternalNav] = useState(false);
+  const isMenuOpen = setNav ? nav : internalNav;
 
-  // В админке шапка используется без мобильного меню. Не допускаем падения
-  // компонента, если управляющие props намеренно не переданы.
-  const handleClick = () => setNav?.(!nav);
-  const closeMenu = () => setNav?.(false);
+  // Некоторые старые страницы используют Navbar без управляющих props.
+  // В этом случае меню остаётся полностью рабочим за счёт локального состояния.
+  const setMenuOpen = (next: boolean) => {
+    setInternalNav(next);
+    setNav?.(next);
+  };
+  const handleClick = () => setMenuOpen(!isMenuOpen);
+  const closeMenu = () => setMenuOpen(false);
   const handleLogout = () => {
     user?.logout();
     closeMenu();
@@ -48,12 +54,14 @@ const Navbar = observer(({ nav = false, setNav }: NavbarProps) => {
         type='button'
         className='site-nav__toggle'
         onClick={handleClick}
-        aria-label={nav ? 'Закрыть меню' : 'Открыть меню'}
+        aria-expanded={isMenuOpen}
+        aria-controls='site-navigation'
+        aria-label={isMenuOpen ? 'Закрыть меню' : 'Открыть меню'}
       >
-        {nav ? <FaTimes size={20} /> : <FaBars size={20} />}
+        {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
       </button>
 
-      <nav className={`site-nav${nav ? ' site-nav--open' : ''}`}>
+      <nav id='site-navigation' className={`site-nav${isMenuOpen ? ' site-nav--open' : ''}`}>
         <ul className='site-nav__list'>
           {navLinks.map(({ to, label }) => (
             <li key={to}>

@@ -206,9 +206,22 @@
   justify-content: space-between;
 }
 
-@media (max-width: 1023px) {
+/* На планшетах все пункты уже не помещаются рядом с логотипом и CTA.
+   Меню переключается заранее, чтобы не возникало промежуточного «сбитого» состояния. */
+@media (max-width: 1500px) {
+  .site-header {
+    height: 80px;
+    padding: 0 clamp(20px, 4vw, 40px);
+  }
+
+  .site-header__brand {
+    font-size: clamp(24px, 3.8vw, 32px);
+  }
+
   .site-nav__toggle {
     display: inline-flex;
+    flex: 0 0 44px;
+    margin-left: auto;
   }
 
   .site-nav__list {
@@ -221,13 +234,13 @@
     padding: 24px clamp(20px, 8vw, 64px) 36px;
     position: fixed;
     right: 0;
-    top: 92px;
+    top: 80px;
     transform: translateY(-125%);
     transition: transform 220ms ease;
     visibility: hidden;
   }
 
-  .site-nav__list--open {
+  .site-nav.site-nav--open .site-nav__list {
     transform: translateY(0);
     visibility: visible;
   }
@@ -256,6 +269,16 @@
     justify-content: flex-start;
   }
   .site-header__booking { display: none; }
+}
+
+@media (max-width: 440px) {
+  .site-header {
+    padding: 0 20px;
+  }
+
+  .site-header__brand {
+    font-size: 25px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

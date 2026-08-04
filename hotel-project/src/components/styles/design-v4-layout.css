@@ -16,4 +16,4 @@
 .v4-events .v4-event-chips button svg{color:#C7774D}
 .v4-events .v4-event-chips button.is-active,.v4-shop__filters button.is-active{background:#C7774D!important;border-color:#C7774D!important;color:#F5F2EA!important}
 .v4-events .v4-event-chips button.is-active svg{color:#F5F2EA!important}
-@media(max-width:1023px){.v4-page{padding-top:92px}}
+@media(max-width:1500px){.v4-page{padding-top:80px!important}}
