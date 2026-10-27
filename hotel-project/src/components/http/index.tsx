@@ -29,10 +29,41 @@ const authInterceptor = (config: any) => {
   return config
 }
 
+// An expired session inside the admin panel must not navigate away: that would
+// discard whatever is open in an editor.  Failed requests wait here until the
+// administrator signs in again in place, and are then sent once more.
+let reloginPromise: Promise<void> | null = null
+let resolveRelogin: (() => void) | null = null
+
+export const ADMIN_SESSION_EXPIRED_EVENT = 'admin-session-expired'
+
+export const waitForRelogin = () => {
+  if (!reloginPromise) {
+    reloginPromise = new Promise((resolve) => { resolveRelogin = resolve })
+    window.dispatchEvent(new Event(ADMIN_SESSION_EXPIRED_EVENT))
+  }
+  return reloginPromise
+}
+
+export const completeRelogin = () => {
+  resolveRelogin?.()
+  reloginPromise = null
+  resolveRelogin = null
+}
+
 $authHost.interceptors.request.use(authInterceptor)
 $authHost.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    const config = error?.config
+    if (
+      error?.response?.status === 401 &&
+      config && !config.skipAuthRedirect && !config._afterRelogin &&
+      window.location.pathname.startsWith('/admin')
+    ) {
+      await waitForRelogin()
+      return $authHost({ ...config, _afterRelogin: true })
+    }
     if (error?.response?.status === 401) {
       localStorage.removeItem('isAuth')
       localStorage.removeItem('user')

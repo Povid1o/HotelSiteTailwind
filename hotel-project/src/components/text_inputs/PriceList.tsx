@@ -4,6 +4,8 @@ import { IoIosClose } from "react-icons/io";
 const Button = ({ icon, text, func }) => {
   return (
     <button
+      type="button"
+      aria-label={text}
       className={`flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-5 ${
         icon ? 'bg-[#FAC638] text-[#AB2217]' : 'bg-[#F5EFDB] text-[#201A09]'
       } text-base font-bold leading-normal tracking-[0.015em]`}
@@ -63,6 +65,14 @@ function PriceList({ globalPrices, onSave = () => {} }) {
     }
   };
 
+  // Same autosave-on-blur behaviour as the other fields of the room editor:
+  // without it a price typed on a phone was lost when the editor was closed.
+  const handleBlur = () => {
+    setTimeout(() => {
+      if (isDirty) handleResetDirty();
+    }, 100);
+  };
+
   return (
     <div className="w-full max-w-lg">
       {prices.map((price, index) => (
@@ -73,6 +83,7 @@ function PriceList({ globalPrices, onSave = () => {} }) {
               className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#201A09] focus:outline-0 focus:ring-0 border border-[#EFE3C3] bg-[#FBF8EF] focus:border-[#EFE3C3] h-14 placeholder:text-[#A07D1C] p-[15px] text-base font-normal leading-normal"
               value={price.title}
               onChange={(e) => handleTitleChange(index, e.target.value)}
+              onBlur={handleBlur}
             />
           </label>
           <label className="flex flex-col min-w-40 flex-1">
@@ -81,6 +92,7 @@ function PriceList({ globalPrices, onSave = () => {} }) {
               className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#201A09] focus:outline-0 focus:ring-0 border border-[#EFE3C3] bg-[#FBF8EF] focus:border-[#EFE3C3] h-14 placeholder:text-[#A07D1C] p-[15px] text-base font-normal leading-normal"
               value={price.price}
               onChange={(e) => handlePriceChange(index, e.target.value)}
+              onBlur={handleBlur}
             />
           </label>
           <label>

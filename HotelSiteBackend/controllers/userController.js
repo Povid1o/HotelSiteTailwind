@@ -4,13 +4,18 @@ const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
 const {User, Basket} = require('../models/models')
 
+// Sliding session: every /api/user/auth check issues a fresh token, so an
+// administrator who opens the panel at least once a week stays signed in on
+// each of their devices.
+const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
 const generateJwt = (id, email, role) => {
   const secretKey = process.env.JWT_SECRET;
   
   return jwt.sign(
         {id, email, role},
         secretKey,
-        {expiresIn: '24h'}
+        {expiresIn: SESSION_TTL_MS / 1000}
     )
 }
 
@@ -18,7 +23,7 @@ const sessionCookieOptions = (req) => ({
     sameSite: 'lax',
     secure: Boolean(req.secure),
     path: '/api',
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: SESSION_TTL_MS
 });
 
 // The browser must be able to read only this anti-CSRF value from every
@@ -29,7 +34,7 @@ const csrfCookieOptions = (req) => ({
     sameSite: 'lax',
     secure: Boolean(req.secure),
     path: '/',
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: SESSION_TTL_MS
 });
 
 const setCsrfCookie = (req, res) => {
@@ -89,7 +94,7 @@ class UserController {
         // coexist, different browser ordering rules can make the server see
         // the legacy value while the UI reads the new one.
         res.clearCookie('csrf_token', { ...sessionCookieOptions(req), maxAge: 0 });
-        setCsrfCookie(req, res)
+        setSessionCookies(req, res, generateJwt(req.user.id, req.user.email, req.user.role))
         return res.json({id: req.user.id, email: req.user.email, role: req.user.role})
     }
 

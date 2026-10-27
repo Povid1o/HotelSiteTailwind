@@ -51,12 +51,12 @@ const V4HeroEdit: React.FC<V4HeroEditProps> = ({ pageTitle, content, onSave, sec
     <div><h2 className='font-display text-4xl text-ink'>{pageTitle}</h2><p className='mt-2 text-sm text-gray-600'>Редактируется только header: фотография, заголовок и краткая подпись. Карточки ниже управляются в соответствующих разделах админки.</p></div>
     <section className='overflow-hidden rounded-lg border border-[#19312f]/15 bg-[#f5f2ea]'>
       <div className='v4-page !pt-0'><div className='v4-page__hero !h-[280px] !min-h-0'>
-        <EditableImageSlot value={draft.image} onChange={value => change('image', value)} label={imageLabel} alt={draft.title} className='absolute inset-0 !min-h-0 !rounded-none !border-0' />
+        <EditableImageSlot value={draft.image} onChange={value => change('image', value)} label={imageLabel} alt={draft.title} className='!absolute inset-0 !h-full !min-h-0 !rounded-none !border-0' />
         <div className='absolute inset-0 bg-gradient-to-b from-[#19312f]/10 to-[#19312f]/60' />
         <div className='bottom-0 box-border w-full px-6 pb-7 text-[#f5f2ea] absolute'><h1 className='!text-4xl'>{draft.title || pageTitle}</h1><p className='mt-2 max-w-xl text-sm text-[#f5f2ea]/85'>{draft.description || 'Добавьте краткое описание страницы.'}</p></div>
       </div></div>
     </section>
-    <div className='grid gap-4 md:grid-cols-2'><label className='block text-sm font-semibold text-gray-700'>Заголовок<input className='mt-1 block w-full rounded border-gray-300' value={draft.title} onChange={changeText('title')} /></label><label className='block text-sm font-semibold text-gray-700'>Подзаголовок<textarea className='mt-1 block w-full rounded border-gray-300' rows={3} value={draft.description} onChange={changeText('description')} /></label></div>
+    <div className='grid gap-4 md:grid-cols-2'><label className='block text-sm font-semibold text-gray-700'>Заголовок<input className='mt-1 block w-full rounded border border-gray-300 px-3 py-2' value={draft.title} onChange={changeText('title')} /></label><label className='block text-sm font-semibold text-gray-700'>Подзаголовок<textarea className='mt-1 block w-full rounded border border-gray-300 px-3 py-2' rows={3} value={draft.description} onChange={changeText('description')} /></label></div>
     <div className='flex justify-end'><button type='button' disabled={!dirty} onClick={() => void save()} className='rounded bg-main_theme px-4 py-2 font-bold text-white disabled:cursor-not-allowed disabled:opacity-50'>Сохранить header</button></div>
   </div>;
 };

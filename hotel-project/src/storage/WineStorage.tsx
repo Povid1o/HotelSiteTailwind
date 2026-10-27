@@ -123,6 +123,8 @@ export default class WineStorage {
             wine.id = response.id;
           }
           this._pendingCreates.delete(tempId);
+          // updateWineLocal awaits this promise to learn the real id.
+          return response.id;
           }).catch((error: any) => {
           if (error?.response?.status === 413) {
             console.error('❌ File too large! Max size: 100MB');
@@ -151,14 +153,18 @@ export default class WineStorage {
         if (wine) {
           assortmentItem.wines.splice(wineIndex, 1);
           
-          // Если это временный ID (отрицательный), не вызываем API
+          // Вино ещё создаётся на сервере: удаляем его, как только станет известен id
           if (wineId < 0) {
-            return; // Просто удаляем локально
+            const pendingCreate = this._pendingCreates.get(wineId);
+            this._pendingCreates.delete(wineId);
+            pendingCreate?.then((realId) => deleteWine(realId)).catch(() => undefined);
+            return;
           }
           
           // Для реальных ID вызываем API удаления
           deleteWine(wineId).catch(error => {
             console.error('Error deleting wine:', error);
+            alert(error?.response?.data?.message || 'Не удалось удалить вино. Попробуйте ещё раз.');
             assortmentItem.wines.splice(wineIndex, 0, wine);
           });
         }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Button = ({ icon, text, func, customBackground = '', disabled = false }) => {
+const Button = ({ icon, text = '', func, customBackground = '', disabled = false, label = '' }) => {
     const getBackgroundColor = () => {
         if (customBackground) {
             return customBackground;
@@ -13,12 +13,13 @@ const Button = ({ icon, text, func, customBackground = '', disabled = false }) =
         className={`flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-5 ${getBackgroundColor()} ${
           icon ? 'text-[#AB2217]' : 'text-[#201A09]'
         } text-base font-bold leading-normal tracking-[0.015em] disabled:opacity-50 disabled:cursor-not-allowed`}
+        type="button"
         onClick={func}
         disabled={disabled}
-        
+        aria-label={label || text || undefined}
       >
         {icon ? (
-          <div className="text-[#201A09]" data-icon={icon} data-size="20px" data-weight="regular">
+          <div className="text-[#201A09]" aria-hidden="true">
             <div width="20px" height="20px">
               {icon}
             </div>

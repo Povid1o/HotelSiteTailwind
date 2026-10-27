@@ -13,3 +13,110 @@
 .tabsContainer > Tabs button{
     color: #80143c;
 }
+
+/* The floating TravelLine booking button belongs to the public site and would
+   cover editor controls. */
+body.admin-mode .x-tl-booking-widget-container {
+    display: none !important;
+}
+
+@media (max-width: 767px) {
+    /* One scrollable row of tabs instead of a stack that fills the screen. */
+    .tabsContainer [role="tablist"] {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .tabsContainer [role="tablist"]::-webkit-scrollbar {
+        display: none;
+    }
+
+    .tabsContainer [role="tab"] {
+        flex-shrink: 0;
+        white-space: nowrap;
+        min-height: 48px;
+    }
+
+    /* iOS Safari zooms into any field with text smaller than 16px. */
+    .admin-root input,
+    .admin-root textarea,
+    .admin-root select {
+        font-size: 16px;
+    }
+
+    /* Tables become a list of cards: one card per row, the column name shown
+       next to the value through data-label. */
+    .admin-table {
+        overflow-x: visible;
+    }
+
+    .admin-table table,
+    .admin-table tbody,
+    .admin-table tr,
+    .admin-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .admin-table thead {
+        display: none;
+    }
+
+    .admin-table tbody {
+        border: 0;
+    }
+
+    .admin-table tr {
+        margin-bottom: 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background: #fff;
+        padding: 10px 14px;
+    }
+
+    .admin-table tr.admin-group-row {
+        border: 0;
+        background: transparent;
+        padding: 8px 0 0;
+        margin-bottom: 4px;
+    }
+
+    .admin-table td {
+        padding: 4px 0;
+        white-space: normal;
+        background: transparent;
+    }
+
+    .admin-table td.admin-cell-title {
+        font-size: 16px;
+    }
+
+    .admin-table td[data-label] {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .admin-table td[data-label]::before {
+        content: attr(data-label);
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    .admin-table td.admin-cell-actions {
+        margin-top: 4px;
+        border-top: 1px solid #f3f4f6;
+        padding-top: 6px;
+    }
+
+    .admin-table td.admin-cell-actions > div {
+        margin-left: -12px;
+    }
+
+    /* Finger-sized controls inside editors. */
+    .admin-root [role="dialog"] button {
+        min-height: 44px;
+    }
+}

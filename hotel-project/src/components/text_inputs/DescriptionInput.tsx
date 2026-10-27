@@ -86,7 +86,7 @@ const DescriptionInput: React.FC<DescriptionInputProps> = ({
   return (
     <>
       {horizontal ? (
-        <div className="flex flex-row">
+        <div className="flex flex-row flex-wrap">
           <div className="flex max-w-screen-lg flex-wrap items-end gap-4 px-4 py-3">
             {renderInputField()}
           </div>

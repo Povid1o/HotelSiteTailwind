@@ -45,7 +45,8 @@
 #block-search .tl-label,
 #block-search .tl-field-label,
 #block-search .tl-caption,
-[class*="tl-"] .tl-label {
+[class^="tl-"] .tl-label,
+[class*=" tl-"] .tl-label {
   color: #1F4D4A !important;
   font-family: 'Manrope', sans-serif !important;
   font-size: 12px !important;
@@ -55,7 +56,10 @@
   margin-bottom: 4px !important;
 }
 
-/* Inputs, Selects, Values */
+/* Inputs, Selects, Values.
+   Match only real TravelLine classes ("tl-…" as a whole class). A bare
+   [class*="tl-"] also caught Tailwind classes such as rounded-tl-lg and
+   restyled every input inside the admin tables. */
 #block-search input,
 #block-search select,
 #block-search .tl-input,
@@ -63,8 +67,10 @@
 #block-search .tl-control,
 #block-search .tl-field-value,
 #block-search .tl-value,
-[class*="tl-"] input,
-[class*="tl-"] select {
+[class^="tl-"] input,
+[class*=" tl-"] input,
+[class^="tl-"] select,
+[class*=" tl-"] select {
   background-color: #FFFFFF !important;
   border: 1px solid rgba(25, 49, 47, 0.20) !important;
   border-radius: 8px !important;
@@ -82,8 +88,10 @@
 #block-search select:focus,
 #block-search input:active,
 #block-search select:active,
-[class*="tl-"] input:focus,
-[class*="tl-"] select:focus {
+[class^="tl-"] input:focus,
+[class*=" tl-"] input:focus,
+[class^="tl-"] select:focus,
+[class*=" tl-"] select:focus {
   border-color: #C7774D !important;
   box-shadow: 0 0 0 3px rgba(199, 119, 77, 0.18) !important;
 }
@@ -94,8 +102,10 @@
 #block-search .tl-btn,
 #block-search .tl-submit-btn,
 #block-search .tl-search-btn,
-[class*="tl-"] .tl-submit,
-[class*="tl-"] button[type="submit"] {
+[class^="tl-"] .tl-submit,
+[class*=" tl-"] .tl-submit,
+[class^="tl-"] button[type="submit"],
+[class*=" tl-"] button[type="submit"] {
   background-color: #C7774D !important;
   border: 1px solid #C7774D !important;
   border-radius: 8px !important;
@@ -115,7 +125,8 @@
 #block-search [type=submit]:hover,
 #block-search .tl-btn:hover,
 #block-search .tl-submit-btn:hover,
-[class*="tl-"] button[type="submit"]:hover {
+[class^="tl-"] button[type="submit"]:hover,
+[class*=" tl-"] button[type="submit"]:hover {
   background-color: #b2643c !important;
   border-color: #b2643c !important;
   color: #FFFFFF !important;
@@ -124,7 +135,8 @@
 
 #block-search button:active,
 #block-search [type=submit]:active,
-[class*="tl-"] button[type="submit"]:active {
+[class^="tl-"] button[type="submit"]:active,
+[class*=" tl-"] button[type="submit"]:active {
   background-color: #9e5531 !important;
   transform: translateY(1px) !important;
 }
@@ -132,7 +144,8 @@
 /* Icons */
 #block-search svg,
 #block-search i,
-[class*="tl-"] svg {
+[class^="tl-"] svg,
+[class*=" tl-"] svg {
   color: #1F4D4A !important;
   fill: #1F4D4A !important;
 }
@@ -155,7 +168,8 @@
 .tl-datepicker .tl-cell-selected,
 .tl-datepicker .tl-day-selected,
 .tl-calendar .tl-cell-active,
-[class*="tl-"] .tl-selected {
+[class^="tl-"] .tl-selected,
+[class*=" tl-"] .tl-selected {
   background-color: #C7774D !important;
   color: #FFFFFF !important;
   border-radius: 6px !important;

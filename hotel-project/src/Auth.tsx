@@ -20,8 +20,6 @@ const Auth = () => {
       }
       user.setUser(data);
       user.setIsAuth(true);
-      // ✅ Перенаправляем на админку после успешного логина
-      console.log('✅ Auth: Login successful, navigating to /admin');
       navigate('/admin');
     } catch (error) {
       setError(error.response?.data?.message || error.message || 'Не удалось выполнить вход');
@@ -98,6 +96,13 @@ if (!user.isAuth) {
             <h2 className="text-center font-semibold text-3xl lg:text-4xl text-gray-800">
               Вы вошли!
             </h2>
+            <button
+              type="button"
+              onClick={() => navigate('/admin')}
+              className="w-full min-h-[48px] mt-6 bg-gray-800 rounded-sm font-medium text-white uppercase hover:bg-gray-700"
+            >
+              Открыть панель управления
+            </button>
 
           </div>
         </div>

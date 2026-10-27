@@ -8,7 +8,6 @@ import V4InfoPageEdit from './components/pages_editable/V4InfoPageEdit';
 import V4HeroEdit from './components/pages_editable/V4HeroEdit';
 import PagePreviewCard from './components/pages_editable/PagePreviewCard';
 import { EditableImageValue } from './components/editable/EditableImageSlot';
-import Card from './components/cards/Card';
 
 import ModalsCard from './components/modals/ModalsCard'
 
@@ -25,7 +24,7 @@ import PhotoSelector from './components/text_inputs/PhotoSelector';
 import { Tabs } from "flowbite-react";
 import { Table } from "flowbite-react";
 import "./AdminPage.css";
-import AdminStatusBadge from './components/AdminStatusBadge';
+import SessionExpiredModal from './components/SessionExpiredModal';
 // Нужно
 // (можно будет удалить, когда вставим бэк)
 import Bottle from './components/assets/wine-bottle.png';
@@ -98,19 +97,17 @@ const initialImages = [
 
 
 
-const AddCategory = ({onClick, disabled = false}) => {
-  return (
-    <Card>
-      <button 
-        className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48 disabled:opacity-50 disabled:cursor-not-allowed" 
-        onClick={onClick}
-        disabled={disabled}
-      >
-        Добавить Категорию
-      </button>
-    </Card>
-  );
-};
+// On phones the tables are restyled as cards (see AdminPage.css), so actions
+// get a finger-sized hit area there and stay compact text links on desktop.
+const actionButton = "inline-flex min-h-[44px] items-center rounded-lg px-3 font-medium text-main_theme hover:underline md:min-h-0 md:px-0";
+const dangerButton = "inline-flex min-h-[44px] items-center rounded-lg px-3 font-medium text-red-700 hover:underline md:min-h-0 md:px-0";
+const toolbarButton = "inline-flex min-h-[44px] items-center gap-2 rounded-lg bg-main_theme px-4 py-2 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50";
+
+const EditButton = () => <button type="button" className={actionButton}>Править</button>;
+
+const confirmDelete = (what: string) => window.confirm(`Удалить ${what}? Это действие нельзя отменить.`);
+// Titles sometimes already carry their own quotes («Вечер джаза»).
+const quoted = (title: string) => /^[«"]/.test(title.trim()) ? title.trim() : `«${title.trim()}»`;
 
 const AdminPage = observer(() =>  {
   const context = useContext(Context);
@@ -145,6 +142,12 @@ const AdminPage = observer(() =>  {
     }
   }, []); // Пустой массив зависимостей - загружаем только при монтировании
 
+  // Hides public-site overlays (the TravelLine booking button) while editing.
+  useEffect(() => {
+    document.body.classList.add('admin-mode');
+    return () => document.body.classList.remove('admin-mode');
+  }, []);
+
   // НАЧАЛО ФУНКЦИЙ ДЛЯ ПРОДУКТОВ
 
   // Состояние для отслеживания режима редактирования категорий
@@ -169,6 +172,8 @@ const AdminPage = observer(() =>  {
 
   // Вместо deleteCategory используйте:
   const deleteCategory = (categoryName: string) => {
+    const count = dish.dishes.find((item) => item.category === categoryName)?.products.length || 0;
+    if (!confirmDelete(`категорию ${quoted(categoryName)}${count ? ` вместе с блюдами (${count})` : ''}`)) return;
     dish.deleteCategoryLocal(categoryName);
   };
 
@@ -185,7 +190,8 @@ const AdminPage = observer(() =>  {
   };
 
   // Вместо deleteProduct используйте:
-  const deleteProduct = (categoryName: string, productId: number) => {
+  const deleteProduct = (categoryName: string, productId: number, name: string) => {
+    if (!confirmDelete(`блюдо ${quoted(name)}`)) return;
     dish.deleteProduct(categoryName, productId);
   };
 
@@ -226,10 +232,6 @@ const AdminPage = observer(() =>  {
     }
   };
 
-  // Добавьте функцию для удаления номера:
-  const deleteRoom = (roomId: number) => {
-    hotel.deleteRoomLocal(roomId);
-  };
   // КОНЕЦ ФУНКЦИЙ ДЛЯ НОМЕРОВ
 
   // ЗАМЕНИТЕ функции для вин:
@@ -247,7 +249,8 @@ const AdminPage = observer(() =>  {
   };
 
   // Вместо deleteWine используйте:
-  const deleteWine = (wineType: string, sweetness: string, wineId: number) => {
+  const deleteWine = (wineType: string, sweetness: string, wineId: number, name: string) => {
+    if (!confirmDelete(`вино ${quoted(name)}`)) return;
     wine.deleteWineLocal(wineType, sweetness, wineId);
   };
 
@@ -276,6 +279,15 @@ const AdminPage = observer(() =>  {
       setTimeout(() => {
         setIsAddingEvent(false);
       }, 500);
+    }
+  };
+
+  const deleteEvent = async (eventId: number, title: string) => {
+    if (!confirmDelete(`мероприятие ${quoted(title)}`)) return;
+    try {
+      await events.deleteEvent(eventId);
+    } catch (error: any) {
+      alert(error?.response?.data?.message || 'Не удалось удалить мероприятие. Попробуйте ещё раз.');
     }
   };
 
@@ -355,56 +367,38 @@ const AdminPage = observer(() =>  {
       </div>
     );
   }
-  
-  // Добавьте обработку ошибок:
-  if (dish.error || hotel.error || pageContent.error || wine.error) {
+
+  const loadErrors = [
+    ['Меню ресторана', dish.error],
+    ['Номера', hotel.error],
+    ['Страницы', pageContent.error],
+    ['Вина', wine.error],
+  ].filter(([, error]) => Boolean(error));
+
+  if (loadErrors.length) {
     return (
-      <div className="h-screen flex justify-center items-center">
-        {/* <div className="text-red-500">
-          Ошибка загрузки: {dish.error || hotel.error || pageContent.error || wine.error}
-        </div> */}
-        <div className="text-red-500">
-          Ошибка загрузки: {dish.error }
-        </div>
-        <div className="text-red-500">
-          Ошибка загрузки: {hotel.error}
-        </div>
-        <div className="text-red-500">
-          Ошибка загрузки: {pageContent.error}
-        </div>
-        <div className="text-red-500">
-          Ошибка загрузки: {wine.error}
-        </div>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-3 p-6 text-center">
+        <h1 className="text-xl font-semibold text-gray-800">Не удалось загрузить данные</h1>
+        {loadErrors.map(([section, error]) => (
+          <p key={section} className="text-red-600">{section}: {error}</p>
+        ))}
+        <button type="button" className={toolbarButton} onClick={() => window.location.reload()}>
+          Повторить
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="h-screen flex flex-col bg-no-repeat bg-cover">
-      <AdminStatusBadge />
+    <div className="admin-root flex min-h-screen flex-col">
+      <SessionExpiredModal />
       <Navbar />
-      <div className="container m-auto p-4 mt-auto md:p-6 lg:p-12">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl text-gray-500 font-bold">Административная панель</h1>
-          {/* <button 
-            onClick={() => {
-              console.log('Принудительное обновление данных...');
-              dish.loadDishes();
-              hotel.loadRooms();
-              pageContent.loadPageContent();
-              wine.loadWines();
-            }}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
-          >
-            Обновить данные
-          </button> */}
-        </div>
+      <div className="container mx-auto px-4 pb-10 pt-24 md:px-6 md:pt-28 lg:px-12">
+        <h1 className="mb-4 text-2xl font-bold text-gray-500 md:text-3xl">Административная панель</h1>
 
-        
-
-        <Tabs aria-label="Tabs with underline" className="tabsContainer" variant="underline">
+        <Tabs aria-label="Разделы панели" className="tabsContainer" variant="underline">
           <Tabs.Item active title="Контент на страницах" icon={FaHome}>
-            <div className="overflow-x-auto">
+            <div className="admin-table overflow-x-auto">
               <Table hoverable>
                 <Table.Head>
                   <Table.HeadCell>Название страницы</Table.HeadCell>
@@ -414,10 +408,10 @@ const AdminPage = observer(() =>  {
                 <Table.Body className="divide-y">
                   {pageContent.pages.map((page) => (
                     <Table.Row key={page.name} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                      <Table.Cell className="admin-cell-title whitespace-nowrap font-medium text-gray-900 dark:text-white">
                         {page.name}
                       </Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell data-label="Статус">
                         {pageContent.isSavingPage(page.id)
                           ? "Сохраняем…"
                           : pageContent.getPageSaveError(page.id) || "Сохранено"}
@@ -437,67 +431,55 @@ const AdminPage = observer(() =>  {
           </Tabs.Item>
 
           <Tabs.Item title="Карточки номеров" icon={FaHotel}>
-            <div className="overflow-x-auto">
-              <div className="mb-4 flex justify-end">
-                <button
-                  type="button"
-                  onClick={addRoom}
-                  disabled={isAddingRoom}
-                  className="inline-flex items-center gap-2 rounded-lg bg-main_theme px-4 py-2 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <IoMdAdd className="h-5 w-5" />
-                  {isAddingRoom ? 'Создаём…' : 'Добавить номер'}
-                </button>
-              </div>
+            <div className="mb-4 flex justify-end">
+              <button type="button" onClick={addRoom} disabled={isAddingRoom} className={toolbarButton}>
+                <IoMdAdd className="h-5 w-5" />
+                {isAddingRoom ? 'Создаём…' : 'Добавить номер'}
+              </button>
+            </div>
+            <div className="admin-table overflow-x-auto">
               <Table hoverable>
                 <Table.Head>
                   <Table.HeadCell>Название номера</Table.HeadCell>
                   <Table.HeadCell>Цена за ночь</Table.HeadCell>
                   <Table.HeadCell>Статус</Table.HeadCell>
+                  <Table.HeadCell>Действия</Table.HeadCell>
                 </Table.Head>
                 <Table.Body className="divide-y">
-                  {hotel.rooms.map((room, index) => (
+                  {hotel.rooms.map((room) => (
                     <Table.Row key={room.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                      <Table.Cell className="admin-cell-title whitespace-nowrap font-medium text-gray-900 dark:text-white">
                         {room.name}
                       </Table.Cell>
-                      <Table.Cell>{room.price[0]?.price || 'N/A'}</Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell data-label="Цена за ночь">{room.price[0]?.price || 'N/A'}</Table.Cell>
+                      <Table.Cell data-label="Статус">
                         {hotel.isSavingRoom(room.id)
                           ? "Сохраняем…"
                           : hotel.getRoomSaveError(room.id) || (room.isActive ? "Активно" : "В архиве")}
                       </Table.Cell>
-                      <Table.Cell>
+                      <Table.Cell className="admin-cell-actions">
+                        <div className="flex flex-wrap items-center gap-2 md:gap-6">
                           <ExtCard
-                          Card={() => (
-                            <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
-                              Править
-                            </button>
-                          )}
-                          content={
-                            <NewRoomCard
-                              roomName={room.name}
-                              photos={room.images}
-                              properties={room.properties}
-                              conviniences={room.conviniences}
-                              description={room.description}
-                              prices={room.price}
-                              checkIn={room.checkStandart.checkIn}
-                              checkOut={room.checkStandart.checkOut}
-                              notes={room.notes}
-                              onDataChange={(updatedData) => updateRoomData(room.id, updatedData)}
-                            />
-                          }
-                        />
-                      </Table.Cell>
-                      <Table.Cell>
-                        <a
-                          href="#"
-                          onClick={() => toggleIsActiveRoom(room.id)}
-                          className="font-medium text-main_theme hover:underline dark:text-cyan-500"
-                        >
-                          {room.isActive ? "В архив" : "Активировать"}
-                        </a>
+                            Card={EditButton}
+                            content={
+                              <NewRoomCard
+                                roomName={room.name}
+                                photos={room.images}
+                                properties={room.properties}
+                                conviniences={room.conviniences}
+                                description={room.description}
+                                prices={room.price}
+                                checkIn={room.checkStandart.checkIn}
+                                checkOut={room.checkStandart.checkOut}
+                                notes={room.notes}
+                                onDataChange={(updatedData) => updateRoomData(room.id, updatedData)}
+                              />
+                            }
+                          />
+                          <button type="button" onClick={() => toggleIsActiveRoom(room.id)} className={actionButton}>
+                            {room.isActive ? "В архив" : "Активировать"}
+                          </button>
+                        </div>
                       </Table.Cell>
                     </Table.Row>
                   ))}
@@ -507,41 +489,52 @@ const AdminPage = observer(() =>  {
           </Tabs.Item>
 
           <Tabs.Item title="Меню ресторана" icon={MdOutlineRestaurant}>
-            <div className="overflow-x-auto">
+            <div className="mb-4 flex justify-end">
+              <button
+                type="button"
+                className={toolbarButton}
+                onClick={() => { addCategory("Новая категория"); }}
+                disabled={isAddingCategory}
+              >
+                <IoMdAdd className="h-5 w-5" />
+                Добавить категорию
+              </button>
+            </div>
+            <div className="admin-table overflow-x-auto">
               <Table hoverable>
                 <Table.Head>
                   <Table.HeadCell>Название блюда</Table.HeadCell>
                   <Table.HeadCell>Цена</Table.HeadCell>
                   <Table.HeadCell>Действия</Table.HeadCell>
-                  <Table.HeadCell>
-                    <AddCategory onClick={() => { addCategory("Новая категория"); }} disabled={isAddingCategory} />
-                  </Table.HeadCell>
                 </Table.Head>
                 <Table.Body className="divide-y">
                   {dish.dishes.map(({ category, products }) => (
                     <React.Fragment key={category}>
-                      <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                        <Table.Cell colSpan={4}>
-                          <div className="my-5 mx-auto flex justify-center items-center gap-4 w-full">
+                      <Table.Row className="admin-group-row bg-white dark:border-gray-700 dark:bg-gray-800">
+                        <Table.Cell colSpan={3}>
+                          <div className="my-3 flex w-full flex-wrap items-center justify-center gap-3 md:my-5 md:gap-4">
                             {editingCategory !== category ? (
                               <>
-                                <h3 className="font-bold text-main_theme text-lg font-body">
+                                <h3 className="w-full text-center font-bold text-main_theme text-lg font-body md:w-auto">
                                   {category}
                                 </h3>
                                 <Button
                                   icon={<MdModeEdit className='h-[20px] w-[20px]' />}
                                   func={() => setEditingCategory(category)}
+                                  label={`Переименовать категорию «${category}»`}
                                 />
                                 <Button
                                   icon={<FaTrashAlt className='h-[20px] w-[20px]' />}
                                   func={() => deleteCategory(category)}
                                   customBackground={"bg-[#ff6b6b]"}
+                                  label={`Удалить категорию «${category}»`}
                                 />
                                 <Button
                                   icon={<IoMdAdd className='h-[20px] w-[20px]' />}
                                   func={() => { addProduct(category); }}
                                   customBackground={isAddingDish ? "bg-gray-400" : "bg-[#2ecc71]"}
                                   disabled={isAddingDish}
+                                  label={`Добавить блюдо в «${category}»`}
                                 />
                               </>
                             ) : (
@@ -557,41 +550,33 @@ const AdminPage = observer(() =>  {
                       </Table.Row>
                       {products.map(({ id, images, name, header, description, descriptionFull, weight, price}) => (
                         <Table.Row key={id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                          <Table.Cell className="admin-cell-title whitespace-nowrap font-medium text-gray-900 dark:text-white">
                             <div>{name}</div>
                             {dish.isSavingProduct(id) && <div className="text-xs text-gray-500">Сохраняем…</div>}
                             {dish.getProductSaveError(id) && <div className="text-xs text-red-600">Ошибка сохранения</div>}
                           </Table.Cell>
-                          <Table.Cell>{price}</Table.Cell>
-                          <Table.Cell>
-                            <ExtCard
-                              Card={() => (
-                                <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
-                                  Править
-                                </button>
-                              )}
-                              content={
-                                <NewDishCard
-                                  dishName={name}
-                                  header={header}
-                                  photos={images}
-                                  price={price}
-                                  description={descriptionFull}
-                                  descriptionBrief={description}
-                                  weight={weight}
-                                  onDataChange={(updatedData) => updateDishData(category, id, updatedData)}
-                                />
-                              }
-                            />
-                          </Table.Cell>
-                          <Table.Cell>
-                            <button
-                              type="button"
-                              onClick={() => deleteProduct(category, id)}
-                              className="font-medium text-main_theme hover:underline dark:text-cyan-500"
-                            >
-                              Удалить
-                            </button>
+                          <Table.Cell data-label="Цена">{price}</Table.Cell>
+                          <Table.Cell className="admin-cell-actions">
+                            <div className="flex flex-wrap items-center gap-2 md:gap-6">
+                              <ExtCard
+                                Card={EditButton}
+                                content={
+                                  <NewDishCard
+                                    dishName={name}
+                                    header={header}
+                                    photos={images}
+                                    price={price}
+                                    description={descriptionFull}
+                                    descriptionBrief={description}
+                                    weight={weight}
+                                    onDataChange={(updatedData) => updateDishData(category, id, updatedData)}
+                                  />
+                                }
+                              />
+                              <button type="button" onClick={() => deleteProduct(category, id, name)} className={dangerButton}>
+                                Удалить
+                              </button>
+                            </div>
                           </Table.Cell>
                         </Table.Row>
                       ))}
@@ -603,7 +588,7 @@ const AdminPage = observer(() =>  {
           </Tabs.Item>
 
           <Tabs.Item title="Мероприятия" icon={IoTicket}>
-            <div className="overflow-x-auto">
+            <div className="admin-table overflow-x-auto">
               <Table hoverable>
                 <Table.Head>
                   <Table.HeadCell>Название мероприятия</Table.HeadCell>
@@ -612,15 +597,15 @@ const AdminPage = observer(() =>  {
                 <Table.Body className="divide-y">
                   {events.categories.map((cat) => (
                     <React.Fragment key={cat.id}>
-                      <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                      <Table.Row className="admin-group-row bg-white dark:border-gray-700 dark:bg-gray-800">
                         <Table.Cell colSpan={2}>
-                          <div className="my-5 mx-auto flex justify-between items-center gap-4 w-full px-4">
-                            <div className="flex items-center gap-4 flex-1">
+                          <div className="my-3 flex w-full flex-wrap items-center justify-between gap-3 md:my-5 md:flex-nowrap md:gap-4 md:px-4">
+                            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2 md:flex-nowrap md:gap-4">
                               <h3 className="font-bold text-main_theme text-lg font-body">
                                 {cat.header}
                               </h3>
                               {editingEventCategory === cat.id ? (
-                                <div className="flex-1">
+                                <div className="w-full md:flex-1">
                                   <DescriptionInput
                                     text={cat.description}
                                     inputField={true}
@@ -629,13 +614,14 @@ const AdminPage = observer(() =>  {
                                   />
                                 </div>
                               ) : (
-                                <span 
-                                  className="text-gray-600 text-sm cursor-pointer hover:text-gray-800 flex-1"
+                                <button
+                                  type="button"
+                                  className="w-full whitespace-normal py-2 text-left text-sm text-gray-600 hover:text-gray-800 md:w-auto md:flex-1"
                                   onClick={() => setEditingEventCategory(cat.id)}
                                   title="Нажмите для редактирования"
                                 >
-                                  {cat.description}
-                                </span>
+                                  {cat.description || 'Добавить описание'}
+                                </button>
                               )}
                             </div>
                             <Button
@@ -644,66 +630,59 @@ const AdminPage = observer(() =>  {
                               func={() => addEvent(cat.id)}
                               customBackground={isAddingEvent ? "bg-gray-400" : "bg-[#2ecc71]"}
                               disabled={isAddingEvent}
+                              label={`Добавить мероприятие в «${cat.header}»`}
                             />
                           </div>
                         </Table.Cell>
                       </Table.Row>
                       {(cat.events || []).map((ev) => (
                         <Table.Row key={ev.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                          <Table.Cell className="admin-cell-title whitespace-nowrap font-medium text-gray-900 dark:text-white">
                             <div>{ev.title}</div>
                             {events.isSavingEvent(ev.id) && <div className="text-xs text-gray-500">Сохраняем…</div>}
                             {events.getEventSaveError(ev.id) && <div className="text-xs text-red-600">Ошибка сохранения</div>}
                           </Table.Cell>
-                          <Table.Cell>
-                            <ExtCard
-                              Card={() => (
-                                <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
-                                  Править
-                                </button>
-                              )}
-                              content={
-                                <div className="p-4">
-                                  <div className="mb-4">
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Название:</label>
-                                    <DescriptionInput
-                                      text={ev.title}
-                                      inputField={true}
-                                      horizontal={false}
-                                      onSave={(t) => events.updateEvent(ev.id, { title: t })}
-                                    />
+                          <Table.Cell className="admin-cell-actions">
+                            <div className="flex flex-wrap items-center gap-2 md:gap-6">
+                              <ExtCard
+                                Card={EditButton}
+                                content={
+                                  <div className="md:p-4">
+                                    <div className="mb-4">
+                                      <label className="block text-sm font-medium text-gray-700 mb-2">Название:</label>
+                                      <DescriptionInput
+                                        text={ev.title}
+                                        inputField={true}
+                                        horizontal={false}
+                                        onSave={(t) => events.updateEvent(ev.id, { title: t })}
+                                      />
+                                    </div>
+                                    <div className="mb-4">
+                                      <label className="block text-sm font-medium text-gray-700 mb-2">Описание:</label>
+                                      <DescriptionInput
+                                        text={ev.description}
+                                        inputField={false}
+                                        horizontal={false}
+                                        onSave={(d) => events.updateEvent(ev.id, { description: d })}
+                                      />
+                                    </div>
+                                    <div className="mb-4">
+                                      <label className="block text-sm font-medium text-gray-700 mb-2">Фотографии:</label>
+                                      <PhotoSelector
+                                        photos={ev.images?.map(img => img.url) || []}
+                                        header="Фотографии мероприятия"
+                                        ButtonCard={null}
+                                        withSlider={true}
+                                        onPhotosChange={(newPhotos) => events.updateEvent(ev.id, { images: newPhotos })}
+                                      />
+                                    </div>
                                   </div>
-                                  <div className="mb-4">
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Описание:</label>
-                                    <DescriptionInput
-                                      text={ev.description}
-                                      inputField={false}
-                                      horizontal={false}
-                                      onSave={(d) => events.updateEvent(ev.id, { description: d })}
-                                    />
-                                  </div>
-                                  <div className="mb-4">
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Фотографии:</label>
-                                    <PhotoSelector
-                                      photos={ev.images?.map(img => img.url) || []}
-                                      header="Фотографии мероприятия"
-                                      ButtonCard={null}
-                                      withSlider={true}
-                                      onPhotosChange={(newPhotos) => events.updateEvent(ev.id, { images: newPhotos })}
-                                    />
-                                  </div>
-                                </div>
-                              }
-                            />
-                          </Table.Cell>
-                          <Table.Cell>
-                            <button
-                              type="button"
-                              onClick={() => events.deleteEvent(ev.id)}
-                              className="font-medium text-main_theme hover:underline dark:text-cyan-500"
-                            >
-                              Удалить
-                            </button>
+                                }
+                              />
+                              <button type="button" onClick={() => deleteEvent(ev.id, ev.title)} className={dangerButton}>
+                                Удалить
+                              </button>
+                            </div>
                           </Table.Cell>
                         </Table.Row>
                       ))}
@@ -715,7 +694,7 @@ const AdminPage = observer(() =>  {
           </Tabs.Item>
 
           <Tabs.Item title="Ассортимент винодельни" icon={FaWineGlassAlt}>
-          <div className="overflow-x-auto">
+            <div className="admin-table overflow-x-auto">
               <Table hoverable>
                 <Table.Head>
                   <Table.HeadCell>Название</Table.HeadCell>
@@ -725,9 +704,9 @@ const AdminPage = observer(() =>  {
                 <Table.Body className="divide-y">
                   {wine.wines.map(({ type, assortment }) => (
                     <React.Fragment key={type}>
-                      <Table.Row>
-                        <Table.Cell colSpan={4}>
-                          <div className="my-5 mx-auto flex justify-center items-center gap-4 w-full">
+                      <Table.Row className="admin-group-row">
+                        <Table.Cell colSpan={3}>
+                          <div className="my-3 mx-auto flex justify-center items-center gap-4 w-full md:my-5">
                             <h3 className="font-bold text-main_theme text-2xl font-body">
                               {type}
                             </h3>
@@ -736,9 +715,9 @@ const AdminPage = observer(() =>  {
                       </Table.Row>
                       {assortment.map(({ sweetness, wines }) => (
                         <React.Fragment key={`${type}-${sweetness}`}>
-                          <Table.Row>
-                            <Table.Cell colSpan={4}>
-                              <div className="flex items-center gap-4 w-full">
+                          <Table.Row className="admin-group-row">
+                            <Table.Cell colSpan={3}>
+                              <div className="flex items-center justify-between gap-4 w-full md:justify-start">
                                 <h4 className="font-bold text-main_theme text-base font-body">
                                   {sweetness}
                                 </h4>
@@ -747,48 +726,41 @@ const AdminPage = observer(() =>  {
                                   func={() => { addWine(type, sweetness); }}
                                   customBackground={isAddingWine ? "bg-gray-400" : "bg-[#2ecc71]"}
                                   disabled={isAddingWine}
+                                  label={`Добавить ${type} ${sweetness} вино`}
                                 />
                               </div>
                             </Table.Cell>
                           </Table.Row>
                           {wines.map(({ id, name, images, year, alcohol, sugar, temperature, price, description }) => (
                             <Table.Row key={id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                              <Table.Cell className="admin-cell-title whitespace-nowrap font-medium text-gray-900 dark:text-white">
                                 <div>{name}</div>
                                 {wine.isSavingWine(id) && <div className="text-xs text-gray-500">Сохраняем…</div>}
                                 {wine.getWineSaveError(id) && <div className="text-xs text-red-600">Ошибка сохранения</div>}
                               </Table.Cell>
-                              <Table.Cell>{price}</Table.Cell>
-                              <Table.Cell>
-                                <ExtCard
-                                  Card={() => (
-                                    <button type="button" className="font-medium text-main_theme hover:underline dark:text-cyan-500">
-                                      Править
-                                    </button>
-                                  )}
-                                  content={
-                                    <NewWineCard
-                                      dishName={name}
-                                      photos={images}
-                                      price={price}
-                                      description={description}
-                                      year={year}
-                                      alcohol={alcohol}
-                                      sugar={sugar}
-                                      temperature={temperature}
-                                      onDataChange={(updatedData) => updateWineData(type, sweetness, id, updatedData)}
-                                    />
-                                  }
-                                />
-                              </Table.Cell>
-                              <Table.Cell>
-                                <button
-                                  type="button"
-                                  onClick={() => deleteWine(type, sweetness, id)}
-                                  className="font-medium text-main_theme hover:underline dark:text-cyan-500"
-                                >
-                                  Удалить
-                                </button>
+                              <Table.Cell data-label="Цена">{price}</Table.Cell>
+                              <Table.Cell className="admin-cell-actions">
+                                <div className="flex flex-wrap items-center gap-2 md:gap-6">
+                                  <ExtCard
+                                    Card={EditButton}
+                                    content={
+                                      <NewWineCard
+                                        dishName={name}
+                                        photos={images}
+                                        price={price}
+                                        description={description}
+                                        year={year}
+                                        alcohol={alcohol}
+                                        sugar={sugar}
+                                        temperature={temperature}
+                                        onDataChange={(updatedData) => updateWineData(type, sweetness, id, updatedData)}
+                                      />
+                                    }
+                                  />
+                                  <button type="button" onClick={() => deleteWine(type, sweetness, id, name)} className={dangerButton}>
+                                    Удалить
+                                  </button>
+                                </div>
                               </Table.Cell>
                             </Table.Row>
                           ))}

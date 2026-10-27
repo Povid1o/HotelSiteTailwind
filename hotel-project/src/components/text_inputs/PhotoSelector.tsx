@@ -142,9 +142,10 @@ const PhotosLayout = ({ content, onImageChange, onSave }) => {
                 </div>
             ))}
             
-            <div className="flex gap-4 mt-4">
+            <div className="flex flex-wrap gap-3 mt-4">
                 <button
-                    className="bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48"
+                    type="button"
+                    className="min-h-[44px] bg-main_theme hover:bg-rose-950 text-white font-bold py-2 px-4 rounded-xl w-48"
                     onClick={handleAddImageClick}
                 >
                     Добавить картинку
@@ -162,13 +163,15 @@ const PhotosLayout = ({ content, onImageChange, onSave }) => {
                 {hasChanges && (
                     <>
                         <button
-                            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl w-32"
+                            type="button"
+                            className="min-h-[44px] bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl w-32"
                             onClick={handleSave}
                         >
                             Сохранить
                         </button>
                         <button
-                            className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-xl w-32"
+                            type="button"
+                            className="min-h-[44px] bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-xl w-32"
                             onClick={handleCancel}
                         >
                             Отменить

@@ -121,8 +121,11 @@ const App= observer(() => {
       const [showModal, setShowModal] = useState(
         () => localStorage.getItem("hasVisited") !== "true"
       );
+      // The panel and its sign-in page are not public content; asking the
+      // administrator to confirm their age on every new device is just noise.
       const [showAgeGate, setShowAgeGate] = useState(
-        () => localStorage.getItem('ageConfirmed') !== 'true'
+        () => localStorage.getItem('ageConfirmed') !== 'true' &&
+          !/^\/(admin|login)(\/|$)/.test(window.location.pathname)
       );
 
       // Проверяем только сессию до первого рендера. Контент публичных страниц

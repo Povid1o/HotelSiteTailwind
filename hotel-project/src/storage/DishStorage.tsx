@@ -131,6 +131,7 @@ export default class DishStorage {
     
     deleteCategory(categoryName).catch(error => {
       console.error('Error deleting category:', error);
+      alert(error?.response?.data?.message || 'Не удалось удалить категорию. Попробуйте ещё раз.');
       // В случае ошибки перезагружаем данные с сервера
       this.loadDishes();
     });
@@ -202,16 +203,18 @@ export default class DishStorage {
         category.products.splice(productIndex, 1);
         
         // Если это временный ID (отрицательный), просто отменяем создание
+        // Блюдо ещё создаётся на сервере: удаляем его, как только станет известен id
         if (productId < 0) {
-          if (this._pendingCreates.has(productId)) {
-            this._pendingCreates.delete(productId);
-          }
-          return; // Не вызываем API для временных ID
+          const pendingCreate = this._pendingCreates.get(productId);
+          this._pendingCreates.delete(productId);
+          pendingCreate?.then((realId) => deleteDish(realId)).catch(() => undefined);
+          return;
         }
         
         // Для реальных ID вызываем API удаления
         deleteDish(productId).catch(error => {
           console.error('Error deleting dish:', error);
+          alert(error?.response?.data?.message || 'Не удалось удалить блюдо. Попробуйте ещё раз.');
           // Возвращаем продукт обратно в случае ошибки
           category.products.splice(productIndex, 0, product);
         });

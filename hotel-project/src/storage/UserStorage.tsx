@@ -31,11 +31,17 @@ export default class UserStorage {
   }
 
   logout() {
+    this.clearLocalSession();
+    void requestLogout().catch(() => undefined);
+  }
+
+  // Used when the server already reported that there is no session: asking it
+  // to log out as well would only produce a rejected request for every guest.
+  clearLocalSession() {
     this._isAuth = false;
     this._user = {};
     localStorage.removeItem("isAuth");
     localStorage.removeItem("user");
-    void requestLogout().catch(() => undefined);
   }
 
   get isAuth(): boolean {
@@ -49,13 +55,14 @@ export default class UserStorage {
   // Проверяем валидность токена на backend и фиксируем флаг авторизации
   async checkAuth(): Promise<boolean> {
     try {
-      await $authHost.get('api/user/auth', { skipAuthRedirect: true } as any);
+      const { data } = await $authHost.get('api/user/auth', { skipAuthRedirect: true } as any);
+      this.setUser(data);
       this.setIsAuth(true);
       return true;
     } catch (e: any) {
-      // Токен невалиден или истек
-      console.log('UserStorage.checkAuth: Token invalid or expired, logging out');
-      this.logout();
+      // Только 401 означает, что сессии нет. Сетевой сбой на телефоне не
+      // должен выбрасывать администратора из панели.
+      if (e?.response?.status === 401) this.clearLocalSession();
       return false;
     }
   }

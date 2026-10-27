@@ -187,12 +187,12 @@ const NewRoomCard = ({
   }, [updateRoomData]);
 
   return (
-    <div className="relative flex w-full min-h-screen flex-col bg-[#FBF8EF] rounded-lg overflow-x-hidden">
-      <header className="flex items-center h-[70px] justify-between whitespace-nowrap border-b border-solid border-b-[#F5EFDB] px-10 py-3">
-        <div className="flex items-center gap-4 text-[#201A09]">
+    <div className="relative flex w-full flex-col bg-[#FBF8EF] rounded-lg overflow-x-hidden">
+      <header className="flex min-h-[70px] items-center justify-between border-b border-solid border-b-[#F5EFDB] px-4 py-3 sm:px-10">
+        <div className="flex min-w-0 flex-wrap items-center gap-4 text-[#201A09]">
           {!changeNameState ? (
             <>
-              <h1 className="text-[#201A09] text-lg font-bold leading-tight tracking-[-0.015em]">{localName}</h1>
+              <h1 className="text-[#201A09] text-lg font-bold leading-tight tracking-[-0.015em] break-words">{localName}</h1>
               <label>
                 <Button
                   icon={<MdModeEdit className='h-[20px] w-[20px]' />}
@@ -211,8 +211,8 @@ const NewRoomCard = ({
         </div>
       </header>
 
-      <div className="px-20 flex flex-1 justify-center py-5 lg:px-40">
-        <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
+      <div className="flex flex-1 justify-center py-5 sm:px-10 lg:px-40">
+        <div className="layout-content-container flex min-w-0 max-w-[960px] flex-1 flex-col">
           <PhotoSelector
             photos={localPhotos}
             header={"Фото Номера"}
@@ -221,7 +221,7 @@ const NewRoomCard = ({
           />
           
           <div className="flex justify-stretch">
-            <div className="flex flex-1 gap-10 flex-wrap px-4 py-3 justify-around">
+            <div className="flex flex-1 flex-wrap justify-around gap-x-10 gap-y-2 py-3 sm:px-4">
               <div className='flex flex-col'>
                 <h1 className="first-header">Свойства</h1>
                 <MultiInputField
