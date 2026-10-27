@@ -42,6 +42,7 @@ const Navbar = observer(({ nav = false, setNav }: NavbarProps) => {
     { to: '/Restaurant', label: 'Ресторан' },
     { to: '/Shop', label: 'Витрина вин' },
     { to: '/Events', label: 'Мероприятия' },
+    { to: '/News', label: 'Новости' },
     { to: '/Contacts', label: 'Контакты' },
   ];
 

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Новости — Винные Террасы</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+.card:hover .t,.feat:hover .t{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}
+.tab:hover{background:#ECE6D8!important}
+.nav a:hover{color:#8F4524}
+button:focus-visible,a:focus-visible{outline:2px solid #1F4D4A;outline-offset:3px}
+</style>
+</helmet>
+<div style="background:#F5F2EA;color:#19312F;font-family:'Manrope',sans-serif;min-height:100%">
+
+<header style="border-bottom:1px solid #DDD5C3">
+  <div style="max-width:1280px;margin:0 auto;padding:12px 24px;box-sizing:border-box;min-height:72px;display:flex;align-items:center;gap:12px 32px;flex-wrap:wrap">
+    <a href="Main.dc.html" style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:#1F4D4A;text-decoration:none;letter-spacing:-0.01em">Винные Террасы</a>
+    <nav class="nav" style="display:flex;gap:8px 24px;flex-wrap:wrap;flex-grow:1;font-size:15px;font-weight:500">
+      <a href="#" style="text-decoration:none">Отель</a>
+      <a href="#" style="text-decoration:none">Винодельня</a>
+      <a href="#" style="text-decoration:none">Ресторан</a>
+      <a href="#" style="text-decoration:none">Витрина вин</a>
+      <a href="#" style="text-decoration:none">Мероприятия</a>
+      <a href="Main.dc.html" style="text-decoration:none;color:#8F4524;border-bottom:2px solid #C7774D;padding-bottom:2px">Новости</a>
+      <a href="#" style="text-decoration:none">Контакты</a>
+    </nav>
+    <a href="#" style="display:inline-flex;align-items:center;min-height:44px;padding:0 24px;border-radius:8px;background:#A5532F;color:#FFFFFF;font-size:15px;font-weight:600;text-decoration:none">Забронировать</a>
+  </div>
+</header>
+
+<section style="max-width:1280px;margin:0 auto;padding:72px 24px 32px;box-sizing:border-box">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:0.14em;text-transform:uppercase;color:#8F4524;font-weight:600;margin-bottom:12px">Новости</div>
+  <h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(44px,7vw,72px);line-height:1.02;letter-spacing:-0.02em;color:#19312F;max-width:760px">Что нового на Террасах</h1>
+  <p style="margin:20px 0 0;font-size:20px;line-height:1.6;color:#3A4A48;max-width:620px">Сезоны на винограднике, события, новинки ресторана и обновления отеля — всё, что происходит у нас, в одном месте.</p>
+</section>
+
+<section style="max-width:1280px;margin:0 auto;padding:0 24px 40px;box-sizing:border-box">
+  <div role="group" aria-label="Категории новостей" style="display:flex;gap:8px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid #DDD5C3">
+    <sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
+      <button class="tab" type="button" onClick="{{t.pick}}" aria-pressed="{{t.pressed}}" style="font-family:'Manrope',sans-serif;font-size:15px;font-weight:600;min-height:44px;padding:0 20px;border:0;border-radius:8px;cursor:pointer;background:{{t.bg}};color:{{t.color}}">{{t.label}}</button>
+    </sc-for>
+  </div>
+</section>
+
+<sc-if value="{{hasFeatured}}" hint-placeholder-val="{{true}}">
+<section style="max-width:1280px;margin:0 auto;padding:0 24px 64px;box-sizing:border-box">
+  <a class="feat" href="Article.dc.html" style="display:flex;gap:40px;flex-wrap:wrap;align-items:center;text-decoration:none;color:inherit">
+    <div style="flex:1 1 520px;aspect-ratio:16/10;border-radius:16px;overflow:hidden;background:#DCE5DE">
+      <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" aria-hidden="true" style="display:block">
+        <rect width="160" height="100" fill="{{featured.c0}}"/>
+        <circle cx="118" cy="28" r="10" fill="{{featured.c3}}"/>
+        <path d="M0 68 C30 52 55 58 80 64 C105 70 130 56 160 60 L160 100 L0 100Z" fill="{{featured.c1}}"/>
+        <path d="M0 82 C25 74 50 78 80 82 C110 86 135 76 160 80 L160 100 L0 100Z" fill="{{featured.c2}}"/>
+      </svg>
+    </div>
+    <div style="flex:1 1 380px;min-width:0">
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase">
+        <span style="color:#8F4524">{{featured.cat}}</span><span style="color:#55625F;font-weight:500;letter-spacing:0.02em;text-transform:none;font-size:14px">{{featured.date}}</span>
+      </div>
+      <h2 class="t" style="margin:16px 0 0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(34px,4.4vw,52px);line-height:1.08;letter-spacing:-0.015em;color:#19312F">{{featured.title}}</h2>
+      <p style="margin:20px 0 0;font-size:18px;line-height:1.65;color:#3A4A48">{{featured.lead}}</p>
+      <span style="display:inline-block;margin-top:24px;font-size:15px;font-weight:600;color:#8F4524">Читать новость →</span>
+    </div>
+  </a>
+</section>
+</sc-if>
+
+<section style="max-width:1280px;margin:0 auto;padding:0 24px 24px;box-sizing:border-box">
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:48px 32px">
+    <sc-for list="{{gridItems}}" as="n" hint-placeholder-count="6">
+      <a class="card" href="Article.dc.html" style="display:flex;flex-direction:column;gap:20px;text-decoration:none;color:inherit">
+        <div style="aspect-ratio:16/10;border-radius:12px;overflow:hidden;background:#DCE5DE">
+          <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" aria-hidden="true" style="display:block">
+            <rect width="160" height="100" fill="{{n.c0}}"/>
+            <circle cx="118" cy="28" r="10" fill="{{n.c3}}"/>
+            <path d="M0 68 C30 52 55 58 80 64 C105 70 130 56 160 60 L160 100 L0 100Z" fill="{{n.c1}}"/>
+            <path d="M0 82 C25 74 50 78 80 82 C110 86 135 76 160 80 L160 100 L0 100Z" fill="{{n.c2}}"/>
+          </svg>
+        </div>
+        <div>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase">
+            <span style="color:#8F4524">{{n.cat}}</span><span style="color:#55625F;font-weight:500;letter-spacing:0.02em;text-transform:none;font-size:14px">{{n.date}}</span>
+          </div>
+          <h3 class="t" style="margin:12px 0 0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:30px;line-height:1.12;letter-spacing:-0.01em;color:#19312F">{{n.title}}</h3>
+          <p style="margin:12px 0 0;font-size:15px;line-height:1.6;color:#3A4A48">{{n.lead}}</p>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+</section>
+
+<sc-if value="{{canMore}}" hint-placeholder-val="{{true}}">
+<section style="max-width:1280px;margin:0 auto;padding:40px 24px 0;box-sizing:border-box;display:flex;justify-content:center">
+  <button type="button" onClick="{{showMore}}" style="font-family:'Manrope',sans-serif;font-size:15px;font-weight:600;min-height:48px;padding:0 32px;border-radius:8px;border:1px solid #19312F;background:transparent;color:#19312F;cursor:pointer">Показать ещё</button>
+</section>
+</sc-if>
+
+<section style="max-width:1280px;margin:96px auto 0;padding:0 24px;box-sizing:border-box">
+  <div style="background:#1F4D4A;color:#F5F2EA;border-radius:16px;padding:64px 48px;display:flex;gap:32px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+    <div style="flex:1 1 420px">
+      <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,4vw,44px);line-height:1.1;letter-spacing:-0.01em">Приезжайте на Террасы</h2>
+      <p style="margin:16px 0 0;font-size:17px;line-height:1.6;color:#DCE5DE;max-width:520px">Выберите даты и номер — остальное в этих новостях вы увидите своими глазами.</p>
+    </div>
+    <a href="#" style="display:inline-flex;align-items:center;min-height:48px;padding:0 32px;border-radius:8px;background:#F5F2EA;color:#19312F;font-size:15px;font-weight:600;text-decoration:none">Выбрать даты</a>
+  </div>
+</section>
+
+<footer style="margin-top:96px;background:#19312F;color:#DCE5DE">
+  <div style="max-width:1280px;margin:0 auto;padding:64px 24px 40px;box-sizing:border-box;display:flex;gap:48px;flex-wrap:wrap;justify-content:space-between">
+    <div style="flex:1 1 280px">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;color:#F5F2EA">Винные Террасы</div>
+      <p style="margin:12px 0 0;font-size:14px;line-height:1.6;color:#B9C7BF;max-width:320px">Отель и винодельня. [Адрес], [телефон]</p>
+    </div>
+    <nav style="display:flex;gap:12px 40px;flex-wrap:wrap;font-size:14px;align-content:flex-start;flex:1 1 360px;justify-content:flex-end">
+      <a href="#" style="color:#DCE5DE;text-decoration:none">Отель</a>
+      <a href="#" style="color:#DCE5DE;text-decoration:none">Винодельня</a>
+      <a href="#" style="color:#DCE5DE;text-decoration:none">Ресторан</a>
+      <a href="Main.dc.html" style="color:#DCE5DE;text-decoration:none">Новости</a>
+      <a href="#" style="color:#DCE5DE;text-decoration:none">Контакты</a>
+      <a href="#" style="color:#DCE5DE;text-decoration:none">Политика конфиденциальности</a>
+    </nav>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":2700}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { cat: 'Все', more: false };
+  }
+  renderVals() {
+    const items = [
+      { cat: 'События', date: '24 октября 2026', title: 'Сбор урожая 2026: приглашаем на виноградники', lead: 'Гости отеля смогут выйти на ряды вместе с виноделами и собрать часть будущего урожая своими руками.', c0: '#DCE5DE', c1: '#7FA08F', c2: '#1F4D4A', c3: '#C7774D' },
+      { cat: 'Ресторан', date: '18 октября 2026', title: 'Осеннее меню: тыква, дичь и молодые вина', lead: 'Шеф обновил карту к сезону. Каждое блюдо мы подобрали в пару к вину нашей винодельни.', c0: '#EAD9C4', c1: '#C7774D', c2: '#8F4524', c3: '#F5F2EA' },
+      { cat: 'Отель', date: '9 октября 2026', title: 'Номера с видом на террасы после обновления', lead: 'Мы обновили текстиль и свет в номерах категории «Стандарт плюс». Рассказываем, что изменилось.', c0: '#CFD9D2', c1: '#5E8272', c2: '#19312F', c3: '#EAD9C4' },
+      { cat: 'Винодельня', date: '2 октября 2026', title: 'Дегустационный сет из молодых вин', lead: 'Три урожая в одном бокале: как меняется вкус после первой выдержки.', c0: '#E8DCC8', c1: '#A9B8A3', c2: '#4B6B5F', c3: '#C7774D' },
+      { cat: 'События', date: '26 сентября 2026', title: 'Вечер живой музыки на открытой террасе', lead: 'Закат, вино и акустический концерт. Рассказываем, как пройдёт вечер и как выбрать места.', c0: '#2B4A47', c1: '#1F4D4A', c2: '#19312F', c3: '#E3B68F' },
+      { cat: 'Винодельня', date: '14 сентября 2026', title: 'Как мы выбираем бочки для выдержки', lead: 'Дуб, обжиг и время: от чего зависит характер вина, которое вы пробуете за ужином.', c0: '#F0E4D0', c1: '#D9A47F', c2: '#5E8272', c3: '#C7774D' },
+      { cat: 'События', date: '5 сентября 2026', title: 'Экскурсия по винодельне: новое расписание', lead: 'Теперь экскурсии проходят чаще, а группы стали меньше — чтобы вы успели задать все вопросы.', c0: '#DCE5DE', c1: '#A9B8A3', c2: '#4B6B5F', c3: '#C7774D' },
+      { cat: 'Ресторан', date: '30 августа 2026', title: 'Завтраки на террасе до конца сезона', lead: 'Пока тепло, подаём завтраки на открытой террасе с видом на виноградник.', c0: '#EAD9C4', c1: '#D9A47F', c2: '#5E8272', c3: '#F5F2EA' },
+      { cat: 'Отель', date: '22 августа 2026', title: 'Что взять с собой на осенние выходные', lead: 'Короткий список от нашей команды: одежда, обувь и всё для прогулки по виноградникам.', c0: '#CFD9D2', c1: '#7FA08F', c2: '#19312F', c3: '#EAD9C4' }
+    ];
+    const cats = ['Все', 'Отель', 'Винодельня', 'Ресторан', 'События'];
+    const sel = this.state.cat;
+    const filtered = sel === 'Все' ? items : items.filter((i) => i.cat === sel);
+    const featured = filtered[0] || {};
+    const rest = filtered.slice(1);
+    const limit = this.state.more ? rest.length : 6;
+    return {
+      tabs: cats.map((c) => ({
+        label: c,
+        pressed: c === sel ? 'true' : 'false',
+        bg: c === sel ? '#1F4D4A' : 'transparent',
+        color: c === sel ? '#F5F2EA' : '#19312F',
+        pick: () => this.setState({ cat: c, more: false })
+      })),
+      hasFeatured: filtered.length > 0,
+      featured: featured,
+      gridItems: rest.slice(0, limit),
+      canMore: rest.length > limit,
+      showMore: () => this.setState({ more: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

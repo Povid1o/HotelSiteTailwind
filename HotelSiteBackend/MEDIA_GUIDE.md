@@ -8,6 +8,7 @@ HotelSiteBackend/static/
 ├── wines/      # Изображения вин и бутылок
 ├── rooms/      # Фотографии номеров
 ├── pages/      # Изображения для страниц сайта
+├── news/       # Обложки и фото внутри новостей (JPG, PNG, WebP до 10 МБ)
 ├── videos/     # Видео файлы
 └── general/    # Общие файлы (по умолчанию)
 ```
@@ -18,7 +19,7 @@ HotelSiteBackend/static/
 
 **Параметры:**
 - `file` (FormData) - файл для загрузки
-- `type` (string) - тип медиа: `dishes`, `wines`, `rooms`, `pages`, `videos`, `general`
+- `type` (string) - тип медиа: `dishes`, `wines`, `rooms`, `pages`, `news`, `videos`, `general`
 
 **Пример использования:**
 

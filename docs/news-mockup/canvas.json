@@ -1,0 +1,272 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-27T13:00:00Z"
+  },
+  "title": "Новости Террас — макет",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 2700,
+      "title": "1 · Список новостей",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "Article.dc.html": {
+      "x": 1360,
+      "y": 0,
+      "w": 1280,
+      "h": 3500,
+      "title": "2 · Страница новости",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminPages.dc.html": {
+      "x": 0,
+      "y": 3900,
+      "w": 1280,
+      "h": 1500,
+      "title": "3 · Админка: страницы сайта",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminRooms.dc.html": {
+      "x": 1360,
+      "y": 3900,
+      "w": 1280,
+      "h": 1900,
+      "title": "4 · Админка: номера",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminMenu.dc.html": {
+      "x": 2720,
+      "y": 3900,
+      "w": 1280,
+      "h": 1700,
+      "title": "5 · Админка: меню ресторана",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminEvents.dc.html": {
+      "x": 0,
+      "y": 5720,
+      "w": 1280,
+      "h": 1400,
+      "title": "6 · Админка: мероприятия",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminWines.dc.html": {
+      "x": 1360,
+      "y": 5720,
+      "w": 1280,
+      "h": 1700,
+      "title": "7 · Админка: вина",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "Admin.dc.html": {
+      "x": 2720,
+      "y": 5720,
+      "w": 1280,
+      "h": 2400,
+      "title": "8 · Админка: новости",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminPagesTablet.dc.html": {
+      "x": 0,
+      "y": 8700,
+      "w": 820,
+      "h": 2400,
+      "title": "Планшет 820 · Страницы сайта",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminPagesPhone.dc.html": {
+      "x": 0,
+      "y": 11920,
+      "w": 390,
+      "h": 3000,
+      "title": "Телефон 390 · Страницы сайта",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminRoomsTablet.dc.html": {
+      "x": 900,
+      "y": 8700,
+      "w": 820,
+      "h": 2900,
+      "title": "Планшет 820 · Номера",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminRoomsPhone.dc.html": {
+      "x": 470,
+      "y": 11920,
+      "w": 390,
+      "h": 4300,
+      "title": "Телефон 390 · Номера",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminMenuTablet.dc.html": {
+      "x": 1800,
+      "y": 8700,
+      "w": 820,
+      "h": 2900,
+      "title": "Планшет 820 · Меню ресторана",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminMenuPhone.dc.html": {
+      "x": 940,
+      "y": 11920,
+      "w": 390,
+      "h": 3600,
+      "title": "Телефон 390 · Меню ресторана",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminEventsTablet.dc.html": {
+      "x": 2700,
+      "y": 8700,
+      "w": 820,
+      "h": 2300,
+      "title": "Планшет 820 · Мероприятия",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminEventsPhone.dc.html": {
+      "x": 1410,
+      "y": 11920,
+      "w": 390,
+      "h": 2900,
+      "title": "Телефон 390 · Мероприятия",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminWinesTablet.dc.html": {
+      "x": 3600,
+      "y": 8700,
+      "w": 820,
+      "h": 2800,
+      "title": "Планшет 820 · Вина",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminWinesPhone.dc.html": {
+      "x": 1880,
+      "y": 11920,
+      "w": 390,
+      "h": 3800,
+      "title": "Телефон 390 · Вина",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminTablet.dc.html": {
+      "x": 4500,
+      "y": 8700,
+      "w": 820,
+      "h": 3500,
+      "title": "Планшет 820 · Новости",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "AdminPhone.dc.html": {
+      "x": 2350,
+      "y": 11920,
+      "w": 390,
+      "h": 4600,
+      "title": "Телефон 390 · Новости",
+      "expand": "fill",
+      "is_interactive": true
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Article.dc.html",
+    "AdminPages.dc.html",
+    "AdminRooms.dc.html",
+    "AdminMenu.dc.html",
+    "AdminEvents.dc.html",
+    "AdminWines.dc.html",
+    "Admin.dc.html",
+    "AdminPagesTablet.dc.html",
+    "AdminPagesPhone.dc.html",
+    "AdminRoomsTablet.dc.html",
+    "AdminRoomsPhone.dc.html",
+    "AdminMenuTablet.dc.html",
+    "AdminMenuPhone.dc.html",
+    "AdminEventsTablet.dc.html",
+    "AdminEventsPhone.dc.html",
+    "AdminWinesTablet.dc.html",
+    "AdminWinesPhone.dc.html",
+    "AdminTablet.dc.html",
+    "AdminPhone.dc.html"
+  ],
+  "notes": {
+    "t1": {
+      "x": 0,
+      "y": -320,
+      "text": "Новости Террас — макет v1",
+      "kind": "title1",
+      "maxW": 2640
+    },
+    "s1": {
+      "x": 0,
+      "y": -190,
+      "w": 640,
+      "text": "Тексты и даты — примеры для макета. [В скобках] — то, что заполняется через админку. Страницы кликабельные: вкладки категорий, переход в новость, «Показать ещё».",
+      "size": "s",
+      "fill": "orange"
+    },
+    "t2": {
+      "x": 0,
+      "y": 3580,
+      "text": "Админка — все разделы",
+      "kind": "title1",
+      "maxW": 4000
+    },
+    "s3": {
+      "x": 0,
+      "y": 3710,
+      "w": 640,
+      "text": "Единое боковое меню и один шаблон на все разделы: список слева, карточка редактирования справа. «Новости» — новый раздел в том же стиле. Пункты меню кликабельны.",
+      "size": "s",
+      "fill": "teal"
+    },
+    "s2": {
+      "x": 2720,
+      "y": 5530,
+      "w": 560,
+      "text": "Новости: текст пишется в редакторе Tiptap Simple Editor — панель сверху, текст оформлен как на сайте. «Линия», «Фото» и «Кнопка» — вставляемые блоки.",
+      "size": "s",
+      "fill": "teal"
+    },
+    "t3": {
+      "x": 0,
+      "y": 8380,
+      "text": "Админка — планшет и телефон",
+      "kind": "title1",
+      "maxW": 5400
+    },
+    "s4": {
+      "x": 0,
+      "y": 8510,
+      "w": 720,
+      "text": "Тот же код, что и на десктопе, в рамках 820 и 390 px. На планшете меню — верхняя панель, на телефоне — кнопка «Меню». Колонки складываются, строки таблиц становятся карточками. Нажмите Play, чтобы открыть меню.",
+      "size": "s",
+      "fill": "teal"
+    }
+  },
+  "designSystems": []
+}

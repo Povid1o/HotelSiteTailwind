@@ -29,6 +29,7 @@
     "multer": "^2.0.2",
     "pg": "^8.11.5",
     "pg-hstore": "^2.3.4",
+    "sanitize-html": "^2.13.1",
     "sequelize": "^6.37.3",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^9.0.1",

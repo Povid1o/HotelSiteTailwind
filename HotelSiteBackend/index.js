@@ -106,6 +106,7 @@ const uploadPolicies = {
   dishes: { extensions: new Set(['.jpg', '.jpeg', '.png', '.webp']), mimeTypes: new Set(['image/jpeg', 'image/png', 'image/webp']), maxBytes: 10 * 1024 * 1024 },
   wines: { extensions: new Set(['.jpg', '.jpeg', '.png', '.webp']), mimeTypes: new Set(['image/jpeg', 'image/png', 'image/webp']), maxBytes: 10 * 1024 * 1024 },
   rooms: { extensions: new Set(['.jpg', '.jpeg', '.png', '.webp']), mimeTypes: new Set(['image/jpeg', 'image/png', 'image/webp']), maxBytes: 10 * 1024 * 1024 },
+  news: { extensions: new Set(['.jpg', '.jpeg', '.png', '.webp']), mimeTypes: new Set(['image/jpeg', 'image/png', 'image/webp']), maxBytes: 10 * 1024 * 1024 },
   pages: { extensions: new Set(['.jpg', '.jpeg', '.png', '.webp']), mimeTypes: new Set(['image/jpeg', 'image/png', 'image/webp']), maxBytes: 10 * 1024 * 1024 },
   videos: { extensions: new Set(['.mp4', '.webm']), mimeTypes: new Set(['video/mp4', 'video/webm']), maxBytes: 100 * 1024 * 1024 }
 };

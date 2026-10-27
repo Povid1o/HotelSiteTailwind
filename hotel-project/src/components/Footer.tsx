@@ -35,6 +35,7 @@ const Footer = () => {
               <nav className="site-footer__nav" aria-label="Навигация в подвале">
                 <Link to="/Hotel">Апартаменты</Link>
                 <Link to="/Events">Мероприятия</Link>
+                <Link to="/News">Новости</Link>
                 <a href="#site-map">Как добраться</a>
                 <Link to="/Contacts">Контакты</Link>
                 <Link to="/Privacy">Политика конфиденциальности</Link>

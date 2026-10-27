@@ -172,6 +172,16 @@ export default class WineStorage {
     }
   };
 
+  /** После сохранения с новым цветом или сладостью переносит вино в списке (сервер уже знает новое место). */
+  moveWineLocal = (fromType: string, fromSweetness: string, toType: string, toSweetness: string, wineId: number) => {
+    const from = this._wines.find(cat => cat.type === fromType)?.assortment.find(item => item.sweetness === fromSweetness);
+    const to = this._wines.find(cat => cat.type === toType)?.assortment.find(item => item.sweetness === toSweetness);
+    const index = from ? from.wines.findIndex(w => w.id === wineId) : -1;
+    if (!from || !to || index < 0) return;
+    const [wine] = from.wines.splice(index, 1);
+    to.wines.push(wine);
+  };
+
   updateWineLocal = (wineType: string, sweetness: string, wineId: number, updatedData: Partial<Wine>) => {
     const wineCategory = this._wines.find(cat => cat.type === wineType);
     const assortmentItem = wineCategory?.assortment.find(item => item.sweetness === sweetness);

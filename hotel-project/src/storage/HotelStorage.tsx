@@ -292,12 +292,15 @@ export default class HotelStorageNew {
     };
     
     this._rooms.push(newRoom);
+    // MobX хранит в массиве свою наблюдаемую копию: настоящий id с сервера пишем в неё,
+    // иначе в списке навсегда остался бы временный.
+    const tracked = this._rooms[this._rooms.length - 1];
     
     try {
       const backendData = await this.transformRoomToBackend(newRoom);
       const response = await createRoom(backendData);
       const createdRoom = this.transformRoomFromBackend(response);
-      Object.assign(newRoom, createdRoom);
+      Object.assign(tracked, createdRoom);
     } catch (error) {
       console.error('Error creating room:', error);
       this._rooms = this._rooms.filter(r => r.id !== newRoom.id);

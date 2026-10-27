@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Админка — мероприятия</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+.in{width:100%;box-sizing:border-box;min-height:44px;padding:0 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px 'Manrope',sans-serif;color:#19312F}
+textarea.in{padding:12px 14px;font:500 15px/1.55 'Manrope',sans-serif;resize:vertical}
+.lb{display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#3A4A48}
+.bp{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 24px;border-radius:8px;border:0;background:#A5532F;color:#FFFFFF;font:600 15px 'Manrope',sans-serif;cursor:pointer;text-decoration:none}
+.bs{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:8px;border:1px solid #19312F;background:transparent;color:#19312F;font:600 15px 'Manrope',sans-serif;cursor:pointer;text-decoration:none}
+.bt{display:inline-flex;align-items:center;min-height:40px;padding:0 12px;border-radius:8px;border:0;background:transparent;color:#8F4524;font:600 14px 'Manrope',sans-serif;cursor:pointer;text-decoration:none}
+input:focus,select:focus,textarea:focus{outline:2px solid #1F4D4A;outline-offset:1px}
+button:focus-visible,a:focus-visible{outline:2px solid #1F4D4A;outline-offset:2px}
+.side a:hover{background:#25504C}
+.row:hover{background:#ECE6D8}
+.bt:hover{background:#ECE6D8}
+
+/* ---- адаптив: общая оболочка ---- */
+.shell{background:#F5F2EA;color:#19312F;font-family:'Manrope',sans-serif;min-height:100%;display:flex;align-items:stretch}
+.side{flex:0 0 240px;width:240px;background:#19312F;color:#DCE5DE;padding:28px 16px;box-sizing:border-box;display:flex;flex-direction:column}
+.brand{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:#F5F2EA;padding:0 12px}
+.brandsub{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#B9C7BF;padding:4px 12px 0}
+.menubtn{display:none;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:8px;border:1px solid #4A6F6B;background:transparent;color:#F5F2EA;font:600 15px 'Manrope',sans-serif;cursor:pointer}
+.nav{margin-top:32px;display:flex;flex-direction:column;gap:4px;font-size:15px;font-weight:500;flex-grow:1}
+.nav a{text-decoration:none;padding:12px;border-radius:8px;color:#DCE5DE}
+.nav a[aria-current="page"],.nav a[aria-current="page"]:hover{background:#1F4D4A;color:#F5F2EA;font-weight:600}
+.sidefoot{display:flex;flex-direction:column;gap:4px;font-size:14px;border-top:1px solid #2C4A47;padding-top:16px}
+.sidefoot a{text-decoration:none;padding:10px 12px;border-radius:8px;color:#B9C7BF}
+.main{flex:1 1 auto;min-width:0;padding:36px 40px 64px;box-sizing:border-box}
+.h1{margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:44px;line-height:1.05;letter-spacing:-0.015em}
+.phead{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between}
+.facts{display:contents}
+.menubtn:focus-visible,.nav a:focus-visible,.sidefoot a:focus-visible{outline:2px solid #F5F2EA;outline-offset:2px}
+
+/* ---- ноутбук и планшет: колонки складываются ---- */
+@media (max-width:1279px){
+  .col-list,.col-edit{flex:1 1 100% !important;min-width:0 !important;width:100%;box-sizing:border-box}
+  .rooms-list{display:grid !important;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px !important}
+}
+
+/* ---- планшет: меню становится верхней панелью ---- */
+@media (max-width:1079px){
+  .shell{flex-direction:column}
+  .side{flex:none;width:100%;padding:14px 24px;flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 16px}
+  .side>.sidehead{order:1;flex:1 1 auto}
+  .brand{padding:0}
+  .brandsub{padding:2px 0 0}
+  .sidefoot{order:2;flex-direction:row;border-top:0;padding:0;gap:4px}
+  .nav{order:3;flex:1 0 100%;margin-top:0;flex-direction:row;flex-wrap:wrap;gap:4px;border-top:1px solid #2C4A47;padding-top:10px}
+  .nav a{padding:10px 14px}
+  .main{padding:28px 24px 48px}
+  .h1{font-size:38px}
+}
+
+/* ---- телефон ---- */
+@media (max-width:699px){
+  .side{padding:12px 16px}
+  .menubtn{display:inline-flex;order:2}
+  .nav,.sidefoot{display:none}
+  .side.open .nav{display:flex;flex-direction:column;order:3}
+  .side.open .sidefoot{display:flex;flex-direction:column;flex:1 0 100%;order:4;border-top:1px solid #2C4A47;padding-top:8px}
+  .main{padding:20px 16px 40px}
+  .h1{font-size:32px}
+  .phead>.bp{width:100%}
+  .col-edit{padding:20px !important}
+  .thead{display:none !important}
+  .row.r-menu,.row.r-wine{grid-template-columns:56px minmax(0,1fr) !important}
+  .row.r-ev{grid-template-columns:64px minmax(0,1fr) !important}
+  .row.r-page{grid-template-columns:minmax(0,1fr) !important;gap:8px !important}
+  .facts{display:flex;grid-column:2;flex-wrap:wrap;gap:6px 14px;align-items:center}
+  .rooms-list{grid-template-columns:minmax(0,1fr)}
+  main [style*="repeat(2,minmax(0,1fr))"]{grid-template-columns:minmax(0,1fr) !important}
+  main [style*="repeat(4,minmax(0,1fr))"]{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+  main [style*="flex:0 0 240px"],main [style*="flex:0 0 200px"]{flex:1 1 100% !important}
+  main input,main select,main textarea{font-size:16px !important}
+  .col-edit .bp,.col-edit .bs{flex:1 1 140px}
+}
+</style>
+</helmet>
+<div class="shell">
+
+<aside class="{{menuCls}}">
+  <div class="sidehead"><div class="brand">Винные Террасы</div><div class="brandsub">Управление сайтом</div></div>
+  <button class="menubtn" type="button" aria-expanded="{{menuOpen}}" aria-controls="adm-nav" onClick="{{toggleMenu}}"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 4h14M2 9h14M2 14h14"/></svg>Меню</button>
+  <nav class="nav" id="adm-nav" aria-label="Разделы админки">
+    <a href="AdminPages.dc.html">Страницы сайта</a>
+    <a href="AdminRooms.dc.html">Номера</a>
+    <a href="AdminMenu.dc.html">Меню ресторана</a>
+    <a href="AdminEvents.dc.html" aria-current="page">Мероприятия</a>
+    <a href="AdminWines.dc.html">Вина</a>
+    <a href="Admin.dc.html">Новости</a>
+  </nav>
+  <div class="sidefoot">
+    <a href="Main.dc.html">Открыть сайт ↗</a>
+    <a href="#">Выйти</a>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="phead">
+    <div>
+      <h1 class="h1">Мероприятия</h1>
+      <p style="margin:8px 0 0;font-size:15px;color:#55625F">Экскурсии, забеги, open-air и календарь событий на странице «Мероприятия».</p>
+    </div>
+    <button class="bp" type="button">Новое мероприятие</button>
+  </div>
+
+  <div role="group" aria-label="Раздел" style="margin-top:28px;display:flex;gap:8px;flex-wrap:wrap">
+    <sc-for list="{{cats}}" as="c" hint-placeholder-count="5">
+      <button type="button" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}" style="min-height:40px;padding:0 16px;border-radius:999px;border:1px solid {{c.border}};background:{{c.bg}};color:{{c.color}};font:600 14px 'Manrope',sans-serif;cursor:pointer">{{c.label}}</button>
+    </sc-for>
+  </div>
+
+  <div style="display:flex;gap:32px;flex-wrap:wrap;margin-top:24px;align-items:flex-start">
+
+    <section class="col-list" aria-label="Список мероприятий" style="flex:1 1 400px;min-width:0">
+      <div class="thead" style="display:grid;grid-template-columns:64px minmax(0,1fr) 110px;gap:14px;padding:0 12px 10px;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#55625F;border-bottom:1px solid #DDD5C3">
+        <span></span><span>Название</span><span>Статус</span>
+      </div>
+      <ul style="list-style:none;margin:0;padding:0">
+        <sc-for list="{{items}}" as="e" hint-placeholder-count="6">
+          <li class="row r-ev" style="margin:0;padding:12px;display:grid;grid-template-columns:64px minmax(0,1fr) 110px;gap:14px;align-items:center;border-bottom:1px solid #DDD5C3;background:{{e.rowBg}}">
+            <div style="width:64px;height:48px;border-radius:6px;background:{{e.thumb}}"></div>
+            <div style="min-width:0">
+              <div style="font-size:15px;font-weight:600">{{e.name}}</div>
+              <div style="margin-top:2px;font-size:13px;color:#55625F">{{e.cat}} · {{e.photos}}</div>
+            </div>
+            <div class="facts"><span style="justify-self:start;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{e.chipBg}};color:{{e.chipColor}}">{{e.status}}</span></div>
+          </li>
+        </sc-for>
+      </ul>
+      <button class="bt" type="button" style="margin-top:12px">+ Добавить мероприятие</button>
+    </section>
+
+    <section class="col-edit" aria-label="Редактирование мероприятия" style="flex:1 1 420px;min-width:0;background:#FBF9F4;border:1px solid #DDD5C3;border-radius:12px;padding:28px;box-sizing:border-box">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:baseline">
+        <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:30px;letter-spacing:-0.01em">Экскурсия по винодельне</h2>
+        <span style="font-size:13px;color:#55625F">Сохранено</span>
+      </div>
+
+      <div style="margin-top:20px;display:flex;flex-direction:column;gap:16px">
+        <div>
+          <label class="lb" for="e-c">Раздел</label>
+          <select class="in" id="e-c"><option>Экскурсии</option><option>Бег</option><option>Open-air</option><option>Календарь</option></select>
+        </div>
+        <div>
+          <label class="lb" for="e-t">Название</label>
+          <input class="in" id="e-t" type="text" value="Экскурсия по винодельне">
+        </div>
+        <div>
+          <label class="lb" for="e-d">Описание</label>
+          <textarea class="in" id="e-d" rows="5">[Что увидят гости, сколько длится, что входит в стоимость, как записаться]</textarea>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid #DDD5C3">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+          <h3 style="margin:0;font-size:16px;font-weight:700">Фотографии</h3>
+          <span style="font-size:13px;color:#55625F">3 фото · первое — обложка</span>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div style="position:relative;width:96px;height:68px;border-radius:8px;background:#7FA08F"><span style="position:absolute;top:6px;left:6px;background:#19312F;color:#F5F2EA;font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px">1</span></div>
+          <div style="position:relative;width:96px;height:68px;border-radius:8px;background:#5E8272"><span style="position:absolute;top:6px;left:6px;background:#19312F;color:#F5F2EA;font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px">2</span></div>
+          <div style="position:relative;width:96px;height:68px;border-radius:8px;background:#EAD9C4"><span style="position:absolute;top:6px;left:6px;background:#19312F;color:#F5F2EA;font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px">3</span></div>
+          <button type="button" aria-label="Добавить фото" style="width:96px;height:68px;border-radius:8px;border:1px dashed #A9A08B;background:transparent;color:#8F4524;font:600 22px 'Manrope',sans-serif;cursor:pointer">+</button>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid #DDD5C3;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+        <div style="flex:1 1 220px">
+          <div id="sw" style="font-size:15px;font-weight:600">Показывать на сайте</div>
+          <div style="margin-top:4px;font-size:13px;color:#55625F">Выключите, чтобы убрать мероприятие, не удаляя его.</div>
+        </div>
+        <button type="button" role="switch" aria-checked="{{on}}" aria-labelledby="sw" onClick="{{toggle}}" style="flex:0 0 52px;width:52px;height:30px;border:0;border-radius:999px;background:{{swBg}};position:relative;cursor:pointer;padding:0"><span style="position:absolute;top:3px;left:{{swLeft}};width:24px;height:24px;border-radius:50%;background:#FFFFFF"></span></button>
+      </div>
+
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid #DDD5C3;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center">
+        <button class="bt" type="button">Удалить</button>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="bs" type="button">Отмена</button>
+          <button class="bp" type="button">Сохранить</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1400}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { menu: false, cat: 'Все', on: true };
+  }
+  renderVals() {
+    const cat = this.state.cat;
+    const on = this.state.on;
+    const labels = ['Все', 'Экскурсии', 'Бег', 'Open-air', 'Календарь'];
+    const all = [
+      { name: 'Экскурсия по винодельне', cat: 'Экскурсии', photos: '3 фото', thumb: '#7FA08F', on: true, sel: true },
+      { name: 'Дегустация в погребе', cat: 'Экскурсии', photos: '4 фото', thumb: '#8F4524', on: true },
+      { name: 'Забег по виноградникам', cat: 'Бег', photos: '5 фото', thumb: '#D9A47F', on: true },
+      { name: 'Вечер джаза на террасе', cat: 'Open-air', photos: '2 фото', thumb: '#5E8272', on: true },
+      { name: 'Фестиваль урожая', cat: 'Календарь', photos: '1 фото', thumb: '#C7774D', on: false },
+      { name: 'Новогодний ужин', cat: 'Календарь', photos: '1 фото', thumb: '#EAD9C4', on: true }
+    ];
+    const shown = all.filter((d) => cat === 'Все' || d.cat === cat);
+    return {
+      menuCls: this.state.menu ? 'side open' : 'side',
+      menuOpen: this.state.menu ? 'true' : 'false',
+      toggleMenu: () => this.setState({ menu: !this.state.menu }),
+      on: on ? 'true' : 'false',
+      swBg: on ? '#1F4D4A' : '#A9A08B',
+      swLeft: on ? '25px' : '3px',
+      toggle: () => this.setState({ on: !this.state.on }),
+      cats: labels.map((l) => ({
+        label: l,
+        pressed: cat === l ? 'true' : 'false',
+        border: cat === l ? '#19312F' : '#CFC6B2',
+        bg: cat === l ? '#19312F' : 'transparent',
+        color: cat === l ? '#F5F2EA' : '#19312F',
+        pick: () => this.setState({ cat: l })
+      })),
+      items: shown.map((d) => ({
+        name: d.name, cat: d.cat, photos: d.photos, thumb: d.thumb,
+        rowBg: d.sel ? '#ECE6D8' : 'transparent',
+        status: d.on ? 'На сайте' : 'Скрыто',
+        chipBg: d.on ? '#DCE5DE' : '#E8DFCB',
+        chipColor: d.on ? '#19312F' : '#55625F'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

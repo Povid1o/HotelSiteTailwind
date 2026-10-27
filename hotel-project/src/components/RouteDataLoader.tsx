@@ -54,6 +54,8 @@ const RouteDataLoader = observer(() => {
     } else if (pathname === '/Events' || pathname.startsWith('/Events/')) {
       loadPageContent();
       loadEvents();
+    } else if (pathname === '/News' || pathname.startsWith('/News/')) {
+      loadPageContent();
     } else if (pathname === '/Contacts' || pathname === '/Privacy') {
       loadPageContent();
     }

@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Админка — новости</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+input:focus,select:focus,textarea:focus{outline:2px solid #1F4D4A;outline-offset:1px}
+button:focus-visible,a:focus-visible{outline:2px solid #1F4D4A;outline-offset:2px}
+.side a:hover{background:#25504C}
+.row:hover{background:#ECE6D8}
+.tb:hover{background:#ECE6D8!important}
+.inl{color:#8F4524;text-decoration:underline;text-underline-offset:3px}
+
+/* ---- адаптив: общая оболочка ---- */
+.shell{background:#F5F2EA;color:#19312F;font-family:'Manrope',sans-serif;min-height:100%;display:flex;align-items:stretch}
+.side{flex:0 0 240px;width:240px;background:#19312F;color:#DCE5DE;padding:28px 16px;box-sizing:border-box;display:flex;flex-direction:column}
+.brand{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:#F5F2EA;padding:0 12px}
+.brandsub{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#B9C7BF;padding:4px 12px 0}
+.menubtn{display:none;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:8px;border:1px solid #4A6F6B;background:transparent;color:#F5F2EA;font:600 15px 'Manrope',sans-serif;cursor:pointer}
+.nav{margin-top:32px;display:flex;flex-direction:column;gap:4px;font-size:15px;font-weight:500;flex-grow:1}
+.nav a{text-decoration:none;padding:12px;border-radius:8px;color:#DCE5DE}
+.nav a[aria-current="page"],.nav a[aria-current="page"]:hover{background:#1F4D4A;color:#F5F2EA;font-weight:600}
+.sidefoot{display:flex;flex-direction:column;gap:4px;font-size:14px;border-top:1px solid #2C4A47;padding-top:16px}
+.sidefoot a{text-decoration:none;padding:10px 12px;border-radius:8px;color:#B9C7BF}
+.main{flex:1 1 auto;min-width:0;padding:36px 40px 64px;box-sizing:border-box}
+.h1{margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:44px;line-height:1.05;letter-spacing:-0.015em}
+.phead{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between}
+.facts{display:contents}
+.menubtn:focus-visible,.nav a:focus-visible,.sidefoot a:focus-visible{outline:2px solid #F5F2EA;outline-offset:2px}
+
+/* ---- ноутбук и планшет: колонки складываются ---- */
+@media (max-width:1279px){
+  .col-list,.col-edit{flex:1 1 100% !important;min-width:0 !important;width:100%;box-sizing:border-box}
+  .rooms-list{display:grid !important;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px !important}
+}
+
+/* ---- планшет: меню становится верхней панелью ---- */
+@media (max-width:1079px){
+  .shell{flex-direction:column}
+  .side{flex:none;width:100%;padding:14px 24px;flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 16px}
+  .side>.sidehead{order:1;flex:1 1 auto}
+  .brand{padding:0}
+  .brandsub{padding:2px 0 0}
+  .sidefoot{order:2;flex-direction:row;border-top:0;padding:0;gap:4px}
+  .nav{order:3;flex:1 0 100%;margin-top:0;flex-direction:row;flex-wrap:wrap;gap:4px;border-top:1px solid #2C4A47;padding-top:10px}
+  .nav a{padding:10px 14px}
+  .main{padding:28px 24px 48px}
+  .h1{font-size:38px}
+}
+
+/* ---- телефон ---- */
+@media (max-width:699px){
+  .side{padding:12px 16px}
+  .menubtn{display:inline-flex;order:2}
+  .nav,.sidefoot{display:none}
+  .side.open .nav{display:flex;flex-direction:column;order:3}
+  .side.open .sidefoot{display:flex;flex-direction:column;flex:1 0 100%;order:4;border-top:1px solid #2C4A47;padding-top:8px}
+  .main{padding:20px 16px 40px}
+  .h1{font-size:32px}
+  .phead>.bp{width:100%}
+  .col-edit{padding:20px !important}
+  .thead{display:none !important}
+  .row.r-menu,.row.r-wine{grid-template-columns:56px minmax(0,1fr) !important}
+  .row.r-ev{grid-template-columns:64px minmax(0,1fr) !important}
+  .row.r-page{grid-template-columns:minmax(0,1fr) !important;gap:8px !important}
+  .facts{display:flex;grid-column:2;flex-wrap:wrap;gap:6px 14px;align-items:center}
+  .rooms-list{grid-template-columns:minmax(0,1fr)}
+  main [style*="repeat(2,minmax(0,1fr))"]{grid-template-columns:minmax(0,1fr) !important}
+  main [style*="repeat(4,minmax(0,1fr))"]{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+  main [style*="flex:0 0 240px"],main [style*="flex:0 0 200px"]{flex:1 1 100% !important}
+  main input,main select,main textarea{font-size:16px !important}
+  .col-edit .bp,.col-edit .bs{flex:1 1 140px}
+}
+</style>
+</helmet>
+<div class="shell">
+
+<aside class="{{menuCls}}">
+  <div class="sidehead"><div class="brand">Винные Террасы</div><div class="brandsub">Управление сайтом</div></div>
+  <button class="menubtn" type="button" aria-expanded="{{menuOpen}}" aria-controls="adm-nav" onClick="{{toggleMenu}}"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 4h14M2 9h14M2 14h14"/></svg>Меню</button>
+  <nav class="nav" id="adm-nav" aria-label="Разделы админки">
+    <a href="AdminPages.dc.html">Страницы сайта</a>
+    <a href="AdminRooms.dc.html">Номера</a>
+    <a href="AdminMenu.dc.html">Меню ресторана</a>
+    <a href="AdminEvents.dc.html">Мероприятия</a>
+    <a href="AdminWines.dc.html">Вина</a>
+    <a href="Admin.dc.html" aria-current="page">Новости</a>
+  </nav>
+  <div class="sidefoot">
+    <a href="Main.dc.html">Открыть сайт ↗</a>
+    <a href="#">Выйти</a>
+  </div>
+</aside>
+
+<main class="main">
+
+  <div class="phead">
+    <div>
+      <h1 class="h1">Новости</h1>
+      <p style="margin:8px 0 0;font-size:15px;color:#55625F">Публикуйте новости и настраивайте страницу раздела — без участия разработчика.</p>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <a href="Main.dc.html" style="display:inline-flex;align-items:center;min-height:44px;padding:0 20px;border-radius:8px;border:1px solid #19312F;color:#19312F;font-size:15px;font-weight:600;text-decoration:none">Открыть раздел на сайте</a>
+      <button type="button" style="min-height:44px;padding:0 24px;border-radius:8px;border:0;background:#A5532F;color:#FFFFFF;font:600 15px 'Manrope',sans-serif;cursor:pointer">Новая новость</button>
+    </div>
+  </div>
+
+  <div role="tablist" aria-label="Разделы управления новостями" style="display:flex;gap:8px;margin-top:28px;border-bottom:1px solid #DDD5C3">
+    <button type="button" role="tab" aria-selected="{{newsSel}}" onClick="{{goNews}}" style="min-height:44px;padding:0 20px;border:0;border-bottom:3px solid {{newsLine}};background:transparent;font:600 15px 'Manrope',sans-serif;color:{{newsColor}};cursor:pointer;margin-bottom:-1px">Новости</button>
+    <button type="button" role="tab" aria-selected="{{pageSel}}" onClick="{{goPage}}" style="min-height:44px;padding:0 20px;border:0;border-bottom:3px solid {{pageLine}};background:transparent;font:600 15px 'Manrope',sans-serif;color:{{pageColor}};cursor:pointer;margin-bottom:-1px">Страница раздела</button>
+  </div>
+
+<sc-if value="{{showNews}}" hint-placeholder-val="{{true}}">
+  <div style="display:flex;gap:32px;flex-wrap:wrap;margin-top:28px;align-items:flex-start">
+
+    <section class="col-list" aria-label="Список новостей" style="flex:0 1 300px;min-width:260px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="search" placeholder="Поиск по заголовку" aria-label="Поиск по заголовку" style="flex:1 1 160px;box-sizing:border-box;min-height:44px;padding:0 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px 'Manrope',sans-serif;color:#19312F">
+        <select aria-label="Фильтр по статусу" style="flex:0 0 150px;min-height:44px;padding:0 10px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px 'Manrope',sans-serif;color:#19312F">
+          <option>Все статусы</option><option>Опубликовано</option><option>Черновик</option><option>Запланировано</option>
+        </select>
+      </div>
+      <ul style="list-style:none;margin:16px 0 0;padding:0;border-top:1px solid #DDD5C3">
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+          <li class="row" style="padding:16px 12px;margin:0;border-bottom:1px solid #DDD5C3;background:{{r.bg}};cursor:pointer;display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:15px;font-weight:600;line-height:1.35;color:#19312F">{{r.title}}</div>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:#55625F">
+              <span>{{r.cat}}</span><span aria-hidden="true">·</span><span>{{r.date}}</span>
+              <span style="margin-left:auto;padding:3px 10px;border-radius:999px;font-weight:600;background:{{r.chipBg}};color:{{r.chipColor}}">{{r.status}}</span>
+            </div>
+          </li>
+        </sc-for>
+      </ul>
+    </section>
+
+    <section class="col-edit" aria-label="Редактор новости" style="flex:1 1 560px;min-width:0;background:#FBF9F4;border:1px solid #DDD5C3;border-radius:12px;padding:32px;box-sizing:border-box">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:baseline">
+        <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:30px;letter-spacing:-0.01em">Редактирование новости</h2>
+        <span style="font-size:13px;color:#55625F">Автосохранение черновика: только что</span>
+      </div>
+
+      <div style="margin-top:24px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px">
+        <div style="grid-column:1 / -1">
+          <label for="f-title" style="display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#3A4A48">Заголовок</label>
+          <input id="f-title" type="text" value="Сбор урожая 2026: приглашаем на виноградники" style="width:100%;box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 17px 'Manrope',sans-serif;color:#19312F">
+        </div>
+        <div>
+          <label for="f-cat" style="display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#3A4A48">Категория</label>
+          <select id="f-cat" style="width:100%;box-sizing:border-box;min-height:44px;padding:0 10px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px 'Manrope',sans-serif;color:#19312F">
+            <option>События</option><option>Отель</option><option>Винодельня</option><option>Ресторан</option>
+          </select>
+        </div>
+        <div>
+          <label for="f-date" style="display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#3A4A48">Дата публикации</label>
+          <input id="f-date" type="text" value="24.10.2026, 10:00" style="width:100%;box-sizing:border-box;min-height:44px;padding:0 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px 'Manrope',sans-serif;color:#19312F">
+        </div>
+        <div style="grid-column:1 / -1">
+          <div id="st-label" style="margin-bottom:6px;font-size:13px;font-weight:600;color:#3A4A48">Статус</div>
+          <div role="group" aria-labelledby="st-label" style="display:inline-flex;border:1px solid #CFC6B2;border-radius:8px;overflow:hidden;background:#FFFFFF;flex-wrap:wrap">
+            <sc-for list="{{statuses}}" as="s" hint-placeholder-count="3">
+              <button type="button" aria-pressed="{{s.pressed}}" onClick="{{s.pick}}" style="min-height:44px;padding:0 20px;border:0;background:{{s.bg}};color:{{s.color}};font:600 14px 'Manrope',sans-serif;cursor:pointer">{{s.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:32px;padding-top:28px;border-top:1px solid #DDD5C3">
+        <h3 style="margin:0 0 16px;font-size:16px;font-weight:700">Обложка</h3>
+        <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
+          <div style="flex:0 0 240px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#DCE5DE">
+            <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" role="img" aria-label="Текущая обложка" style="display:block"><rect width="160" height="90" fill="#DCE5DE"/><circle cx="122" cy="24" r="9" fill="#C7774D"/><path d="M0 58 C30 42 55 48 80 54 C105 60 130 46 160 50 L160 90 L0 90Z" fill="#7FA08F"/><path d="M0 72 C25 64 50 68 80 72 C110 76 135 66 160 70 L160 90 L0 90Z" fill="#1F4D4A"/></svg>
+          </div>
+          <div style="flex:1 1 260px;min-width:0">
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button type="button" style="min-height:44px;padding:0 20px;border-radius:8px;border:1px solid #19312F;background:transparent;color:#19312F;font:600 14px 'Manrope',sans-serif;cursor:pointer">Заменить фото</button>
+              <button type="button" style="min-height:44px;padding:0 20px;border-radius:8px;border:1px solid #CFC6B2;background:transparent;color:#8F4524;font:600 14px 'Manrope',sans-serif;cursor:pointer">Убрать</button>
+            </div>
+            <div style="margin-top:10px;font-size:12px;line-height:1.5;color:#55625F">Формат 16:9, лучше 1920×1080, до 5 МБ. Фото обрезается по центру — точку фокуса можно сместить после загрузки.</div>
+            <label for="f-alt" style="display:block;margin:16px 0 6px;font-size:13px;font-weight:600;color:#3A4A48">Описание фото (для доступности)</label>
+            <input id="f-alt" type="text" value="Виноградные ряды на закате" style="width:100%;box-sizing:border-box;min-height:44px;padding:0 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px 'Manrope',sans-serif;color:#19312F">
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:32px;padding-top:28px;border-top:1px solid #DDD5C3">
+        <label for="f-lead" style="display:block;margin-bottom:6px;font-size:16px;font-weight:700">Лид</label>
+        <textarea id="f-lead" rows="3" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px/1.55 'Manrope',sans-serif;color:#19312F;resize:vertical">Гости отеля смогут выйти на ряды вместе с нашими виноделами и собрать часть будущего урожая своими руками.</textarea>
+        <div style="margin-top:6px;font-size:12px;color:#55625F">Показывается под заголовком и на карточке в списке. До 200 символов.</div>
+
+        <div style="margin-top:20px">
+          <div style="margin-bottom:8px;font-size:13px;font-weight:600;color:#3A4A48">Теги</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <sc-for list="{{tags}}" as="tg" hint-placeholder-count="3">
+              <span style="display:inline-flex;align-items:center;gap:6px;background:#ECE6D8;color:#19312F;font-size:13px;font-weight:500;padding:4px 6px 4px 14px;border-radius:999px">{{tg}}<button type="button" aria-label="Убрать тег" style="width:28px;height:28px;border:0;border-radius:50%;background:transparent;color:#55625F;font-size:16px;line-height:1;cursor:pointer">×</button></span>
+            </sc-for>
+            <input type="text" placeholder="Добавить тег" aria-label="Добавить тег" style="min-height:40px;width:150px;box-sizing:border-box;padding:0 12px;border:1px dashed #A9A08B;border-radius:999px;background:transparent;font:500 13px 'Manrope',sans-serif;color:#19312F">
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:32px;padding-top:28px;border-top:1px solid #DDD5C3">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:baseline">
+          <h3 style="margin:0;font-size:16px;font-weight:700">Текст новости</h3>
+          <span style="font-size:12px;color:#55625F">Пишите прямо здесь — на сайте текст выглядит так же</span>
+        </div>
+
+        <div style="margin-top:16px;border:1px solid #CFC6B2;border-radius:12px;background:#FFFFFF">
+          <div role="toolbar" aria-label="Форматирование текста" style="position:relative;display:flex;gap:2px;flex-wrap:wrap;align-items:center;padding:8px;border-bottom:1px solid #DDD5C3;background:#FBF9F4;border-radius:12px 12px 0 0">
+            <button class="tb" type="button" aria-label="Отменить" style="width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:#19312F;font:600 17px 'Manrope',sans-serif;cursor:pointer">↶</button>
+            <button class="tb" type="button" aria-label="Повторить" style="width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:#19312F;font:600 17px 'Manrope',sans-serif;cursor:pointer">↷</button>
+            <span aria-hidden="true" style="width:1px;height:20px;background:#DDD5C3;margin:0 6px"></span>
+
+            <div style="position:relative">
+              <button class="tb" type="button" aria-haspopup="menu" aria-expanded="{{hOpen}}" onClick="{{toggleH}}" style="min-height:36px;padding:0 12px;border:0;border-radius:8px;background:{{hBg}};color:#19312F;font:600 14px 'Manrope',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:8px">{{hLabel}}<span aria-hidden="true" style="font-size:10px">▾</span></button>
+              <sc-if value="{{hMenu}}" hint-placeholder-val="{{false}}">
+                <div role="menu" style="position:absolute;z-index:5;top:42px;left:0;min-width:210px;background:#FFFFFF;border:1px solid #CFC6B2;border-radius:10px;padding:6px;display:flex;flex-direction:column;gap:2px">
+                  <button class="tb" role="menuitem" type="button" onClick="{{pickP}}" style="text-align:left;min-height:40px;padding:0 12px;border:0;border-radius:6px;background:transparent;font:500 15px 'Manrope',sans-serif;color:#19312F;cursor:pointer">Абзац</button>
+                  <button class="tb" role="menuitem" type="button" onClick="{{pickH2}}" style="text-align:left;min-height:44px;padding:0 12px;border:0;border-radius:6px;background:transparent;font:500 24px 'Cormorant Garamond',serif;color:#19312F;cursor:pointer">Заголовок 2</button>
+                  <button class="tb" role="menuitem" type="button" onClick="{{pickH3}}" style="text-align:left;min-height:40px;padding:0 12px;border:0;border-radius:6px;background:transparent;font:500 20px 'Cormorant Garamond',serif;color:#19312F;cursor:pointer">Заголовок 3</button>
+                  <button class="tb" role="menuitem" type="button" onClick="{{pickH4}}" style="text-align:left;min-height:40px;padding:0 12px;border:0;border-radius:6px;background:transparent;font:600 16px 'Manrope',sans-serif;color:#19312F;cursor:pointer">Заголовок 4</button>
+                </div>
+              </sc-if>
+            </div>
+            <button class="tb" type="button" aria-label="Список" style="min-height:36px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:#19312F;font:600 14px 'Manrope',sans-serif;cursor:pointer">• Список <span aria-hidden="true" style="font-size:10px">▾</span></button>
+            <span aria-hidden="true" style="width:1px;height:20px;background:#DDD5C3;margin:0 6px"></span>
+
+            <button class="tb" type="button" aria-label="Цитата" style="width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:#19312F;font:600 20px 'Cormorant Garamond',serif;cursor:pointer">“</button>
+            <span aria-hidden="true" style="width:1px;height:20px;background:#DDD5C3;margin:0 6px"></span>
+
+            <button class="tb" type="button" aria-label="Жирный" style="width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:#19312F;font:800 15px 'Manrope',sans-serif;cursor:pointer">B</button>
+            <button class="tb" type="button" aria-label="Курсив" style="width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:#19312F;font:italic 600 16px 'Cormorant Garamond',serif;cursor:pointer">I</button>
+            <button class="tb" type="button" aria-label="Подчёркнутый" style="width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:#19312F;font:600 15px 'Manrope',sans-serif;text-decoration:underline;cursor:pointer">U</button>
+            <button class="tb" type="button" aria-label="Зачёркнутый" style="width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:#19312F;font:600 15px 'Manrope',sans-serif;text-decoration:line-through;cursor:pointer">S</button>
+            <span aria-hidden="true" style="width:1px;height:20px;background:#DDD5C3;margin:0 6px"></span>
+
+            <button class="tb" type="button" style="min-height:36px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:#19312F;font:600 14px 'Manrope',sans-serif;cursor:pointer">Ссылка</button>
+            <span aria-hidden="true" style="width:1px;height:20px;background:#DDD5C3;margin:0 6px"></span>
+
+            <button class="tb" type="button" style="min-height:36px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:#8F4524;font:700 14px 'Manrope',sans-serif;cursor:pointer">+ Линия</button>
+            <button class="tb" type="button" style="min-height:36px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:#8F4524;font:700 14px 'Manrope',sans-serif;cursor:pointer">+ Фото</button>
+            <button class="tb" type="button" style="min-height:36px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:#8F4524;font:700 14px 'Manrope',sans-serif;cursor:pointer">+ Кнопка</button>
+          </div>
+
+          <div style="padding:32px 28px 36px">
+            <div style="max-width:680px;margin:0 auto">
+              <p style="margin:0 0 20px;font-size:17px;line-height:1.75;color:#2A3C3A">В этом году сезон сбора начинается [дата]. Каждое утро мы выходим на ряды вместе с командой винодельни: виноделы показывают, как выбирают зрелые грозди, и рассказывают, чем ручной сбор отличается от машинного.</p>
+
+              <h2 style="margin:40px 0 14px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;line-height:1.1;letter-spacing:-0.015em;color:#19312F">Что вас ждёт</h2>
+              <ul style="margin:0 0 20px;padding:0 0 0 22px;font-size:17px;line-height:1.75;color:#2A3C3A">
+                <li style="margin:0 0 6px;padding:0">Утренний выход на виноградник — [время]</li>
+                <li style="margin:0 0 6px;padding:0">Знакомство с сортами и дегустация молодого сока</li>
+                <li style="margin:0 0 6px;padding:0">Завтрак на террасе после сбора</li>
+                <li style="margin:0 0 6px;padding:0">Экскурсия по винодельне и подвалу выдержки</li>
+              </ul>
+              <p style="margin:0 0 20px;font-size:17px;line-height:1.75;color:#2A3C3A">Условия участия: [условия]. Мест в каждой группе немного, поэтому бронировать лучше заранее — <span class="inl">оставьте заявку на сайте</span> или напишите администратору.</p>
+
+              <blockquote style="margin:36px 0;padding:24px 0;border-top:1px solid #DDD5C3;border-bottom:1px solid #DDD5C3">
+                <p style="margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:28px;line-height:1.25;letter-spacing:-0.01em;color:#19312F">«Виноград, собранный руками, чувствуется в бокале. Мы хотим, чтобы гости увидели этот путь целиком».</p>
+                <p style="margin:14px 0 0;font-size:14px;color:#55625F">[Имя], главный винодел</p>
+              </blockquote>
+
+              <figure style="margin:0 0 32px">
+                <div style="position:relative;outline:2px solid #1F4D4A;outline-offset:3px;border-radius:12px">
+                  <div style="aspect-ratio:3/2;border-radius:12px;overflow:hidden;background:#EAD9C4">
+                    <svg viewBox="0 0 150 100" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" role="img" aria-label="Фото внутри новости" style="display:block"><rect width="150" height="100" fill="#EAD9C4"/><circle cx="30" cy="26" r="9" fill="#F5F2EA"/><path d="M0 64 C30 50 55 56 80 62 C105 68 125 54 150 58 L150 100 L0 100Z" fill="#D9A47F"/><path d="M0 80 C25 72 50 76 80 80 C105 84 125 74 150 78 L150 100 L0 100Z" fill="#8F4524"/></svg>
+                  </div>
+                  <div style="position:absolute;top:10px;right:10px;display:flex;gap:4px;background:#19312F;border-radius:8px;padding:4px">
+                    <button type="button" style="min-height:32px;padding:0 12px;border:0;border-radius:6px;background:transparent;color:#F5F2EA;font:600 13px 'Manrope',sans-serif;cursor:pointer">Заменить</button>
+                    <button type="button" style="min-height:32px;padding:0 12px;border:0;border-radius:6px;background:transparent;color:#F5F2EA;font:600 13px 'Manrope',sans-serif;cursor:pointer">Убрать</button>
+                  </div>
+                </div>
+                <figcaption style="margin-top:14px;font-size:14px;line-height:1.5;color:#55625F">[Подпись к фото] · Фото: [автор]</figcaption>
+              </figure>
+
+              <hr style="border:0;border-top:1px solid #CFC6B2;margin:8px 0 0">
+              <h2 style="margin:40px 0 14px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;line-height:1.1;letter-spacing:-0.015em;color:#19312F">Как приехать и где остановиться</h2>
+              <p style="margin:0 0 24px;font-size:17px;line-height:1.75;color:#2A3C3A">Виноградник находится в нескольких минутах от отеля. Гости, которые остаются на ночь, могут выйти на сбор прямо с утра, не думая о дороге.</p>
+
+              <div style="display:inline-flex;flex-direction:column;gap:10px;padding:14px;border:1px dashed #A9A08B;border-radius:10px">
+                <span style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 28px;border-radius:8px;background:#A5532F;color:#FFFFFF;font-size:15px;font-weight:600">Выбрать даты</span>
+                <span style="font-size:12px;color:#55625F">Блок «Кнопка» · ссылка: #booking · изменить</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px 24px;flex-wrap:wrap;justify-content:space-between;padding:10px 16px;border-top:1px solid #DDD5C3;background:#FBF9F4;border-radius:0 0 12px 12px;font-size:12px;color:#55625F">
+            <span>312 слов · чтение около 3 минут</span>
+            <span>Заголовок новости задаётся выше, в тексте — только уровни 2–4</span>
+          </div>
+        </div>
+        <p style="margin:12px 0 0;font-size:12px;line-height:1.5;color:#55625F">Основа — Tiptap Simple Editor. Лишнее (код, чек-листы, выравнивание, индексы) скрываем. «Линия» — стандартный блок Tiptap, «Кнопка» — наш собственный: ей задаются текст и ссылка. Фото сразу уходит на сервер. Адрес страницы создаётся автоматически из заголовка.</p>
+      </div>
+
+      <div style="margin-top:32px;padding-top:28px;border-top:1px solid #DDD5C3">
+        <h3 style="margin:0 0 16px;font-size:16px;font-weight:700">Поиск и соцсети</h3>
+        <label for="f-seo-t" style="display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#3A4A48">Заголовок для поиска</label>
+        <input id="f-seo-t" type="text" value="Сбор урожая 2026 — Винные Террасы" style="width:100%;box-sizing:border-box;min-height:44px;padding:0 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px 'Manrope',sans-serif;color:#19312F">
+        <label for="f-seo-d" style="display:block;margin:16px 0 6px;font-size:13px;font-weight:600;color:#3A4A48">Описание</label>
+        <textarea id="f-seo-d" rows="2" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px/1.55 'Manrope',sans-serif;color:#19312F;resize:vertical">Выйдите на виноградник вместе с виноделами и соберите урожай своими руками.</textarea>
+        <div style="margin-top:6px;font-size:12px;color:#55625F">Картинка для соцсетей берётся из обложки.</div>
+      </div>
+
+      <div style="margin-top:32px;padding-top:24px;border-top:1px solid #DDD5C3;display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end">
+        <button type="button" style="min-height:48px;padding:0 24px;border-radius:8px;border:1px solid #19312F;background:transparent;color:#19312F;font:600 15px 'Manrope',sans-serif;cursor:pointer">Сохранить черновик</button>
+        <a href="Article.dc.html" style="display:inline-flex;align-items:center;min-height:48px;padding:0 24px;border-radius:8px;border:1px solid #19312F;color:#19312F;font-size:15px;font-weight:600;text-decoration:none">Предпросмотр</a>
+        <button type="button" style="min-height:48px;padding:0 28px;border-radius:8px;border:0;background:#A5532F;color:#FFFFFF;font:600 15px 'Manrope',sans-serif;cursor:pointer">Опубликовать</button>
+      </div>
+    </section>
+  </div>
+</sc-if>
+
+<sc-if value="{{showPage}}" hint-placeholder-val="{{false}}">
+  <div style="margin-top:28px;max-width:760px;background:#FBF9F4;border:1px solid #DDD5C3;border-radius:12px;padding:32px;box-sizing:border-box">
+    <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:30px;letter-spacing:-0.01em">Страница раздела «Новости»</h2>
+    <p style="margin:8px 0 0;font-size:14px;color:#55625F">Эти настройки меняют страницу <span style="font-weight:600;color:#19312F">/News</span> и призыв внизу каждой новости.</p>
+
+    <div style="margin-top:24px;display:flex;flex-direction:column;gap:20px">
+      <div>
+        <label for="p-h1" style="display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#3A4A48">Заголовок страницы</label>
+        <input id="p-h1" type="text" value="Что нового на Террасах" style="width:100%;box-sizing:border-box;min-height:48px;padding:0 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 17px 'Manrope',sans-serif;color:#19312F">
+      </div>
+      <div>
+        <label for="p-lead" style="display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#3A4A48">Короткий текст под заголовком</label>
+        <textarea id="p-lead" rows="3" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px/1.55 'Manrope',sans-serif;color:#19312F;resize:vertical">Сезоны на винограднике, события, новинки ресторана и обновления отеля — всё, что происходит у нас, в одном месте.</textarea>
+      </div>
+
+      <div>
+        <div style="margin-bottom:8px;font-size:13px;font-weight:600;color:#3A4A48">Вкладки категорий</div>
+        <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px">
+          <sc-for list="{{cats}}" as="c" hint-placeholder-count="5">
+            <li style="margin:0;padding:8px 12px;display:flex;gap:12px;align-items:center;background:#FFFFFF;border:1px solid #DDD5C3;border-radius:10px;cursor:default">
+              <span aria-hidden="true" style="color:#8A8470;font-size:18px;line-height:1;letter-spacing:-2px;cursor:grab">⋮⋮</span>
+              <span style="flex:1;font-size:15px;font-weight:500">{{c.name}}</span>
+              <span style="font-size:12px;color:#55625F">{{c.note}}</span>
+              <button type="button" aria-label="Скрыть вкладку" style="width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:#19312F;font-size:15px;cursor:pointer">◉</button>
+            </li>
+          </sc-for>
+        </ul>
+        <button type="button" style="margin-top:10px;min-height:40px;padding:0 16px;border-radius:8px;border:1px dashed #A9A08B;background:transparent;color:#19312F;font:600 13px 'Manrope',sans-serif;cursor:pointer">+ Новая категория</button>
+      </div>
+
+      <div style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:16px 0;border-top:1px solid #DDD5C3">
+        <div style="flex:1 1 320px">
+          <div id="sw1" style="font-size:15px;font-weight:600">Крупная главная новость вверху</div>
+          <div style="margin-top:4px;font-size:13px;color:#55625F">Берётся самая свежая новость выбранной категории.</div>
+        </div>
+        <button type="button" role="switch" aria-checked="{{feat.on}}" aria-labelledby="sw1" onClick="{{feat.toggle}}" style="flex:0 0 52px;width:52px;height:30px;border:0;border-radius:999px;background:{{feat.bg}};position:relative;cursor:pointer;padding:0"><span style="position:absolute;top:3px;left:{{feat.left}};width:24px;height:24px;border-radius:50%;background:#FFFFFF"></span></button>
+      </div>
+
+      <div style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+        <div style="flex:1 1 320px">
+          <label for="p-n" style="font-size:15px;font-weight:600">Сколько карточек показывать сразу</label>
+          <div style="margin-top:4px;font-size:13px;color:#55625F">Остальные открываются кнопкой «Показать ещё».</div>
+        </div>
+        <select id="p-n" style="flex:0 0 100px;min-height:44px;padding:0 10px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px 'Manrope',sans-serif;color:#19312F">
+          <option>6</option><option>9</option><option>12</option>
+        </select>
+      </div>
+
+      <div style="padding-top:20px;border-top:1px solid #DDD5C3">
+        <div style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+          <div style="flex:1 1 320px">
+            <div id="sw2" style="font-size:15px;font-weight:600">Зелёная полоса с призывом к бронированию</div>
+            <div style="margin-top:4px;font-size:13px;color:#55625F">Показывается внизу списка и под каждой новостью.</div>
+          </div>
+          <button type="button" role="switch" aria-checked="{{cta.on}}" aria-labelledby="sw2" onClick="{{cta.toggle}}" style="flex:0 0 52px;width:52px;height:30px;border:0;border-radius:999px;background:{{cta.bg}};position:relative;cursor:pointer;padding:0"><span style="position:absolute;top:3px;left:{{cta.left}};width:24px;height:24px;border-radius:50%;background:#FFFFFF"></span></button>
+        </div>
+        <div style="margin-top:16px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
+          <div style="grid-column:1 / -1">
+            <label for="p-ct" style="display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#3A4A48">Заголовок</label>
+            <input id="p-ct" type="text" value="Проведите выходные на Террасах" style="width:100%;box-sizing:border-box;min-height:44px;padding:0 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px 'Manrope',sans-serif;color:#19312F">
+          </div>
+          <div>
+            <label for="p-cb" style="display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#3A4A48">Текст кнопки</label>
+            <input id="p-cb" type="text" value="Выбрать даты" style="width:100%;box-sizing:border-box;min-height:44px;padding:0 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px 'Manrope',sans-serif;color:#19312F">
+          </div>
+          <div>
+            <label for="p-cl" style="display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#3A4A48">Ссылка кнопки</label>
+            <input id="p-cl" type="text" value="#booking" style="width:100%;box-sizing:border-box;min-height:44px;padding:0 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px 'Manrope',sans-serif;color:#19312F">
+          </div>
+        </div>
+      </div>
+
+      <div style="padding-top:20px;border-top:1px solid #DDD5C3">
+        <label for="p-st" style="display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#3A4A48">Заголовок страницы для поиска</label>
+        <input id="p-st" type="text" value="Новости — Винные Террасы" style="width:100%;box-sizing:border-box;min-height:44px;padding:0 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px 'Manrope',sans-serif;color:#19312F">
+      </div>
+    </div>
+
+    <div style="margin-top:28px;padding-top:24px;border-top:1px solid #DDD5C3;display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end">
+      <a href="Main.dc.html" style="display:inline-flex;align-items:center;min-height:48px;padding:0 24px;border-radius:8px;border:1px solid #19312F;color:#19312F;font-size:15px;font-weight:600;text-decoration:none">Предпросмотр</a>
+      <button type="button" style="min-height:48px;padding:0 28px;border-radius:8px;border:0;background:#A5532F;color:#FFFFFF;font:600 15px 'Manrope',sans-serif;cursor:pointer">Сохранить</button>
+    </div>
+  </div>
+</sc-if>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":2400}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { menu: false, tab: 'news', status: 'Опубликовано', feat: true, cta: true, hOpen: false, hLabel: 'Абзац' };
+  }
+  renderVals() {
+    const tab = this.state.tab;
+    const st = this.state.status;
+    const chip = (s) => s === 'Опубликовано'
+      ? { chipBg: '#DCE5DE', chipColor: '#19312F' }
+      : s === 'Запланировано'
+        ? { chipBg: '#F3E1D2', chipColor: '#7A3A1C' }
+        : { chipBg: '#E6E0D2', chipColor: '#3A4A48' };
+    const rowsRaw = [
+      { title: 'Сбор урожая 2026: приглашаем на виноградники', cat: 'События', date: '24 окт', status: 'Опубликовано' },
+      { title: 'Вечер живой музыки на открытой террасе', cat: 'События', date: '6 ноя', status: 'Запланировано' },
+      { title: 'Зимнее меню ресторана', cat: 'Ресторан', date: '—', status: 'Черновик' },
+      { title: 'Осеннее меню: тыква, дичь и молодые вина', cat: 'Ресторан', date: '18 окт', status: 'Опубликовано' },
+      { title: 'Номера с видом на террасы после обновления', cat: 'Отель', date: '9 окт', status: 'Опубликовано' },
+      { title: 'Дегустационный сет из молодых вин', cat: 'Винодельня', date: '2 окт', status: 'Опубликовано' }
+    ];
+    const rows = rowsRaw.map((r, i) => Object.assign({ bg: i === 0 ? '#ECE6D8' : 'transparent' }, r, chip(r.status)));
+    const sw = (on) => ({ on: on ? 'true' : 'false', bg: on ? '#1F4D4A' : '#A9A08B', left: on ? '25px' : '3px' });
+    const feat = sw(this.state.feat);
+    feat.toggle = () => this.setState({ feat: !this.state.feat });
+    const cta = sw(this.state.cta);
+    cta.toggle = () => this.setState({ cta: !this.state.cta });
+    return {
+      menuCls: this.state.menu ? 'side open' : 'side',
+      menuOpen: this.state.menu ? 'true' : 'false',
+      toggleMenu: () => this.setState({ menu: !this.state.menu }),
+      showNews: tab === 'news',
+      showPage: tab === 'page',
+      newsSel: tab === 'news' ? 'true' : 'false',
+      pageSel: tab === 'page' ? 'true' : 'false',
+      newsLine: tab === 'news' ? '#A5532F' : 'transparent',
+      pageLine: tab === 'page' ? '#A5532F' : 'transparent',
+      newsColor: tab === 'news' ? '#19312F' : '#55625F',
+      pageColor: tab === 'page' ? '#19312F' : '#55625F',
+      goNews: () => this.setState({ tab: 'news' }),
+      goPage: () => this.setState({ tab: 'page' }),
+      rows: rows,
+      statuses: ['Черновик', 'Опубликовано', 'Запланировано'].map((s) => ({
+        label: s,
+        pressed: s === st ? 'true' : 'false',
+        bg: s === st ? '#1F4D4A' : 'transparent',
+        color: s === st ? '#F5F2EA' : '#19312F',
+        pick: () => this.setState({ status: s })
+      })),
+      tags: ['Виноградник', 'Сезон', 'Экскурсии'],
+      hMenu: this.state.hOpen,
+      hOpen: this.state.hOpen ? 'true' : 'false',
+      hBg: this.state.hOpen ? '#ECE6D8' : 'transparent',
+      hLabel: this.state.hLabel,
+      toggleH: () => this.setState({ hOpen: !this.state.hOpen }),
+      pickP: () => this.setState({ hLabel: 'Абзац', hOpen: false }),
+      pickH2: () => this.setState({ hLabel: 'Заголовок 2', hOpen: false }),
+      pickH3: () => this.setState({ hLabel: 'Заголовок 3', hOpen: false }),
+      pickH4: () => this.setState({ hLabel: 'Заголовок 4', hOpen: false }),
+      cats: [
+        { name: 'Все', note: 'всегда первая' },
+        { name: 'Отель', note: '1 новость' },
+        { name: 'Винодельня', note: '2 новости' },
+        { name: 'Ресторан', note: '2 новости' },
+        { name: 'События', note: '3 новости' }
+      ],
+      feat: feat,
+      cta: cta
+    };
+  }
+}
+</script>
+</body>
+</html>

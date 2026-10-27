@@ -10,6 +10,7 @@ tags:
   - name: Rooms
   - name: Wines
   - name: Pages
+  - name: News
   - name: Types
   - name: Clases
   - name: Products
@@ -915,4 +916,99 @@ paths:
         '401': { description: Unauthorized }
         '403': { description: Forbidden }
 
+  /news:
+    get:
+      tags: [News]
+      summary: Список опубликованных новостей
+      description: Черновики и новости с датой публикации в будущем не возвращаются.
+      parameters:
+        - { name: category, in: query, schema: { type: string } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 50, default: 12 } }
+        - { name: offset, in: query, schema: { type: integer, minimum: 0, default: 0 } }
+      responses:
+        '200':
+          description: OK ({ items, total })
 
+  /news/{slug}:
+    get:
+      tags: [News]
+      summary: Новость по адресу (slug) с похожими новостями
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { description: OK }
+        '404': { description: Не найдена или ещё не опубликована }
+
+  /news/admin:
+    get:
+      tags: [News]
+      summary: Все новости, включая черновики (ADMIN)
+      security:
+        - bearerAuth: []
+      responses:
+        '200': { description: OK }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+    post:
+      tags: [News]
+      summary: Создать новость (ADMIN)
+      description: HTML очищается на сервере; адрес формируется из заголовка и замораживается после первой публикации.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title: { type: string }
+                category: { type: string }
+                excerpt: { type: string, maxLength: 600 }
+                cover_url: { type: string }
+                cover_alt: { type: string }
+                tags: { type: array, items: { type: string }, maxItems: 10 }
+                status: { type: string, enum: [draft, published] }
+                published_at: { type: string, format: date-time, nullable: true }
+                seo_title: { type: string }
+                seo_description: { type: string, maxLength: 320 }
+                content_json: { type: object }
+                content_html: { type: string }
+      responses:
+        '201': { description: Created }
+        '400': { description: Ошибка валидации }
+        '401': { description: Unauthorized }
+        '403': { description: Forbidden }
+
+  /news/admin/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer }
+    get:
+      tags: [News]
+      summary: Новость с содержимым для редактора (ADMIN)
+      security:
+        - bearerAuth: []
+      responses:
+        '200': { description: OK }
+        '404': { description: Not found }
+    put:
+      tags: [News]
+      summary: Обновить новость (ADMIN)
+      security:
+        - bearerAuth: []
+      responses:
+        '200': { description: OK }
+        '400': { description: Ошибка валидации }
+        '404': { description: Not found }
+    delete:
+      tags: [News]
+      summary: Удалить новость (ADMIN)
+      security:
+        - bearerAuth: []
+      responses:
+        '200': { description: 'OK ({ ok: true })' }
+        '404': { description: Not found }

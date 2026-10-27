@@ -11,12 +11,12 @@ export const API_BASE = (process.env.REACT_APP_API_URL !== undefined ? process.e
 export const STATIC_BASE = process.env.REACT_APP_API_URL !== undefined ? '' : 'http://localhost:5001'
 
 const $host = axios.create({
-  baseURL: API_BASE,
+  baseURL: API_BASE || '/',
   withCredentials: true
 })
 
 const $authHost = axios.create({
-  baseURL: API_BASE,
+  baseURL: API_BASE || '/',
   withCredentials: true
 })
 

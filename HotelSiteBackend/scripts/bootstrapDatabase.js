@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const sequelize = require('../db');
-const { Page, WineType, WineSweetness } = require('../models/models');
+const { Page, WineType, WineSweetness, News } = require('../models/models');
 const seedEvents = require('../seed/seedEvents');
 
 const baselineMigrations = [
@@ -25,6 +25,7 @@ const defaultPages = [
   { name: 'Отель', path: '/Hotel', is_active: true, content_json: { hero: { title: 'Отель', description: 'Номера с видом на террасы.', image: '' } } },
   { name: 'Страница ресторана', path: '/Restaurant', is_active: true, content_json: { hero: { title: 'Ресторан', description: 'Сезонное меню из продуктов своей земли и виноделия.', image: '' } } },
   { name: 'Страница мероприятий', path: '/Events', is_active: true, content_json: { hero: { title: 'Мероприятия', description: 'Дегустации, ужины и события на террасах.', image: '' } } },
+  { name: 'Новости', path: '/News', is_active: true, content_json: { newsPage: { title: 'Что нового на Террасах', lead: 'Новости отеля, винодельни и ресторана: сезоны, события и открытия.', categories: [{ key: 'hotel', label: 'Отель' }, { key: 'winery', label: 'Винодельня' }, { key: 'restaurant', label: 'Ресторан' }, { key: 'events', label: 'События' }], showFeatured: true, perPage: 6, cta: { enabled: true, title: 'Приезжайте на Террасы', text: 'Выберите номер и забронируйте отдых среди виноградников.', buttonLabel: 'Выбрать номер', href: '/Hotel' }, seoTitle: '', seoDescription: '' } } },
   { name: 'Контакты', path: '/Contacts', is_active: true, content_json: { contacts: {} } },
   { name: 'Политика конфиденциальности', path: '/Privacy', is_active: true, content_json: { privacy: {} } }
 ];
@@ -59,6 +60,8 @@ async function bootstrapDatabase() {
 
   for (const name of ['красное', 'белое', 'розовое']) await WineType.findOrCreate({ where: { name } });
   for (const name of ['сухое', 'полусухое', 'полусладкое', 'сладкое']) await WineSweetness.findOrCreate({ where: { name } });
+  // Таблица новостей создаётся, только если её ещё нет (существующие данные не затрагиваются).
+  await News.sync();
   for (const page of defaultPages) await Page.findOrCreate({ where: { path: page.path }, defaults: page });
   await seedEvents();
 }

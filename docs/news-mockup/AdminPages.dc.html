@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Админка — страницы сайта</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit}
+.in{width:100%;box-sizing:border-box;min-height:44px;padding:0 14px;border:1px solid #CFC6B2;border-radius:8px;background:#FFFFFF;font:500 15px 'Manrope',sans-serif;color:#19312F}
+textarea.in{padding:12px 14px;font:500 15px/1.55 'Manrope',sans-serif;resize:vertical}
+.lb{display:block;margin-bottom:6px;font-size:13px;font-weight:600;color:#3A4A48}
+.bp{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 24px;border-radius:8px;border:0;background:#A5532F;color:#FFFFFF;font:600 15px 'Manrope',sans-serif;cursor:pointer;text-decoration:none}
+.bs{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:8px;border:1px solid #19312F;background:transparent;color:#19312F;font:600 15px 'Manrope',sans-serif;cursor:pointer;text-decoration:none}
+.bt{display:inline-flex;align-items:center;min-height:40px;padding:0 12px;border-radius:8px;border:0;background:transparent;color:#8F4524;font:600 14px 'Manrope',sans-serif;cursor:pointer;text-decoration:none}
+input:focus,select:focus,textarea:focus{outline:2px solid #1F4D4A;outline-offset:1px}
+button:focus-visible,a:focus-visible{outline:2px solid #1F4D4A;outline-offset:2px}
+.side a:hover{background:#25504C}
+.row:hover{background:#ECE6D8}
+.bt:hover{background:#ECE6D8}
+
+/* ---- адаптив: общая оболочка ---- */
+.shell{background:#F5F2EA;color:#19312F;font-family:'Manrope',sans-serif;min-height:100%;display:flex;align-items:stretch}
+.side{flex:0 0 240px;width:240px;background:#19312F;color:#DCE5DE;padding:28px 16px;box-sizing:border-box;display:flex;flex-direction:column}
+.brand{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:#F5F2EA;padding:0 12px}
+.brandsub{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#B9C7BF;padding:4px 12px 0}
+.menubtn{display:none;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:8px;border:1px solid #4A6F6B;background:transparent;color:#F5F2EA;font:600 15px 'Manrope',sans-serif;cursor:pointer}
+.nav{margin-top:32px;display:flex;flex-direction:column;gap:4px;font-size:15px;font-weight:500;flex-grow:1}
+.nav a{text-decoration:none;padding:12px;border-radius:8px;color:#DCE5DE}
+.nav a[aria-current="page"],.nav a[aria-current="page"]:hover{background:#1F4D4A;color:#F5F2EA;font-weight:600}
+.sidefoot{display:flex;flex-direction:column;gap:4px;font-size:14px;border-top:1px solid #2C4A47;padding-top:16px}
+.sidefoot a{text-decoration:none;padding:10px 12px;border-radius:8px;color:#B9C7BF}
+.main{flex:1 1 auto;min-width:0;padding:36px 40px 64px;box-sizing:border-box}
+.h1{margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:44px;line-height:1.05;letter-spacing:-0.015em}
+.phead{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between}
+.facts{display:contents}
+.menubtn:focus-visible,.nav a:focus-visible,.sidefoot a:focus-visible{outline:2px solid #F5F2EA;outline-offset:2px}
+
+/* ---- ноутбук и планшет: колонки складываются ---- */
+@media (max-width:1279px){
+  .col-list,.col-edit{flex:1 1 100% !important;min-width:0 !important;width:100%;box-sizing:border-box}
+  .rooms-list{display:grid !important;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px !important}
+}
+
+/* ---- планшет: меню становится верхней панелью ---- */
+@media (max-width:1079px){
+  .shell{flex-direction:column}
+  .side{flex:none;width:100%;padding:14px 24px;flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 16px}
+  .side>.sidehead{order:1;flex:1 1 auto}
+  .brand{padding:0}
+  .brandsub{padding:2px 0 0}
+  .sidefoot{order:2;flex-direction:row;border-top:0;padding:0;gap:4px}
+  .nav{order:3;flex:1 0 100%;margin-top:0;flex-direction:row;flex-wrap:wrap;gap:4px;border-top:1px solid #2C4A47;padding-top:10px}
+  .nav a{padding:10px 14px}
+  .main{padding:28px 24px 48px}
+  .h1{font-size:38px}
+}
+
+/* ---- телефон ---- */
+@media (max-width:699px){
+  .side{padding:12px 16px}
+  .menubtn{display:inline-flex;order:2}
+  .nav,.sidefoot{display:none}
+  .side.open .nav{display:flex;flex-direction:column;order:3}
+  .side.open .sidefoot{display:flex;flex-direction:column;flex:1 0 100%;order:4;border-top:1px solid #2C4A47;padding-top:8px}
+  .main{padding:20px 16px 40px}
+  .h1{font-size:32px}
+  .phead>.bp{width:100%}
+  .col-edit{padding:20px !important}
+  .thead{display:none !important}
+  .row.r-menu,.row.r-wine{grid-template-columns:56px minmax(0,1fr) !important}
+  .row.r-ev{grid-template-columns:64px minmax(0,1fr) !important}
+  .row.r-page{grid-template-columns:minmax(0,1fr) !important;gap:8px !important}
+  .facts{display:flex;grid-column:2;flex-wrap:wrap;gap:6px 14px;align-items:center}
+  .rooms-list{grid-template-columns:minmax(0,1fr)}
+  main [style*="repeat(2,minmax(0,1fr))"]{grid-template-columns:minmax(0,1fr) !important}
+  main [style*="repeat(4,minmax(0,1fr))"]{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+  main [style*="flex:0 0 240px"],main [style*="flex:0 0 200px"]{flex:1 1 100% !important}
+  main input,main select,main textarea{font-size:16px !important}
+  .col-edit .bp,.col-edit .bs{flex:1 1 140px}
+}
+</style>
+</helmet>
+<div class="shell">
+
+<aside class="{{menuCls}}">
+  <div class="sidehead"><div class="brand">Винные Террасы</div><div class="brandsub">Управление сайтом</div></div>
+  <button class="menubtn" type="button" aria-expanded="{{menuOpen}}" aria-controls="adm-nav" onClick="{{toggleMenu}}"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 4h14M2 9h14M2 14h14"/></svg>Меню</button>
+  <nav class="nav" id="adm-nav" aria-label="Разделы админки">
+    <a href="AdminPages.dc.html" aria-current="page">Страницы сайта</a>
+    <a href="AdminRooms.dc.html">Номера</a>
+    <a href="AdminMenu.dc.html">Меню ресторана</a>
+    <a href="AdminEvents.dc.html">Мероприятия</a>
+    <a href="AdminWines.dc.html">Вина</a>
+    <a href="Admin.dc.html">Новости</a>
+  </nav>
+  <div class="sidefoot">
+    <a href="Main.dc.html">Открыть сайт ↗</a>
+    <a href="#">Выйти</a>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="phead">
+    <div>
+      <h1 class="h1">Страницы сайта</h1>
+      <p style="margin:8px 0 0;font-size:15px;color:#55625F">Тексты и фотографии на страницах. Изменения появляются на сайте сразу после сохранения.</p>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:32px;flex-wrap:wrap;margin-top:32px;align-items:flex-start">
+
+    <section class="col-list" aria-label="Список страниц" style="flex:1 1 440px;min-width:0">
+      <div class="thead" style="display:grid;grid-template-columns:minmax(0,1fr) 140px auto;gap:16px;padding:0 12px 10px;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#55625F;border-bottom:1px solid #DDD5C3">
+        <span>Страница</span><span>Статус</span><span style="min-width:150px">Действия</span>
+      </div>
+      <ul style="list-style:none;margin:0;padding:0">
+        <sc-for list="{{pages}}" as="p" hint-placeholder-count="9">
+          <li class="row r-page" style="margin:0;padding:14px 12px;display:grid;grid-template-columns:minmax(0,1fr) 140px auto;gap:16px;align-items:center;border-bottom:1px solid #DDD5C3;background:{{p.bg}}">
+            <div style="min-width:0">
+              <div style="font-size:15px;font-weight:600">{{p.name}}</div>
+              <div style="margin-top:2px;font-size:13px;color:#55625F">{{p.path}}</div>
+            </div>
+            <span style="justify-self:start;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{p.chipBg}};color:{{p.chipColor}}">{{p.status}}</span>
+            <div style="display:flex;gap:4px;min-width:150px">
+              <button class="bt" type="button">Редактировать</button>
+              <a class="bt" href="#">Открыть ↗</a>
+            </div>
+          </li>
+        </sc-for>
+      </ul>
+    </section>
+
+    <section class="col-edit" aria-label="Редактирование страницы" style="flex:1 1 440px;min-width:0;background:#FBF9F4;border:1px solid #DDD5C3;border-radius:12px;padding:28px;box-sizing:border-box">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:baseline">
+        <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:30px;letter-spacing:-0.01em">Главная</h2>
+        <span style="font-size:13px;color:#55625F">Сохранено только что</span>
+      </div>
+
+      <div style="margin-top:20px;padding-top:20px;border-top:1px solid #DDD5C3">
+        <h3 style="margin:0 0 14px;font-size:16px;font-weight:700">Фон главной</h3>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+          <div style="flex:0 0 200px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#DCE5DE">
+            <svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" role="img" aria-label="Текущее фото фона" style="display:block"><rect width="160" height="90" fill="#DCE5DE"/><circle cx="122" cy="24" r="9" fill="#C7774D"/><path d="M0 58 C30 42 55 48 80 54 C105 60 130 46 160 50 L160 90 L0 90Z" fill="#7FA08F"/><path d="M0 72 C25 64 50 68 80 72 C110 76 135 66 160 70 L160 90 L0 90Z" fill="#1F4D4A"/></svg>
+          </div>
+          <div style="flex:1 1 180px;min-width:0;display:flex;flex-direction:column;gap:8px;align-items:flex-start">
+            <button class="bs" type="button">Заменить фото</button>
+            <span style="font-size:12px;line-height:1.5;color:#55625F">Формат 16:9, лучше 1920×1080, до 5 МБ.</span>
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <label class="lb" for="h-t">Заголовок</label>
+          <input class="in" id="h-t" type="text" value="Винные Террасы">
+        </div>
+        <div style="margin-top:16px">
+          <label class="lb" for="h-d">Подзаголовок</label>
+          <textarea class="in" id="h-d" rows="2">[Короткая фраза о том, чем живёт отель и винодельня]</textarea>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid #DDD5C3">
+        <h3 style="margin:0 0 14px;font-size:16px;font-weight:700">Блок «О нас»</h3>
+        <label class="lb" for="a-t">Заголовок</label>
+        <input class="in" id="a-t" type="text" value="Место для неторопливого отдыха">
+        <label class="lb" for="a-d" style="margin-top:16px">Текст</label>
+        <textarea class="in" id="a-d" rows="4">[Описание отеля и винодельни в двух-трёх предложениях]</textarea>
+      </div>
+
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid #DDD5C3">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+          <h3 style="margin:0;font-size:16px;font-weight:700">Первая галерея</h3>
+          <span style="font-size:13px;color:#55625F">4 фото · порядок меняется перетаскиванием</span>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div style="width:88px;height:64px;border-radius:8px;background:#7FA08F"></div>
+          <div style="width:88px;height:64px;border-radius:8px;background:#D9A47F"></div>
+          <div style="width:88px;height:64px;border-radius:8px;background:#5E8272"></div>
+          <div style="width:88px;height:64px;border-radius:8px;background:#EAD9C4"></div>
+          <button type="button" aria-label="Добавить фото" style="width:88px;height:64px;border-radius:8px;border:1px dashed #A9A08B;background:transparent;color:#8F4524;font:600 22px 'Manrope',sans-serif;cursor:pointer">+</button>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid #DDD5C3;display:flex;justify-content:space-between;align-items:center;gap:12px">
+        <h3 style="margin:0;font-size:16px;font-weight:700">Вторая галерея</h3>
+        <span style="font-size:13px;color:#55625F">6 фото ▸</span>
+      </div>
+
+      <div style="margin-top:24px;padding-top:20px;border-top:1px solid #DDD5C3;display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end">
+        <button class="bs" type="button">Отмена</button>
+        <button class="bp" type="button">Сохранить</button>
+      </div>
+    </section>
+  </div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1500}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { menu: false };
+  }
+  renderVals() {
+    const ok = { status: 'Сохранено', chipBg: '#DCE5DE', chipColor: '#19312F' };
+    const raw = [
+      { name: 'Главная', path: '/', bg: '#ECE6D8' },
+      { name: 'Отель', path: '/Hotel', bg: 'transparent' },
+      { name: 'Винодельня', path: '/Vinery', bg: 'transparent' },
+      { name: 'Ресторан', path: '/Restaurant', bg: 'transparent' },
+      { name: 'Витрина вин', path: '/Shop', bg: 'transparent' },
+      { name: 'Мероприятия', path: '/Events', bg: 'transparent' },
+      { name: 'Новости', path: '/News', bg: 'transparent' },
+      { name: 'Контакты', path: '/Contacts', bg: 'transparent' },
+      { name: 'Политика конфиденциальности', path: '/Privacy', bg: 'transparent' }
+    ];
+    return {
+      menuCls: this.state.menu ? 'side open' : 'side',
+      menuOpen: this.state.menu ? 'true' : 'false',
+      toggleMenu: () => this.setState({ menu: !this.state.menu }), pages: raw.map((r) => Object.assign({}, r, ok)) };
+  }
+}
+</script>
+</body>
+</html>

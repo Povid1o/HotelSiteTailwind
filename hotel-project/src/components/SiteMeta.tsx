@@ -7,6 +7,7 @@ const pages = [
   { match: /^\/Vinery/, title: 'Винодельня — Винные Террасы', description: 'История, территория и коллекция вин Винных Террас.' },
   { match: /^\/Restaurant/, title: 'Ресторан — Винные Террасы', description: 'Меню ресторана Винных Террас.' },
   { match: /^\/Events/, title: 'События — Винные Террасы', description: 'События, дегустации и маршруты Винных Террас.' },
+  { match: /^\/News/, title: 'Новости — Винные Террасы', description: 'Новости отеля, винодельни и ресторана Винные Террасы.' },
   { match: /^\/Shop/, title: 'Коллекция вин — Винные Террасы', description: 'Коллекция вин Винных Террас. Для заказа свяжитесь с нами по email.' },
 ];
 
@@ -19,6 +20,19 @@ const setMeta = (name: string, content: string, property = false) => {
     document.head.appendChild(element);
   }
   element.content = content;
+};
+
+/**
+ * Страницы с собственными данными (например, новость) задают заголовок и описание
+ * сами, после загрузки. Эффект дочерней страницы срабатывает позже SiteMeta.
+ */
+export const setPageMeta = (title: string, description: string, image?: string, type: 'website' | 'article' = 'website') => {
+  document.title = title;
+  setMeta('description', description);
+  setMeta('og:title', title, true);
+  setMeta('og:description', description, true);
+  setMeta('og:type', type, true);
+  if (image) setMeta('og:image', image, true);
 };
 
 const SiteMeta = () => {

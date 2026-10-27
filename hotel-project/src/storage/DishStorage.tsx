@@ -222,6 +222,16 @@ export default class DishStorage {
     }
   };
 
+  /** После сохранения с новым разделом переносит блюдо в списке (сервер уже знает новый раздел). */
+  moveProductLocal = (fromCategory: string, toCategory: string, productId: number) => {
+    const from = this._dishes.find(cat => cat.category === fromCategory);
+    const to = this._dishes.find(cat => cat.category === toCategory);
+    const index = from ? from.products.findIndex(p => p.id === productId) : -1;
+    if (!from || !to || index < 0) return;
+    const [product] = from.products.splice(index, 1);
+    to.products.push(product);
+  };
+
   updateProduct = (categoryName: string, productId: number, updatedData: Partial<DishProduct>) => {
     const category = this._dishes.find(cat => cat.category === categoryName);
     const product = category?.products.find(p => p.id === productId);

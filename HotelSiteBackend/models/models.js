@@ -232,7 +232,29 @@ Event.belongsTo(EventCategory, { foreignKey: 'category_id', as: 'category' });
 Event.hasMany(EventImage, { foreignKey: 'event_id', as: 'images', onDelete: 'CASCADE' });
 EventImage.belongsTo(Event, { foreignKey: 'event_id' });
 
+// News (редактор Tiptap: content_json — исходник для редактора, content_html — очищенный HTML для сайта)
+const News = sequelize.define('news', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  slug: { type: DataTypes.STRING(200), allowNull: false, unique: true },
+  slug_locked: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+  title: { type: DataTypes.STRING(255), allowNull: false },
+  category: { type: DataTypes.STRING(50), allowNull: false, defaultValue: '' },
+  excerpt: { type: DataTypes.TEXT, allowNull: false, defaultValue: '' },
+  cover_url: { type: DataTypes.STRING(500), allowNull: false, defaultValue: '' },
+  cover_alt: { type: DataTypes.STRING(255), allowNull: false, defaultValue: '' },
+  tags: { type: DataTypes.JSONB, allowNull: false, defaultValue: [] },
+  status: { type: DataTypes.STRING(20), allowNull: false, defaultValue: 'draft' },
+  published_at: { type: DataTypes.DATE, allowNull: true },
+  seo_title: { type: DataTypes.STRING(255), allowNull: false, defaultValue: '' },
+  seo_description: { type: DataTypes.STRING(320), allowNull: false, defaultValue: '' },
+  content_json: { type: DataTypes.JSONB, allowNull: false, defaultValue: {} },
+  content_html: { type: DataTypes.TEXT, allowNull: false, defaultValue: '' },
+  word_count: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 },
+  reading_minutes: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 }
+}, { underscored: true, timestamps: true, tableName: 'news' });
+
 module.exports = {
+  News,
   DishCategory, Dish, DishImage,
   Room, RoomImage, RoomProperty, RoomConvenience, RoomPrice, RoomNote,
   WineType, WineSweetness, Wine, WineDescription, WineImage,
