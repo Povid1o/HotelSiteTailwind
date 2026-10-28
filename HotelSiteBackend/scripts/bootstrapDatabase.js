@@ -3,6 +3,7 @@ require('dotenv').config();
 const sequelize = require('../db');
 const { Page, WineType, WineSweetness, News } = require('../models/models');
 const seedEvents = require('../seed/seedEvents');
+const localProducts = require('../seed/localProducts');
 
 const baselineMigrations = [
   '20250910-schema.js',
@@ -26,6 +27,7 @@ const defaultPages = [
   { name: 'Страница ресторана', path: '/Restaurant', is_active: true, content_json: { hero: { title: 'Ресторан', description: 'Сезонное меню из продуктов своей земли и виноделия.', image: '' } } },
   { name: 'Страница мероприятий', path: '/Events', is_active: true, content_json: { hero: { title: 'Мероприятия', description: 'Дегустации, ужины и события на террасах.', image: '' } } },
   { name: 'Новости', path: '/News', is_active: true, content_json: { newsPage: { title: 'Что нового на Террасах', lead: 'Новости отеля, винодельни и ресторана: сезоны, события и открытия.', categories: [{ key: 'hotel', label: 'Отель' }, { key: 'winery', label: 'Винодельня' }, { key: 'restaurant', label: 'Ресторан' }, { key: 'events', label: 'События' }], showFeatured: true, perPage: 6, cta: { enabled: true, title: 'Приезжайте на Террасы', text: 'Выберите номер и забронируйте отдых среди виноградников.', buttonLabel: 'Выбрать номер', href: '/Hotel' }, seoTitle: '', seoDescription: '' } } },
+  { name: localProducts.PAGE_NAME, path: localProducts.PAGE_PATH, is_active: true, content_json: localProducts.buildLocalProducts() },
   { name: 'Контакты', path: '/Contacts', is_active: true, content_json: { contacts: {} } },
   { name: 'Политика конфиденциальности', path: '/Privacy', is_active: true, content_json: { privacy: {} } }
 ];

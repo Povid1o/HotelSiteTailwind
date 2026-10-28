@@ -36,6 +36,8 @@ export interface Block {
 }
 
 const hero = (section: string, title = 'Шапка страницы'): Block => ({ kind: 'hero', section, title, note: 'Фото, заголовок и подпись в верхней части страницы.' });
+const SHAPES_FOR_SCHEMA = ['Банка', 'Бутылка', 'Жестяная баночка'];
+const COLORS_FOR_SCHEMA = ['Терракота', 'Песочный', 'Коричневый', 'Шалфей', 'Хвоя'];
 const PHOTO_HINT = 'Лучше горизонтальное фото, JPG, PNG или WebP до 10 МБ.';
 
 const facts = (where: string): Block => ({
@@ -166,6 +168,104 @@ export const SCHEMAS: Record<string, Block[]> = {
       },
     },
     cta('ctaHome', 'Готовы приехать?'),
+  ],
+  'Местные продукты': [
+    {
+      kind: 'form', section: 'productsHero', title: 'Верх страницы «Местные продукты»',
+      note: 'Вступление и две кнопки. Первая ведёт в ассортимент, вторая — к блоку «Где купить». Пока нет фото, рисуется картинка с банкой и бутылками.',
+      head: [
+        { key: 'kicker', label: 'Надзаголовок' },
+        { key: 'title', label: 'Заголовок' },
+        { key: 'text', label: 'Вступление', type: 'area', rows: 3 },
+        { key: 'primary', label: 'Первая кнопка', placeholder: 'Смотреть ассортимент' },
+        { key: 'secondary', label: 'Вторая кнопка', placeholder: 'Где купить', hint: 'Оставьте пустой, чтобы убрать кнопку.' },
+        { key: 'image', label: 'Фото (необязательно)', type: 'image', hint: `Квадратное фото. ${PHOTO_HINT}` },
+      ],
+    },
+    {
+      kind: 'form', section: 'tocSection', title: 'Содержание',
+      note: 'Заголовок над списком разделов. Сам список собирается из разделов ассортимента ниже: каждый раздел — строка со ссылкой на его полку.',
+      head: [
+        { key: 'title', label: 'Заголовок' },
+        { key: 'lead', label: 'Подпись', type: 'area', rows: 2 },
+        { key: 'all', label: 'Надпись на кнопке под списком', placeholder: 'Весь ассортимент на одной странице →' },
+      ],
+    },
+    ...[1, 2, 3, 4].map((n): Block => ({
+      kind: 'form', section: `productsCategory${n}`, title: `Раздел ассортимента ${n}`, toggle: true,
+      note: n === 4
+        ? 'Свободный раздел: чтобы он появился на сайте, впишите название и добавьте хотя бы один товар.'
+        : 'Раздел показывается на сайте, если у него есть название и хотя бы один товар. Порядок разделов — по номерам.',
+      head: [
+        { key: 'name', label: 'Название раздела', placeholder: 'Паштеты' },
+        { key: 'toc', label: 'Коротко для содержания', type: 'area', rows: 2, hint: 'Одна-две фразы под названием в списке на странице «Местные продукты».' },
+        { key: 'lead', label: 'Подпись над товарами', type: 'area', rows: 2, hint: 'Показывается над карточками на странице ассортимента.' },
+      ],
+      list: {
+        key: 'products', item: 'Товар', titleKey: 'name', add: '+ Добавить товар', max: 12,
+        fields: [
+          { key: 'name', label: 'Название' },
+          { key: 'tag', label: 'Метка на карточке', placeholder: 'Хит', hint: 'Короткое слово: «Новинка», «Набор», «Сезон».' },
+          { key: 'text', label: 'Описание', type: 'area', rows: 2 },
+          { key: 'size', label: 'Вес или объём', placeholder: '180 г' },
+          { key: 'price', label: 'Цена (необязательно)', placeholder: '320 ₽' },
+          { key: 'shape', label: 'Рисунок без фото', type: 'select', options: SHAPES_FOR_SCHEMA, hint: 'Если фото не загружено, на карточке рисуется банка, бутылка или жестянка.' },
+          { key: 'color', label: 'Цвет рисунка', type: 'select', options: COLORS_FOR_SCHEMA },
+          { key: 'image', label: 'Фото товара (необязательно)', type: 'image', hint: `Квадратное фото на нейтральном фоне. ${PHOTO_HINT}` },
+        ],
+      },
+    })),
+    {
+      kind: 'form', section: 'productionSection', title: 'О производстве', toggle: true,
+      note: 'Тёмный блок с рассказом о том, как делаются продукты. Пока нет фото, рисуются полки с банками.',
+      head: [
+        { key: 'kicker', label: 'Надзаголовок' },
+        { key: 'title', label: 'Заголовок' },
+        { key: 'text', label: 'Текст', type: 'area', rows: 4 },
+        { key: 'image', label: 'Фото (необязательно)', type: 'image', hint: `Квадратное фото. ${PHOTO_HINT}` },
+      ],
+      list: {
+        key: 'points', item: 'Пункт', titleKey: 'text', add: '+ Добавить пункт', max: 5,
+        fields: [{ key: 'text', label: 'Короткая фраза с галочкой' }],
+      },
+    },
+    {
+      kind: 'form', section: 'whereSection', title: 'Где купить', toggle: true,
+      note: 'Карточки «В отеле», «В ресторане» и т. п. Блок появится, когда добавлена хотя бы одна карточка — как у вас устроена продажа, знаете только вы.',
+      head: [
+        { key: 'title', label: 'Заголовок' },
+        { key: 'lead', label: 'Подпись', type: 'area', rows: 2 },
+      ],
+      list: {
+        key: 'items', item: 'Место', titleKey: 'name', add: '+ Добавить место', max: 6,
+        fields: [
+          { key: 'name', label: 'Название', placeholder: 'В отеле' },
+          { key: 'icon', label: 'Значок', type: 'select', options: ['Отель', 'Ресторан', 'Винодельня', 'Магазин'] },
+          { key: 'text', label: 'Описание', type: 'area', rows: 2 },
+        ],
+      },
+    },
+    cta('ctaProducts', 'Подберите к вину то, что к нему просится'),
+    {
+      kind: 'form', section: 'catalogSection', title: 'Страница «Ассортимент»: заголовок',
+      note: 'Заголовок и подпись в верхней части страницы ассортимента (адрес — /LocalProducts/Catalog).',
+      head: [
+        { key: 'title', label: 'Заголовок', placeholder: 'Ассортимент' },
+        { key: 'lead', label: 'Подпись', type: 'area', rows: 2 },
+      ],
+    },
+    {
+      kind: 'form', section: 'pickupSection', title: 'Страница «Ассортимент»: как забрать', toggle: true,
+      note: 'Тёмная плашка внизу страницы ассортимента. Появляется, если заполнены заголовок и текст или первая кнопка.',
+      head: [
+        { key: 'title', label: 'Заголовок' },
+        { key: 'text', label: 'Текст', type: 'area', rows: 3 },
+        { key: 'button', label: 'Первая кнопка', placeholder: 'Позвонить на ресепшен' },
+        { key: 'buttonLink', label: 'Ссылка первой кнопки', placeholder: 'tel:+78612000000', hint: 'Телефон — tel:+7…, почта — mailto:…, страница сайта — /Contacts.' },
+        { key: 'button2', label: 'Вторая кнопка', placeholder: 'Как добраться' },
+        { key: 'button2Link', label: 'Ссылка второй кнопки', placeholder: '#site-map' },
+      ],
+    },
   ],
   'Винодельня': [
     hero('mainBackground'),

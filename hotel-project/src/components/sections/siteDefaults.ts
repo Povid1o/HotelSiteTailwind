@@ -80,6 +80,32 @@ export const DEFAULTS: Record<string, Rec> = {
   },
   ctaHome: { title: 'Готовы приехать?', text: 'Выберите номер и даты — мы подтвердим бронирование в течение дня.', button: 'Забронировать номер' },
   locationSection: { title: 'Абрау-Дюрсо', text: '', mapUrl: '', routes: [] },
+
+  /* «Местные продукты»: названия товаров, цены и адреса продажи знаете только вы — их здесь нет */
+  productsHero: {
+    kicker: 'Местные продукты',
+    title: 'Вкус этого места — не только в вине',
+    text: 'Винодел делает не только вино: паштеты, натуральную газировку и другие вещи к столу. Здесь коротко — что у нас есть.',
+    primary: 'Смотреть ассортимент',
+    secondary: 'Где купить',
+    image: '',
+  },
+  tocSection: { title: 'Что у нас есть', lead: 'Нажмите на раздел — и вы сразу окажетесь у нужной полки.', all: 'Весь ассортимент на одной странице →' },
+  productsCategory1: { name: 'Паштеты', toc: '', lead: '', products: [] },
+  productsCategory2: { name: 'Натуральная газировка', toc: '', lead: '', products: [] },
+  productsCategory3: { name: '', toc: '', lead: '', products: [] },
+  productsCategory4: { name: '', toc: '', lead: '', products: [] },
+  productionSection: {
+    kicker: 'О производстве',
+    title: 'Те же руки, другой вкус',
+    text: 'Помимо вина, винодел занимается и другими производствами. Здесь коротко о них рассказано.',
+    image: '',
+    points: [],
+  },
+  whereSection: { title: 'Где купить', lead: '', items: [] },
+  ctaProducts: { title: 'Подберите к вину то, что к нему просится', text: '', button: 'Открыть ассортимент' },
+  catalogSection: { title: 'Ассортимент', lead: 'Коротко — что мы делаем, кроме вина.' },
+  pickupSection: { title: 'Как это забрать', text: '', button: '', buttonLink: '', button2: 'Как добраться', button2Link: '#site-map' },
 };
 
 const filled = (v: unknown): boolean =>

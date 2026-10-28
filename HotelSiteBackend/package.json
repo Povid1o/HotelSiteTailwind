@@ -9,6 +9,8 @@
     "migrate": "sequelize-cli db:migrate",
     "db:bootstrap": "node scripts/bootstrapDatabase.js",
     "create-admin": "node scripts/create-admin.js",
+    "seed:content": "node scripts/seedFullContent.js",
+    "seed:demo": "node scripts/seedDemoSite.js",
     "test": "node --test"
   },
   "keywords": [],

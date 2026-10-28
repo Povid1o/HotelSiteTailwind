@@ -16,6 +16,8 @@ const Ivents = lazy(() => import("./Ivents.tsx"));
 const Restaurant = lazy(() => import("./Restaurant.tsx"));
 const Vinery = lazy(() => import("./Vinery.tsx"));
 const Shop = lazy(() => import("./Shop.tsx"));
+const LocalProducts = lazy(() => import("./LocalProducts.tsx"));
+const LocalProductsCatalog = lazy(() => import("./LocalProductsCatalog.tsx"));
 const NewsPage = lazy(() => import("./NewsPage.tsx"));
 const NewsArticle = lazy(() => import("./NewsArticle.tsx"));
 const Auth = lazy(() => import("./Auth.tsx"));
@@ -82,6 +84,8 @@ const router = createBrowserRouter([
         path: "/Shop/:productId",
         element: <WinePage />,
       },
+      { path: "/LocalProducts", element: <LocalProducts /> },
+      { path: "/LocalProducts/Catalog", element: <LocalProductsCatalog /> },
       { path: "/News", element: <NewsPage /> },
       { path: "/News/:slug", element: <NewsArticle /> },
       { path: "/Contacts", element: <InfoPages /> },

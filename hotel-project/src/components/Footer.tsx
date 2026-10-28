@@ -34,6 +34,7 @@ const Footer = () => {
               <Link to='/' className="site-footer__brand">Винные Террасы</Link>
               <nav className="site-footer__nav" aria-label="Навигация в подвале">
                 <Link to="/Hotel">Апартаменты</Link>
+                <Link to="/LocalProducts">Местные продукты</Link>
                 <Link to="/Events">Мероприятия</Link>
                 <Link to="/News">Новости</Link>
                 <a href="#site-map">Как добраться</a>
