@@ -405,3 +405,12 @@ select.adm-input { padding: 0 10px; }
   .adm-catbar .adm-input { max-width: none; }
   .adm-pill-form .adm-input { width: 100%; }
 }
+
+/* ---------- списки внутри страниц (этапы, сорта, пакеты…) ---------- */
+.adm-listitem { background: #fff; border: 1px solid var(--adm-line); border-radius: 12px; margin-top: 16px; padding: 4px 20px 20px; }
+.adm-listitem-head { align-items: center; display: flex; gap: 12px; justify-content: space-between; padding-top: 14px; }
+.adm-listitem-head b { font-size: 15px; min-width: 0; overflow-wrap: anywhere; }
+.adm-listitem-tools { display: flex; flex: 0 0 auto; gap: 4px; }
+.adm-listitem-empty { margin: 16px 0 0; }
+.adm-listitem-add { margin-top: 16px; }
+.adm-listitem .adm-cover { margin-top: 4px; }

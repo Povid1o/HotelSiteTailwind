@@ -8,29 +8,8 @@ import {
   confirmDiscard, formStatus, snap, useAutoSelect, useDraft, useSaveFlow,
 } from '../ui';
 
-type Kind = 'hero' | 'about' | 'gallery' | 'contacts' | 'privacy';
-interface Block { kind: Kind; section: string; title: string; note?: string }
-
-const hero = (section: string, title = 'Шапка страницы'): Block => ({ kind: 'hero', section, title, note: 'Фото, заголовок и подпись в верхней части страницы.' });
-
-/** Какие разделы содержимого редактируются на какой странице. */
-const SCHEMAS: Record<string, Block[]> = {
-  'Главная': [
-    hero('mainBackground', 'Фон главной'),
-    { kind: 'about', section: 'aboutSection', title: 'Блок «О нас»' },
-    { kind: 'gallery', section: 'firstGallery', title: 'Первая галерея' },
-    { kind: 'gallery', section: 'secondGallery', title: 'Вторая галерея' },
-  ],
-  'Винодельня': [hero('mainBackground')],
-  'Витрина вина': [hero('shopHero')],
-  'Отель': [hero('hero')],
-  'Ресторан': [hero('hero')],
-  'Страница ресторана': [hero('hero')],
-  'Мероприятия': [hero('hero')],
-  'Страница мероприятий': [hero('hero')],
-  'Контакты': [{ kind: 'contacts', section: 'contacts', title: 'Контактная информация' }],
-  'Политика конфиденциальности': [{ kind: 'privacy', section: 'privacy', title: 'Текст политики' }],
-};
+import { Block, Field, SCHEMAS } from './pageSchemas';
+import { mergeDefaults } from '../../sections/siteDefaults';
 
 type Rec = Record<string, unknown>;
 const isRec = (v: unknown): v is Rec => typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -42,7 +21,8 @@ type SectionData = Rec;
 type PageForm = Record<string, SectionData>;
 
 const readSection = (block: Block, content: Rec, pageName: string): SectionData => {
-  const raw = isRec(content[block.section]) ? (content[block.section] as Rec) : {};
+  const raw = mergeDefaults(block.section, content[block.section]);
+  const hidden = raw.hidden === true;
   switch (block.kind) {
     case 'hero':
       return { title: str(raw.title, pageName), description: str(raw.description), image: img(raw.image) };
@@ -50,6 +30,7 @@ const readSection = (block: Block, content: Rec, pageName: string): SectionData 
       return { title: str(raw.title), description: str(raw.description) };
     case 'gallery':
       return {
+        hidden,
         title: str(raw.title),
         images: (Array.isArray(raw.images) ? raw.images : [])
           .map((item): GalleryItem | null => {
@@ -59,6 +40,17 @@ const readSection = (block: Block, content: Rec, pageName: string): SectionData 
           })
           .filter((x): x is GalleryItem => !!x),
       };
+    case 'form': {
+      const readFields = (fields: Field[], source: Rec): Rec =>
+        Object.fromEntries(fields.map((f) => [f.key, f.type === 'image' ? img(source[f.key]) : str(source[f.key])]));
+      const data = readFields(block.head || [], raw);
+      data.hidden = hidden;
+      if (block.list) {
+        const spec = block.list;
+        data[spec.key] = (Array.isArray(raw[spec.key]) ? (raw[spec.key] as unknown[]) : []).filter(isRec).map((item) => readFields(spec.fields, item));
+      }
+      return data;
+    }
     case 'contacts':
       return Object.fromEntries(Object.entries(contactDefault).map(([key, fallback]) => [key, str(raw[key], fallback)]));
     case 'privacy':
@@ -97,11 +89,23 @@ const PageEditor: React.FC<{ pageId: number; onClose: () => void }> = observer((
 
   const setSection = (section: string, part: SectionData) => patch({ [section]: { ...draft[section], ...part } });
   const baseline = read();
+  /** Что уйдёт на сервер: у «форм» убираем пустые пункты и не теряем поля, которых в форме нет. */
+  const payloadFor = (block: Block): SectionData => {
+    const data = draft[block.section];
+    if (block.kind !== 'form') return data;
+    const stored = isRec(page.content) && isRec(page.content[block.section]) ? (page.content[block.section] as Rec) : {};
+    const out: Rec = { ...stored, ...data };
+    if (block.list) {
+      const key = block.list.key;
+      out[key] = ((data[key] as Rec[]) || []).filter((item) => Object.values(item).some((v) => (v instanceof File ? true : typeof v === 'string' ? v.trim() !== '' : !!v)));
+    }
+    return out;
+  };
   const save = () => {
     const changed = blocks.filter((b) => snap(draft[b.section]) !== snap(baseline[b.section]));
     if (!changed.length) return;
     void run(async () => {
-      await Promise.all(changed.map((b) => pageContent.updatePageContentLocal(page.name, b.section, draft[b.section])));
+      await Promise.all(changed.map((b) => pageContent.updatePageContentLocal(page.name, b.section, payloadFor(b))));
       const error = pageContent.getPageSaveError(page.id);
       if (!error) sync();
       return error;
@@ -109,6 +113,13 @@ const PageEditor: React.FC<{ pageId: number; onClose: () => void }> = observer((
   };
   const cancel = () => { sync(); setMsg(null); };
   const status = formStatus(saving, dirty);
+
+  const renderToggle = (block: Block, data: SectionData) => block.toggle && (
+    <label className="adm-check" style={{ marginTop: 0, marginBottom: 12 }}>
+      <input type="checkbox" checked={data.hidden !== true} onChange={(e) => setSection(block.section, { hidden: !e.target.checked })} />
+      Показывать блок на сайте
+    </label>
+  );
 
   const renderBlock = (block: Block) => {
     const data = draft[block.section] || {};
@@ -143,7 +154,8 @@ const PageEditor: React.FC<{ pageId: number; onClose: () => void }> = observer((
       case 'gallery': {
         const images = (data.images as GalleryItem[]) || [];
         return (
-          <FormBlock key={block.section} title={block.title} note={`${images.length} фото · порядок меняется перетаскиванием`}>
+          <FormBlock key={block.section} title={block.title} note={block.note || `${images.length} фото · порядок меняется перетаскиванием`}>
+            {renderToggle(block, data)}
             <div className="adm-field" style={{ marginTop: 0, marginBottom: 14 }}>
               <label htmlFor={`${block.section}-t`}>Заголовок галереи</label>
               <input id={`${block.section}-t`} className="adm-input" value={str(data.title)} onChange={(e) => setSection(block.section, { title: e.target.value })} />
@@ -157,6 +169,73 @@ const PageEditor: React.FC<{ pageId: number; onClose: () => void }> = observer((
                 setSection(block.section, { images: next.map((src) => ({ src, alt: alts.get(src) ?? '' })) });
               }}
             />
+          </FormBlock>
+        );
+      }
+      case 'form': {
+        const spec = block.list;
+        const items = spec ? ((data[spec.key] as Rec[]) || []) : [];
+        const setItems = (next: Rec[]) => spec && setSection(block.section, { [spec.key]: next });
+        const setItem = (i: number, part: Rec) => setItems(items.map((item, j) => (j === i ? { ...item, ...part } : item)));
+        const move = (i: number, to: number) => {
+          const next = items.slice();
+          const [picked] = next.splice(i, 1);
+          next.splice(to, 0, picked);
+          setItems(next);
+        };
+        const emptyItem = (): Rec => Object.fromEntries((spec?.fields || []).map((f) => [f.key, f.type === 'image' ? null : '']));
+        const renderField = (id: string, f: Field, value: unknown, onChange: (v: unknown) => void) => (
+          <div key={f.key} className="adm-field" style={f.type === 'area' || f.type === 'image' ? { gridColumn: '1 / -1' } : undefined}>
+            <label htmlFor={id}>{f.label}</label>
+            {f.type === 'image' ? (
+              <SinglePhoto value={value as Img | null} onChange={onChange} hint={f.hint} />
+            ) : f.type === 'area' ? (
+              <textarea id={id} className="adm-input" rows={f.rows || 3} value={str(value)} placeholder={f.placeholder} onChange={(e) => onChange(e.target.value)} />
+            ) : f.type === 'select' ? (
+              <select id={id} className="adm-input" value={str(value)} onChange={(e) => onChange(e.target.value)}>
+                <option value="">Не выбрано</option>
+                {(f.options || []).map((o) => <option key={o} value={o}>{o}</option>)}
+              </select>
+            ) : (
+              <input id={id} className="adm-input" value={str(value)} placeholder={f.placeholder} onChange={(e) => onChange(e.target.value)} />
+            )}
+            {f.hint && f.type !== 'image' && <p className="adm-hint">{f.hint}</p>}
+          </div>
+        );
+        return (
+          <FormBlock key={block.section} title={block.title} note={block.note}>
+            {renderToggle(block, data)}
+            {block.head && block.head.length > 0 && (
+              <div className="adm-grid-2">
+                {block.head.map((f) => renderField(`${block.section}-${f.key}`, f, data[f.key], (v) => setSection(block.section, { [f.key]: v })))}
+              </div>
+            )}
+            {spec && (
+              <>
+                {items.map((item, i) => {
+                  const label = str(item[spec.titleKey]).trim();
+                  return (
+                    <div key={i} className="adm-listitem">
+                      <div className="adm-listitem-head">
+                        <b>{spec.item} {i + 1}{label ? ` · ${label.length > 40 ? `${label.slice(0, 40)}…` : label}` : ''}</b>
+                        <span className="adm-listitem-tools">
+                          <button type="button" className="adm-iconbtn" aria-label={`${spec.item} ${i + 1}: выше`} disabled={i === 0} onClick={() => move(i, i - 1)}>↑</button>
+                          <button type="button" className="adm-iconbtn" aria-label={`${spec.item} ${i + 1}: ниже`} disabled={i === items.length - 1} onClick={() => move(i, i + 1)}>↓</button>
+                          <button type="button" className="adm-iconbtn is-danger" aria-label={`${spec.item} ${i + 1}: удалить`} onClick={() => setItems(items.filter((_, j) => j !== i))}>×</button>
+                        </span>
+                      </div>
+                      <div className="adm-grid-2">
+                        {spec.fields.map((f) => renderField(`${block.section}-${i}-${f.key}`, f, item[f.key], (v) => setItem(i, { [f.key]: v })))}
+                      </div>
+                    </div>
+                  );
+                })}
+                {items.length === 0 && <p className="adm-empty adm-listitem-empty">Пока ничего не добавлено.</p>}
+                {(!spec.max || items.length < spec.max) && (
+                  <button type="button" className="adm-btn adm-btn-ghost adm-btn-sm adm-listitem-add" onClick={() => setItems([...items, emptyItem()])}>{spec.add}</button>
+                )}
+              </>
+            )}
           </FormBlock>
         );
       }
