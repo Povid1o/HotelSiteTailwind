@@ -8,6 +8,8 @@ import ErrorBoundary from './components/ErrorBoundary';
 import SiteMeta from './components/SiteMeta';
 import AgeGate from './components/AgeGate';
 import RouteDataLoader from './components/RouteDataLoader';
+import MetrikaTracker from './components/MetrikaTracker';
+import CookieBanner from './components/CookieBanner';
 
 // Ленивая загрузка компонентов
 const HotelPage = lazy(() => import("./HotelPage.tsx"));
@@ -113,9 +115,11 @@ function Layout() {
         <TravelLineScript />
         <ScrollRestoration />
         <RouteDataLoader />
+        <MetrikaTracker />
         <Suspense fallback={<LoadingScreen />}>
           <Outlet />
         </Suspense>
+        <CookieBanner />
       </div>
   );
 }

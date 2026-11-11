@@ -179,6 +179,7 @@ Frontend запустится на `http://localhost:3000`.
 - [docs/agent-redesign-brief.md](./docs/agent-redesign-brief.md) — Подробное техническое задание на V4 редизайн
 - [docs/backend-db-audit-2026-08-03.md](./docs/backend-db-audit-2026-08-03.md) — Результаты аудита бэкенда и базы данных
 - [docs/project-improvement-plan.md](./docs/project-improvement-plan.md) — План пошаговых улучшений и рефакторинга
+- [docs/analytics.md](./docs/analytics.md) — Яндекс Метрика: цели, раздел «Аналитика» в админке, настройка токена
 - [HotelSiteBackend/MEDIA_GUIDE.md](./HotelSiteBackend/MEDIA_GUIDE.md) — Руководство по загрузке и работе со статическими медиафайлами
 
 ---

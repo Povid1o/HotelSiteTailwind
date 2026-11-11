@@ -41,6 +41,9 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       SECRET_KEY: ${SECRET_KEY}
       CORS_ORIGIN: ${CORS_ORIGIN:-}
+      # Раздел «Аналитика» в админке читает отчёты Метрики этим токеном
+      YM_ID: ${YM_ID:-}
+      YM_TOKEN: ${YM_TOKEN:-}
     depends_on:
       db:
         condition: service_healthy
@@ -63,6 +66,7 @@ services:
      dockerfile: Dockerfile
      args:
       REACT_APP_API_URL: ""
+      REACT_APP_YM_ID: ${YM_ID:-}
       # image: ghcr.io/povid1o/hotelsitetailwind-frontend:latest
     restart: unless-stopped
     environment:
@@ -78,7 +82,8 @@ services:
     restart: unless-stopped
     ports:
       - "443:443"
-      - "8081:80"
+      # Locally the site is on :8081; the server sets HTTP_PORT=80 in .env
+      - "${HTTP_PORT:-8081}:80"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data

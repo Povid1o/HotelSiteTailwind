@@ -10,6 +10,9 @@ COPY . .
 
 ARG REACT_APP_API_URL= 
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
+# Номер счётчика Яндекс Метрики; пусто — аналитика выключена
+ARG REACT_APP_YM_ID=
+ENV REACT_APP_YM_ID=$REACT_APP_YM_ID
 RUN npm run build
 
 # ---------- serve ----------

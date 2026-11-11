@@ -1,0 +1,90 @@
+/* Раздел «Аналитика»: плитки, наблюдения, таблицы и графики. Цвета — токены админки. */
+
+.an-page { --an-grid: #E7E1D3; --an-good: #2E6B4F; --an-bad: #A5532F; }
+.an-loading { margin-top: 24px; }
+.an-updated { margin: 0 0 0 8px; }
+.an-report { transition: opacity .2s; }
+.an-report.is-loading { opacity: .55; }
+.an-block { margin-top: 32px; }
+.an-card-hint { margin: 4px 0 0; }
+
+/* ---------- плитки ---------- */
+.an-kpis { display: grid; gap: 12px; grid-template-columns: repeat(6, minmax(0, 1fr)); margin-top: 24px; }
+.an-goals { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); margin-top: 14px; }
+/* Длинное название цели не должно сдвигать цифру ниже соседних плиток. */
+.an-goals .an-kpi-label { min-height: 2.7em; }
+.an-kpi { background: var(--adm-card); border: 1px solid var(--adm-line); border-radius: 12px; display: flex; flex-direction: column; gap: 4px; padding: 18px 20px; }
+.an-kpi-label { color: var(--adm-muted); font-size: 13px; font-weight: 600; }
+.an-kpi-value { font: 500 36px/1.1 'Cormorant Garamond', serif; letter-spacing: -.01em; }
+.an-kpi-sub { color: var(--adm-label); font-size: 13px; }
+.an-delta { color: var(--adm-muted); font-size: 13px; font-weight: 600; }
+.an-delta.is-good { color: var(--an-good); }
+.an-delta.is-bad { color: var(--an-bad); }
+
+/* ---------- наблюдения ---------- */
+.an-insights { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); margin-top: 14px; }
+.an-insight { background: var(--adm-card); border: 1px solid var(--adm-line); border-left: 4px solid var(--adm-muted); border-radius: 12px; padding: 18px 20px; }
+.an-insight.is-positive { border-left-color: var(--an-good); }
+.an-insight.is-warning { border-left-color: var(--an-bad); }
+.an-insight-tone { color: var(--adm-muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.an-insight h3 { font: 700 16px/1.35 Manrope, sans-serif; margin: 6px 0 0; }
+.an-insight p { color: var(--adm-label); font-size: 14px; line-height: 1.55; margin: 6px 0 0; }
+.an-insight .an-hypothesis { border-top: 1px solid var(--adm-line); color: var(--adm-ink); margin-top: 12px; padding-top: 10px; }
+
+/* ---------- карточки и сетка ---------- */
+.an-card { margin-top: 20px; min-width: 0; padding: 24px; }
+.an-grid { display: grid; gap: 0 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.an-grid > .an-wide { grid-column: 1 / -1; }
+.an-setup { margin-top: 28px; max-width: 760px; }
+.an-setup ol { margin: 0 0 12px; padding-left: 20px; }
+.an-setup li { margin-bottom: 8px; }
+
+/* ---------- таблицы ---------- */
+.an-table { border-collapse: collapse; font-size: 14px; margin-top: 14px; width: 100%; }
+.an-table th { border-bottom: 1px solid var(--adm-line); color: var(--adm-muted); font-size: 12px; font-weight: 600; padding: 0 10px 8px; text-align: right; white-space: nowrap; }
+.an-table td { border-bottom: 1px solid var(--an-grid); font-variant-numeric: tabular-nums; padding: 9px 10px; text-align: right; white-space: nowrap; }
+.an-table th:first-child, .an-table td:first-child { padding-left: 0; text-align: left; white-space: normal; }
+.an-table th:last-child, .an-table td:last-child { padding-right: 0; }
+.an-table tr:last-child td { border-bottom: 0; }
+.an-table th.an-col-bar { text-align: left; width: 34%; }
+.an-path { color: var(--adm-green); font-weight: 600; overflow-wrap: anywhere; text-decoration: none; }
+.an-path:hover { text-decoration: underline; }
+.an-barcell { align-items: center; display: flex; gap: 8px; min-width: 110px; }
+.an-bar { background: var(--adm-green); border-radius: 0 4px 4px 0; display: block; flex: 0 1 auto; height: 8px; max-width: calc(100% - 52px); }
+.an-barvalue { flex: 0 0 auto; }
+
+/* ---------- графики ---------- */
+.an-chart { margin-top: 14px; position: relative; }
+.an-chart svg { display: block; overflow: visible; }
+.an-gridline { stroke: var(--an-grid); stroke-width: 1; }
+.an-baseline { stroke: var(--adm-field); stroke-width: 1; }
+.an-axis { fill: var(--adm-muted); font: 500 11px Manrope, sans-serif; }
+.an-strong { fill: var(--adm-ink); font-weight: 700; }
+.an-line { fill: none; stroke: var(--adm-green); stroke-linejoin: round; stroke-width: 2; }
+.an-area { fill: var(--adm-green); opacity: .08; }
+.an-crosshair { stroke: var(--adm-muted); stroke-dasharray: 3 3; stroke-width: 1; }
+.an-dot { fill: var(--adm-green); stroke: var(--adm-card); stroke-width: 2; }
+.an-col { fill: var(--adm-green); opacity: .85; }
+.an-col.is-hover { opacity: 1; }
+.an-tooltip {
+  background: var(--adm-ink); border-radius: 8px; box-shadow: 0 6px 20px rgba(25,49,47,.18); color: #F5F2EA;
+  display: flex; flex-direction: column; font-size: 13px; gap: 2px; padding: 8px 12px; pointer-events: none;
+  position: absolute; transform: translate(-50%, -100%); white-space: nowrap; z-index: 2;
+}
+.an-tooltip strong { font-weight: 700; }
+
+@media (max-width: 1279px) {
+  .an-kpis:not(.an-goals) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 1079px) {
+  .an-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 699px) {
+  .an-card { padding: 18px 16px; }
+  .an-kpis, .an-kpis:not(.an-goals) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .an-kpi { padding: 14px 16px; }
+  .an-kpi-value { font-size: 30px; }
+  .an-table { display: block; overflow-x: auto; }
+  .an-table td:first-child { min-width: 150px; }
+  .an-barcell { min-width: 96px; }
+}

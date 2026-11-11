@@ -10,6 +10,7 @@ import RoomsAdmin from './components/admin/sections/RoomsAdmin';
 import MenuAdmin from './components/admin/sections/MenuAdmin';
 import EventsAdmin from './components/admin/sections/EventsAdmin';
 import WinesAdmin from './components/admin/sections/WinesAdmin';
+import AnalyticsAdmin from './components/admin/analytics/AnalyticsAdmin';
 import { confirmDiscard, useBeforeUnloadGuard } from './components/admin/ui';
 import SessionExpiredModal from './components/SessionExpiredModal';
 
@@ -20,6 +21,7 @@ const ADMIN_SECTIONS: AdminSection[] = [
   { key: 'events', label: 'Мероприятия' },
   { key: 'wines', label: 'Вина' },
   { key: 'news', label: 'Новости' },
+  { key: 'analytics', label: 'Аналитика' },
 ];
 
 const AdminPage = observer(() => {
@@ -51,9 +53,10 @@ const AdminPage = observer(() => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Hides public-site overlays (the TravelLine booking button) while editing.
+  // ym-hide-content keeps the panel out of Metrika's Webvisor recordings.
   useEffect(() => {
-    document.body.classList.add('admin-mode');
-    return () => document.body.classList.remove('admin-mode');
+    document.body.classList.add('admin-mode', 'ym-hide-content');
+    return () => document.body.classList.remove('admin-mode', 'ym-hide-content');
   }, []);
 
   if (dish.isLoading || hotel.isLoading || pageContent.isLoading || wine.isLoading) {
@@ -96,6 +99,7 @@ const AdminPage = observer(() => {
           {section === 'events' && <EventsAdmin />}
           {section === 'wines' && <WinesAdmin />}
           {section === 'news' && <NewsAdmin />}
+          {section === 'analytics' && <AnalyticsAdmin />}
         </div>
       </AdminShell>
     </div>

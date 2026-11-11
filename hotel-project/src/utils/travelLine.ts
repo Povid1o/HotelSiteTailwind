@@ -1,5 +1,6 @@
 // src/utils/travelLine.ts
 import React from 'react';
+import { GOALS, reachGoal } from './metrika';
 
 /**
  * Opens TravelLine booking module or smoothly scrolls to TravelLine search form.
@@ -8,6 +9,8 @@ export const openTravelLineBooking = (event?: React.MouseEvent | Event, roomId?:
   if (event && typeof event.preventDefault === 'function') {
     event.preventDefault();
   }
+
+  reachGoal(GOALS.bookingOpen, roomId ? { room: String(roomId) } : undefined);
 
   const w = window as any;
 
