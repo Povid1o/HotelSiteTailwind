@@ -30,9 +30,19 @@ export default class UserStorage {
     localStorage.setItem("user", JSON.stringify(user));
   }
 
-  logout() {
+  async logout() {
+    try {
+      await requestLogout();
+    } catch (error: any) {
+      // An expired session is already revoked. Network/CSRF errors must not
+      // make a shared browser appear logged out while its cookie still works.
+      if (error?.response?.status !== 401) {
+        window.alert('Не удалось завершить сессию. Проверьте соединение и повторите выход.');
+        return;
+      }
+    }
     this.clearLocalSession();
-    void requestLogout().catch(() => undefined);
+    window.location.assign('/login');
   }
 
   // Used when the server already reported that there is no session: asking it

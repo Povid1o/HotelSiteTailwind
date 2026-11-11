@@ -22,17 +22,14 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
     "noImplicitAny": false,
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
-    "types": ["react", "react-dom"]
+    "types": ["react", "react-dom", "node", "vitest/globals", "vite/client"]
   },
-  "include": ["./**/*.ts", "./**/*.tsx", "./**/*.d.ts", "./**/*.js", "./**/*.jsx"],
+  "include": ["src", "declarations.d.ts"],
   "exclude": ["node_modules", "build", "HotelSiteBackend"]
 }

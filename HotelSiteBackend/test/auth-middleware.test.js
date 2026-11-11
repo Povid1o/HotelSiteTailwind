@@ -1,60 +1,34 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 const jwt = require('jsonwebtoken');
-
+const crypto = require('node:crypto');
 const auth = require('../middleware/authMiddleware');
 const checkRole = require('../middleware/checkRoleMiddleware');
+const { User } = require('../models/models');
+const AdminSession = require('../models/adminSession');
+const { credentialHash, signSession } = require('../utils/session');
+process.env.JWT_SECRET = 'synthetic-unit-test-key-at-least-thirty-two-characters';
+const responseRecorder = () => ({ statusCode: null, status(code) { this.statusCode = code; return this; }, json(body) { this.body = body; return this; } });
 
-process.env.JWT_SECRET = 'test-only-secret';
-
-function responseRecorder() {
-  return {
-    statusCode: null,
-    body: null,
-    status(code) {
-      this.statusCode = code;
-      return this;
-    },
-    json(body) {
-      this.body = body;
-      return this;
-    }
-  };
-}
-
-test('auth middleware rejects a request without a session cookie', () => {
-  const res = responseRecorder();
-  let calledNext = false;
-
-  auth({ method: 'POST', headers: {} }, res, () => { calledNext = true; });
-
-  assert.equal(calledNext, false);
-  assert.equal(res.statusCode, 401);
+test('auth rejects missing session and legacy self-contained JWT', async () => {
+  for (const cookie of ['', `hotel_session=${jwt.sign({ id: 42, role: 'ADMIN' }, process.env.JWT_SECRET)}`]) {
+    const res = responseRecorder(); let next = false;
+    await auth({ method: 'POST', headers: { cookie } }, res, () => { next = true; });
+    assert.equal(next, false); assert.equal(res.statusCode, 401);
+  }
 });
-
-test('auth middleware accepts a valid httpOnly session cookie', () => {
-  const res = responseRecorder();
-  const token = jwt.sign({ id: 42, email: 'admin@example.test', role: 'ADMIN' }, process.env.JWT_SECRET);
-  const req = { method: 'POST', headers: { cookie: `hotel_session=${token}` } };
-  let calledNext = false;
-
-  auth(req, res, () => { calledNext = true; });
-
-  assert.equal(calledNext, true);
-  assert.equal(req.user.role, 'ADMIN');
-  assert.equal(res.statusCode, null);
+test('auth accepts a current stored session and obtains the role from the database', async () => {
+  const user = { id: 42, email: 'admin@example.test', role: 'ADMIN', password: 'a-stored-password-hash' };
+  const session = { id: crypto.randomUUID(), user_id: 42, credential_hash: credentialHash(user.password), expires_at: new Date(Date.now() + 3600000), last_seen_at: new Date() };
+  AdminSession.findByPk = async () => session;
+  User.findByPk = async () => user;
+  const req = { method: 'POST', headers: { cookie: `hotel_session=${signSession(session)}` } };
+  const res = responseRecorder(); let called = false;
+  await auth(req, res, () => { called = true; });
+  assert.equal(called, true); assert.equal(req.user.role, 'ADMIN');
 });
-
-test('role middleware rejects an authenticated non-admin user', () => {
-  const res = responseRecorder();
-  let calledNext = false;
-
-  checkRole('ADMIN')(
-    { method: 'DELETE', headers: {}, user: { id: 7, email: 'user@example.test', role: 'USER' } },
-    res,
-    () => { calledNext = true; }
-  );
-
-  assert.equal(calledNext, false);
-  assert.equal(res.statusCode, 403);
+test('role middleware rejects an authenticated non-admin', () => {
+  const res = responseRecorder(); let called = false;
+  checkRole('ADMIN')({ method: 'DELETE', user: { id: 7, role: 'USER' } }, res, () => { called = true; });
+  assert.equal(called, false); assert.equal(res.statusCode, 403);
 });

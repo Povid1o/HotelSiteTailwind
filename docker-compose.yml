@@ -9,6 +9,17 @@ volumes:
   caddy_config:
 
 services:
+  uploads-init:
+    image: alpine:3.22
+    user: "0:0"
+    restart: "no"
+    command: ["chown", "-R", "1000:1000", "/uploads"]
+    network_mode: none
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_READ_SEARCH]
+    volumes:
+      - uploads:/uploads
   db:
     image: postgres:16-alpine
     restart: unless-stopped
@@ -20,7 +31,7 @@ services:
       - pgdata:/var/lib/postgresql/data
     networks: [appnet]
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d HotelSite"]
+      test: ["CMD-SHELL", 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
       interval: 10s
       timeout: 5s
       retries: 10
@@ -41,10 +52,20 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       SECRET_KEY: ${SECRET_KEY}
       CORS_ORIGIN: ${CORS_ORIGIN:-}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
       # Раздел «Аналитика» в админке читает отчёты Метрики этим токеном
       YM_ID: ${YM_ID:-}
       YM_TOKEN: ${YM_TOKEN:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_SECURE: ${SMTP_SECURE:-true}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-http://localhost:8081}
     depends_on:
+      uploads-init:
+        condition: service_completed_successfully
       db:
         condition: service_healthy
     volumes:
@@ -52,6 +73,12 @@ services:
     networks: [appnet]
     expose:
       - "8000"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    pids_limit: 128
+    mem_limit: 768m
+    cpus: 1.5
     command: >
       sh -c "
        mkdir -p /app/static/rooms /app/static/pages /app/static/news &&
@@ -81,11 +108,11 @@ services:
     image: caddy:2-alpine
     restart: unless-stopped
     ports:
-      - "443:443"
+      - "127.0.0.1:443:443"
       # Locally the site is on :8081; the server sets HTTP_PORT=80 in .env
-      - "${HTTP_PORT:-8081}:80"
+      - "${HTTP_BIND:-127.0.0.1}:${HTTP_PORT:-8081}:80"
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./${CADDYFILE:-Caddyfile.local}:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
       - uploads:/var/www/static:ro

@@ -1,0 +1,11 @@
+services:
+  backend:
+    environment:
+      COOKIE_SECURE: "true"
+      PUBLIC_SITE_URL: "https://xn--80adsuhsg7e.xn--p1ai"
+  caddy:
+    ports: !override
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./Caddyfile.server:/etc/caddy/Caddyfile:ro

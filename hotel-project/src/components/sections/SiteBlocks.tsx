@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { safeLinkUrl } from '../../utils/contentHelpers';
 import { Link } from 'react-router-dom';
 import { GRAPE_COLORS, lines, list, media, rec, safeMapUrl, txt } from './content';
 import { sec } from './siteDefaults';
@@ -10,9 +11,9 @@ import '../styles/v4-sections.css';
 
 /** Ссылка внутри сайта (/Hotel) или наружу (https://…). */
 export const SmartLink: React.FC<{ to: string; className?: string; children: React.ReactNode }> = ({ to, className, children }) =>
-  /^(https?:|mailto:|tel:|#)/.test(to)
-    ? <a className={className} href={to}>{children}</a>
-    : <Link className={className} to={to || '/'}>{children}</Link>;
+  /^(https:|mailto:|tel:|#)/i.test(safeLinkUrl(to))
+    ? <a className={className} href={safeLinkUrl(to)}>{children}</a>
+    : <Link className={className} to={safeLinkUrl(to, '/')}>{children}</Link>;
 
 const Head: React.FC<{ kicker: string; title: string; lead?: string }> = ({ kicker, title, lead }) => (
   <div className='v4s-head'><p className='v4-kicker'>{kicker}</p><h2>{title}</h2>{lead && <p className='v4s-lead'>{lead}</p>}</div>

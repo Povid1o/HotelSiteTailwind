@@ -2,32 +2,35 @@
     email tati8877@yandex.ru
 }
 
-www.xn--80adsuhsg7e.xn--p1ai {
-    redir https://xn--80adsuhsg7e.xn--p1ai{uri} permanent
-}
-
 xn--80adsuhsg7e.xn--p1ai {
+    header Strict-Transport-Security "max-age=31536000"
     encode zstd gzip
+    request_body {
+        max_size 101MB
+    }
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy strict-origin-when-cross-origin
+        X-Frame-Options DENY
+        -Server
+    }
 
     # API > backend:8000
-    @api path /api*
+    @api path /api /api/*
     handle @api {
         reverse_proxy backend:8000
     }
     
-    @doubleapi path /api/api*
-    handle @doubleapi {
-        uri strip_prefix /api
-    reverse_proxy backend:8000
+    # Uploads live in the shared read-only volume. Serve them here instead of
+    # sending every photo/video through Caddy → nginx → backend.
+    @media path /static/dishes/* /static/pages/* /static/rooms/* /static/wines/* /static/events/* /static/news/* /static/videos/* /static/fallbacks/*
+    handle @media {
+        root * /var/www
+        header Cache-Control "public, max-age=31536000, immutable"
+        header Content-Security-Policy "default-src 'none'; sandbox"
+        try_files {path} =404
+        file_server
     }
-
-
-    # Загруженные файлы (если нужно отдавать напрямую из volume)
-#    @static path /static*
-#    handle @static {
-#        root * /var/www/static
-#        file_server
-#    }
 
     # Фронтенд > nginx внутри контейнера frontend:80
     handle {
@@ -40,4 +43,8 @@ xn--80adsuhsg7e.xn--p1ai {
         rewrite @notFound /index.html
         reverse_proxy frontend:80
     }
+}
+
+www.xn--80adsuhsg7e.xn--p1ai {
+    redir https://xn--80adsuhsg7e.xn--p1ai{uri} permanent
 }

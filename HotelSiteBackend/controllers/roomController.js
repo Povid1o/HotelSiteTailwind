@@ -30,6 +30,8 @@ const roomUpdateSchema = Joi.object({
 
 exports.list = asyncHandler(async (req, res) => {
   const rooms = await Room.findAll({
+    where: req.user?.role === 'ADMIN' ? {} : { is_active: true },
+    limit: 100,
     include: [
       { model: RoomImage, as: 'images' },
       { model: RoomProperty, as: 'properties' },
@@ -56,7 +58,7 @@ exports.create = asyncHandler(async (req, res) => {
 });
 
 exports.get = asyncHandler(async (req, res) => {
-  const room = await Room.findByPk(req.params.id, { include: ['images','properties','conveniences','prices','notes'] });
+  const room = await Room.findOne({ where: { id: req.params.id, ...(req.user?.role === 'ADMIN' ? {} : { is_active: true }) }, include: ['images','properties','conveniences','prices','notes'] });
   if (!room) return res.sendStatus(404);
   res.json(room);
 });

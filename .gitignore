@@ -1,5 +1,10 @@
 
-HotelSiteBackend/.env
 .env
-hotel-project/node_modules/
-HotelSiteBackend/node_modules/
+.env.*
+!.env.example
+node_modules/
+.claude/tmp/
+*.tgz
+*.log
+.DS_Store
+hotel-project/build/

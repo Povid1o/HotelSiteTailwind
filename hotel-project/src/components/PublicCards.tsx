@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { getMediaUrl } from '../utils/contentHelpers';
 import './styles/public-cards-v4.css';
+import WineInquiry from './WineInquiry';
 
 import { openTravelLineBooking } from '../utils/travelLine';
 
@@ -75,7 +76,7 @@ export const WineDialog = ({ wine, onClose }: { wine: any; onClose: () => void }
     <div className='public-wine-dialog__media'>{wineImage && <img src={wineImage} alt={wine.name} />}</div>
     <section className='public-wine-dialog__content'><button className='public-back-button' type='button' onClick={onClose}>← Назад к ассортименту</button><span className='public-tag'>{wine.type || 'Вино'}</span><h1>{wine.name}</h1>
       <div className='public-wine-stats'><div><span>Алкоголь</span><b>{wine.alcohol || '—'}%</b></div><div><span>Сахар, г/дм³</span><b>{wine.sugar || '—'}</b></div><div><span>Подача, °C</span><b>{wine.temperature || '—'}</b></div></div>
-      <strong className='public-wine-price'>{money(wine.price)} ₽</strong><h2>Описание</h2><div className='public-wine-description'>{description.length ? description.map((item: string, index: number) => <p key={index}>{item}</p>) : <p>Подробности о вине доступны по запросу.</p>}</div>
+      <strong className='public-wine-price'>{money(wine.price)} ₽</strong><WineInquiry key={wine.id} wine={wine} /><h2>Описание</h2><div className='public-wine-description'>{description.length ? description.map((item: string, index: number) => <p key={index}>{item}</p>) : <p>Подробности о вине доступны по запросу.</p>}</div>
     </section>
   </div>;
 };

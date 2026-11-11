@@ -664,7 +664,7 @@ paths:
   /wines/tree:
     get:
       tags: [Wines]
-      summary: Дерево: тип → сладость → вина
+      summary: "Дерево: тип → сладость → вина"
       responses:
         '200':
           description: OK

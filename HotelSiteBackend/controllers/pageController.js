@@ -4,7 +4,7 @@ const { Page } = require('../models/models');
 
 const pageSchema = Joi.object({
   name: Joi.string().max(255).required(),
-  path: Joi.string().max(255).required(),
+  path: Joi.string().max(255).pattern(/^\/(?!\/)[^\\\s?#]*$/).required(),
   is_active: Joi.boolean().default(true),
   content_json: Joi.object().default({})
 });
@@ -22,11 +22,11 @@ const toJsonObject = (x) => {
 };
 
 exports.list = asyncHandler(async (req, res) => {
-  const where = req.query.path ? { path: String(req.query.path) } : undefined;
+  const where = { ...(req.query.path ? { path: String(req.query.path) } : {}), ...(req.user?.role === 'ADMIN' ? {} : { is_active: true }) };
   const requestedLimit = Number.parseInt(String(req.query.limit || ''), 10);
   const requestedOffset = Number.parseInt(String(req.query.offset || ''), 10);
-  const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 100) : undefined;
-  const offset = Number.isFinite(requestedOffset) ? Math.max(requestedOffset, 0) : undefined;
+  const limit = Number.isFinite(requestedLimit) ? Math.min(Math.max(requestedLimit, 1), 100) : 100;
+  const offset = Number.isFinite(requestedOffset) ? Math.min(Math.max(requestedOffset, 0), 100000) : undefined;
   const pages = await Page.findAll({ where, limit, offset, order: [['id', 'ASC']] });
   res.json(pages);
 });
@@ -42,7 +42,7 @@ exports.create = asyncHandler(async (req, res) => {
 
 
 exports.get = asyncHandler(async (req, res) => {
-  const p = await Page.findByPk(req.params.id);
+  const p = await Page.findOne({ where: { id: req.params.id, ...(req.user?.role === 'ADMIN' ? {} : { is_active: true }) } });
   if (!p) return res.sendStatus(404);
   res.json(p);
 });

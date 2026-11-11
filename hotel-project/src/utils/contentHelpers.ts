@@ -6,6 +6,20 @@ const API_BASE = (process.env.REACT_APP_API_URL !== undefined ? process.env.REAC
 // Локально: статические файлы обслуживаются через backend на порту 5001
 const STATIC_BASE = process.env.REACT_APP_API_URL !== undefined ? '' : 'http://localhost:5001';
 
+/** CMS links must never execute a script or use a protocol-relative address. */
+export const safeLinkUrl = (value: unknown, fallback = '#'): string => {
+  if (typeof value !== 'string') return fallback;
+  const url = value.trim();
+  if (!url || /[\\\u0000-\u0020\u007f]/.test(url)) return fallback;
+  if (/^\/(?!\/)/.test(url) || url.startsWith('#')) return url;
+  if (/^(mailto:|tel:)/i.test(url)) return url;
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol === 'https:' && !parsed.username && !parsed.password) return parsed.href;
+  } catch { /* Invalid URLs are not links. */ }
+  return fallback;
+};
+
 // Debug logs
 console.log('📦 contentHelpers: API_BASE =', API_BASE);
 console.log('📦 contentHelpers: STATIC_BASE =', STATIC_BASE);
@@ -20,6 +34,10 @@ export const getMediaUrl = (path: string | File | null | undefined): string => {
   
   // Если это File объект, возвращаем пустую строку (обрабатывается отдельно)
   if (path instanceof File) return '';
+  if (typeof path !== 'string') return '';
+  if (path.startsWith('blob:')) return path;
+  if (!/^https?:\/\//.test(path) && !/^\/(?!\/)/.test(path)) return '';
+  if (/[\\\u0000-\u001f\u007f]/.test(path)) return '';
   
   // Если это уже полный URL, возвращаем как есть
   if (path.startsWith('http://') || path.startsWith('https://')) {

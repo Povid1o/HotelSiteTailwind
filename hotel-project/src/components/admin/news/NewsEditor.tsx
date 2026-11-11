@@ -214,7 +214,7 @@ const NewsEditor: React.FC<Props> = ({ content, onChange }) => {
 
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({ heading: { levels: [2, 3, 4] }, code: false, codeBlock: false }),
+      StarterKit.configure({ heading: { levels: [2, 3, 4] }, code: false, codeBlock: false, link: false, underline: false }),
       Underline,
       Link.configure({ openOnClick: false, autolink: true, HTMLAttributes: {} }),
       Placeholder.configure({

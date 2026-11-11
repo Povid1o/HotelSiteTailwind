@@ -133,7 +133,7 @@ const ImageView: React.FC<NodeViewProps> = ({ node, updateAttributes, deleteNode
           onChange={(e) => replace(e.target.files?.[0])}
         />
       </div>
-      <NodeViewContent as="figcaption" className="news-nv-caption" data-empty={node.content.size === 0 ? 'true' : 'false'} />
+      <NodeViewContent<'figcaption'> as="figcaption" className="news-nv-caption" data-empty={node.content.size === 0 ? 'true' : 'false'} />
       {error && <div className="news-nv-error" contentEditable={false} role="alert">{error}</div>}
       {selected && (
         <label className="news-nv-alt" contentEditable={false}>

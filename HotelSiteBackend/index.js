@@ -5,7 +5,7 @@ const cors = require('cors')
 const fileUpload = require('express-fileupload')
 const rateLimit = require('express-rate-limit')
 const helmet = require('helmet')
-const { fromFile } = require('file-type')
+const detectFileType = async (filePath) => (await import('file-type')).fileTypeFromFile(filePath)
 const router = require('./routes/index')
 const errorHandler = require('./middleware/ErrorHandlingMiddleware')
 const path = require('path')
@@ -13,16 +13,15 @@ const fs = require('fs')
 const crypto = require('crypto')
 const authMiddleware = require('./middleware/authMiddleware')
 const checkRole = require('./middleware/checkRoleMiddleware')
-const { parseCookies } = require('./utils/session')
+const apiSecurity = require('./middleware/apiSecurity')
+const { validateEnvironment } = require('./utils/environment')
 
 const PORT = process.env.PORT || 5001
 
 const app = express()
 app.disable('x-powered-by')
-// Public requests reach Express through Caddy and nginx. Trust only those two
-// internal hops so rate limiting uses the client address from X-Forwarded-For,
-// rather than treating every visitor as the proxy container.
-app.set('trust proxy', 2)
+// All configured /api routes have one edge proxy: Caddy directly to Express.
+app.set('trust proxy', 1)
 // The public HTML is served by nginx/Caddy, while this process serves the API
 // and media. Keep media embeddable from the same public origin, but apply the
 // remaining Helmet protections to every API response.
@@ -32,7 +31,7 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' }
 }))
 const allowedOrigins = process.env.CORS_ORIGIN?.split(',').map((origin) => origin.trim()).filter(Boolean);
-app.use(cors(allowedOrigins?.length ? { origin: allowedOrigins } : { origin: process.env.NODE_ENV !== 'production' }))
+app.use(cors(allowedOrigins?.length ? { origin: allowedOrigins, credentials: true } : { origin: process.env.NODE_ENV !== 'production' }))
 
 // Login is deliberately throttled separately from the rest of the API: bcrypt
 // is expensive by design, so unrestricted attempts can become both a password
@@ -45,34 +44,17 @@ const loginLimiter = rateLimit({
   message: { message: 'Слишком много попыток входа. Повторите через 15 минут.' }
 })
 app.use('/api/user/login', loginLimiter)
-app.use('/api', (req, res, next) => {
-  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method) || req.path === '/user/login') return next();
-  const cookies = parseCookies(req.headers.cookie);
-  const csrfHeader = req.get('x-csrf-token');
-  const cookieToken = cookies.csrf_token ? Buffer.from(cookies.csrf_token) : null;
-  const headerToken = csrfHeader ? Buffer.from(csrfHeader) : null;
-  if (!cookieToken || !headerToken || cookieToken.length !== headerToken.length || !crypto.timingSafeEqual(cookieToken, headerToken)) {
-    return res.status(403).json({ message: 'Недействительный CSRF-токен' });
-  }
-  next();
-})
+const apiLimiter = rateLimit({ windowMs: 60 * 1000, limit: 300, standardHeaders: 'draft-7', legacyHeaders: false });
+app.use('/api', apiLimiter, apiSecurity)
+app.use('/api', (_req, res, next) => { res.set('Cache-Control', 'no-store'); next(); })
 // JSON в API не содержит медиа: файлы принимаются отдельным защищённым endpoint.
 app.use(express.json({ limit: '1mb' }))
 app.use(express.urlencoded({ extended: true, limit: '1mb' }))
-// Normalize duplicate slashes to avoid //static/... 404s
-app.use((req, _res, next) => {
-  if (typeof req.url === 'string' && req.url.includes('//')) {
-    req.url = req.url.replace(/\/+/, '/').replace(/\/+/, '/');
-    // Collapse any remaining multiple slashes
-    while (req.url.includes('//')) req.url = req.url.replace(/\/+/, '/');
-  }
-  next()
-})
-
 // Статика доступна только по явному префиксу; это исключает двойную обработку
 // каждого файла и не смешивает API с файловой системой.
 app.use('/static', express.static(path.resolve(__dirname, 'static'), {
   setHeaders: (res, filePath) => {
+    res.setHeader('Content-Security-Policy', "default-src 'none'; sandbox");
     // Явно устанавливаем MIME-типы для видео файлов
     if (filePath.endsWith('.mp4')) {
       res.setHeader('Content-Type', 'video/mp4');
@@ -93,15 +75,6 @@ app.use('/static', express.static(path.resolve(__dirname, 'static'), {
     res.setHeader('Accept-Ranges', 'bytes');
   }
 }))
-// ✅ Увеличиваем лимит для загрузки файлов до 100MB
-app.use(fileUpload({
-  limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB
-  abortOnLimit: true,
-  responseOnLimit: 'Размер файла превышает допустимый лимит.',
-  useTempFiles: true,
-  tempFileDir: '/tmp/'
-}))
-
 const uploadPolicies = {
   dishes: { extensions: new Set(['.jpg', '.jpeg', '.png', '.webp']), mimeTypes: new Set(['image/jpeg', 'image/png', 'image/webp']), maxBytes: 10 * 1024 * 1024 },
   wines: { extensions: new Set(['.jpg', '.jpeg', '.png', '.webp']), mimeTypes: new Set(['image/jpeg', 'image/png', 'image/webp']), maxBytes: 10 * 1024 * 1024 },
@@ -114,7 +87,24 @@ const uploadPolicies = {
 // Media changes are admin-only.  The endpoint accepts a deliberately small
 // format allowlist; file names, MIME type and target directory are never taken
 // from the client unchecked.
-app.post('/api/upload', authMiddleware, checkRole('ADMIN'), async (req, res) => {
+const uploadLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 40, standardHeaders: 'draft-7', legacyHeaders: false });
+// Create one private directory per authorized request; remove it even on disconnect.
+const prepareUpload = async (req, res, next) => {
+  try {
+    const directory = await fs.promises.mkdtemp(path.join(require('os').tmpdir(), 'hotel-upload-'));
+    req.uploadTempDirectory = directory;
+    const cleanup = () => { void fs.promises.rm(directory, { recursive: true, force: true }).catch(() => {}); };
+    res.once('finish', cleanup);
+    res.once('close', cleanup);
+    next();
+  } catch (error) { next(error); }
+};
+const parseUpload = (req, res, next) => fileUpload({
+  limits: { fileSize: 100 * 1024 * 1024, files: 1, fields: 1, parts: 2, fieldSize: 100, fieldNameSize: 50, headerPairs: 50 },
+  abortOnLimit: true, useTempFiles: true, tempFileDir: req.uploadTempDirectory,
+  uploadTimeout: 30000, responseOnLimit: 'Размер файла превышает допустимый лимит.'
+})(req, res, next);
+app.post('/api/upload', authMiddleware, checkRole('ADMIN'), uploadLimiter, prepareUpload, parseUpload, async (req, res) => {
   try {
     if (!req.files || Object.keys(req.files).length === 0) {
       return res.status(400).json({ message: 'No files uploaded' });
@@ -129,7 +119,7 @@ app.post('/api/upload', authMiddleware, checkRole('ADMIN'), async (req, res) => 
     }
 
     const mediaType = req.body.type || req.query.type;
-    const policy = uploadPolicies[mediaType];
+    const policy = typeof mediaType === 'string' && Object.hasOwn(uploadPolicies, mediaType) ? uploadPolicies[mediaType] : null;
     if (!policy) {
       return res.status(400).json({ message: 'Invalid media type' });
     }
@@ -144,7 +134,7 @@ app.post('/api/upload', authMiddleware, checkRole('ADMIN'), async (req, res) => 
 
     // Do not trust the MIME type sent by the browser.  Identify the bytes in
     // the temporary file before it is moved into public static storage.
-    const detectedType = await fromFile(uploadedFile.tempFilePath);
+    const detectedType = await detectFileType(uploadedFile.tempFilePath);
     if (!detectedType || !policy.mimeTypes.has(detectedType.mime)) {
       return res.status(415).json({ message: 'File contents do not match an allowed media format' });
     }
@@ -163,7 +153,7 @@ app.post('/api/upload', authMiddleware, checkRole('ADMIN'), async (req, res) => 
       type: mediaType
     });
   } catch (error) {
-    console.error('Upload endpoint error:', error);
+    console.error('Upload endpoint error:', error.name || 'Error');
     res.status(500).json({ message: 'Media upload failed' });
   }
 });
@@ -172,13 +162,13 @@ app.use('/api', router)
 
 // ---- Swagger ----
 const swaggerUi = require('swagger-ui-express');
-const YAML = require('yamljs');
+const YAML = require('yaml');
 
-const swaggerDocument = YAML.load(path.join(__dirname, 'swagger.yaml'));
+const swaggerDocument = YAML.parse(fs.readFileSync(path.join(__dirname, 'swagger.yaml'), 'utf8'));
 
 // отдать UI и сам yaml именно под /api/*
-app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.get('/api/swagger.yaml', (_req, res) =>
+app.use('/api/docs', authMiddleware, checkRole('ADMIN'), swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.get('/api/swagger.yaml', authMiddleware, checkRole('ADMIN'), (_req, res) =>
   res.sendFile(path.join(__dirname, 'swagger.yaml'))
 );
 
@@ -192,12 +182,16 @@ app.use(errorHandler)
 
 const start = async() => {
   try{
+    validateEnvironment()
     await sequelize.authenticate()
     app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
   } catch(e) {
-      console.log(e)
+      console.error('Backend startup failed:', e.message)
+      process.exitCode = 1
   }
   
 }
 
-start()
+if (require.main === module) start()
+
+module.exports = app;

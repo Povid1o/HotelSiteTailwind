@@ -57,7 +57,7 @@ const daily = (date1, date2) => {
 };
 
 /** Ответ на запрос к API: { status, body }. */
-const fakeMetrikaResponse = (input) => {
+const fakeMetrikaResponse = (input, now = new Date()) => {
   const url = new URL(String(input));
   if (url.pathname.endsWith('/goals')) return { status: 200, body: { goals: GOALS } };
   if (!url.pathname.endsWith('/stat/v1/data')) return { status: 404, body: { message: 'Not found' } };
@@ -66,7 +66,7 @@ const fakeMetrikaResponse = (input) => {
   const metrics = (q.get('metrics') || '').split(',');
   const dimension = q.get('dimensions');
   // Предыдущий период делаем немного меньше, чтобы было видно сравнение.
-  const scale = q.get('date2') < new Date(Date.now() - 2 * 864e5).toISOString().slice(0, 10) ? 0.78 : 1;
+  const scale = q.get('date2') < new Date(now.getTime() - 2 * 864e5).toISOString().slice(0, 10) ? 0.78 : 1;
 
   if (metrics[0] === 'ym:s:ecommercePurchases') return { status: 200, body: { data: [], totals: [0, 0] } };
   if (dimension === 'ym:s:date') return { status: 200, body: { data: daily(q.get('date1'), q.get('date2')) } };

@@ -1,14 +1,16 @@
 // controllers/wineTypeController.js
 const { WineType } = require('../models/models');
+const asyncHandler = require('express-async-handler');
 
 exports.list = async (req, res) => {
     const rows = await WineType.findAll({ order: [['id', 'ASC']] });
     res.json(rows);
 };
 
+
 exports.create = async (req, res) => {
     const { name } = req.body;
-    if (!name || !name.trim()) return res.status(400).json({ message: 'name is required' });
+    if (typeof name !== 'string' || !name.trim() || name.length > 255) return res.status(400).json({ message: 'name is required' });
     const row = await WineType.create({ name: name.trim() });
     res.status(201).json(row);
 };
@@ -20,3 +22,5 @@ exports.remove = async (req, res) => {
     await row.destroy();
     res.json({ ok: true });
 };
+
+for (const key of Object.keys(exports)) exports[key] = asyncHandler(exports[key]);

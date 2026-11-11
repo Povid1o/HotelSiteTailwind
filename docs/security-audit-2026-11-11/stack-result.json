@@ -1,0 +1,27 @@
+{
+  "realPostgreSQL": true,
+  "adminRegistrationStatus": 201,
+  "hiddenPagePublicStatus": 404,
+  "hiddenRoomPublicStatus": 404,
+  "validPngUploadStatus": 201,
+  "svgUploadStatus": 415,
+  "mediaSandboxCsp": true,
+  "crossSiteWriteStatus": 403,
+  "adminAndLoginCsp": true,
+  "dotfilesStatus": 403,
+  "spoofedXffLoginStatuses": [
+    400,
+    400,
+    400,
+    400,
+    400,
+    400,
+    400,
+    429,
+    429,
+    429,
+    429,
+    429
+  ],
+  "logoutReplayStatus": 401
+}

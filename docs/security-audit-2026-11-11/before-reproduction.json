@@ -1,0 +1,107 @@
+{
+  "scope": "actual Express middleware and routes; mocked database; synthetic JWT secret; loopback only",
+  "results": [
+    {
+      "name": "administrative writes reject absent session",
+      "evidence": {
+        "routesChecked": 33
+      }
+    },
+    {
+      "name": "administrative reads reject absent session",
+      "evidence": {
+        "routesChecked": 4
+      }
+    },
+    {
+      "name": "CSRF and non-admin role rejection",
+      "evidence": {
+        "csrfStatus": 403,
+        "roleStatus": 403
+      }
+    },
+    {
+      "name": "signed token for a nonexistent administrator is renewed without database lookup",
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "name": "token replay after logout",
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "name": "admin registration accepts a one-character password",
+      "evidence": {
+        "status": 201
+      }
+    },
+    {
+      "name": "inactive data returned by public route",
+      "evidence": {
+        "route": "/api/pages",
+        "status": 200,
+        "activeFilter": null
+      }
+    },
+    {
+      "name": "inactive data returned by public route",
+      "evidence": {
+        "route": "/api/pages/1",
+        "status": 200,
+        "activeFilter": null
+      }
+    },
+    {
+      "name": "inactive data returned by public route",
+      "evidence": {
+        "route": "/api/rooms",
+        "status": 200,
+        "activeFilter": null
+      }
+    },
+    {
+      "name": "inactive data returned by public route",
+      "evidence": {
+        "route": "/api/dishes",
+        "status": 200,
+        "activeFilter": null
+      }
+    },
+    {
+      "name": "unauthenticated multipart leaves temporary file after response",
+      "evidence": {
+        "method": "POST",
+        "route": "/api/upload",
+        "status": 401,
+        "leakedFiles": 1
+      }
+    },
+    {
+      "name": "unauthenticated multipart leaves temporary file after response",
+      "evidence": {
+        "method": "POST",
+        "route": "/outside-api-audit",
+        "status": 404,
+        "leakedFiles": 1
+      }
+    },
+    {
+      "name": "trust proxy 2 accepts extra forwarded hop on direct Express access",
+      "evidence": {
+        "ip": "198.51.100.99",
+        "publicCaddyBypassProven": false
+      }
+    },
+    {
+      "name": "one malformed unauthenticated login terminates isolated backend process",
+      "evidence": {
+        "code": 1,
+        "signal": null,
+        "bcryptArgumentError": true
+      }
+    }
+  ]
+}

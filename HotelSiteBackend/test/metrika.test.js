@@ -2,7 +2,11 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 
 const { buildInsights, createClient, fetchDashboard, periodDates, pickGoals } = require('../utils/metrika');
-const { fakeFetch } = require('./fixtures/fakeMetrika');
+const { fakeMetrikaResponse } = require('./fixtures/fakeMetrika');
+const fakeFetch = async input => {
+  const { status, body } = fakeMetrikaResponse(input, NOW);
+  return { ok: status < 400, status, json: async () => body };
+};
 
 const NOW = new Date('2026-10-29T09:00:00Z');
 

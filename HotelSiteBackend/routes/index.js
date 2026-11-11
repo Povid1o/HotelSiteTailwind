@@ -13,6 +13,7 @@ router.use('/user', require('./userRouter'));        // registration/login/check
 router.use('/dishes', require('./dishRouter'));
 router.use('/rooms', require('./roomRouter'));
 router.use('/wines', require('./wineRouter'));
+router.use('/wine-inquiries', require('./wineInquiryRouter'));
 router.use('/pages', require('./pageRouter'));
 router.use('/events', require('./eventsRouter'));
 router.use('/news', require('./newsRouter'));

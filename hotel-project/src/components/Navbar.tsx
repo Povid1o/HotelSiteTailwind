@@ -81,7 +81,7 @@ const Navbar = observer(({ nav = false, setNav }: NavbarProps) => {
           {user?.isAuth && (
             <>
               <li>
-                <NavLink to='/admin' onClick={closeMenu} className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}>
+                <NavLink to='/admin' reloadDocument onClick={closeMenu} className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}>
                   Админка
                 </NavLink>
               </li>

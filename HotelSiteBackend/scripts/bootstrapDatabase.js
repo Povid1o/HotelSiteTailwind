@@ -1,7 +1,9 @@
 require('dotenv').config();
 
 const sequelize = require('../db');
-const { Page, WineType, WineSweetness, News } = require('../models/models');
+const { Page, WineType, WineSweetness, News, EventCategory, Event, EventImage } = require('../models/models');
+const WineInquirySettings = require('../models/wineInquirySettings');
+const AdminSession = require('../models/adminSession');
 const seedEvents = require('../seed/seedEvents');
 const localProducts = require('../seed/localProducts');
 
@@ -58,12 +60,19 @@ async function bootstrapDatabase() {
   for (const name of baselineMigrations) {
     await sequelize.query('INSERT INTO "SequelizeMeta" (name) VALUES (:name) ON CONFLICT (name) DO NOTHING', { replacements: { name } });
   }
+  // Legacy migrations did not include events. Create missing tables before
+  // their indexes; sync without alter/force preserves existing content.
+  await EventCategory.sync();
+  await Event.sync();
+  await EventImage.sync();
   for (const statement of indexStatements) await sequelize.query(statement);
 
   for (const name of ['красное', 'белое', 'розовое']) await WineType.findOrCreate({ where: { name } });
   for (const name of ['сухое', 'полусухое', 'полусладкое', 'сладкое']) await WineSweetness.findOrCreate({ where: { name } });
   // Таблица новостей создаётся, только если её ещё нет (существующие данные не затрагиваются).
   await News.sync();
+  await WineInquirySettings.sync();
+  await AdminSession.sync();
   for (const page of defaultPages) await Page.findOrCreate({ where: { path: page.path }, defaults: page });
   await seedEvents();
 }

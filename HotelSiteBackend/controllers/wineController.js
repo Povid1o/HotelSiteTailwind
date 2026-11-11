@@ -28,7 +28,7 @@ exports.tree = asyncHandler(async (req, res) => {
   const [types, sweetnesses, wines] = await Promise.all([
     WineType.findAll(),
     WineSweetness.findAll(),
-    Wine.findAll({ include: [{ model: WineDescription, as: 'description' }, { model: WineImage, as: 'images' }] })
+    Wine.findAll({ where: req.user?.role === 'ADMIN' ? {} : { is_active: true }, include: [{ model: WineDescription, as: 'description' }, { model: WineImage, as: 'images' }] })
   ]);
 
   const byType = types.map(t => ({ id: t.id, name: t.name, assortment: [] }));

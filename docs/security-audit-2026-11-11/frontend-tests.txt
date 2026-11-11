@@ -1,0 +1,13 @@
+
+> hotel-project@0.1.0 test
+> vitest run
+
+
+ RUN  v5.1.0 /Users/nikitabaslykov/Documents/Javascript/HotelSiteTailwind/hotel-project
+
+
+ Test Files  2 passed (2)
+      Tests  5 passed (5)
+   Start at  17:40:34
+   Duration  581ms (environment 86%, import 8%, transform 3%, tests 2%, worker 1%)
+

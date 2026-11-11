@@ -1,5 +1,6 @@
 import React, { Suspense, lazy, useContext, useState, useEffect } from "react";
-import { createBrowserRouter, Navigate, RouterProvider, ScrollRestoration, Outlet } from 'react-router-dom';
+import { createBrowserRouter, Navigate, RouterProvider, ScrollRestoration, Outlet, useLocation } from 'react-router-dom';
+import { isPrivatePath } from './utils/metrika';
 import { observer } from "mobx-react-lite";
 import { Context } from "./index";
 import LoadingScreen from './components/LoadingScreen';
@@ -108,14 +109,24 @@ const router = createBrowserRouter([
   }
 ]);
 
+const privateDocument = isPrivatePath(window.location.pathname);
 function Layout() {
+  const { pathname } = useLocation();
+  const privatePage = isPrivatePath(pathname);
+  const reloadForSecurityPolicy = privatePage !== privateDocument;
+  useEffect(() => {
+    if (reloadForSecurityPolicy) window.location.replace(window.location.href);
+  }, [reloadForSecurityPolicy, pathname]);
+  // A new document applies the admin CSP and removes public third-party scripts
+  // before rendering credentials, including navigation through SPA links.
+  if (reloadForSecurityPolicy) return null;
   return (
       <div>
         <SiteMeta />
-        <TravelLineScript />
+        {!privatePage && <TravelLineScript />}
         <ScrollRestoration />
         <RouteDataLoader />
-        <MetrikaTracker />
+        {!privatePage && <MetrikaTracker />}
         <Suspense fallback={<LoadingScreen />}>
           <Outlet />
         </Suspense>

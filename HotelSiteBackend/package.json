@@ -23,22 +23,32 @@
     "express": "^4.19.2",
     "express-async-handler": "^1.2.0",
     "express-fileupload": "^1.5.0",
-    "express-rate-limit": "^7.5.1",
-    "file-type": "^16.5.4",
+    "express-rate-limit": "^8.7.4",
+    "file-type": "^22.3.0",
     "helmet": "^8.3.0",
     "joi": "^17.12.0",
     "jsonwebtoken": "^9.0.2",
-    "multer": "^2.0.2",
+    "nodemailer": "^10.5.0",
     "pg": "^8.11.5",
     "pg-hstore": "^2.3.4",
     "sanitize-html": "^2.13.1",
     "sequelize": "^6.37.3",
     "swagger-ui-express": "^5.0.1",
-    "uuid": "^9.0.1",
-    "yamljs": "^0.3.0"
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.0",
     "sequelize-cli": "^6.6.2"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "overrides": {
+    "sequelize": {
+      "uuid": "^11.1.1"
+    },
+    "brace-expansion": "^1.1.21",
+    "glob": "^14.0.2",
+    "minimatch": "^11.0.1"
   }
 }

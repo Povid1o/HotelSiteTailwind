@@ -114,6 +114,11 @@ select.adm-input { padding: 0 10px; }
 .adm-card-head > span { font-size: 13px; margin: 0; }
 .adm-lead { margin-bottom: 8px; }
 .adm-settings { margin-top: 28px; max-width: 760px; }
+.adm-inquiry-settings { margin-bottom: 28px; }
+.adm-inquiry-settings h2 { font-size: 24px; margin: 0 0 8px; }
+.adm-inquiry-settings__row { align-items: center; display: flex; gap: 12px; max-width: 660px; }
+.adm-inquiry-settings__row .adm-input { flex: 1; min-width: 0; }
+@media (max-width: 540px) { .adm-inquiry-settings__row { align-items: stretch; flex-direction: column; } }
 .adm-empty { color: var(--adm-muted); font-size: 15px; line-height: 1.6; }
 .adm-empty p { margin: 0 0 12px; }
 .adm-empty code { background: #ECE6D8; border-radius: 4px; padding: 1px 6px; }

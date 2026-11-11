@@ -1,3 +1,4 @@
+import { safeLinkUrl } from '../../../utils/contentHelpers';
 import React, { useContext, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../../../index';
@@ -288,7 +289,7 @@ const PageEditor: React.FC<{ pageId: number; onClose: () => void }> = observer((
     <div className="adm-card">
       <BackButton onClick={() => { if (confirmDiscard()) onClose(); }} />
       <FormHead title={page.name} status={status.text} tone={status.tone} />
-      <p className="adm-muted adm-page-link">Адрес на сайте: <a href={page.path} target="_blank" rel="noreferrer">{page.path} ↗</a></p>
+      <p className="adm-muted adm-page-link">Адрес на сайте: <a href={safeLinkUrl(page.path)} target="_blank" rel="noreferrer">{page.path} ↗</a></p>
       {blocks.length ? blocks.map(renderBlock) : <p className="adm-empty">Содержимое этой страницы не редактируется здесь.</p>}
       {blocks.length > 0 && <FormBar dirty={dirty} saving={saving} onSave={save} onCancel={cancel} message={msg?.kind === 'error' ? msg : null} />}
     </div>

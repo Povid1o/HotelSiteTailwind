@@ -1,0 +1,251 @@
+TAP version 13
+# Subtest: auth rejects missing session and legacy self-contained JWT
+ok 1 - auth rejects missing session and legacy self-contained JWT
+  ---
+  duration_ms: 2.138541
+  type: 'test'
+  ...
+# Subtest: auth accepts a current stored session and obtains the role from the database
+ok 2 - auth accepts a current stored session and obtains the role from the database
+  ---
+  duration_ms: 0.721208
+  type: 'test'
+  ...
+# Subtest: role middleware rejects an authenticated non-admin
+ok 3 - role middleware rejects an authenticated non-admin
+  ---
+  duration_ms: 0.070375
+  type: 'test'
+  ...
+# Subtest: production rejects unsafe cookie, transport and secret configuration
+ok 4 - production rejects unsafe cookie, transport and secret configuration
+  ---
+  duration_ms: 1.293292
+  type: 'test'
+  ...
+# Subtest: test/fixtures/fakeMetrika.js
+ok 3 - test/fixtures/fakeMetrika.js
+  ---
+  duration_ms: 54.419541
+  type: 'test'
+  ...
+# Subtest: periodDates covers N days ending today and the same span before it
+ok 6 - periodDates covers N days ending today and the same span before it
+  ---
+  duration_ms: 39.070458
+  type: 'test'
+  ...
+# Subtest: pickGoals puts site goals first and names them by their event
+ok 7 - pickGoals puts site goals first and names them by their event
+  ---
+  duration_ms: 0.191791
+  type: 'test'
+  ...
+# Subtest: fetchDashboard assembles every report from the API
+ok 8 - fetchDashboard assembles every report from the API
+  ---
+  duration_ms: 4.123208
+  type: 'test'
+  ...
+# Subtest: API errors become readable messages
+ok 9 - API errors become readable messages
+  ---
+  duration_ms: 0.280166
+  type: 'test'
+  ...
+# Subtest: insights flag weak devices, weak sources and leaky entry pages
+ok 10 - insights flag weak devices, weak sources and leaky entry pages
+  ---
+  duration_ms: 2.104208
+  type: 'test'
+  ...
+# Subtest: insights stay quiet on tiny samples
+ok 11 - insights stay quiet on tiny samples
+  ---
+  duration_ms: 0.06275
+  type: 'test'
+  ...
+# Subtest: slugify transliterates Russian titles
+ok 12 - slugify transliterates Russian titles
+  ---
+  duration_ms: 0.632875
+  type: 'test'
+  ...
+# Subtest: slugify keeps addresses short without cutting words in half
+ok 13 - slugify keeps addresses short without cutting words in half
+  ---
+  duration_ms: 0.632125
+  type: 'test'
+  ...
+# Subtest: uniqueSlug adds a numeric suffix on collision
+ok 14 - uniqueSlug adds a numeric suffix on collision
+  ---
+  duration_ms: 0.17825
+  type: 'test'
+  ...
+# Subtest: sanitizer keeps editor output
+ok 15 - sanitizer keeps editor output
+  ---
+  duration_ms: 2.493916
+  type: 'test'
+  ...
+# Subtest: sanitizer removes scripts, handlers and dangerous links
+ok 16 - sanitizer removes scripts, handlers and dangerous links
+  ---
+  duration_ms: 0.625167
+  type: 'test'
+  ...
+# Subtest: external links open safely
+ok 17 - external links open safely
+  ---
+  duration_ms: 0.159584
+  type: 'test'
+  ...
+# Subtest: textStats counts words and reading time
+ok 18 - textStats counts words and reading time
+  ---
+  duration_ms: 0.856791
+  type: 'test'
+  ...
+# Subtest: HTTP security regressions
+    # Subtest: all administrative writes reject an unauthenticated request
+    ok 1 - all administrative writes reject an unauthenticated request
+      ---
+      duration_ms: 17.856
+      type: 'test'
+      ...
+    # Subtest: admin-only reads and Swagger reject a guest
+    ok 2 - admin-only reads and Swagger reject a guest
+      ---
+      duration_ms: 2.263125
+      type: 'test'
+      ...
+    # Subtest: CSRF requires the value bound to the server-side session
+    ok 3 - CSRF requires the value bound to the server-side session
+      ---
+      duration_ms: 8.369166
+      type: 'test'
+      ...
+    # Subtest: one-character passwords are rejected
+    ok 4 - one-character passwords are rejected
+      ---
+      duration_ms: 1.372167
+      type: 'test'
+      ...
+    # Subtest: malformed login data returns an error and keeps the process alive
+    ok 5 - malformed login data returns an error and keeps the process alive
+      ---
+      duration_ms: 3.574041
+      type: 'test'
+      ...
+    # Subtest: login rejects cross-site and HTML-form submissions
+    ok 6 - login rejects cross-site and HTML-form submissions
+      ---
+      duration_ms: 1.158709
+      type: 'test'
+      ...
+    # Subtest: successful login sets secure HttpOnly cookies and no-store
+    ok 7 - successful login sets secure HttpOnly cookies and no-store
+      ---
+      duration_ms: 2.211333
+      type: 'test'
+      ...
+    # Subtest: a signed JWT without a real stored session cannot authenticate
+    ok 8 - a signed JWT without a real stored session cannot authenticate
+      ---
+      duration_ms: 0.869916
+      type: 'test'
+      ...
+    # Subtest: password change, role removal and user deletion revoke existing sessions
+    ok 9 - password change, role removal and user deletion revoke existing sessions
+      ---
+      duration_ms: 2.500917
+      type: 'test'
+      ...
+    # Subtest: absolute and idle expirations are enforced
+    ok 10 - absolute and idle expirations are enforced
+      ---
+      duration_ms: 0.824417
+      type: 'test'
+      ...
+    # Subtest: public queries filter inactive content; administrators retain access
+    ok 11 - public queries filter inactive content; administrators retain access
+      ---
+      duration_ms: 2.916875
+      type: 'test'
+      ...
+    # Subtest: unauthenticated multipart never creates upload temp directories
+    ok 12 - unauthenticated multipart never creates upload temp directories
+      ---
+      duration_ms: 2.335208
+      type: 'test'
+      ...
+    # Subtest: authorized rejected upload is cleaned after response
+    ok 13 - authorized rejected upload is cleaned after response
+      ---
+      duration_ms: 36.694708
+      type: 'test'
+      ...
+    # Subtest: logout revokes token replay on the server
+    ok 14 - logout revokes token replay on the server
+      ---
+      duration_ms: 1.179917
+      type: 'test'
+      ...
+    # Subtest: login attempts are rate limited
+    ok 15 - login attempts are rate limited
+      ---
+      duration_ms: 3.228792
+      type: 'test'
+      ...
+    1..15
+ok 19 - HTTP security regressions
+  ---
+  duration_ms: 94.428708
+  type: 'test'
+  ...
+# Subtest: public inquiry sends authoritative product data to the stored recipient
+ok 20 - public inquiry sends authoritative product data to the stored recipient
+  ---
+  duration_ms: 1.678917
+  type: 'test'
+  ...
+# Subtest: invalid email, injected recipient, header injection, invalid product, honeypot and non-JSON never send mail
+ok 21 - invalid email, injected recipient, header injection, invalid product, honeypot and non-JSON never send mail
+  ---
+  duration_ms: 1.128375
+  type: 'test'
+  ...
+# Subtest: unavailable wine, missing configuration and SMTP failure never claim success
+ok 22 - unavailable wine, missing configuration and SMTP failure never claim success
+  ---
+  duration_ms: 0.653708
+  type: 'test'
+  ...
+# Subtest: email settings validate one recipient, persist it, and can disable inquiries
+ok 23 - email settings validate one recipient, persist it, and can disable inquiries
+  ---
+  duration_ms: 0.432833
+  type: 'test'
+  ...
+# Subtest: notification renders a real email with product link and visitor Reply-To
+ok 24 - notification renders a real email with product link and visitor Reply-To
+  ---
+  duration_ms: 9.922083
+  type: 'test'
+  ...
+# Subtest: SMTP supports implicit TLS and STARTTLS without exposing credentials to settings
+ok 25 - SMTP supports implicit TLS and STARTTLS without exposing credentials to settings
+  ---
+  duration_ms: 0.297416
+  type: 'test'
+  ...
+1..25
+# tests 40
+# suites 0
+# pass 40
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 739.865334

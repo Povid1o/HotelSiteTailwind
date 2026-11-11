@@ -5,35 +5,73 @@ on:
     branches: ["dev"]
   workflow_dispatch: {}
 
+permissions:
+  contents: read
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
 jobs:
-  deploy:
+  verify:
     runs-on: ubuntu-latest
-
     steps:
-      - name: add ssh key
-        uses: webfactory/ssh-agent@v0.9.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
-      - name:  Add host to known_hosts
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            HotelSiteBackend/package-lock.json
+            hotel-project/package-lock.json
+      - name: Backend tests and dependency audit
+        working-directory: HotelSiteBackend
         run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
-
-      - name: 🚀 Deploy to VPS
+          npm ci --ignore-scripts
+          npm test
+          npm audit --audit-level=high
+      - name: Frontend tests, production build and dependency audit
+        working-directory: hotel-project
         run: |
-          ssh -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "
-            set -e
-            echo 'Change directory to project'
-            cd /home/HotelSiteTailwind || exit 1
-
-            echo 'Get current git commit'
-            git fetch origin dev && git pull
-
-            echo 'Stop previous conteiners'
-            docker-compose down
-
-            echo 'Rebuild new vresion'
-            docker-compose up --build -d
-
-            echo 'Ready'
-          "
+          npm ci --ignore-scripts
+          npm test
+          npm run build
+          npm audit --audit-level=high
+  deploy:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy using a pinned SSH host key
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          DEPLOY_SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SSH_KEY" && test -n "$SSH_KNOWN_HOSTS"
+          [[ "$SSH_HOST" =~ ^[a-zA-Z0-9.-]+$ ]]
+          [[ "$SSH_USER" =~ ^[a-zA-Z0-9_-]+$ ]]
+          [[ "$SSH_PORT" =~ ^[0-9]+$ ]]
+          key_file="$RUNNER_TEMP/hotel-deploy-key"
+          hosts_file="$RUNNER_TEMP/hotel-known-hosts"
+          trap 'rm -f "$key_file" "$hosts_file"' EXIT
+          umask 077
+          printf '%s\n' "$SSH_KEY" > "$key_file"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$hosts_file"
+          [[ "$DEPLOY_SHA" =~ ^[a-f0-9]{40}$ ]]
+          ssh -i "$key_file" -p "$SSH_PORT" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$hosts_file" "$SSH_USER@$SSH_HOST" "bash -se -- $DEPLOY_SHA" <<'REMOTE'
+          set -euo pipefail
+          cd /home/HotelSiteTailwind
+          git fetch origin dev
+          git merge --ff-only "$1"
+          test "$(git rev-parse HEAD)" = "$1"
+          HTTP_PORT=80 docker compose -f docker-compose.yml -f docker-compose.production.yml build
+          HTTP_PORT=80 docker compose -f docker-compose.yml -f docker-compose.production.yml up -d
+          HTTP_PORT=80 docker compose -f docker-compose.yml -f docker-compose.production.yml exec -T caddy caddy reload --config /etc/caddy/Caddyfile
+          REMOTE

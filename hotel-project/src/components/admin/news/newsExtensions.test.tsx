@@ -1,16 +1,17 @@
+import { vi } from 'vitest';
 import { getSchema } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import { DOMParser as PMParser, DOMSerializer, Node as PMNode } from '@tiptap/pm/model';
 // Сеть тесту не нужна: подменяем http-слой, чтобы не тянуть axios.
-jest.mock('../../http', () => ({ STATIC_BASE: '', $authHost: {}, $host: {} }));
-jest.mock('../../http/newsAPI', () => ({ uploadNewsImage: jest.fn() }));
+vi.mock('../../http', () => ({ STATIC_BASE: '', $authHost: {}, $host: {} }));
+vi.mock('../../http/newsAPI', () => ({ uploadNewsImage: vi.fn() }));
 
 import { NewsButton, NewsImage, checkNewsImage } from './newsExtensions';
 
 const schema = getSchema([
-  StarterKit.configure({ heading: { levels: [2, 3, 4] }, code: false, codeBlock: false }),
+  StarterKit.configure({ heading: { levels: [2, 3, 4] }, code: false, codeBlock: false, link: false, underline: false }),
   Underline,
   Link.configure({ openOnClick: false }),
   NewsButton,

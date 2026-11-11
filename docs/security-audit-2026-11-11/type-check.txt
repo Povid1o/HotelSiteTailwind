@@ -1,0 +1,149 @@
+
+> hotel-project@0.1.0 type-check
+> tsc --noEmit
+
+src/Auth.tsx(8,11): error TS2339: Property 'user' does not exist on type 'AppContext | null'.
+src/Auth.tsx(25,16): error TS18046: 'error' is of type 'unknown'.
+src/Auth.tsx(25,49): error TS18046: 'error' is of type 'unknown'.
+src/components/admin/sections/PagesAdmin.tsx(40,44): error TS2339: Property 'alt' does not exist on type 'Rec | { src: any; }'.
+  Property 'alt' does not exist on type '{ src: any; }'.
+src/components/cards/ExtEventCard.tsx(18,10): error TS2741: Property 'images' is missing in type '{}' but required in type 'BlueSwiperProps'.
+src/components/cards/ExtStandart.tsx(15,10): error TS2741: Property 'images' is missing in type '{}' but required in type 'BlueSwiperProps'.
+src/components/CircularPagination.tsx(41,11): error TS2345: Argument of type 'Element' is not assignable to parameter of type 'never'.
+src/components/CircularPagination.tsx(50,9): error TS2345: Argument of type 'Element' is not assignable to parameter of type 'never'.
+src/components/CircularPagination.tsx(56,11): error TS2345: Argument of type 'Element' is not assignable to parameter of type 'never'.
+src/components/CircularPagination.tsx(67,13): error TS2345: Argument of type 'Element' is not assignable to parameter of type 'never'.
+src/components/CircularPagination.tsx(75,11): error TS2345: Argument of type 'Element' is not assignable to parameter of type 'never'.
+src/components/CircularPagination.tsx(81,9): error TS2345: Argument of type 'Element' is not assignable to parameter of type 'never'.
+src/components/CircularPagination.tsx(90,8): error TS2739: Type '{ children: (string | Element)[]; variant: "text"; className: string; onClick: () => void; disabled: boolean; }' is missing the following properties from type 'Pick<ButtonProps, "form" | "slot" | "style" | "title" | "children" | "className" | "onClick" | "dir" | "property" | "role" | "id" | "type" | "value" | "defaultChecked" | ... 259 more ... | "fullWidth">': placeholder, onResize, onResizeCapture, onPointerEnterCapture, onPointerLeaveCapture
+src/components/CircularPagination.tsx(101,8): error TS2739: Type '{ children: (string | Element)[]; variant: "text"; className: string; onClick: () => void; disabled: boolean; }' is missing the following properties from type 'Pick<ButtonProps, "form" | "slot" | "style" | "title" | "children" | "className" | "onClick" | "dir" | "property" | "role" | "id" | "type" | "value" | "defaultChecked" | ... 259 more ... | "fullWidth">': placeholder, onResize, onResizeCapture, onPointerEnterCapture, onPointerLeaveCapture
+src/components/Filters.tsx(179,14): error TS2739: Type '{ children: Element[]; open: boolean; icon: Element; }' is missing the following properties from type 'Pick<AccordionProps, "slot" | "style" | "title" | "animate" | "children" | "className" | "onClick" | "dir" | "property" | "role" | "id" | "defaultChecked" | "defaultValue" | ... 248 more ... | "onPointerLeaveCapture">': placeholder, onResize, onResizeCapture, onPointerEnterCapture, onPointerLeaveCapture
+src/components/Filters.tsx(180,16): error TS2739: Type '{ children: string; onClick: () => void; }' is missing the following properties from type 'Pick<AccordionHeaderProps, "form" | "slot" | "style" | "title" | "children" | "className" | "onClick" | "dir" | "property" | "role" | "id" | "type" | "value" | ... 255 more ... | "onPointerLeaveCapture">': placeholder, onResize, onResizeCapture, onPointerEnterCapture, onPointerLeaveCapture
+src/components/Filters.tsx(192,14): error TS2739: Type '{ children: Element[]; open: boolean; icon: Element; }' is missing the following properties from type 'Pick<AccordionProps, "slot" | "style" | "title" | "animate" | "children" | "className" | "onClick" | "dir" | "property" | "role" | "id" | "defaultChecked" | "defaultValue" | ... 248 more ... | "onPointerLeaveCapture">': placeholder, onResize, onResizeCapture, onPointerEnterCapture, onPointerLeaveCapture
+src/components/Filters.tsx(193,16): error TS2739: Type '{ children: string; onClick: () => void; }' is missing the following properties from type 'Pick<AccordionHeaderProps, "form" | "slot" | "style" | "title" | "children" | "className" | "onClick" | "dir" | "property" | "role" | "id" | "type" | "value" | ... 255 more ... | "onPointerLeaveCapture">': placeholder, onResize, onResizeCapture, onPointerEnterCapture, onPointerLeaveCapture
+src/components/Filters.tsx(242,8): error TS2739: Type '{ children: Element[]; open: boolean; icon: Element; }' is missing the following properties from type 'Pick<AccordionProps, "slot" | "style" | "title" | "animate" | "children" | "className" | "onClick" | "dir" | "property" | "role" | "id" | "defaultChecked" | "defaultValue" | ... 248 more ... | "onPointerLeaveCapture">': placeholder, onResize, onResizeCapture, onPointerEnterCapture, onPointerLeaveCapture
+src/components/Filters.tsx(243,10): error TS2739: Type '{ children: string; onClick: () => void; }' is missing the following properties from type 'Pick<AccordionHeaderProps, "form" | "slot" | "style" | "title" | "children" | "className" | "onClick" | "dir" | "property" | "role" | "id" | "type" | "value" | ... 255 more ... | "onPointerLeaveCapture">': placeholder, onResize, onResizeCapture, onPointerEnterCapture, onPointerLeaveCapture
+src/components/Filters.tsx(255,8): error TS2739: Type '{ children: Element[]; open: boolean; icon: Element; }' is missing the following properties from type 'Pick<AccordionProps, "slot" | "style" | "title" | "animate" | "children" | "className" | "onClick" | "dir" | "property" | "role" | "id" | "defaultChecked" | "defaultValue" | ... 248 more ... | "onPointerLeaveCapture">': placeholder, onResize, onResizeCapture, onPointerEnterCapture, onPointerLeaveCapture
+src/components/Filters.tsx(256,10): error TS2739: Type '{ children: string; onClick: () => void; }' is missing the following properties from type 'Pick<AccordionHeaderProps, "form" | "slot" | "style" | "title" | "children" | "className" | "onClick" | "dir" | "property" | "role" | "id" | "type" | "value" | ... 255 more ... | "onPointerLeaveCapture">': placeholder, onResize, onResizeCapture, onPointerEnterCapture, onPointerLeaveCapture
+src/components/modals/ModalsCard.tsx(31,25): error TS2339: Property 'style' does not exist on type 'never'.
+src/components/modals/NewDishCard.tsx(75,33): error TS2554: Expected 0 arguments, but got 1.
+src/components/modals/NewDishCard.tsx(109,20): error TS2554: Expected 0 arguments, but got 1.
+src/components/modals/NewDishCard.tsx(173,12): error TS2741: Property 'ButtonCard' is missing in type '{ photos: any; header: string; onPhotosChange: (newPhotos: any) => void; withSlider: true; }' but required in type '{ photos: any; header: any; ButtonCard: any; withSlider?: boolean | undefined; onPhotosChange: any; }'.
+src/components/modals/NewRoomCard.tsx(95,33): error TS2554: Expected 0 arguments, but got 1.
+src/components/modals/NewRoomCard.tsx(133,20): error TS2554: Expected 0 arguments, but got 1.
+src/components/modals/NewRoomCard.tsx(216,12): error TS2741: Property 'ButtonCard' is missing in type '{ photos: any; header: string; onPhotosChange: (newPhotos: any) => void; withSlider: true; }' but required in type '{ photos: any; header: any; ButtonCard: any; withSlider?: boolean | undefined; onPhotosChange: any; }'.
+src/components/modals/NewRoomCard.tsx(251,13): error TS2322: Type '(newPrices: any) => void' is not assignable to type '() => void'.
+  Target signature provides too few arguments. Expected 1 or more, but got 0.
+src/components/modals/NewWineCard.tsx(87,33): error TS2554: Expected 0 arguments, but got 1.
+src/components/modals/NewWineCard.tsx(122,20): error TS2554: Expected 0 arguments, but got 1.
+src/components/modals/NewWineCard.tsx(196,12): error TS2741: Property 'ButtonCard' is missing in type '{ photos: any; header: string; onPhotosChange: (newPhotos: any) => void; withSlider: true; }' but required in type '{ photos: any; header: any; ButtonCard: any; withSlider?: boolean | undefined; onPhotosChange: any; }'.
+src/components/pages_editable/EventsEdit.tsx(41,10): error TS2741: Property 'style' is missing in type '{ text: string; format: string; onSave: (newText: string) => void; }' but required in type '{ text: any; format?: string | undefined; style: any; onSave: any; isShort?: boolean | undefined; }'.
+src/components/pages_editable/EventsEdit.tsx(44,10): error TS2739: Type '{ photos: { src: string; alt: string; }[]; withSlider: true; onPhotosChange: (newImgs: any[]) => void; }' is missing the following properties from type '{ photos: any; header: any; ButtonCard: any; withSlider?: boolean | undefined; onPhotosChange: any; }': header, ButtonCard
+src/components/pages_editable/HomeEdit.tsx(20,21): error TS2783: 'title' is specified more than once, so this usage will be overwritten.
+src/components/pages_editable/HomeEdit.tsx(20,32): error TS2783: 'description' is specified more than once, so this usage will be overwritten.
+src/components/pages_editable/HomeEdit.tsx(20,49): error TS2783: 'image' is specified more than once, so this usage will be overwritten.
+src/components/pages_editable/HomeEdit.tsx(21,19): error TS2783: 'title' is specified more than once, so this usage will be overwritten.
+src/components/pages_editable/HomeEdit.tsx(21,30): error TS2783: 'description' is specified more than once, so this usage will be overwritten.
+src/components/pages_editable/HomeEdit.tsx(22,19): error TS2783: 'title' is specified more than once, so this usage will be overwritten.
+src/components/pages_editable/HomeEdit.tsx(22,30): error TS2783: 'images' is specified more than once, so this usage will be overwritten.
+src/components/pages_editable/HomeEdit.tsx(23,20): error TS2783: 'title' is specified more than once, so this usage will be overwritten.
+src/components/pages_editable/HomeEdit.tsx(23,31): error TS2783: 'images' is specified more than once, so this usage will be overwritten.
+src/components/pages_editable/ShopEdit.tsx(31,10): error TS2741: Property 'children' is missing in type '{ image: string | File | null; onImageChange: (image: any) => void; }' but required in type '{ image: any; onImageChange: any; isBackground?: boolean | undefined; children: any; }'.
+src/components/pages_editable/VineryEdit.tsx(62,67): error TS2339: Property 'year' does not exist on type 'never'.
+src/components/pages_editable/VineryEdit.tsx(63,67): error TS2339: Property 'description' does not exist on type 'never'.
+src/components/pages_editable/VineryEdit.tsx(72,67): error TS2339: Property 'year' does not exist on type 'never'.
+src/components/pages_editable/VineryEdit.tsx(73,67): error TS2339: Property 'description' does not exist on type 'never'.
+src/components/pages_editable/VineryEdit.tsx(333,14): error TS2322: Type '{ children: Element[]; name: string; className: string; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.
+  Property 'name' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.
+src/components/pages_editable/VineryEdit.tsx(343,30): error TS2741: Property 'style' is missing in type '{ text: any; format: string; isShort: true; onSave: (newTitle: any) => void; }' but required in type '{ text: any; format?: string | undefined; style: any; onSave: any; isShort?: boolean | undefined; }'.
+src/components/pages_editable/VineryEdit.tsx(368,30): error TS2741: Property 'style' is missing in type '{ text: any; format: string; onSave: (newDescription: any) => void; }' but required in type '{ text: any; format?: string | undefined; style: any; onSave: any; isShort?: boolean | undefined; }'.
+src/components/pages_editable/VineryEdit.tsx(403,26): error TS2741: Property 'children' is missing in type '{ image: string; onImageChange: (newImage: string | File | null) => void; }' but required in type '{ image: any; onImageChange: any; isBackground?: boolean | undefined; children: any; }'.
+src/components/pages_editable/VineryEdit.tsx(414,30): error TS2741: Property 'style' is missing in type '{ text: any; format: string; onSave: (newDescription: any) => void; }' but required in type '{ text: any; format?: string | undefined; style: any; onSave: any; isShort?: boolean | undefined; }'.
+src/components/pages_editable/VineryEdit.tsx(448,103): error TS2353: Object literal may only specify known properties, and '"--tw-translate-y"' does not exist in type 'Properties<string | number, string & {}>'.
+src/components/pages_editable/VineryEdit.tsx(449,26): error TS2741: Property 'children' is missing in type '{ image: string; onImageChange: (newImage: string | File | null) => void; }' but required in type '{ image: any; onImageChange: any; isBackground?: boolean | undefined; children: any; }'.
+src/components/pages_editable/VineryEdit.tsx(460,22): error TS2741: Property 'style' is missing in type '{ text: any; format: string; isShort: true; onSave: (newTitle: any) => void; }' but required in type '{ text: any; format?: string | undefined; style: any; onSave: any; isShort?: boolean | undefined; }'.
+src/components/pages_editable/VineryEdit.tsx(476,29): error TS2322: Type '(newDates: any) => void' is not assignable to type '() => void'.
+  Target signature provides too few arguments. Expected 1 or more, but got 0.
+src/components/pages_editable/VineryEdit.tsx(483,29): error TS2322: Type '(newDates: any) => void' is not assignable to type '() => void'.
+  Target signature provides too few arguments. Expected 1 or more, but got 0.
+src/components/pages_editable/VineryEdit.tsx(493,26): error TS2741: Property 'style' is missing in type '{ text: any; format: string; onSave: (newText: any) => void; }' but required in type '{ text: any; format?: string | undefined; style: any; onSave: any; isShort?: boolean | undefined; }'.
+src/components/pages_editable/VineryEdit.tsx(531,30): error TS2741: Property 'style' is missing in type '{ text: any; format: string; onSave: (newText: any) => void; }' but required in type '{ text: any; format?: string | undefined; style: any; onSave: any; isShort?: boolean | undefined; }'.
+src/components/pages_editable/VineryEdit.tsx(542,26): error TS2741: Property 'style' is missing in type '{ text: any; format: string; onSave: (newText: any) => void; }' but required in type '{ text: any; format?: string | undefined; style: any; onSave: any; isShort?: boolean | undefined; }'.
+src/components/pages_editable/VineryEdit.tsx(550,26): error TS2741: Property 'style' is missing in type '{ text: any; format: string; onSave: (newText: any) => void; }' but required in type '{ text: any; format?: string | undefined; style: any; onSave: any; isShort?: boolean | undefined; }'.
+src/components/pages_editable/VineryEdit.tsx(586,30): error TS2741: Property 'style' is missing in type '{ text: any; format: string; isShort: true; onSave: (newTitle: any) => void; }' but required in type '{ text: any; format?: string | undefined; style: any; onSave: any; isShort?: boolean | undefined; }'.
+src/components/pages_editable/VineryEdit.tsx(647,41): error TS2322: Type '(newData: any) => void' is not assignable to type '() => void'.
+  Target signature provides too few arguments. Expected 1 or more, but got 0.
+src/components/pages_editable/VineryEdit.tsx(690,34): error TS2741: Property 'style' is missing in type '{ text: any; format: string; onSave: (newText: any) => void; }' but required in type '{ text: any; format?: string | undefined; style: any; onSave: any; isShort?: boolean | undefined; }'.
+src/components/pages_editable/VineryEdit.tsx(697,34): error TS2741: Property 'style' is missing in type '{ text: any; format: string; onSave: (newText: any) => void; }' but required in type '{ text: any; format?: string | undefined; style: any; onSave: any; isShort?: boolean | undefined; }'.
+src/components/pages_editable/VineryEdit.tsx(735,30): error TS2741: Property 'children' is missing in type '{ image: string; onImageChange: (newImage: string | File | null) => void; }' but required in type '{ image: any; onImageChange: any; isBackground?: boolean | undefined; children: any; }'.
+src/components/text_inputs/BackgroundContentEdit.tsx(73,34): error TS2345: Argument of type 'string | File | null | undefined' is not assignable to parameter of type 'string | File | null'.
+  Type 'undefined' is not assignable to type 'string | File | null'.
+src/components/text_inputs/BoxEditable.tsx(49,22): error TS2554: Expected 0 arguments, but got 1.
+src/components/text_inputs/BoxEditable.tsx(67,13): error TS2322: Type 'string' is not assignable to type 'null'.
+src/components/text_inputs/BoxEditable.tsx(70,31): error TS2345: Argument of type 'File' is not assignable to parameter of type 'SetStateAction<null>'.
+  Type 'File' provides no match for the signature '(prevState: null): null'.
+src/components/text_inputs/BoxEditable.tsx(97,22): error TS2741: Property 'children' is missing in type '{ image: any; onImageChange: any; }' but required in type '{ image: any; onImageChange: any; isBackground?: boolean | undefined; children: any; }'.
+src/components/text_inputs/BoxEditable.tsx(118,10): error TS2741: Property 'content' is missing in type '{ Card: () => Element; ExtContent: () => Element; }' but required in type '{ Card: any; ExtContent: any; content: any; }'.
+src/components/text_inputs/BoxEditable.tsx(120,18): error TS2741: Property 'className' is missing in type '{ children: Element; imgSrc: any; imgAlt: any; }' but required in type '{ className: any; imgAlt: any; imgSrc: any; children: any; }'.
+src/components/text_inputs/Button.tsx(23,18): error TS2322: Type '{ children: any; width: string; height: string; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.
+  Property 'width' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.
+src/components/text_inputs/DescriptionInput.tsx(96,18): error TS2741: Property 'icon' is missing in type '{ text: string; func: () => void; }' but required in type '{ icon: any; text?: string | undefined; func: any; customBackground?: string | undefined; disabled?: boolean | undefined; label?: string | undefined; }'.
+src/components/text_inputs/DescriptionInput.tsx(109,18): error TS2741: Property 'icon' is missing in type '{ text: string; func: () => void; }' but required in type '{ icon: any; text?: string | undefined; func: any; customBackground?: string | undefined; disabled?: boolean | undefined; label?: string | undefined; }'.
+src/components/text_inputs/ImageEdit.tsx(41,30): error TS18047: 'fileInputRef.current' is possibly 'null'.
+src/components/text_inputs/ImageEdit.tsx(89,28): error TS18047: 'fileInputRef.current' is possibly 'null'.
+src/components/text_inputs/ImageWithButton.tsx(38,58): error TS2339: Property 'startsWith' does not exist on type 'never'.
+src/components/text_inputs/ImageWithButton.tsx(47,7): error TS2322: Type 'string' is not assignable to type 'null'.
+src/components/text_inputs/ImageWithButton.tsx(56,60): error TS2339: Property 'startsWith' does not exist on type 'never'.
+src/components/text_inputs/ImageWithButton.tsx(107,30): error TS2339: Property 'value' does not exist on type 'never'.
+src/components/text_inputs/ImageWithButton.tsx(111,45): error TS18046: 'error' is of type 'unknown'.
+src/components/text_inputs/ImageWithButton.tsx(115,30): error TS2339: Property 'value' does not exist on type 'never'.
+src/components/text_inputs/ImageWithButton.tsx(151,52): error TS2339: Property 'click' does not exist on type 'never'.
+src/components/text_inputs/ImageWithButton.tsx(204,50): error TS2339: Property 'click' does not exist on type 'never'.
+src/components/text_inputs/ImageWithButtonPersistent.tsx(37,58): error TS2339: Property 'startsWith' does not exist on type 'never'.
+src/components/text_inputs/ImageWithButtonPersistent.tsx(46,7): error TS2322: Type 'string' is not assignable to type 'null'.
+src/components/text_inputs/ImageWithButtonPersistent.tsx(55,60): error TS2339: Property 'startsWith' does not exist on type 'never'.
+src/components/text_inputs/ImageWithButtonPersistent.tsx(106,30): error TS2339: Property 'value' does not exist on type 'never'.
+src/components/text_inputs/ImageWithButtonPersistent.tsx(110,45): error TS18046: 'error' is of type 'unknown'.
+src/components/text_inputs/ImageWithButtonPersistent.tsx(114,30): error TS2339: Property 'value' does not exist on type 'never'.
+src/components/text_inputs/ImageWithButtonPersistent.tsx(145,50): error TS2339: Property 'click' does not exist on type 'never'.
+src/components/text_inputs/ImageWithButtonPersistent.tsx(195,48): error TS2339: Property 'click' does not exist on type 'never'.
+src/components/text_inputs/MediaWithButton.tsx(62,58): error TS2339: Property 'startsWith' does not exist on type 'never'.
+src/components/text_inputs/MediaWithButton.tsx(72,7): error TS2322: Type 'string' is not assignable to type 'null'.
+src/components/text_inputs/MediaWithButton.tsx(82,60): error TS2339: Property 'startsWith' does not exist on type 'never'.
+src/components/text_inputs/MediaWithButton.tsx(145,30): error TS2339: Property 'value' does not exist on type 'never'.
+src/components/text_inputs/MediaWithButton.tsx(149,39): error TS18046: 'error' is of type 'unknown'.
+src/components/text_inputs/MediaWithButton.tsx(153,30): error TS2339: Property 'value' does not exist on type 'never'.
+src/components/text_inputs/MediaWithButton.tsx(225,50): error TS2339: Property 'click' does not exist on type 'never'.
+src/components/text_inputs/MultiInputField.tsx(96,12): error TS2741: Property 'icon' is missing in type '{ func: () => void; text: string; }' but required in type '{ icon: any; text?: string | undefined; func: any; customBackground?: string | undefined; disabled?: boolean | undefined; label?: string | undefined; }'.
+src/components/text_inputs/MultiInputField.tsx(98,14): error TS2741: Property 'icon' is missing in type '{ text: string; func: () => void; }' but required in type '{ icon: any; text?: string | undefined; func: any; customBackground?: string | undefined; disabled?: boolean | undefined; label?: string | undefined; }'.
+src/components/text_inputs/PagesPhotoSelector.tsx(333,14): error TS2741: Property 'content' is missing in type '{ Card: () => Element; ExtContent: () => Element; }' but required in type '{ Card: any; ExtContent: any; content: any; }'.
+src/components/text_inputs/PhotoSelector.tsx(340,14): error TS2741: Property 'content' is missing in type '{ Card: () => Element; ExtContent: () => Element; }' but required in type '{ Card: any; ExtContent: any; content: any; }'.
+src/components/text_inputs/PriceList.tsx(16,16): error TS2322: Type '{ children: any; width: string; height: string; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.
+  Property 'width' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.
+src/components/text_inputs/PriceList.tsx(64,14): error TS2554: Expected 0 arguments, but got 1.
+src/components/text_inputs/PriceList.tsx(105,12): error TS2741: Property 'icon' is missing in type '{ text: string; func: () => void; }' but required in type '{ icon: any; text: any; func: any; }'.
+src/components/text_inputs/PriceList.tsx(107,14): error TS2741: Property 'icon' is missing in type '{ text: string; func: () => void; }' but required in type '{ icon: any; text: any; func: any; }'.
+src/components/text_inputs/TextEditor.tsx(107,12): error TS2741: Property 'icon' is missing in type '{ text: string; func: () => void; }' but required in type '{ icon: any; text?: string | undefined; func: any; customBackground?: string | undefined; disabled?: boolean | undefined; label?: string | undefined; }'.
+src/components/text_inputs/VideoWithUpload.tsx(22,9): error TS2358: The left-hand side of an 'instanceof' expression must be of type 'any', an object type or a type parameter.
+src/components/text_inputs/VideoWithUpload.tsx(48,16): error TS2358: The left-hand side of an 'instanceof' expression must be of type 'any', an object type or a type parameter.
+src/components/text_inputs/VideoWithUpload.tsx(194,16): error TS2741: Property 'icon' is missing in type '{ text: string; func: () => void; }' but required in type '{ icon: any; text?: string | undefined; func: any; customBackground?: string | undefined; disabled?: boolean | undefined; label?: string | undefined; }'.
+src/components/text_inputs/VideoWithUpload.tsx(244,16): error TS2741: Property 'icon' is missing in type '{ text: string; func: () => void; }' but required in type '{ icon: any; text?: string | undefined; func: any; customBackground?: string | undefined; disabled?: boolean | undefined; label?: string | undefined; }'.
+src/components/text_inputs/VideoWithUpload.tsx(251,16): error TS2741: Property 'icon' is missing in type '{ text: string; func: () => void; }' but required in type '{ icon: any; text?: string | undefined; func: any; customBackground?: string | undefined; disabled?: boolean | undefined; label?: string | undefined; }'.
+src/components/text_inputs/VideoWithUpload.tsx(257,14): error TS2741: Property 'icon' is missing in type '{ text: string; func: () => void; }' but required in type '{ icon: any; text?: string | undefined; func: any; customBackground?: string | undefined; disabled?: boolean | undefined; label?: string | undefined; }'.
+src/components/TravelLineScript.tsx(7,12): error TS2339: Property 'travelline' does not exist on type 'Window & typeof globalThis'.
+src/components/TravelLineScript.tsx(7,32): error TS2339: Property 'travelline' does not exist on type 'Window & typeof globalThis'.
+src/components/TravelLineScript.tsx(8,23): error TS2339: Property 'travelline' does not exist on type 'Window & typeof globalThis'.
+src/components/utils/apiTest.tsx(15,54): error TS18046: 'error' is of type 'unknown'.
+src/components/utils/apiTest.tsx(32,48): error TS18046: 'error' is of type 'unknown'.
+src/components/utils/apiTest.tsx(32,74): error TS18046: 'error' is of type 'unknown'.
+src/components/VideoPlayer.tsx(128,25): error TS2353: Object literal may only specify known properties, and 'playerVars' does not exist in type '{ cc_lang_pref?: string | undefined; cc_load_policy?: 0 | 1 | undefined; color?: "red" | "white" | undefined; disablekb?: 0 | 1 | undefined; enablejsapi?: 0 | 1 | undefined; end?: number | undefined; ... 8 more ...; referrerpolicy?: string | undefined; }'.
+src/ProductionCenter.tsx(94,22): error TS2739: Type '{ imageStyle: string; specialStyle: string; bgImg: string; spesialTitle: string; title: string; description: string; }' is missing the following properties from type '{ title: any; description: any; spesialTitle: any; spesialDesc: any; imageStyle: any; bgImg: any; flexReverse: any; specialStyle: any; extraBlock: any; extraImage: any; }': spesialDesc, flexReverse, extraBlock, extraImage
+src/ProductionCenter.tsx(101,22): error TS2739: Type '{ imageStyle: string; specialStyle: string; bgImg: string; flexReverse: boolean; spesialTitle: string; spesialDesc: string; title: string; description: string; }' is missing the following properties from type '{ title: any; description: any; spesialTitle: any; spesialDesc: any; imageStyle: any; bgImg: any; flexReverse: any; specialStyle: any; extraBlock: any; extraImage: any; }': extraBlock, extraImage
+src/ProductionCenter.tsx(141,26): error TS2739: Type '{ spesialTitle: string; imageStyle: string; specialStyle: string; title: string; extraBlock: boolean; extraImage: string; description: string; }' is missing the following properties from type '{ title: any; description: any; spesialTitle: any; spesialDesc: any; imageStyle: any; bgImg: any; flexReverse: any; specialStyle: any; extraBlock: any; extraImage: any; }': spesialDesc, bgImg, flexReverse
+src/ProductionCenter.tsx(150,26): error TS2739: Type '{ spesialTitle: string; imageStyle: string; specialStyle: string; title: string; description: string; extraBlock: boolean; extraImage: string; }' is missing the following properties from type '{ title: any; description: any; spesialTitle: any; spesialDesc: any; imageStyle: any; bgImg: any; flexReverse: any; specialStyle: any; extraBlock: any; extraImage: any; }': spesialDesc, bgImg, flexReverse
+src/ProductionCenter.tsx(177,25): error TS2322: Type '(string | undefined)[]' is not assignable to type 'string[]'.
+  Type 'string | undefined' is not assignable to type 'string'.
+    Type 'undefined' is not assignable to type 'string'.
+src/ProductionCenter.tsx(186,41): error TS2353: Object literal may only specify known properties, and 'value' does not exist in type '{ wine: Wine; }'.
+src/WineHotel.tsx(12,13): error TS2322: Type '{ nav: boolean; }' is not assignable to type 'IntrinsicAttributes'.
+  Property 'nav' does not exist on type 'IntrinsicAttributes'.

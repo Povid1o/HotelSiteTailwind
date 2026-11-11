@@ -1,3 +1,4 @@
+import { safeLinkUrl } from '../../../utils/contentHelpers';
 import React, { useCallback, useEffect, useState } from 'react';
 import { AnalyticsPeriod, Dashboard, DashboardResponse, Insight, getAnalyticsDashboard } from '../../http/analyticsAPI';
 import { Pills } from '../ui';
@@ -155,7 +156,7 @@ const Report: React.FC<{ d: Dashboard }> = ({ d }) => {
             <tbody>
               {d.entryPages.map((p) => (
                 <tr key={p.path}>
-                  <td><a href={p.path} target='_blank' rel='noopener noreferrer' className='an-path'>{p.path}</a></td>
+                  <td><a href={safeLinkUrl(p.path)} target='_blank' rel='noopener noreferrer' className='an-path'>{p.path}</a></td>
                   <td><BarCell value={p.visits} max={maxEntry} /></td>
                   <td>{pct(p.bounceRate)}</td>
                   <td>{duration(p.avgDuration)}</td>
@@ -172,7 +173,7 @@ const Report: React.FC<{ d: Dashboard }> = ({ d }) => {
             <tbody>
               {d.pages.map((p) => (
                 <tr key={p.path}>
-                  <td><a href={p.path} target='_blank' rel='noopener noreferrer' className='an-path'>{p.path}</a></td>
+                  <td><a href={safeLinkUrl(p.path)} target='_blank' rel='noopener noreferrer' className='an-path'>{p.path}</a></td>
                   <td><BarCell value={p.pageviews} max={maxPage} /></td>
                 </tr>
               ))}

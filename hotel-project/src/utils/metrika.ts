@@ -46,6 +46,7 @@ let initialized = false;
 let lastUrl = '';
 
 export const initMetrika = () => {
+  if (isPrivatePath(window.location.pathname)) return;
   if (initialized || !isMetrikaConfigured() || getConsent() !== 'accepted') return;
   initialized = true;
 
@@ -66,7 +67,7 @@ export const initMetrika = () => {
     clickmap: true,
     trackLinks: true,
     accurateTrackBounce: true,
-    webvisor: true,
+    webvisor: false,
   });
 
   document.addEventListener('click', trackContactClick, true);
@@ -77,7 +78,12 @@ export const hit = (url: string, referer?: string) => {
   if (!initialized || url === lastUrl) return;
   if (isPrivatePath(new URL(url, window.location.origin).pathname)) return;
   lastUrl = url;
-  ym('hit', url, { title: document.title, referer });
+  const page = new URL(url, window.location.origin);
+  const previous = referer ? new URL(referer, window.location.origin) : null;
+  ym('hit', `${page.origin}${page.pathname}`, {
+    title: document.title,
+    referer: previous && !isPrivatePath(previous.pathname) ? `${previous.origin}${previous.pathname}` : undefined
+  });
 };
 
 /**

@@ -36,7 +36,7 @@ const normalizeNutrients = (n) => {
 
 exports.list = asyncHandler(async (req, res) => {
   const categories = await DishCategory.findAll({
-    include: [{ model: Dish, as: 'products', include: [{ model: DishImage, as: 'images' }] }],
+    include: [{ model: Dish, as: 'products', required: false, where: req.user?.role === 'ADMIN' ? {} : { is_active: true }, include: [{ model: DishImage, as: 'images' }] }],
     order: [
       [{ model: Dish, as: 'products' }, 'id', 'ASC'],
       [{ model: Dish, as: 'products' }, { model: DishImage, as: 'images' }, 'order', 'ASC']
@@ -53,7 +53,7 @@ exports.create = asyncHandler(async (req, res) => {
 });
 
 exports.get = asyncHandler(async (req, res) => {
-  const dish = await Dish.findByPk(req.params.id, { include: [{ model: DishImage, as: 'images' }, { model: DishCategory, as: 'category' }] });
+  const dish = await Dish.findOne({ where: { id: req.params.id, ...(req.user?.role === 'ADMIN' ? {} : { is_active: true }) }, include: [{ model: DishImage, as: 'images' }, { model: DishCategory, as: 'category' }] });
   if (!dish) return res.sendStatus(404);
   res.json(dish);
 });

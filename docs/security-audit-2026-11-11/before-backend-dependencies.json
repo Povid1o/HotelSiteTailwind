@@ -1,0 +1,656 @@
+{
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 1,
+      "moderate": 6,
+      "high": 16,
+      "critical": 1,
+      "total": 24
+    },
+    "dependencies": {
+      "prod": 191,
+      "dev": 94,
+      "optional": 3,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 285
+    }
+  },
+  "vulnerabilities": [
+    {
+      "name": "body-parser",
+      "severity": "high",
+      "direct": false,
+      "range": "<=1.20.8 || 2.0.0-beta.1 - 2.0.2",
+      "paths": [
+        "node_modules/body-parser"
+      ],
+      "advisories": [
+        {
+          "title": "body-parser vulnerable to denial of service when invalid limit value silently disables size enforcement",
+          "url": "https://github.com/advisories/GHSA-v422-hmwv-36x6",
+          "range": "<1.20.6"
+        },
+        {
+          "title": "body-parser vulnerable to Denial of Service via trailing bytes after a compressed request body",
+          "url": "https://github.com/advisories/GHSA-27r3-jxmh-p828",
+          "range": "<1.20.9"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "brace-expansion",
+      "severity": "high",
+      "direct": false,
+      "range": "<=1.1.20 || 2.0.0 - 2.1.6",
+      "paths": [
+        "node_modules/brace-expansion",
+        "node_modules/editorconfig/node_modules/brace-expansion",
+        "node_modules/js-beautify/node_modules/brace-expansion"
+      ],
+      "advisories": [
+        {
+          "title": "brace-expansion: Zero-step sequence causes process hang and memory exhaustion",
+          "url": "https://github.com/advisories/GHSA-f886-m6hf-6m8v",
+          "range": "<1.1.13"
+        },
+        {
+          "title": "brace-expansion: Zero-step sequence causes process hang and memory exhaustion",
+          "url": "https://github.com/advisories/GHSA-f886-m6hf-6m8v",
+          "range": ">=2.0.0 <2.0.3"
+        },
+        {
+          "title": "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+          "url": "https://github.com/advisories/GHSA-3jxr-9vmj-r5cp",
+          "range": ">=2.0.0 <2.1.2"
+        },
+        {
+          "title": "brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups",
+          "url": "https://github.com/advisories/GHSA-3jxr-9vmj-r5cp",
+          "range": "<1.1.16"
+        },
+        {
+          "title": "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+          "url": "https://github.com/advisories/GHSA-mh99-v99m-4gvg",
+          "range": "<1.1.17"
+        },
+        {
+          "title": "brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash",
+          "url": "https://github.com/advisories/GHSA-mh99-v99m-4gvg",
+          "range": ">=2.0.0 <2.1.3"
+        },
+        {
+          "title": "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation",
+          "url": "https://github.com/advisories/GHSA-rgw5-rvv9-x895",
+          "range": ">=2.0.0 <2.1.4"
+        },
+        {
+          "title": "brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation",
+          "url": "https://github.com/advisories/GHSA-rgw5-rvv9-x895",
+          "range": "<1.1.18"
+        },
+        {
+          "title": "brace-expansion: Quadratic-time expansion of the `{a},b}` rewrite causes CPU denial of service",
+          "url": "https://github.com/advisories/GHSA-q2hr-2g5m-vwhr",
+          "range": "<1.1.21"
+        },
+        {
+          "title": "brace-expansion: Quadratic-time expansion of the `{a},b}` rewrite causes CPU denial of service",
+          "url": "https://github.com/advisories/GHSA-q2hr-2g5m-vwhr",
+          "range": ">=2.0.0 <2.1.7"
+        },
+        {
+          "title": "brace-expansion: DoS via uncontrolled recursion on nested brace groups causing stack exhaustion",
+          "url": "https://github.com/advisories/GHSA-qhr7-859c-m2p7",
+          "range": "<1.1.20"
+        },
+        {
+          "title": "brace-expansion: DoS via uncontrolled recursion on nested brace groups causing stack exhaustion",
+          "url": "https://github.com/advisories/GHSA-qhr7-859c-m2p7",
+          "range": ">=2.0.0 <2.1.6"
+        },
+        {
+          "title": "brace-expansion: DoS via uncontrolled recursion in parseCommaParts causing stack exhaustion",
+          "url": "https://github.com/advisories/GHSA-6j4f-fj2g-mc7p",
+          "range": "<1.1.19"
+        },
+        {
+          "title": "brace-expansion: DoS via uncontrolled recursion in parseCommaParts causing stack exhaustion",
+          "url": "https://github.com/advisories/GHSA-6j4f-fj2g-mc7p",
+          "range": ">=2.0.0 <2.1.5"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "deepmerge",
+      "severity": "low",
+      "direct": false,
+      "range": ">=4.2.0",
+      "paths": [
+        "node_modules/deepmerge"
+      ],
+      "advisories": [
+        {
+          "title": "deepmerge mergeObject() allows prototype poisoning of returned objects",
+          "url": "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
+          "range": ">=4.2.0 <=4.3.1"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "dottie",
+      "severity": "moderate",
+      "direct": false,
+      "range": "2.0.4 - 2.0.6",
+      "paths": [
+        "node_modules/dottie"
+      ],
+      "advisories": [
+        {
+          "title": "dottie is vulnerable to Prototype Pollution bypass via non-first path segments in set() and transform()",
+          "url": "https://github.com/advisories/GHSA-r5mx-6wc6-7h9w",
+          "range": ">=2.0.4 <=2.0.6"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "editorconfig",
+      "severity": "high",
+      "direct": false,
+      "range": "1.0.3 - 1.0.4 || 2.0.0",
+      "paths": [
+        "node_modules/editorconfig"
+      ],
+      "advisories": [],
+      "fixAvailable": true
+    },
+    {
+      "name": "express",
+      "severity": "high",
+      "direct": true,
+      "range": "4.0.0-rc1 - 4.22.2 || 5.0.0-alpha.1 - 5.0.1",
+      "paths": [
+        "node_modules/express"
+      ],
+      "advisories": [],
+      "fixAvailable": true
+    },
+    {
+      "name": "file-type",
+      "severity": "moderate",
+      "direct": true,
+      "range": "13.0.0 - 21.3.0",
+      "paths": [
+        "node_modules/file-type"
+      ],
+      "advisories": [
+        {
+          "title": "file-type affected by infinite loop in ASF parser on malformed input with zero-size sub-header",
+          "url": "https://github.com/advisories/GHSA-5v7r-6r5c-r473",
+          "range": ">=13.0.0 <21.3.1"
+        }
+      ],
+      "fixAvailable": {
+        "name": "file-type",
+        "version": "22.3.0",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "glob",
+      "severity": "high",
+      "direct": false,
+      "range": "9.0.0 - 14.0.1",
+      "paths": [
+        "node_modules/js-beautify/node_modules/glob"
+      ],
+      "advisories": [
+        {
+          "title": "glob CLI: Command injection via -c/--cmd executes matches with shell:true",
+          "url": "https://github.com/advisories/GHSA-5j98-mcp5-4vw2",
+          "range": ">=10.2.0 <10.5.0"
+        },
+        {
+          "title": "Glob: AbortSignal cancellation bypass allows post-timeout filesystem traversal",
+          "url": "https://github.com/advisories/GHSA-3g3m-2fjr-6pw4",
+          "range": ">=9.0.0 <=14.0.1"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "joi",
+      "severity": "high",
+      "direct": true,
+      "range": "<=17.13.8",
+      "paths": [
+        "node_modules/joi"
+      ],
+      "advisories": [
+        {
+          "title": "joi has an uncaught RangeError on deeply nested input through recursive `link()` schemas",
+          "url": "https://github.com/advisories/GHSA-q7cg-457f-vx79",
+          "range": "<17.13.4"
+        },
+        {
+          "title": "joi: Prototype pollution via a `__proto__` language key in custom messages",
+          "url": "https://github.com/advisories/GHSA-6w3j-5fw6-r9vr",
+          "range": ">=17.2.0 <17.13.6"
+        },
+        {
+          "title": "joi: object().rename() with a template target can set the validated object's prototype",
+          "url": "https://github.com/advisories/GHSA-gg4h-3hg2-grpc",
+          "range": ">=16.0.0 <17.13.5"
+        },
+        {
+          "title": "joi messages compilation allows prototype replacement through __proto__ error codes",
+          "url": "https://github.com/advisories/GHSA-wr44-6hxh-3jwq",
+          "range": "<17.13.8"
+        },
+        {
+          "title": "joi: Quadratic regular-expression backtracking in `Joi.string().isoDate()`",
+          "url": "https://github.com/advisories/GHSA-6h2x-m376-mqjq",
+          "range": ">=17.2.0 <17.13.7"
+        },
+        {
+          "title": "joi: quadratic-time split in `string().email({ multiple: true })` allows denial of service",
+          "url": "https://github.com/advisories/GHSA-4528-x5fx-h6hg",
+          "range": ">=17.1.1 <17.13.9"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "js-cookie",
+      "severity": "high",
+      "direct": false,
+      "range": "<=3.0.5",
+      "paths": [
+        "node_modules/js-cookie"
+      ],
+      "advisories": [
+        {
+          "title": "JavaScript Cookie: Per-instance prototype hijack in assign() enables cookie-attribute injection",
+          "url": "https://github.com/advisories/GHSA-qjx8-664m-686j",
+          "range": "<=3.0.5"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "jws",
+      "severity": "high",
+      "direct": false,
+      "range": "<3.2.3",
+      "paths": [
+        "node_modules/jws"
+      ],
+      "advisories": [
+        {
+          "title": "auth0/node-jws Improperly Verifies HMAC Signature",
+          "url": "https://github.com/advisories/GHSA-869p-cjfg-cm3x",
+          "range": "<3.2.3"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "lodash",
+      "severity": "high",
+      "direct": false,
+      "range": "4.0.0 - 4.17.23",
+      "paths": [
+        "node_modules/lodash"
+      ],
+      "advisories": [
+        {
+          "title": "lodash vulnerable to Code Injection via `_.template` imports key names",
+          "url": "https://github.com/advisories/GHSA-r5fr-rjxr-66jc",
+          "range": ">=4.0.0 <=4.17.23"
+        },
+        {
+          "title": "Lodash has Prototype Pollution Vulnerability in `_.unset`, `_.omit`, and `_.pullAt` functions",
+          "url": "https://github.com/advisories/GHSA-xxjr-mmjv-4gpg",
+          "range": ">=4.0.0 <=4.17.22"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "minimatch",
+      "severity": "high",
+      "direct": false,
+      "range": "<=3.1.3 || 7.0.0 - 11.0.0",
+      "paths": [
+        "node_modules/editorconfig/node_modules/minimatch",
+        "node_modules/js-beautify/node_modules/minimatch",
+        "node_modules/minimatch"
+      ],
+      "advisories": [
+        {
+          "title": "minimatch has a ReDoS via repeated wildcards with non-matching literal in pattern",
+          "url": "https://github.com/advisories/GHSA-3ppc-4f35-3m26",
+          "range": "<3.1.3"
+        },
+        {
+          "title": "minimatch has a ReDoS via repeated wildcards with non-matching literal in pattern",
+          "url": "https://github.com/advisories/GHSA-3ppc-4f35-3m26",
+          "range": ">=9.0.0 <9.0.6"
+        },
+        {
+          "title": "minimatch has ReDoS: matchOne() combinatorial backtracking via multiple non-adjacent GLOBSTAR segments",
+          "url": "https://github.com/advisories/GHSA-7r86-cg39-jmmj",
+          "range": "<3.1.3"
+        },
+        {
+          "title": "minimatch has ReDoS: matchOne() combinatorial backtracking via multiple non-adjacent GLOBSTAR segments",
+          "url": "https://github.com/advisories/GHSA-7r86-cg39-jmmj",
+          "range": ">=9.0.0 <9.0.7"
+        },
+        {
+          "title": "minimatch ReDoS: nested *() extglobs generate catastrophically backtracking regular expressions",
+          "url": "https://github.com/advisories/GHSA-23c5-xmqv-rm74",
+          "range": "<3.1.4"
+        },
+        {
+          "title": "minimatch ReDoS: nested *() extglobs generate catastrophically backtracking regular expressions",
+          "url": "https://github.com/advisories/GHSA-23c5-xmqv-rm74",
+          "range": ">=9.0.0 <9.0.7"
+        },
+        {
+          "title": "minimatch has potential denial of service via globparts amplification",
+          "url": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+          "range": ">=7.0.0 <11.0.1"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "moment",
+      "severity": "moderate",
+      "direct": false,
+      "range": "2.29.2 - 2.30.1",
+      "paths": [
+        "node_modules/moment"
+      ],
+      "advisories": [
+        {
+          "title": "moment vulnerable to Path Traversal via crafted non-string locale name",
+          "url": "https://github.com/advisories/GHSA-4p3w-j4w9-5jqw",
+          "range": ">=2.29.2 <2.31.0"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "multer",
+      "severity": "high",
+      "direct": true,
+      "range": "<=2.4.0",
+      "paths": [
+        "node_modules/multer"
+      ],
+      "advisories": [
+        {
+          "title": "Multer vulnerable to Denial of Service via incomplete cleanup",
+          "url": "https://github.com/advisories/GHSA-xf7r-hgr6-v32p",
+          "range": "<2.1.0"
+        },
+        {
+          "title": "Multer vulnerable to Denial of Service via resource exhaustion",
+          "url": "https://github.com/advisories/GHSA-v52c-386h-88mc",
+          "range": "<2.1.0"
+        },
+        {
+          "title": "Multer Vulnerable to Denial of Service via Uncontrolled Recursion",
+          "url": "https://github.com/advisories/GHSA-5528-5vmv-3xc2",
+          "range": "<2.1.1"
+        },
+        {
+          "title": "Multer vulnerable to Denial of Service via deeply nested field names",
+          "url": "https://github.com/advisories/GHSA-72gw-mp4g-v24j",
+          "range": ">=1.0.0 <2.2.0"
+        },
+        {
+          "title": "Multer vulnerable to Denial of Service via incomplete cleanup of aborted uploads",
+          "url": "https://github.com/advisories/GHSA-3p4h-7m6x-2hcm",
+          "range": ">=2.0.0-alpha.1 <2.2.0"
+        },
+        {
+          "title": "multer vulnerable to Denial of Service via crafted multipart field names",
+          "url": "https://github.com/advisories/GHSA-wc9g-mqfw-jrwm",
+          "range": "<2.3.0"
+        },
+        {
+          "title": "multer vulnerable to file size limit bypass via async fileFilter race condition",
+          "url": "https://github.com/advisories/GHSA-qvfw-j98x-7q72",
+          "range": "<2.3.0"
+        },
+        {
+          "title": "multer vulnerable to Denial of Service via oversized array index in field names",
+          "url": "https://github.com/advisories/GHSA-535w-7cp7-47q4",
+          "range": "<2.3.0"
+        },
+        {
+          "title": "multer vulnerable to Denial of Service via a pending asynchronous fileFilter after request teardown",
+          "url": "https://github.com/advisories/GHSA-q7qp-rjg7-q26m",
+          "range": ">=2.0.0 <2.5.0"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "path-to-regexp",
+      "severity": "high",
+      "direct": false,
+      "range": "<0.1.13",
+      "paths": [
+        "node_modules/path-to-regexp"
+      ],
+      "advisories": [
+        {
+          "title": "path-to-regexp vulnerable to Regular Expression Denial of Service via multiple route parameters",
+          "url": "https://github.com/advisories/GHSA-37ch-88jc-xwx2",
+          "range": "<0.1.13"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "picomatch",
+      "severity": "high",
+      "direct": false,
+      "range": "<=2.3.1",
+      "paths": [
+        "node_modules/picomatch"
+      ],
+      "advisories": [
+        {
+          "title": "Picomatch: Method Injection in POSIX Character Classes causes incorrect Glob Matching",
+          "url": "https://github.com/advisories/GHSA-3v7f-55p6-f55p",
+          "range": "<2.3.2"
+        },
+        {
+          "title": "Picomatch has a ReDoS vulnerability via extglob quantifiers",
+          "url": "https://github.com/advisories/GHSA-c2c7-rcm5-vvqj",
+          "range": "<2.3.2"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "proxy-addr",
+      "severity": "critical",
+      "direct": false,
+      "range": "1.1.0 - 2.0.7",
+      "paths": [
+        "node_modules/proxy-addr"
+      ],
+      "advisories": [
+        {
+          "title": "proxy-addr vulnerable to IP spoofing via IPv4-mapped IPv6 trust subnet",
+          "url": "https://github.com/advisories/GHSA-jqcg-44mw-7w3h",
+          "range": ">=1.1.0 <2.0.8"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "qs",
+      "severity": "moderate",
+      "direct": false,
+      "range": "<=6.16.0",
+      "paths": [
+        "node_modules/qs"
+      ],
+      "advisories": [
+        {
+          "title": "qs's arrayLimit bypass in comma parsing allows denial of service",
+          "url": "https://github.com/advisories/GHSA-w7fw-mjwx-w883",
+          "range": ">=6.7.0 <=6.14.1"
+        },
+        {
+          "title": "qs's arrayLimit bypass in its bracket notation allows DoS via memory exhaustion",
+          "url": "https://github.com/advisories/GHSA-6rw7-vpxm-498p",
+          "range": "<6.14.1"
+        },
+        {
+          "title": "qs has a remotely triggerable DoS: qs.stringify crashes with TypeError on null/undefined entries in comma-format arrays when encodeValuesOnly is set",
+          "url": "https://github.com/advisories/GHSA-q8mj-m7cp-5q26",
+          "range": ">=6.11.1 <=6.15.1"
+        },
+        {
+          "title": "qs: Denial of Service via Attacker Controlled isBuffer",
+          "url": "https://github.com/advisories/GHSA-4mjr-xmp4-gh2g",
+          "range": ">=2.2.5 <6.16.0"
+        },
+        {
+          "title": "qs : qs.stringify with arrayFormat 'comma' throws an uncaught TypeError on array elements carrying a non-callable own toString (DoS)",
+          "url": "https://github.com/advisories/GHSA-6pq8-jhm2-2vcw",
+          "range": ">=6.7.0 <=6.16.0"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "sanitize-html",
+      "severity": "moderate",
+      "direct": true,
+      "range": "<=2.18.0",
+      "paths": [
+        "node_modules/sanitize-html"
+      ],
+      "advisories": [
+        {
+          "title": "sanitize-html has incomplete URI scheme validation in that allows javascript: URIs through action, formaction, data, poster, and background attributes",
+          "url": "https://github.com/advisories/GHSA-vccv-cmxp-4j9h",
+          "range": ">=1.18.0 <=2.17.4"
+        },
+        {
+          "title": "ApostropheCMS: Stored XSS via SVG SMIL URI-list scheme-policy bypass",
+          "url": "https://github.com/advisories/GHSA-g8qq-57p8-ggw5",
+          "range": ">=1.9.0 <=2.17.6"
+        },
+        {
+          "title": "ApostropheCMS: Mutation-XSS / allowedTags bypass via literal `</textarea/>` solidus close",
+          "url": "https://github.com/advisories/GHSA-jxwj-j7wr-gfrw",
+          "range": "<=2.17.5"
+        },
+        {
+          "title": "ApostropheCMS sanitize-html: nonTextTags discard region ends early on an implied close, letting <noscript> content render",
+          "url": "https://github.com/advisories/GHSA-x3q4-9hxx-gx8m",
+          "range": "<2.18.0"
+        },
+        {
+          "title": "ApostropheCMS: Incomplete CVE-2026-53606: `meta http-equiv=refresh` `content` still ships `javascript:` / `data:` URLs",
+          "url": "https://github.com/advisories/GHSA-cv27-6wvh-8x7j",
+          "range": "<2.18.0"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "sequelize",
+      "severity": "high",
+      "direct": true,
+      "range": "0.0.0-development || >=3.30.1",
+      "paths": [
+        "node_modules/sequelize"
+      ],
+      "advisories": [
+        {
+          "title": "Sequelize v6 Vulnerable to SQL Injection via JSON Column Cast Type",
+          "url": "https://github.com/advisories/GHSA-6457-6jrx-69cr",
+          "range": ">=6.0.0-beta.1 <=6.37.7"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "underscore",
+      "severity": "high",
+      "direct": false,
+      "range": "<=1.13.7",
+      "paths": [
+        "node_modules/underscore"
+      ],
+      "advisories": [
+        {
+          "title": "Underscore has unlimited recursion in _.flatten and _.isEqual, potential for DoS attack",
+          "url": "https://github.com/advisories/GHSA-qpx9-hpmf-5gmw",
+          "range": "<=1.13.7"
+        }
+      ],
+      "fixAvailable": true
+    },
+    {
+      "name": "uuid",
+      "severity": "moderate",
+      "direct": true,
+      "range": "<11.1.1",
+      "paths": [
+        "node_modules/sequelize/node_modules/uuid",
+        "node_modules/uuid"
+      ],
+      "advisories": [
+        {
+          "title": "uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided",
+          "url": "https://github.com/advisories/GHSA-w5hq-g745-h8pq",
+          "range": "<11.1.1"
+        }
+      ],
+      "fixAvailable": {
+        "name": "uuid",
+        "version": "14.0.3",
+        "isSemVerMajor": true
+      }
+    },
+    {
+      "name": "validator",
+      "severity": "high",
+      "direct": false,
+      "range": "<=13.15.20",
+      "paths": [
+        "node_modules/validator"
+      ],
+      "advisories": [
+        {
+          "title": "validator.js has a URL validation bypass vulnerability in its isURL function",
+          "url": "https://github.com/advisories/GHSA-9965-vmph-33xx",
+          "range": "<13.15.20"
+        },
+        {
+          "title": "Validator is Vulnerable to Incomplete Filtering of One or More Instances of Special Elements",
+          "url": "https://github.com/advisories/GHSA-vghf-hv5q-vc2g",
+          "range": "<13.15.22"
+        }
+      ],
+      "fixAvailable": true
+    }
+  ]
+}

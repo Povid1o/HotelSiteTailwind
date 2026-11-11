@@ -5,17 +5,31 @@
 
 :80 {
     encode zstd gzip
+    request_body {
+        max_size 101MB
+    }
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy strict-origin-when-cross-origin
+        X-Frame-Options DENY
+        -Server
+    }
 
     # API > backend:8000
-    @api path /api*
+    @api path /api /api/*
     handle @api {
         reverse_proxy backend:8000
     }
     
-    @doubleapi path /api/api*
-    handle @doubleapi {
-        uri strip_prefix /api
-        reverse_proxy backend:8000
+    # Uploads live in the shared read-only volume. Serve them here instead of
+    # sending every photo/video through Caddy → nginx → backend.
+    @media path /static/dishes/* /static/pages/* /static/rooms/* /static/wines/* /static/events/* /static/news/* /static/videos/* /static/fallbacks/*
+    handle @media {
+        root * /var/www
+        header Cache-Control "public, max-age=31536000, immutable"
+        header Content-Security-Policy "default-src 'none'; sandbox"
+        try_files {path} =404
+        file_server
     }
 
     # Фронтенд > nginx внутри контейнера frontend:80

@@ -4,6 +4,7 @@ import useWindowDimensions from '../WindowResizeListener';
 import { Context } from '../../index';
 import { observer } from 'mobx-react-lite';
 import { API_BASE } from '../http';
+import WineInquiry from '../WineInquiry';
 
 import BigBackground from "../assets/BigBackground.png";
 import SmallBackground from "../assets/SmallBackground.png";
@@ -191,6 +192,7 @@ const ProductPage = observer(() => {
             </section>
             
             <p className="mobile-header mb-8">{wine.price} ₽</p>
+            <WineInquiry key={wine.id} wine={wine} />
             
             <h3 className="mobile-header mb-2">Описание</h3>
             <div className="space-y-2">
@@ -272,6 +274,7 @@ const ProductPage = observer(() => {
             </div>
             
             <h2 className="desktop-header-lower mb-14">{wine.price} ₽</h2>
+            <WineInquiry key={wine.id} wine={wine} />
             
             <h2 className="desktop-header-lower mb-4">Описание</h2>
             <div className="space-y-3">

@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../../../index';
+import WineInquirySettings from './WineInquirySettings';
 import {
   BackButton, FormBar, FormBlock, FormHead, Img, ListRow, PhotoGrid, Pills, SectionHead, Thumb,
   confirmDiscard, formStatus, uidOf, useAutoSelect, useDraft, useSaveFlow,
@@ -199,6 +200,8 @@ const WinesAdmin: React.FC = observer(() => {
       <SectionHead title="Вина" lead="Витрина вин: характеристики, цена и фотографии бутылок.">
         <button type="button" className="adm-btn adm-btn-primary" onClick={add} disabled={!active || adding}>Новое вино</button>
       </SectionHead>
+
+      <WineInquirySettings />
 
       <Pills label="Цвет вина" value={active?.type || ''} onChange={pick} items={types.map((t) => ({ key: t.type, label: cap(t.type) }))} />
 

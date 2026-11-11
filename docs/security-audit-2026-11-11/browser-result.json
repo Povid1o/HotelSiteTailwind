@@ -1,0 +1,10 @@
+{
+  "loginAndAdminRendered": true,
+  "adminCspPresent": true,
+  "thirdPartyScriptsOnAdmin": 0,
+  "sessionCookieHttpOnly": true,
+  "sessionCookieSameSite": "Strict",
+  "logoutReplayStatus": 401,
+  "pageErrors": [],
+  "transport": "isolated localhost HTTP; production Secure-cookie separately verified by HTTP integration tests"
+}
